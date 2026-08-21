@@ -3,6 +3,7 @@ import { Google_Sans } from "next/font/google";
 import "./globals.css";
 import { site, summary } from "@/content/site";
 import { themeScript } from "@/components/theme-toggle";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 /*
  * The real thing: Google Sans is published on Google Fonts, so next/font can
@@ -88,6 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
