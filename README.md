@@ -1,104 +1,159 @@
 # Muhammad Wahab Ansari — Portfolio
 
-A portfolio that does two jobs at once: it's a CV for hiring managers **and** a services
-page for clients. Built in Google's design language — Google Sans throughout, large light
-display headings, pill buttons, `#F8F9FA` section bands, the four brand colours as accents,
-no shadows anywhere. Light by default, with Google's own dark palette behind the toggle.
+A personal site that does two jobs at once: a **CV** for hiring managers and a
+**services page** for clients. Built in Google's design language — Google Sans
+throughout, large light display headings, pill buttons, `#F8F9FA` section bands,
+the four brand colours as accents, and no shadows anywhere.
+
+Light by default, with Google's own dark palette behind the toggle.
+
+**Live:** https://wahabansari.dev · **Stack:** Next.js 16 · React 19 · Tailwind CSS v4 · TypeScript
+
+---
+
+## Contents
+
+- [Quick start](#quick-start)
+- [Scripts](#scripts)
+- [Project structure](#project-structure)
+- [Editing your content](#editing-your-content) ← **start here**
+- [Dual purpose: CV and services](#dual-purpose-cv-and-services)
+- [Design system](#design-system)
+- [Section rhythm](#section-rhythm)
+- [Accessibility](#accessibility)
+- [SEO](#seo)
+- [Deploying](#deploying)
+- [Things to know](#things-to-know)
+
+---
+
+## Quick start
+
+**Requirements:** Node.js 20 or newer, and npm.
 
 ```bash
-npm run dev     # http://localhost:3000
-npm run build   # production build
-npm run lint    # eslint (react-hooks compiler rules included)
+git clone https://github.com/wahabansari/portfolio-final.git
+```
+
+```bash
+cd portfolio-final && npm install
+```
+
+```bash
+npm run dev
+```
+
+Open http://localhost:3000. The dev server hot-reloads, so edits to
+`src/content/site.ts` appear immediately.
+
+## Scripts
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Development server on port 3000, with hot reload |
+| `npm run build` | Production build — also type-checks and prerenders every route |
+| `npm run start` | Serves the production build (run `build` first) |
+| `npm run lint` | ESLint, including the React Compiler rules |
+
+Type-check on its own: `npx tsc --noEmit`
+
+## Project structure
+
+```
+src/
+├── app/
+│   ├── globals.css          Design system: tokens, type scale, components
+│   ├── layout.tsx           Fonts, metadata, theme script
+│   ├── page.tsx             Section order
+│   ├── icon.tsx             Generated favicon
+│   ├── opengraph-image.tsx  Generated social card
+│   ├── robots.ts
+│   └── sitemap.ts
+├── components/
+│   ├── ui.tsx               Section, SectionHeading, Field, Reveal, icons
+│   ├── nav.tsx  hero.tsx  about.tsx  services.tsx  work.tsx
+│   ├── experience.tsx  skills.tsx  credentials.tsx  contact.tsx  footer.tsx
+│   ├── theme-toggle.tsx     Light/dark switch + the no-flash script
+│   └── json-ld.tsx          Person + service structured data
+├── content/
+│   └── site.ts              ★ ALL text lives here
+├── hooks/use-media-query.ts
+└── lib/cn.ts
 ```
 
 ---
 
-## Editing content
+## Editing your content
 
-**Everything you'd want to change lives in one file: [`src/content/site.ts`](src/content/site.ts).**
-No copy is hardcoded in components. Edit there and the whole site updates — nav, JSON-LD,
-OG image, sitemap and all.
+**Everything you'd want to change lives in one file:
+[`src/content/site.ts`](src/content/site.ts).** No copy is hardcoded in
+components. Edit there and the whole site updates — nav, JSON-LD, OG image,
+sitemap and all.
 
 | Export | Controls |
 | --- | --- |
 | `site` | Name, role, email, location, availability flag, résumé path |
 | `socials` | GitHub / LinkedIn / email links (also feeds JSON-LD `sameAs`) |
 | `summary`, `summaryShort` | SEO description and the hero paragraph |
-| `stats` | The four hero stat cards (`numeric: true` animates the count) |
+| `stats` | The four hero stat figures (`numeric: true` animates the count) |
 | `about` | Statement, body paragraphs, and the "At a glance" list |
-| `experience` | Roles, bullets, per-role stack |
+| `services` | The four offerings — title, blurb, what each includes; `accent` picks the brand colour |
 | `projects` | Project cards — links, blurb, tools; `plate` picks the brand-colour accent |
-| `services` | The four offerings — title, blurb, and what each includes; `accent` picks the brand colour |
+| `experience` | Roles, bullets, per-role stack |
 | `skills` | The skills cards |
 | `education`, `certifications` | Background section |
 | `sections` | Nav items — ids must match the `<section id>` values |
-| `marquee` | The "tools I work with" pills in the hero (first 10 shown) |
+| `marquee` | Technology names available to the hero strip |
 
-### Things worth updating
+### Adding a project
 
-- **`site.url`** is `https://wahabansari.dev`. Change it before deploying elsewhere —
+```ts
+{
+  slug: "my-project",
+  title: "My Project",
+  kind: "Web Application",
+  href: "https://example.com/",
+  domain: "example.com",
+  blurb: "One sentence that appears on the card.",
+  detail: "Longer description, kept for future use.",
+  tools: ["Next.js", "Tailwind CSS"],
+  plate: "app",     // app | commerce | marketplace | portal | listing
+}
+```
+
+`plate` only picks which brand colour tints the card — it has no other effect.
+
+### Project screenshots
+
+Each card shows a generated browser-window placeholder tinted by `plate`. To use
+a real screenshot, drop the image in `public/work/` and add `image` to that
+project:
+
+```ts
+image: "/work/my-project.png",
+```
+
+The card swaps to the real image automatically.
+
+### Adding a service
+
+Add to `services` in the same file. **Keep every service backed by something in
+`skills`** — the point of the section is that nothing is offered which isn't
+already on the résumé. If you add a service, add the underlying skill too.
+
+### Before you deploy
+
+- **`site.url`** is `https://wahabansari.dev`. Change it if you deploy elsewhere —
   it's the base for canonical URLs, OG tags and the sitemap.
 - **`socials`** currently guesses `github.com/wahabansari` and
-  `linkedin.com/in/wahabansari` from the résumé's `/wahabansari` handles. Verify both.
-- **Employment dates** aren't shown, because the source résumé doesn't contain them.
-  Add a `period` to any `experience` entry and it's ready to display.
-- **`public/Muhammad-Wahab-Ansari-Resume.pdf`** is a copy of the source résumé (3.4 MB).
-  Worth compressing — it's served on every "Download résumé" click.
-
-### Project images
-
-Each project card shows a stylised browser-window placeholder, tinted by the `plate`
-field. To use a real screenshot, drop the image in `public/work/` and set
-`image: "/work/verdira.png"` on that project — the card swaps automatically.
+  `linkedin.com/in/wahabansari` from the résumé's `/wahabansari` handles.
+  **Verify both.**
+- **Employment dates** aren't shown, because the source résumé doesn't contain
+  them. Add a `period` to any `experience` entry and it's ready to display.
+- **`public/Muhammad-Wahab-Ansari-Resume.pdf`** is 3.4 MB. Worth compressing —
+  it's served on every "Download résumé" click.
 
 ---
-
-## Design system
-
-Defined once in [`src/app/globals.css`](src/app/globals.css), measured from **about.google**
-rather than guessed.
-
-| | Google's approach, adopted here |
-| --- | --- |
-| Type | **Google Sans** — the real font, now published on Google Fonts and self-hosted via `next/font` |
-| Headings | **Weight 400.** Large and light, never bold — the single most identifying trait of Google's type |
-| Buttons | Full pills (999px), `12px 24px`, 16px/500 |
-| Elevation | **No shadows anywhere.** Depth comes from `#F8F9FA` band fills and `#DADCE0` hairlines |
-| Cards | 16px radius, hairline border, or plain white on a grey band |
-| Bands | Sections alternate white / `#F8F9FA` / `#E8F0FE` full-bleed |
-| Container | 1296px, matching about.google |
-
-The h1 reproduces Google's metrics exactly — verified against the live site:
-
-```
-about.google h1:  60px · 400 · -0.5px  · 72px line-height · #202124
-this site h1:     60px · 400 · -0.498px · 72px line-height · #202124
-```
-
-### Colour
-
-Google's four brand colours are used the way Google actually uses them outside the logo:
-as **graphics**, not as small text. Each project card and skills group carries one as a dot
-or artwork tint, while the label beside it stays neutral.
-
-> **The one deliberate departure.** Google ships `#1A73E8` (Blue 600) as link and label text,
-> but on white that is only **4.27:1** — below AA for normal text. Yellow `#FBBC04` as text is
-> **1.71:1**, unusable. So `--color-primary` is Blue 700 `#1967D2` (5.37:1) for all blue *text*,
-> while Blue 600 is kept for button *fills* (white on it is 4.51:1). Brand colours never carry
-> text. This is the only place the design knowingly diverges from Google.
-
-Dark mode uses Google's own dark palette — `#202124` surface, `#8AB4F8` blue, as in Search.
-
-Every text role was measured against its real background in both themes, applying the WCAG
-large-text allowance: **232 elements, zero failures** (light normal-text minimum 4.51:1,
-dark 5.06:1).
-
-### A note on the OG card
-
-The page is set in Google Sans, but the social card is set in **Roboto**. Satori — the
-rasteriser behind `next/og` — cannot parse Google Sans's OpenType tables and throws on
-`GSUB lookupType 7`. Roboto is Google's other open face and renders cleanly. The fetch is
-wrapped so a build without network still succeeds on the system sans.
 
 ## Dual purpose: CV and services
 
@@ -110,59 +165,156 @@ The page serves two audiences without splitting into two sites:
 | "View my work" | "Hire me for a project" |
 | Work history with measured outcomes | The same work framed as offerings |
 
-The hero speaks to both — the headline covers what gets built, the three CTAs split by
-intent (hire → services, evaluate → work, screen → résumé), and the availability chip reads
-"Open to roles and freelance projects".
+The hero speaks to both — the headline covers what gets built, the three CTAs
+split by intent (hire → services, evaluate → work, screen → résumé), and the
+availability chip reads "Open to roles and freelance projects".
 
-**Every service maps to a capability already listed in `skills`** — nothing is offered that
-isn't backed by the résumé. Frontend engineering, full-stack development, AI automation
-(n8n, Gemini API, REST integrations) and Performance & SEO all come straight from it. If you
-add a service, add the underlying skill too, or the claim isn't grounded.
+The services also emit `makesOffer` entries in the `Person` JSON-LD, so search
+engines see the freelance offering alongside the CV.
 
-The services also emit `makesOffer` entries in the `Person` JSON-LD, so search engines see
-the freelance offering alongside the CV.
+---
+
+## Design system
+
+Defined once in [`src/app/globals.css`](src/app/globals.css), **measured from
+about.google** rather than guessed.
+
+| | Google's approach, adopted here |
+| --- | --- |
+| Type | **Google Sans** — the real font, published on Google Fonts and self-hosted via `next/font` |
+| Headings | Google ships **weight 400** — large and light, never bold. This site uses 500, one step up |
+| Buttons | Full pills (999px), `12px 24px`, 16px/500 |
+| Elevation | **No shadows anywhere.** Depth comes from band and card fills |
+| Cards | 16px radius, **no outline** — the fill inverts against the band |
+| Bands | Sections alternate white / `#F8F9FA` / `#E8F0FE`, full bleed |
+| Container | 1296px, matching about.google |
+
+The h1 reproduces Google's metrics — verified against the live site:
+
+```
+about.google h1:  60px · 400 · -0.5px  · 72px line-height · #202124
+this site h1:     60px · 500 · -0.498px · 72px line-height · #202124
+```
+
+### Colour
+
+Google's four brand colours are used the way Google uses them outside the logo:
+as **graphics, not text**. Each project card and skills group carries one as a
+dot or artwork tint, while the label beside it stays neutral.
+
+> **The one deliberate departure.** Google ships `#1A73E8` (Blue 600) as link and
+> label text, but on white that is only **4.27:1** — below AA for normal text.
+> Yellow `#FBBC04` as text is **1.71:1**, unusable. So `--color-primary` is
+> Blue 700 `#1967D2` (5.37:1) for all blue *text*, while Blue 600 is kept for
+> button *fills* (white on it is 4.51:1). Brand colours never carry text.
+
+Dark mode uses Google's own dark palette — `#202124` surface, `#8AB4F8` blue.
+
+### Cards
+
+**No card draws an outline** — that's Material 2 / Bootstrap, not Google.
+Separation comes from the fill inverting against the band: on a **grey** band use
+`.g-card-plain` (raised fill), on a **white** band use `.g-card-soft`
+(`#F8F9FA`). If a card looks weak, change the fill, never add a border.
+
+Dark mode flips the direction — Material raises surfaces by *lightening* them, so
+`.g-card-plain` uses `--color-card-raised` (`#FFFFFF` light, `#35363A` dark)
+rather than the page background. Reusing the page background there makes dark
+cards *darker* than their band, which reads as an inset well instead of a card.
+
+### Tailwind v4 tokens
+
+Colours are declared in a plain `@theme` block, and the dark theme re-points the
+same custom properties under `:root[data-theme="dark"]`.
+
+> This is deliberate and worth preserving: **`@theme inline` bakes colour values
+> into the compiled utilities**, so `text-ink-muted` would freeze at its light
+> value and never respond to the theme. A plain `@theme` compiles utilities to
+> `var(--color-*)`, which is what makes the toggle work. If you add a colour, add
+> it to `@theme` and to the dark block — never to a `@theme inline`.
+
+### Type rendering
+
+Google Sans is loaded as the **variable** cut with the `opsz` and `GRAD` axes, so
+`font-optical-sizing: auto` can adapt letterforms to their size rather than
+scaling one drawing from 14px to 60px. `font-synthesis: none` prevents the
+browser faking weights the variable font already has.
+
+### Theme toggle
+
+`<html data-theme>` is the single source of truth. An inline script in `<head>`
+sets it before first paint so there's no flash, the toggle reads the live DOM
+attribute (not a React snapshot, so rapid clicks can't desync), and the choice
+persists in `localStorage`.
+
+---
 
 ## Section rhythm
 
 Bands alternate so no two adjacent sections share a fill:
 
 ```
-Hero      white   (stats band grey)
-About     white
-Services  grey     ← cards go plain white, no border needed
-Work      white    ← cards get the #DADCE0 hairline
-Experience grey    ← cards plain white
-Skills    white    ← cards bordered
-Background grey    ← cards plain white
-Contact   blue     #E8F0FE
+Hero       white   (stats sub-band grey)
+About      white
+Services   grey     ← cards raised white
+Work       white    ← cards #F8F9FA
+Experience grey     ← cards raised white
+Skills     white    ← cards #F8F9FA
+Background grey     ← cards raised white
+Contact    blue     #E8F0FE
 ```
 
-**No card draws an outline** — that's Material 2 / Bootstrap, not Google. Separation comes
-from the fill inverting against the band: on a **grey** band use `.g-card-plain` (raised
-fill), on a **white** band use `.g-card-soft` (`#F8F9FA`). If a card looks weak, change the
-fill, never add a border.
-
-Dark mode flips the direction — Material raises surfaces by *lightening* them, so
-`.g-card-plain` uses `--color-card-raised` (`#FFFFFF` light, `#35363A` dark) rather than the
-page background. Reusing the page background there makes dark cards *darker* than their
-band, which reads as an inset well instead of a card.
+---
 
 ## Accessibility
 
 - Skip link, visible focus rings, semantic landmarks.
-- Heading outline: one `h1`, then exactly one `h2` per section, `h3` for cards.
-- Mobile menu collapses via `grid-template-rows` and is marked `inert` when closed, so it
-  never strands an invisible overlay or leaves hidden links in the tab order. Escape closes
-  it and returns focus to the trigger.
-- Tap targets meet the 24px minimum; buttons and links are 44px.
-- Decorative card artwork is `aria-hidden`; each project link carries a descriptive label.
+- Heading outline: one `h1`, then exactly one `h2` per section. Card and
+  footer-column titles are `<p>`, not headings, so the outline stays clean.
+- Mobile menu collapses via `grid-template-rows` and is marked `inert` when
+  closed, so it never strands an invisible overlay or leaves hidden links in the
+  tab order. Escape closes it and returns focus to the trigger.
+- Tap targets meet the 24px minimum; buttons are 48px.
+- Decorative card artwork is `aria-hidden`; each project link carries a
+  descriptive label.
+- All motion is gated behind `prefers-reduced-motion`.
+
+**Measured, not assumed:** every text role was checked against its real
+background in both themes, applying the WCAG large-text allowance — **265
+elements, zero failures** (light normal-text minimum 4.51:1, dark 4.57:1).
 
 ## SEO
 
-`metadata` in `layout.tsx`, `Person` JSON-LD in `json-ld.tsx`, generated OG card
-(`opengraph-image.tsx`), favicon (`icon.tsx`), `sitemap.ts` and `robots.ts`.
+`metadata` in `layout.tsx`, `Person` + `makesOffer` JSON-LD in `json-ld.tsx`, a
+generated OG card (`opengraph-image.tsx`), a generated favicon (`icon.tsx`),
+plus `sitemap.ts` and `robots.ts`.
 
 ## Deploying
 
-Push to a Git remote and import into Vercel — zero config. Set the production domain, then
-update `site.url` to match.
+Push to GitHub and import the repo into [Vercel](https://vercel.com) — no
+configuration needed. Then set your production domain and update `site.url` in
+`src/content/site.ts` to match, so canonical URLs and OG tags point at the right
+place.
+
+Any host that runs a Next.js 16 build works too:
+
+```bash
+npm run build && npm run start
+```
+
+## Things to know
+
+**The OG card is set in Roboto, not Google Sans.** Satori — the rasteriser behind
+`next/og` — cannot parse Google Sans's OpenType tables and throws on
+`GSUB lookupType 7`, which fails the whole build. Roboto is Google's other open
+face and renders cleanly. The font fetch is wrapped so a build without network
+access still succeeds on the system sans.
+
+**`Failed to find font override values for Google Sans`** appears as a build
+warning. It means Next can't compute fallback metrics for the fallback font, so
+there may be a small layout shift while the font loads. Harmless — `display: swap`
+means text is never invisible.
+
+---
+
+© Muhammad Wahab Ansari
