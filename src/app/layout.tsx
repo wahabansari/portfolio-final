@@ -61,6 +61,10 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
+  /* Google Search Console ownership. Next emits this as
+     <meta name="google-site-verification">. Leave it in place after
+     verification — removing the tag un-verifies the property. */
+  verification: { google: "T8_DkVEVl9u0RlU-zH6YWRQpyfT1GSUxbDXRxtI-lHQ" },
 };
 
 export const viewport: Viewport = {
