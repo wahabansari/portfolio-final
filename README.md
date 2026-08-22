@@ -273,7 +273,7 @@ about.google** rather than guessed.
 | Headings | Google ships **weight 400** — large and light, never bold. This site uses 500, one step up |
 | Buttons | Full pills (999px), `12px 24px`, 16px/500 |
 | Elevation | **No shadows anywhere.** Depth comes from band and card fills |
-| Cards | 16px radius, always the raised fill, 1px hairline, shallow shadow |
+| Cards | 16px radius, always the raised fill, 1px hairline, no shadow |
 | Bands | Sections alternate white / `#F8F9FA` / `#E8F0FE`, full bleed |
 | Container | 1296px, matching about.google |
 
@@ -302,18 +302,17 @@ Dark mode uses Google's own dark palette — `#202124` surface, `#8AB4F8` blue.
 
 Cards always use the **raised** fill — `#FFFFFF` in light, `#35363A` in dark —
 and never take the grey band colour. On a grey or blue band that reads as
-elevation by itself; on a white band a 1px hairline (`--color-border`) and a
-shallow elevation-1 shadow do the separating instead.
+elevation by itself; on a white band a 1px hairline
+(`--color-border`) does the separating instead.
 
 Because the fill is always lighter than every band in both themes, a card can't
 come out the same colour as what it sits on. It used to be picked per component,
 which broke exactly as you'd expect: re-toning the home page left five of seven
 sections with cards the same colour as their band — invisible.
 
-Shadows come from `--card-shadow` / `--card-shadow-hover`, and dark mode carries
-its own pair. Black on near-black barely registers, so dark leans on the lighter
-fill for elevation and only hints at a shadow. **Cards are the only thing on the
-page that casts one** — bands, the nav and the mega menu all stay flat.
+**Nothing on the page casts a shadow** — not cards, not the nav, not the mega
+menu. Depth is fills and hairlines only. Hover firms a card's outline rather
+than lifting it.
 
 ### Tailwind v4 tokens
 
