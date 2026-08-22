@@ -71,23 +71,418 @@ export const serviceCategories: ServiceCategory[] = [
     title: "Frontend & interface services",
     shortTitle: "Frontend",
     accent: "blue",
-    tagline: "Interfaces designed and built by the same person",
+    tagline: "Web applications built, and the interface work around them",
     metaTitle: "Frontend Development Services — React, Next.js & UI Design",
     metaDescription:
-      "Frontend services from a developer who also designs: email templates, website and dashboard redesigns, and UI/UX work in Figma. React, Next.js and TypeScript.",
+      "Frontend development services: React and Next.js web applications, responsive websites and PWAs, plus dashboard redesigns, UI/UX design and email template development.",
     keywords: [
       "frontend development services",
       "react developer for hire",
       "next.js development services",
+      "responsive website development",
+      "progressive web app development",
       "ui ux design services",
       "dashboard redesign",
       "email template development",
     ],
     intro: [
-      "Most frontend problems are really handoff problems — a design that never quite survives the trip into code, or a codebase that has drifted so far from the design that nobody trusts it any more.",
-      "I work on both sides of that line. Five years of production React and Next.js, and before that a role building design systems in Figma. That means fewer rounds of back-and-forth, and interfaces that look in the browser the way they looked in the file.",
+      "The core of this is building web applications: React and Next.js in production, typed, with a rendering strategy chosen per page and a structure that is still workable a year later. Responsive websites and installable PWAs come out of the same stack.",
+      "Around that sits the interface work most teams need alongside a build — redesigning a product that has outgrown its structure, the UI/UX and design system underneath it, and the email templates nobody wants to hand-code. Same person, so a design does not lose anything on the way into the browser.",
     ],
     services: [
+      {
+        slug: "react-nextjs-development",
+        title: "React & Next.js development",
+        tagline: "The core build — your product, in production",
+        summary:
+          "Production web applications in React and Next.js: architecture, components, state, API integration and deployment.",
+        metaTitle: "React & Next.js Development Services",
+        metaDescription:
+          "Production React and Next.js development — web applications built with TypeScript, proper state management, API integration and a rendering strategy chosen per page.",
+        keywords: [
+          "react development services",
+          "next.js development services",
+          "react developer for hire",
+          "hire nextjs developer",
+          "react web application development",
+          "typescript react development",
+        ],
+        intro: [
+          "This is the work everything else on this page supports. Not a landing page or a redesign — the actual application: routing, state, data, forms, auth-gated areas, and the hundred small decisions that determine whether it is still pleasant to work on in a year.",
+          "Five years of it, in production. The stack is React and Next.js with TypeScript, and the choices that matter get made deliberately: what renders on the server, what ships to the client, and where state actually belongs.",
+        ],
+        problem: {
+          heading: "Most React projects do not fail at the start",
+          body: "They fail around month four. State that began as one useState is now threaded through nine components. Every page ships the whole bundle because nothing was ever split. Nobody is sure which components are still used. The app still works — it has just become slow to change, which is the expensive kind of broken.",
+        },
+        deliverables: [
+          {
+            title: "Architecture set before the first screen",
+            detail:
+              "Folder structure, state strategy and data flow decided up front, so the fifth feature costs about what the first one did.",
+          },
+          {
+            title: "Typed end to end",
+            detail:
+              "TypeScript across components, API responses and forms — so a renamed field breaks the build rather than production.",
+          },
+          {
+            title: "Rendering chosen per page",
+            detail:
+              "Static where content is stable, server-rendered where it is not, client-side only where it genuinely must be. Next.js gives you the choice; using it well is the point.",
+          },
+          {
+            title: "State that stays understandable",
+            detail:
+              "Redux Toolkit, Zustand or Context — picked for the size of the problem rather than habit, and kept out of components that do not need it.",
+          },
+          {
+            title: "API integration and forms",
+            detail:
+              "REST integration with real error and loading states, and validated forms via React Hook Form rather than hand-rolled checks.",
+          },
+        ],
+        process: [
+          {
+            step: "Scope",
+            detail:
+              "Agree what the application does and which parts are genuinely complex, before estimating anything.",
+          },
+          {
+            step: "Architect",
+            detail:
+              "Data flow, routing and state settled and written down, so decisions are not relitigated mid-build.",
+          },
+          {
+            step: "Build in slices",
+            detail:
+              "Feature by feature, deployable at each step, so you see working software early rather than at the end.",
+          },
+          {
+            step: "Harden",
+            detail:
+              "Performance pass, error states, accessibility and cross-browser checks before launch — not after.",
+          },
+        ],
+        stack: [
+          "React.js",
+          "Next.js",
+          "TypeScript",
+          "Redux Toolkit",
+          "Zustand",
+          "React Hook Form",
+          "REST APIs",
+          "Vercel",
+        ],
+        idealFor: [
+          "Startups building their first real product",
+          "Teams needing a senior frontend for a build",
+          "Companies replacing an aging web app",
+          "Founders without an in-house frontend",
+        ],
+        useCases: [
+          {
+            scenario:
+              "A marketing site that had grown into an application, with authentication bolted on and no clear structure.",
+            outcome:
+              "Rebuilt as a proper Next.js application with password-protected client areas, and a codebase organised so new sections could be added without touching the old ones.",
+          },
+          {
+            scenario:
+              "An e-commerce frontend needed from design to production, with payment flows, by one developer.",
+            outcome:
+              "Built solo in Next.js with reusable components and integrated payment workflows, responsive from phone to desktop.",
+          },
+          {
+            scenario:
+              "A team whose page bundle had grown to the point where mobile users waited seconds for a first paint.",
+            outcome:
+              "Code splitting, lazy boundaries and a cleaned-up build pipeline — the same approach that returned a 30% Core Web Vitals improvement elsewhere.",
+          },
+        ],
+        faqs: [
+          {
+            q: "React or Next.js — which do we need?",
+            a: "Next.js, in almost every case where the app has pages and needs to be found in search. Plain React makes sense for something that lives entirely behind a login and never needs server rendering or SEO. I will tell you which applies rather than defaulting to the bigger framework.",
+          },
+          {
+            q: "Can you work with our existing codebase?",
+            a: "Yes. Joining an existing React project is common — I start by reading it and telling you honestly what is worth keeping. Rewrites get proposed only when the alternative genuinely costs more.",
+          },
+          {
+            q: "Do you handle the backend too?",
+            a: "For APIs, databases and auth, yes — Node.js, Express, PostgreSQL or MongoDB with Prisma or Drizzle. For heavy backend systems you want a specialist, and I will say so.",
+          },
+          {
+            q: "How do you keep it maintainable after you leave?",
+            a: "TypeScript throughout, a component structure that follows the product rather than the framework, and no clever abstractions that need me to explain them. The test is whether your next developer can add a feature without asking questions.",
+          },
+          {
+            q: "What about accessibility?",
+            a: "Built in, not bolted on. Semantic markup, keyboard support, focus management and contrast checked against WCAG AA while building — retrofitting all of that later costs far more than doing it once.",
+          },
+        ],
+      },
+      {
+        slug: "responsive-web-development",
+        title: "Responsive website development",
+        tagline: "One build that works from a phone to a widescreen",
+        summary:
+          "Pixel-perfect, responsive websites built from your design — fast, cross-browser, and correct at every width your visitors actually use.",
+        metaTitle: "Responsive Website Development Services",
+        metaDescription:
+          "Responsive website development from Figma to production: pixel-perfect, cross-browser, mobile-first, and fast. Built in React, Next.js or plain HTML and CSS.",
+        keywords: [
+          "responsive website development",
+          "mobile first web development",
+          "figma to code",
+          "cross browser website development",
+          "pixel perfect website",
+          "html css developer",
+        ],
+        intro: [
+          "Most traffic arrives on a phone, and most designs are drawn on a desktop. The gap between those two facts is where responsive work actually lives — not in adding a media query, but in deciding what a layout should become when there is a third of the width available.",
+          "I build from the design file, mobile-first, and check the result at the widths your analytics show rather than the three breakpoints a framework happens to ship with.",
+        ],
+        problem: {
+          heading: "It looked fine in the browser you tested",
+          body: "Responsive failures are rarely dramatic. A table scrolls sideways and cuts off a column. A fixed-width card forces the whole page to pan. A tap target sits four pixels from another one. Individually small, together they are why mobile visitors leave — and you rarely see it, because you check on the machine you built it on.",
+        },
+        deliverables: [
+          {
+            title: "Mobile-first build",
+            detail:
+              "Written for the small screen and expanded upward, which produces better layouts than shrinking a desktop design down.",
+          },
+          {
+            title: "Pixel-perfect against the design",
+            detail:
+              "Spacing, type and colour read straight off the Figma file, not approximated — I came from design, so I know what the file intends.",
+          },
+          {
+            title: "Cross-browser and cross-device",
+            detail:
+              "Checked in Chrome, Safari, Firefox and Edge, on real device widths rather than only in a simulator.",
+          },
+          {
+            title: "Accessible by construction",
+            detail:
+              "Semantic markup, keyboard order, contrast checked against WCAG AA and tap targets sized properly.",
+          },
+          {
+            title: "Fast on a poor connection",
+            detail:
+              "Optimised images, sensible asset weight and no layout shift while things load.",
+          },
+        ],
+        process: [
+          {
+            step: "Review the design",
+            detail:
+              "Flag anything that will not survive a narrow screen before building, while it is still cheap to change.",
+          },
+          {
+            step: "Build mobile-first",
+            detail: "Small screen first, then the breakpoints your traffic actually uses.",
+          },
+          {
+            step: "Test on real widths",
+            detail: "Across browsers and devices, including the awkward in-between sizes.",
+          },
+          {
+            step: "Hand over",
+            detail: "Deployed, with the component structure documented for your team.",
+          },
+        ],
+        stack: [
+          "HTML5",
+          "CSS3",
+          "Tailwind CSS",
+          "React.js",
+          "Next.js",
+          "SASS",
+          "Figma",
+          "Responsive design",
+        ],
+        idealFor: [
+          "Businesses losing mobile visitors",
+          "Designs that need faithful implementation",
+          "Sites that predate mobile traffic",
+          "Teams needing a reliable build partner",
+        ],
+        useCases: [
+          {
+            scenario:
+              "A marketplace whose listing grid collapsed into an unusable single column below 900px.",
+            outcome:
+              "Rebuilt with a layout that reflows rather than stacks, keeping filters reachable at every width.",
+          },
+          {
+            scenario:
+              "A design team frustrated that shipped pages never quite matched their Figma file.",
+            outcome:
+              "Implementation read directly off the file — spacing, type scale and colour tokens matched rather than eyeballed.",
+          },
+          {
+            scenario:
+              "A healthcare site where the appointment form was unusable on a phone.",
+            outcome:
+              "Form rebuilt mobile-first with proper input types and tap targets, so booking worked on the device most patients used.",
+          },
+        ],
+        faqs: [
+          {
+            q: "Which breakpoints do you build for?",
+            a: "Whichever your traffic uses. Analytics beats convention — if a meaningful share of your visitors are on a 360px Android or a 1024px tablet, those get treated as real cases rather than edges.",
+          },
+          {
+            q: "Do you need a design first?",
+            a: "It helps, but no. If you have a Figma file I build from it. If you do not, design can be part of the engagement rather than something you hire separately for.",
+          },
+          {
+            q: "Can you make our existing site responsive?",
+            a: "Usually, yes. Whether it is worth retrofitting or rebuilding depends on how the current CSS is structured — I will look and tell you which is cheaper, including when the answer is to leave it alone.",
+          },
+          {
+            q: "Does this include a CMS?",
+            a: "It can. Pair it with WordPress if your team needs to publish without a developer, or keep it as static pages if the content rarely changes.",
+          },
+          {
+            q: "How do you test?",
+            a: "Real browsers at real widths, plus keyboard-only passes and contrast checks. Not just the responsive toggle in devtools, which hides plenty of real problems.",
+          },
+        ],
+      },
+      {
+        slug: "progressive-web-app-development",
+        title: "Progressive Web App development",
+        tagline: "App-like, without the app store",
+        summary:
+          "Installable, offline-capable web apps that behave like native ones — no store submission, no separate codebase.",
+        metaTitle: "Progressive Web App (PWA) Development Services",
+        metaDescription:
+          "Progressive Web App development: installable, offline-capable and fast on poor connections. One codebase, no app store submission, works on Android and iOS.",
+        keywords: [
+          "progressive web app development",
+          "pwa development services",
+          "installable web app",
+          "offline web app",
+          "pwa developer",
+          "web app instead of native app",
+        ],
+        intro: [
+          "A PWA is a website that behaves like an installed app: it sits on the home screen, opens without browser chrome, and keeps working when the connection does not. No store submission, no review queue, no second codebase for a second platform.",
+          "For a large share of businesses asking for a mobile app, this is what they actually needed — the same reach at a fraction of the cost and none of the release friction.",
+        ],
+        problem: {
+          heading: "You may not need a native app",
+          body: "Native means two codebases, two skill sets, store review on every release, and asking users to install something before they can even try it. Plenty of products are asking for a fast, installable, offline-tolerant experience — not for platform APIs. Building native for that means paying twice for something a PWA delivers from one codebase.",
+        },
+        deliverables: [
+          {
+            title: "Installable on the home screen",
+            detail:
+              "A configured manifest and icon set, so the app installs from the browser and launches without browser chrome.",
+          },
+          {
+            title: "Works offline",
+            detail:
+              "Service worker caching so key screens still load with no connection, and requests queue rather than fail.",
+          },
+          {
+            title: "Fast on weak connections",
+            detail:
+              "Assets cached and prioritised, so a second visit is near-instant even on poor mobile data.",
+          },
+          {
+            title: "One codebase",
+            detail:
+              "The same build serves desktop, Android and iOS — no separate app to maintain or ship.",
+          },
+          {
+            title: "Honest about the limits",
+            detail:
+              "Where a PWA genuinely cannot do what you need — deep OS integration, certain hardware APIs — I will tell you before we start, not after.",
+          },
+        ],
+        process: [
+          {
+            step: "Qualify",
+            detail:
+              "Check that a PWA fits what you actually need. If it does not, better to know in the first conversation.",
+          },
+          {
+            step: "Build the app",
+            detail: "The web application itself, in React or Next.js, responsive from the start.",
+          },
+          {
+            step: "Add the app layer",
+            detail:
+              "Manifest, icons, service worker and a caching strategy matched to how the app is used.",
+          },
+          {
+            step: "Test installed",
+            detail:
+              "Verified as an installed app on Android and iOS, offline and on throttled connections.",
+          },
+        ],
+        stack: [
+          "Progressive Web Apps",
+          "Service workers",
+          "React.js",
+          "Next.js",
+          "NativeScript",
+          "Responsive design",
+        ],
+        idealFor: [
+          "Businesses quoted a large native app budget",
+          "Field teams working with patchy connectivity",
+          "Products needing fast iteration without store review",
+          "Anyone wanting reach on Android and iOS at once",
+        ],
+        useCases: [
+          {
+            scenario:
+              "A company quoted separately for iOS and Android builds of what was essentially a form and a dashboard.",
+            outcome:
+              "Delivered as one installable PWA covering both platforms, at a fraction of the two-app cost.",
+          },
+          {
+            scenario:
+              "Field staff losing work when they dropped out of coverage mid-form.",
+            outcome:
+              "Offline caching with queued submissions, so entries sync automatically once signal returns.",
+          },
+          {
+            scenario:
+              "A team blocked for days at a time by app store review on every small fix.",
+            outcome:
+              "Moved to a PWA, where a fix deploys in minutes and users get it on next open.",
+          },
+        ],
+        faqs: [
+          {
+            q: "Do PWAs work on iPhone?",
+            a: "Yes — they install to the home screen and run standalone. iOS supports less than Android on some APIs, notably around push notifications and background work, so if those are central to your product that needs discussing up front.",
+          },
+          {
+            q: "Is a PWA as good as a native app?",
+            a: "For most business applications, close enough that the difference does not justify two codebases. For anything leaning heavily on OS integration, camera pipelines or heavy graphics, native is genuinely better and I will say so.",
+          },
+          {
+            q: "How does it work offline?",
+            a: "A service worker caches the shell and key data, so screens load without a connection. Actions taken offline can queue and sync when the connection returns, rather than failing silently.",
+          },
+          {
+            q: "Can we still put it in the app store?",
+            a: "Yes, via a wrapper — Google Play accepts PWAs directly through Trusted Web Activity. Whether it is worth the overhead depends on whether your users search stores for you at all.",
+          },
+          {
+            q: "Can our existing site become a PWA?",
+            a: "Often, yes. If it is already responsive and reasonably fast, adding the app layer is a small piece of work. If it is neither, that comes first — a slow site does not improve by being installable.",
+          },
+        ],
+      },
       /* ── Email templates ─────────────────────────────────────────────── */
       {
         slug: "email-template-development",
