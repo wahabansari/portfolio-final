@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { ArrowIcon, Reveal, Section } from "@/components/ui";
-import { ACCENT_BG, Breadcrumbs, CategoryJsonLd } from "@/components/service-ui";
+import { ACCENT_BG, CategoryJsonLd, PageHeader } from "@/components/service-ui";
 
 type Props = { params: Promise<{ category: string }> };
 
@@ -45,48 +45,31 @@ export default async function CategoryPage({ params }: Props) {
       <CategoryJsonLd category={category} />
       <Nav />
       <main id="main">
-        {/* Hero */}
-        <section className="pt-10 pb-16 md:pt-14 md:pb-20">
-          <div className="g-container">
-            <Breadcrumbs
-              trail={[
-                { label: "Home", href: "/" },
-                { label: "Services", href: "/services" },
-                { label: category.shortTitle },
-              ]}
-            />
-
-            <Reveal className="mt-8">
-              <span
-                aria-hidden
-                className={`block h-1 w-12 rounded-full ${ACCENT_BG[category.accent]}`}
-              />
-              <h1 className="g-display mt-6 max-w-4xl">{category.title}</h1>
-              <p className="g-body-lg mt-5 max-w-2xl">{category.tagline}</p>
-
-              <div className="mt-8 max-w-2xl space-y-5">
-                {category.intro.map((p, i) => (
-                  <p key={i} className="g-body text-[1.0625rem]">
-                    {p}
-                  </p>
-                ))}
-              </div>
-
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/contact" className="g-btn g-btn-filled">
-                  Start a project
-                  <ArrowIcon />
-                </Link>
-                <Link href="/services" className="g-btn g-btn-outlined">
-                  All services
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-        </section>
+        <PageHeader
+          trail={[
+            { label: "Home", href: "/" },
+            { label: "Services", href: "/services" },
+            { label: category.shortTitle },
+          ]}
+          accent={category.accent}
+          title={category.title}
+          lede={category.tagline}
+          intro={category.intro}
+          actions={
+            <>
+              <Link href="/contact" className="g-btn g-btn-filled w-full sm:w-auto">
+                Start a project
+                <ArrowIcon />
+              </Link>
+              <Link href="/services" className="g-btn g-btn-outlined w-full sm:w-auto">
+                All services
+              </Link>
+            </>
+          }
+        />
 
         {/* Services in this category */}
-        <Section tone="grey">
+        <Section>
           <Reveal className="mb-12 md:mb-16">
             <h2 className="g-h2">
               {category.services.length} services under {category.shortTitle.toLowerCase()}
@@ -98,7 +81,7 @@ export default async function CategoryPage({ params }: Props) {
               <Reveal as="li" key={service.slug} delay={(i % 2) * 0.06} className="h-full">
                 <Link
                   href={`/services/${category.slug}/${service.slug}`}
-                  className="g-card-plain group flex h-full flex-col p-7 md:p-8"
+                  className="g-card-soft group flex h-full flex-col p-7 md:p-8"
                 >
                   <h3 className="g-title">{service.title}</h3>
                   <p className="text-[0.9375rem] font-medium text-primary mt-2">
@@ -128,7 +111,7 @@ export default async function CategoryPage({ params }: Props) {
         </Section>
 
         {/* Other categories */}
-        <Section>
+        <Section tone="grey">
           <Reveal>
             <h2 className="g-h2">Other services</h2>
             <ul className="mt-10 grid gap-6 md:grid-cols-2">
@@ -136,7 +119,7 @@ export default async function CategoryPage({ params }: Props) {
                 .filter((c) => c.slug !== category.slug)
                 .map((other) => (
                   <li key={other.slug}>
-                    <Link href={`/services/${other.slug}`} className="g-card-soft group block p-7">
+                    <Link href={`/services/${other.slug}`} className="g-card-plain group block p-7">
                       <span
                         aria-hidden
                         className={`block h-1 w-10 rounded-full ${ACCENT_BG[other.accent]}`}

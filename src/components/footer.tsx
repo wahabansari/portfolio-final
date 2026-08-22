@@ -27,7 +27,7 @@ export function Footer() {
                 <li key={s.id}>
                   <Link
                     href={s.href}
-                    className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-ink-muted transition-colors hover:text-primary"
+                    className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-primary transition-colors hover:text-primary-bg-hover"
                   >
                     {s.label}
                   </Link>
@@ -43,7 +43,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/services"
-                  className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-ink-muted transition-colors hover:text-primary"
+                  className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-primary transition-colors hover:text-primary-bg-hover"
                 >
                   All services
                 </Link>
@@ -53,7 +53,7 @@ export function Footer() {
                   <li key={`${c.slug}-${sv.slug}`}>
                     <Link
                       href={`/services/${c.slug}/${sv.slug}`}
-                      className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-ink-muted transition-colors hover:text-primary"
+                      className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-primary transition-colors hover:text-primary-bg-hover"
                     >
                       {sv.title}
                     </Link>
@@ -72,7 +72,7 @@ export function Footer() {
                     href={s.href}
                     target={s.href.startsWith("http") ? "_blank" : undefined}
                     rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] break-all text-ink-muted transition-colors hover:text-primary"
+                    className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] break-all text-primary transition-colors hover:text-primary-bg-hover"
                   >
                     {s.label}
                   </a>

@@ -3,9 +3,9 @@ import { Reveal, Section, SectionHeading } from "./ui";
 
 type Entry = { title: string; org: string; period: string; note: string };
 
-export function Credentials() {
+export function Credentials({ tone = "grey" }: { tone?: "plain" | "grey" }) {
   return (
-    <Section id="background" tone="grey">
+    <Section id="background" tone={tone}>
       <SectionHeading overline="Background" title="Education & certifications" />
 
       <div className="grid gap-6 md:grid-cols-2">

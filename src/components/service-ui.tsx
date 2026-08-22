@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { Accent, ServiceCategory, ServiceDetail } from "@/content/services";
 import { site } from "@/content/site";
 
@@ -32,7 +33,7 @@ export function Breadcrumbs({ trail }: { trail: Crumb[] }) {
               {crumb.href && !last ? (
                 <Link
                   href={crumb.href}
-                  className="g-body-sm inline-flex min-h-8 items-center py-1 hover:text-primary"
+                  className="g-body-sm inline-flex min-h-8 items-center py-1 !text-primary hover:underline"
                 >
                   {crumb.label}
                 </Link>
@@ -345,5 +346,101 @@ export function UseCases({
         </li>
       ))}
     </ol>
+  );
+}
+
+/**
+ * The header band every inner page opens with: breadcrumbs, an accent rule,
+ * the h1 and its supporting copy, on the grey surface. Content below it sits on
+ * white, so the page has a clear head and body rather than one long white run.
+ */
+export function PageHeader({
+  trail,
+  accent,
+  overline,
+  title,
+  lede,
+  intro,
+  actions,
+}: {
+  trail?: Crumb[];
+  accent?: Accent;
+  overline?: string;
+  title: string;
+  lede?: string;
+  intro?: string[];
+  actions?: ReactNode;
+}) {
+  return (
+    <section className="bg-surface pt-6 pb-12 md:pt-8 md:pb-16">
+      <div className="g-container">
+        {trail && <Breadcrumbs trail={trail} />}
+
+        <div className={trail ? "mt-6" : undefined}>
+          {accent && (
+            <span
+              aria-hidden
+              className={`block h-1 w-12 rounded-full ${ACCENT_BG[accent]}`}
+            />
+          )}
+          {overline && <p className={`g-overline ${accent ? "mt-5" : ""}`}>{overline}</p>}
+
+          <h1 className={`g-display max-w-4xl ${accent || overline ? "mt-4" : ""}`}>{title}</h1>
+
+          {lede && <p className="g-body-lg mt-5 max-w-2xl">{lede}</p>}
+
+          {intro && (
+            <div className="mt-7 max-w-2xl space-y-5">
+              {intro.map((p, i) => (
+                <p key={i} className="g-body text-[1.0625rem]">
+                  {p}
+                </p>
+              ))}
+            </div>
+          )}
+
+          {actions && <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">{actions}</div>}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Breadcrumb + WebPage schema for the standalone pages. */
+export function PageJsonLd({
+  name,
+  path,
+  description,
+}: {
+  name: string;
+  path: string;
+  description: string;
+}) {
+  const url = `${site.url}${path}`;
+  const graph = [
+    {
+      "@type": "WebPage",
+      "@id": url,
+      name,
+      description,
+      url,
+      isPartOf: { "@type": "WebSite", name: site.name, url: site.url },
+      about: { "@type": "Person", name: site.name, url: site.url },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+        { "@type": "ListItem", position: 2, name, item: url },
+      ],
+    },
+  ];
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({ "@context": "https://schema.org", "@graph": graph }),
+      }}
+    />
   );
 }

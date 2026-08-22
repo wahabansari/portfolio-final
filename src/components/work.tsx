@@ -13,24 +13,34 @@ const ACCENTS: Record<Project["plate"], { var: string; soft: string }> = {
 };
 
 /** `preview` shows the first three projects on the home page. */
-export function Work({ preview = false }: { preview?: boolean }) {
+export function Work({
+  preview = false,
+  hideHeading = false,
+  tone = "grey",
+}: {
+  preview?: boolean;
+  hideHeading?: boolean;
+  tone?: "plain" | "grey";
+}) {
   const shown = preview ? projects.slice(0, 3) : projects;
   return (
-    <Section id="work" tone="grey">
-      <SectionHeading
-        level={preview ? "h2" : "h1"}
-        overline="Work"
-        title="Selected projects"
-        description="Production platforms I've designed, built or migrated. Every one is live and linked."
-        aside={
-          preview ? (
-            <Link href="/work" className="g-link">
-              All {projects.length} projects
-              <ArrowIcon className="h-4 w-4" />
-            </Link>
-          ) : undefined
-        }
-      />
+    <Section id="work" tone={tone}>
+      {!hideHeading && (
+        <SectionHeading
+          level={preview ? "h2" : "h1"}
+          overline="Work"
+          title="Selected projects"
+          description="Production platforms I've designed, built or migrated. Every one is live and linked."
+          aside={
+            preview ? (
+              <Link href="/work" className="g-link">
+                All {projects.length} projects
+                <ArrowIcon className="h-4 w-4" />
+              </Link>
+            ) : undefined
+          }
+        />
+      )}
 
       <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {shown.map((project, i) => (

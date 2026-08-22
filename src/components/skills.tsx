@@ -6,28 +6,38 @@ import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 const DOTS = ["bg-g-blue", "bg-g-red", "bg-g-yellow", "bg-g-green"];
 
 /** `preview` shows the first six groups on the home page. */
-export function Skills({ preview = false }: { preview?: boolean }) {
+export function Skills({
+  preview = false,
+  hideHeading = false,
+  tone = "grey",
+}: {
+  preview?: boolean;
+  hideHeading?: boolean;
+  tone?: "plain" | "grey";
+}) {
   const total = skills.reduce((n, g) => n + g.items.length, 0);
-  const shown = preview ? skills.slice(0, 6) : skills;
+  const shown = skills;
 
   return (
-    <Section id="skills" tone="grey">
-      <SectionHeading
-        level={preview ? "h2" : "h1"}
-        overline="Skills"
-        title="Tools and technologies"
-        description="What I reach for, grouped by what it does."
-        aside={
-          preview ? (
-            <Link href="/skills" className="g-link">
-              All {total} technologies
-              <ArrowIcon className="h-4 w-4" />
-            </Link>
-          ) : (
-            <p className="g-body-sm">{total} technologies</p>
-          )
-        }
-      />
+    <Section id="skills" tone={tone}>
+      {!hideHeading && (
+        <SectionHeading
+          level={preview ? "h2" : "h1"}
+          overline="Skills"
+          title="Tools and technologies"
+          description="What I reach for, grouped by what it does."
+          aside={
+            preview ? (
+              <Link href="/skills" className="g-link">
+                All {total} technologies
+                <ArrowIcon className="h-4 w-4" />
+              </Link>
+            ) : (
+              <p className="g-body-sm">{total} technologies</p>
+            )
+          }
+        />
+      )}
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {shown.map((group, i) => (

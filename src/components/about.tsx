@@ -3,23 +3,25 @@ import { about, site } from "@/content/site";
 import { ArrowIcon, DownloadIcon, Field, Reveal, Section, SectionHeading } from "./ui";
 
 /** `preview` renders the short version used on the home page. */
-export function About({ preview = false }: { preview?: boolean }) {
+export function About({
+  preview = false,
+  hideHeading = false,
+  tone = "plain",
+}: {
+  preview?: boolean;
+  hideHeading?: boolean;
+  tone?: "plain" | "grey";
+}) {
   return (
-    <Section id="about">
-      <SectionHeading
-        level={preview ? "h2" : "h1"}
-        overline="About"
-        title="Design sensibility, engineering discipline"
-        description={about.statement}
-        aside={
-          preview ? (
-            <Link href="/about" className="g-link">
-              More about me
-              <ArrowIcon className="h-4 w-4" />
-            </Link>
-          ) : undefined
-        }
-      />
+    <Section id="about" tone={tone}>
+      {!hideHeading && (
+        <SectionHeading
+          level={preview ? "h2" : "h1"}
+          overline="About"
+          title="Design sensibility, engineering discipline"
+          description={about.statement}
+        />
+      )}
 
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
         <Reveal className="lg:col-span-7">
@@ -31,10 +33,20 @@ export function About({ preview = false }: { preview?: boolean }) {
             ))}
           </div>
 
-          <a href={site.resumeHref} className="g-btn g-btn-tonal mt-9">
-            <DownloadIcon />
-            Download résumé
-          </a>
+          {/* Actions sit under the copy on the left, not floated beside the
+              heading — that kept breaking the shared left edge. */}
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            {preview && (
+              <Link href="/about" className="g-btn g-btn-filled w-full sm:w-auto">
+                More about me
+                <ArrowIcon />
+              </Link>
+            )}
+            <a href={site.resumeHref} className="g-btn g-btn-tonal w-full sm:w-auto">
+              <DownloadIcon />
+              Download résumé
+            </a>
+          </div>
         </Reveal>
 
         <Reveal delay={0.06} className="lg:col-span-5">

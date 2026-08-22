@@ -34,7 +34,8 @@ export function Hero() {
             {/* Speaks to both halves of the audience: hiring managers and
                 clients looking to commission work. */}
             <motion.h1 {...step(1)} className="g-display mt-7">
-              I build fast web apps — and the AI automations that run behind them.
+              I build <span className="text-primary">fast web apps</span> — and the{" "}
+              <span className="text-primary">AI automations</span> that run behind them.
             </motion.h1>
 
             <motion.p {...step(2)} className="g-body-lg mt-6 max-w-xl">

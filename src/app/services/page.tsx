@@ -5,7 +5,7 @@ import { site } from "@/content/site";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "@/components/ui";
-import { ACCENT_BG, Breadcrumbs, ServicesIndexJsonLd } from "@/components/service-ui";
+import { ACCENT_BG, PageHeader, ServicesIndexJsonLd } from "@/components/service-ui";
 
 export const metadata: Metadata = {
   title: "Services — Frontend Development & AI Automation",
@@ -34,39 +34,30 @@ export default function ServicesIndexPage() {
       <ServicesIndexJsonLd categories={serviceCategories} />
       <Nav />
       <main id="main">
-        {/* Hero */}
-        <section className="pt-10 pb-16 md:pt-14 md:pb-20">
-          <div className="g-container">
-            <Breadcrumbs trail={[{ label: "Home", href: "/" }, { label: "Services" }]} />
-
-            <Reveal className="mt-8">
-              <p className="g-overline">Services</p>
-              <h1 className="g-display mt-4 max-w-4xl">
-                Two things I build: interfaces, and the automation behind them.
-              </h1>
-              <p className="g-body-lg mt-6 max-w-2xl">
-                Five years of production frontend work, extending into Node.js and AI automation.
-                Available full-time, or for individual projects. Pick a category to see the detail.
-              </p>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/contact" className="g-btn g-btn-filled">
-                  Start a project
-                  <ArrowIcon />
-                </Link>
-                <Link href="/work" className="g-btn g-btn-outlined">
-                  See past work
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-        </section>
+        <PageHeader
+          trail={[{ label: "Home", href: "/" }, { label: "Services" }]}
+          overline="Services"
+          title="Two things I build: interfaces, and the automation behind them."
+          lede="Five years of production frontend work, extending into Node.js and AI automation. Available full-time, or for individual projects."
+          actions={
+            <>
+              <Link href="/contact" className="g-btn g-btn-filled w-full sm:w-auto">
+                Start a project
+                <ArrowIcon />
+              </Link>
+              <Link href="/work" className="g-btn g-btn-outlined w-full sm:w-auto">
+                See past work
+              </Link>
+            </>
+          }
+        />
 
         {/* Categories, each with its services listed inline */}
         {serviceCategories.map((category, i) => (
           <Section
             key={category.slug}
             id={category.slug}
-            tone={i % 2 === 0 ? "grey" : "plain"}
+            tone={i % 2 === 0 ? "plain" : "grey"}
           >
             <SectionHeading
               overline={category.shortTitle}
@@ -90,7 +81,7 @@ export default function ServicesIndexPage() {
                 >
                   <Link
                     href={`/services/${category.slug}/${service.slug}`}
-                    className={`${i % 2 === 0 ? "g-card-plain" : "g-card-soft"} group flex h-full flex-col p-7`}
+                    className={`${i % 2 === 0 ? "g-card-soft" : "g-card-plain"} group flex h-full flex-col p-7`}
                   >
                     <span
                       aria-hidden

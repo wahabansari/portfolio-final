@@ -3,23 +3,33 @@ import Link from "next/link";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
 /** `preview` drops the bullet lists, leaving roles and their stacks. */
-export function Experience({ preview = false }: { preview?: boolean }) {
+export function Experience({
+  preview = false,
+  hideHeading = false,
+  tone = "plain",
+}: {
+  preview?: boolean;
+  hideHeading?: boolean;
+  tone?: "plain" | "grey";
+}) {
   return (
-    <Section id="experience">
-      <SectionHeading
-        level={preview ? "h2" : "h1"}
-        overline="Experience"
-        title="Where I've worked"
-        description="Five years across product engineering and interface design."
-        aside={
-          preview ? (
-            <Link href="/experience" className="g-link">
-              Full history
-              <ArrowIcon className="h-4 w-4" />
-            </Link>
-          ) : undefined
-        }
-      />
+    <Section id="experience" tone={tone}>
+      {!hideHeading && (
+        <SectionHeading
+          level={preview ? "h2" : "h1"}
+          overline="Experience"
+          title="Where I've worked"
+          description="Five years across product engineering and interface design."
+          aside={
+            preview ? (
+              <Link href="/experience" className="g-link">
+                Full history
+                <ArrowIcon className="h-4 w-4" />
+              </Link>
+            ) : undefined
+          }
+        />
+      )}
 
       <div className="space-y-6">
         {experience.map((role, i) => (
@@ -33,7 +43,7 @@ export function Experience({ preview = false }: { preview?: boolean }) {
 
                   {role.client && (
                     <p className="g-body-sm mt-4">
-                      Client: <span className="text-ink">{role.client}</span>
+                      <span className="text-ink">{role.client}</span>
                     </p>
                   )}
 
@@ -49,9 +59,8 @@ export function Experience({ preview = false }: { preview?: boolean }) {
                 <div className="lg:col-span-8">
                   <p className="text-[1.0625rem] leading-relaxed text-ink">{role.summary}</p>
 
-                  {!preview && (
-                    <ul className="mt-7 space-y-4">
-                      {role.highlights.map((h, hi) => (
+                  <ul className="mt-7 space-y-4">
+                      {(preview ? role.highlights.slice(0, 3) : role.highlights).map((h, hi) => (
                         <li key={hi} className="grid grid-cols-[1.25rem_1fr] gap-x-3">
                           <span
                             aria-hidden
@@ -61,7 +70,6 @@ export function Experience({ preview = false }: { preview?: boolean }) {
                         </li>
                       ))}
                     </ul>
-                  )}
                 </div>
               </div>
             </article>

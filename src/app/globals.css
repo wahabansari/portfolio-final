@@ -97,7 +97,8 @@
 
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
+    /* Deliberately NOT `smooth`: it hijacks the App Router's scroll-to-top
+       on navigation and leaves you part-way down the new page. */
     scroll-padding-top: 5rem;
   }
 
