@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { ArrowIcon, Reveal, Section } from "@/components/ui";
-import { ACCENT_BG, Breadcrumbs } from "@/components/service-ui";
+import { ACCENT_BG, Breadcrumbs, CategoryJsonLd } from "@/components/service-ui";
 
 type Props = { params: Promise<{ category: string }> };
 
@@ -42,6 +42,7 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <>
+      <CategoryJsonLd category={category} />
       <Nav />
       <main>
         {/* Hero */}

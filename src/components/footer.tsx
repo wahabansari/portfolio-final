@@ -12,8 +12,8 @@ export function Footer() {
           <div className="md:col-span-4">
             <Link href="/#home" className="-mx-2 inline-flex min-h-11 items-center rounded-full px-2">
               <span className="text-[1.375rem] leading-none font-medium tracking-[-0.01em] text-ink">
-                <span className="text-g-blue">W</span>ahab
-                <span className="text-g-red">.</span>
+                <span className="text-primary">W</span>ahab
+                <span className="text-g-red-strong">.</span>
               </span>
             </Link>
             <p className="g-body-sm mt-5 max-w-xs">{site.roleLong}</p>

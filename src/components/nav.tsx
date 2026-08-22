@@ -6,17 +6,17 @@ import { sections } from "@/content/site";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/cn";
 
-/** The wordmark, with the trailing letter picked out in Google's four colours. */
+/**
+ * The wordmark. Uses the *accessible* variants of the brand colours rather than
+ * the raw ones — brand blue is 4.27:1 on white and brand red 3.9:1, both below
+ * AA. Blue 700 and Red 700 look the same at this size and clear it comfortably.
+ */
 function Wordmark() {
-  const colors = ["text-g-blue", "text-g-red", "text-g-yellow", "text-g-green"];
   return (
     <span className="text-[1.375rem] leading-none font-medium tracking-[-0.01em] text-ink">
-      {"Wahab".split("").map((c, i) => (
-        <span key={i} className={i === 0 ? colors[0] : undefined}>
-          {c}
-        </span>
-      ))}
-      <span className={colors[1]}>.</span>
+      <span className="text-primary">W</span>
+      ahab
+      <span className="text-g-red-strong">.</span>
     </span>
   );
 }

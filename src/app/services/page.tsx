@@ -5,7 +5,7 @@ import { site } from "@/content/site";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "@/components/ui";
-import { ACCENT_BG, Breadcrumbs } from "@/components/service-ui";
+import { ACCENT_BG, Breadcrumbs, ServicesIndexJsonLd } from "@/components/service-ui";
 
 export const metadata: Metadata = {
   title: "Services — Frontend Development & AI Automation",
@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 export default function ServicesIndexPage() {
   return (
     <>
+      <ServicesIndexJsonLd categories={serviceCategories} />
       <Nav />
       <main>
         {/* Hero */}

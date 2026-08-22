@@ -869,6 +869,563 @@ export const serviceCategories: ServiceCategory[] = [
       },
     ],
   },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     WORDPRESS
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "wordpress",
+    title: "WordPress development services",
+    shortTitle: "WordPress",
+    accent: "green",
+    tagline: "Custom builds, not another page-builder site",
+    metaTitle: "WordPress Development Services — Custom Themes & Plugins",
+    metaDescription:
+      "WordPress development services: custom themes, plugin development, speed and Core Web Vitals optimisation, landing pages, and migration from WordPress to Next.js.",
+    keywords: [
+      "wordpress development services",
+      "custom wordpress theme development",
+      "wordpress plugin development",
+      "wordpress speed optimization",
+      "wordpress developer for hire",
+      "wordpress to nextjs migration",
+    ],
+    intro: [
+      "WordPress still runs a large share of the web, and for good reason — when a client needs to publish without calling a developer, nothing else is as immediately useful. The problem is usually what gets built on top of it: a bought theme, a dozen plugins, and a page builder that turns one paragraph into forty nested divs.",
+      "I build the other kind. Custom themes and plugins written for the site they are on, CMS structures that stay manageable as content grows, and — where WordPress has genuinely been outgrown — a clean path off it. I have worked in both directions: healthcare and real-estate platforms built on heavily customised WordPress, and a large automotive marketplace migrated from WordPress onto Next.js.",
+    ],
+    services: [
+      {
+        slug: "custom-wordpress-theme-development",
+        title: "Custom WordPress theme development",
+        tagline: "A theme built for your site, not adapted from someone else's",
+        summary:
+          "Hand-built WordPress themes matched to your design, with an editing experience that makes sense to the people who publish.",
+        metaTitle: "Custom WordPress Theme Development Services",
+        metaDescription:
+          "Custom WordPress theme development built from your design — fast, responsive, and easy for your team to edit. No page builders, no bloated purchased themes.",
+        keywords: [
+          "custom wordpress theme development",
+          "bespoke wordpress theme",
+          "wordpress theme developer",
+          "figma to wordpress",
+          "custom wordpress design",
+          "wordpress theme from scratch",
+        ],
+        intro: [
+          "A purchased theme is built to satisfy thousands of different sites, which means it ships with the features for all of them. You pay for that in load time, in settings panels nobody understands, and in the constant friction of bending a layout that was never meant for your content.",
+          "A custom theme contains what your site actually uses. It is smaller, it loads faster, and the editing screens show your content types rather than a generic set of options.",
+        ],
+        problem: {
+          heading: "What a bought theme really costs",
+          body: "The licence is the cheap part. The expense arrives later: pages that load slowly because the theme carries features you never enable, layouts that need a developer to change because everything is a shortcode, and an update path that risks breaking whatever customisations were made to fit your brand. Meanwhile the people who write your content avoid the CMS because it confuses them.",
+        },
+        deliverables: [
+          {
+            title: "Theme built from your design",
+            detail:
+              "Your Figma file or brand implemented directly, so the site matches the design instead of approximating it within a template's constraints.",
+          },
+          {
+            title: "Editor-friendly content types",
+            detail:
+              "Custom post types and fields shaped around your actual content, so editing screens make sense to the people using them.",
+          },
+          {
+            title: "Responsive and cross-browser",
+            detail:
+              "Tested across devices and browsers, with layouts that hold at the breakpoints your visitors actually use.",
+          },
+          {
+            title: "Built for speed from the start",
+            detail:
+              "Only the assets the site uses, loaded when they are needed — rather than optimising a bloated theme afterwards.",
+          },
+          {
+            title: "Documented handover",
+            detail:
+              "A short guide to the content types and templates, so your team can publish confidently without calling me.",
+          },
+        ],
+        process: [
+          {
+            step: "Content model",
+            detail:
+              "Work out what content types you have before any code — this is what makes the CMS pleasant to use later.",
+          },
+          {
+            step: "Design",
+            detail:
+              "Use your existing design, or I produce one first. Either way it is settled before implementation starts.",
+          },
+          {
+            step: "Build",
+            detail: "Theme, templates and custom fields implemented, reviewable as they go.",
+          },
+          {
+            step: "Handover",
+            detail: "Deployed, documented, and walked through with whoever will be publishing.",
+          },
+        ],
+        stack: ["WordPress", "PHP", "HTML5", "CSS3", "JavaScript", "Custom post types", "Figma"],
+        idealFor: [
+          "Businesses stuck with a slow purchased theme",
+          "Brands whose design a template cannot quite fit",
+          "Teams who find their current editor confusing",
+          "Sites where content structure matters",
+        ],
+        faqs: [
+          {
+            q: "Why not just use a page builder like Elementor?",
+            a: "Page builders are genuinely useful for simple marketing sites, and I will not talk you out of one if that is all you need. The trade-off is output: they generate deeply nested markup that slows pages down, and they lock your content into that builder's format. For a site where speed or longevity matters, a custom theme is the better investment.",
+          },
+          {
+            q: "Can you work from a Figma design?",
+            a: "Yes, and it is the ideal starting point. I came into engineering from interface design, so I read spacing, type and colour straight off the file rather than guessing. If there is no design yet, I can produce that first.",
+          },
+          {
+            q: "Will my team still be able to edit the site?",
+            a: "More easily than before, usually. Custom post types and fields mean the editing screens show your actual content — a Property with its own fields, rather than a generic post you have to format by hand each time.",
+          },
+          {
+            q: "What happens when WordPress updates?",
+            a: "A custom theme built with WordPress's own APIs updates cleanly. What breaks on update is a purchased theme somebody has hacked to fit their brand, because those changes sit outside the supported extension points.",
+          },
+          {
+            q: "Do you handle hosting and deployment?",
+            a: "I will deploy to your host and configure what the site needs. If you have not chosen a host yet, I will recommend one based on your traffic and budget rather than an affiliate link.",
+          },
+        ],
+      },
+      {
+        slug: "wordpress-plugin-development",
+        title: "WordPress plugin development",
+        tagline: "The functionality no existing plugin quite provides",
+        summary:
+          "Custom plugins built for your workflow, plus safe customisation of the plugins you already run.",
+        metaTitle: "WordPress Plugin Development & Customisation Services",
+        metaDescription:
+          "Custom WordPress plugin development for functionality no off-the-shelf plugin provides, plus update-safe customisation of existing plugins. Documented, portable code.",
+        keywords: [
+          "wordpress plugin development",
+          "custom wordpress plugin",
+          "wordpress plugin developer",
+          "wordpress plugin customization",
+          "wordpress api integration",
+          "custom wordpress functionality",
+        ],
+        intro: [
+          "Most WordPress requirements are met by an existing plugin. The interesting cases are the ones that are not — a booking flow that does not match any calendar plugin's assumptions, a listing system with fields no directory plugin supports, an integration with a system nobody has written a connector for.",
+          "That is where a custom plugin belongs. Built as a proper plugin rather than dropped into the theme, so it survives a theme change and can be switched off without taking the site down.",
+        ],
+        problem: {
+          heading: "The plugin pile-up",
+          body: "The usual pattern is to solve each new requirement with another plugin. Twenty plugins later, three of them do overlapping things, two conflict in ways that only appear on certain pages, every one is another update to track and another potential security hole, and the site is measurably slower. A single custom plugin that does exactly what you need is usually lighter than the three you would otherwise stack to approximate it.",
+        },
+        deliverables: [
+          {
+            title: "Custom plugin built to your requirement",
+            detail:
+              "Functionality written for your workflow as a self-contained plugin — not code buried in a theme that disappears when the theme changes.",
+          },
+          {
+            title: "Existing plugin customisation",
+            detail:
+              "Changes made through hooks and filters rather than by editing plugin files, so your customisations survive updates.",
+          },
+          {
+            title: "External integrations",
+            detail:
+              "Connections to CRMs, booking systems, payment providers and internal tools over their REST APIs.",
+          },
+          {
+            title: "Native admin interfaces",
+            detail:
+              "Settings screens that follow WordPress's own conventions, so they feel built-in to whoever administers the site.",
+          },
+          {
+            title: "Documented code you own",
+            detail:
+              "Commented and documented, so a future developer — including a future you — can pick it up without archaeology.",
+          },
+        ],
+        process: [
+          {
+            step: "Define",
+            detail:
+              "Pin down exactly what it must do, and check first whether an existing plugin already does it well.",
+          },
+          {
+            step: "Design the data",
+            detail:
+              "Decide how the information is stored and structured before writing behaviour around it.",
+          },
+          {
+            step: "Build",
+            detail:
+              "Written against WordPress's hook system so it plays properly with your theme and other plugins.",
+          },
+          {
+            step: "Test and hand over",
+            detail: "Tested on a staging copy of your site, then deployed with documentation.",
+          },
+        ],
+        stack: ["WordPress", "PHP", "REST APIs", "JavaScript", "MySQL", "Custom post types"],
+        idealFor: [
+          "Requirements no existing plugin fits",
+          "Sites carrying too many overlapping plugins",
+          "Businesses integrating WordPress with other systems",
+          "Teams who have outgrown plugin settings screens",
+        ],
+        faqs: [
+          {
+            q: "Would an off-the-shelf plugin not be cheaper?",
+            a: "Often, yes — and when one fits, I will tell you to use it. Custom becomes worth it when the alternative is stacking several plugins that each do part of the job, or paying for a subscription tier to unlock the one feature you actually need.",
+          },
+          {
+            q: "Can you modify a plugin we already use?",
+            a: "Yes, and the important part is how. Changes go through WordPress hooks and filters rather than editing the plugin's own files — otherwise the next update silently wipes your customisation.",
+          },
+          {
+            q: "Will it break when WordPress updates?",
+            a: "Plugins written against WordPress's documented APIs are stable across updates. What breaks are plugins reaching into internals they should not touch, which is precisely what building properly avoids.",
+          },
+          {
+            q: "Can it connect to our CRM or booking system?",
+            a: "If the system has an API, yes. I have built appointment booking and patient-portal integrations on WordPress before, and REST integration work is a core part of what I do.",
+          },
+          {
+            q: "Do we own the code?",
+            a: "Yes. You get the source, documented, and you are free to have anyone maintain it. No licence, no lock-in, no dependency on me.",
+          },
+        ],
+      },
+      {
+        slug: "wordpress-speed-optimization",
+        title: "WordPress speed & SEO optimisation",
+        tagline: "Core Web Vitals fixed at the cause, not hidden behind a cache",
+        summary:
+          "Performance audits and fixes for slow WordPress sites — Core Web Vitals, asset weight, render blocking and technical SEO.",
+        metaTitle: "WordPress Speed Optimization & Core Web Vitals Services",
+        metaDescription:
+          "Fix slow WordPress sites properly: Core Web Vitals audit and remediation, asset and image optimisation, render-blocking fixes and technical SEO. Measured before and after.",
+        keywords: [
+          "wordpress speed optimization",
+          "core web vitals wordpress",
+          "wordpress performance optimization",
+          "improve wordpress page speed",
+          "wordpress technical seo",
+          "fix slow wordpress site",
+        ],
+        intro: [
+          "A cache plugin is usually the first thing tried and rarely the thing that fixes it. Caching hides a slow page behind a stored copy; it does not reduce the four megabytes of assets the page still ships, or the render-blocking scripts delaying the first paint.",
+          "This is the work I have spent the most time on. On a production platform the same approach — removing unused assets, tree-shaking, lazy loading, image compression and a streamlined build pipeline — returned a 30% Core Web Vitals improvement, with better user retention alongside it.",
+        ],
+        problem: {
+          heading: "Why speed became a ranking problem",
+          body: "Core Web Vitals are part of how Google evaluates pages, so a slow site is not only losing visitors who will not wait — it is ranking below competitors who fixed it. The frustrating part is that most WordPress slowness traces back to a handful of identifiable causes: a theme loading assets for features you do not use, plugins queuing scripts on every page, and uncompressed images. All of them are fixable.",
+        },
+        deliverables: [
+          {
+            title: "Audit with a real baseline",
+            detail:
+              "Current Core Web Vitals measured and the causes identified, so any improvement is a number rather than an impression.",
+          },
+          {
+            title: "Asset and plugin cleanup",
+            detail:
+              "Unused CSS and JavaScript removed, plugin scripts loaded only where they are needed, overlapping plugins consolidated.",
+          },
+          {
+            title: "Image and media optimisation",
+            detail:
+              "Compression, modern formats and correct sizing — usually the single largest weight saving available on a WordPress site.",
+          },
+          {
+            title: "Render-blocking fixes",
+            detail:
+              "Critical CSS and deferred scripts, so the page paints without waiting on resources it does not need yet.",
+          },
+          {
+            title: "Technical SEO pass",
+            detail:
+              "Metadata, structured data, heading structure, sitemap and crawlability checked and corrected alongside the speed work.",
+          },
+        ],
+        process: [
+          {
+            step: "Measure",
+            detail:
+              "Baseline Core Web Vitals and identify what is actually costing time — often not what people assume.",
+          },
+          {
+            step: "Prioritise",
+            detail: "Rank fixes by impact against effort, and start where the payback is largest.",
+          },
+          {
+            step: "Fix",
+            detail: "Applied on staging first, so nothing changes on the live site unverified.",
+          },
+          {
+            step: "Re-measure",
+            detail:
+              "Measured again against the baseline, with a written before-and-after you can keep.",
+          },
+        ],
+        stack: [
+          "WordPress",
+          "Core Web Vitals",
+          "Lazy loading",
+          "Image optimisation",
+          "Technical SEO",
+          "PHP",
+        ],
+        idealFor: [
+          "Sites failing Core Web Vitals in Search Console",
+          "Businesses losing mobile visitors to load time",
+          "Sites where a caching plugin did not help",
+          "Anyone ranking below a faster competitor",
+        ],
+        faqs: [
+          {
+            q: "We already use a caching plugin. Why is the site still slow?",
+            a: "Because caching stores a copy of the finished page — it does not make the page lighter. If that page loads three megabytes of images and blocks rendering on half a dozen scripts, the cached copy does all of that too, just without regenerating the HTML first. The fix has to happen at the cause.",
+          },
+          {
+            q: "How much faster will it get?",
+            a: "That depends on the starting point, and I will not quote a number before seeing the site. What I will do is baseline it during the audit and re-measure at the end, so you get an actual figure rather than a claim. On one production platform this approach produced a 30% Core Web Vitals improvement.",
+          },
+          {
+            q: "Will you break the site removing plugins?",
+            a: "Nothing is removed without first checking what depends on it, and all work happens on a staging copy. You approve the changes before they reach the live site.",
+          },
+          {
+            q: "Does this include SEO, or only speed?",
+            a: "Both, because they overlap. Core Web Vitals are a ranking input, and the same audit is the natural moment to fix metadata, structured data, heading structure and crawlability. Content strategy and link building are not included — that is a different discipline and you would be better served by a specialist.",
+          },
+          {
+            q: "How long does it take?",
+            a: "A typical audit and remediation runs one to two weeks, depending on how much has accumulated. You will have the audit findings within the first few days, before committing to the full fix.",
+          },
+        ],
+      },
+      {
+        slug: "wordpress-to-nextjs-migration",
+        title: "WordPress to Next.js migration",
+        tagline: "Move off WordPress without losing your rankings",
+        summary:
+          "Staged migration from WordPress to Next.js — faster and more maintainable, with URLs and search rankings preserved.",
+        metaTitle: "WordPress to Next.js Migration Services",
+        metaDescription:
+          "Migrate from WordPress to Next.js in stages, with URL structure and SEO rankings preserved. Faster load times and a maintainable codebase, with no downtime.",
+        keywords: [
+          "wordpress to nextjs migration",
+          "migrate wordpress to react",
+          "headless wordpress nextjs",
+          "wordpress replacement",
+          "wordpress migration services",
+          "legacy cms migration",
+        ],
+        intro: [
+          "There is a point where WordPress stops being the reason a site works and starts being the reason it is slow. It usually arrives with scale: thousands of listings, complex filtering, dashboard views, or a front end that has become a fight against the CMS rather than a feature of it.",
+          "I have done this migration on a large automotive marketplace — moving off WordPress onto a Next.js application, which improved both maintainability and performance. The important part is that it happened in stages, not as one risky switchover.",
+        ],
+        problem: {
+          heading: "The risk everyone worries about, correctly",
+          body: "The fear with any migration is losing search rankings, and it is justified — a mishandled move can drop traffic overnight through broken URLs, missing redirects, or metadata that did not carry across. That risk is manageable, but only if URL mapping and redirects are planned before anything moves, rather than patched afterwards once Search Console starts reporting 404s.",
+        },
+        deliverables: [
+          {
+            title: "Migration plan before any code",
+            detail:
+              "URL inventory, content mapping and a staged sequence, so you can see the whole route before committing to it.",
+          },
+          {
+            title: "Redirects and SEO preservation",
+            detail:
+              "Every existing URL mapped to its new home, with redirects in place and metadata and structured data carried across.",
+          },
+          {
+            title: "Next.js rebuild",
+            detail:
+              "Rebuilt with the rendering strategy each page type actually needs — static where content is stable, server-rendered where it is not.",
+          },
+          {
+            title: "Content migration",
+            detail:
+              "Existing content moved into the new system, or WordPress kept as a headless CMS if your team wants to keep the editor they know.",
+          },
+          {
+            title: "Staged rollout",
+            detail:
+              "Migrated section by section with the live site running throughout, rather than one switchover with everything riding on it.",
+          },
+        ],
+        process: [
+          {
+            step: "Inventory",
+            detail:
+              "Catalogue every URL, content type and integration, and identify what genuinely needs to move.",
+          },
+          {
+            step: "Map",
+            detail:
+              "Old URLs mapped to new ones and the redirect table written before the first page is built.",
+          },
+          {
+            step: "Migrate in stages",
+            detail:
+              "Section by section, verified at each step, with the existing site serving traffic throughout.",
+          },
+          {
+            step: "Monitor",
+            detail:
+              "Crawl errors, rankings and Core Web Vitals watched after each stage, so problems surface in days rather than months.",
+          },
+        ],
+        stack: [
+          "Next.js",
+          "React.js",
+          "TypeScript",
+          "WordPress REST API",
+          "Vercel",
+          "Technical SEO",
+        ],
+        idealFor: [
+          "Sites that have outgrown WordPress at scale",
+          "Marketplaces and listing-heavy platforms",
+          "Teams fighting the CMS to ship features",
+          "Businesses where load time is costing revenue",
+        ],
+        faqs: [
+          {
+            q: "Will we lose our Google rankings?",
+            a: "Not if the migration is planned properly. URL mapping and redirects are written before anything is built, metadata and structured data carry across, and rankings are monitored after each stage. The horror stories come from migrations where redirects were an afterthought.",
+          },
+          {
+            q: "Can our team keep using the WordPress editor?",
+            a: "Yes — that is the headless approach. WordPress stays as the editor your team already knows, and Next.js becomes the front end reading from it over the REST API. It is often the right compromise when your editors are happy but the front end is not.",
+          },
+          {
+            q: "Does the site go down during migration?",
+            a: "No. The work is staged and the existing site keeps serving traffic until each section is verified. That is the main reason to migrate incrementally rather than all at once.",
+          },
+          {
+            q: "How do we know it is even worth migrating?",
+            a: "Sometimes it is not, and I will say so. If yours is a marketing site publishing a few posts a month, a custom theme and a speed pass will serve you better at a fraction of the cost. Migration earns its price at scale — heavy listings, complex filtering, or a front end the CMS is actively obstructing.",
+          },
+          {
+            q: "What happens to our existing content?",
+            a: "It migrates. Content and media move into the new system, or stay in WordPress if you keep it headless. Either way nothing is retyped by hand.",
+          },
+        ],
+      },
+      {
+        slug: "landing-page-development",
+        title: "Landing page development",
+        tagline: "One page, built to convert and built to load",
+        summary:
+          "Fast, focused landing pages for campaigns and launches — on WordPress, or as a standalone Next.js page.",
+        metaTitle: "Landing Page Development — Fast, Converting Pages",
+        metaDescription:
+          "Custom landing page development for campaigns, launches and paid traffic. Fast-loading, responsive, conversion-focused pages built on WordPress or Next.js.",
+        keywords: [
+          "landing page development",
+          "custom landing page design",
+          "wordpress landing page",
+          "high converting landing page",
+          "campaign landing page",
+          "ppc landing page development",
+        ],
+        intro: [
+          "A landing page has one job, and every element on it either supports that job or competes with it. That is what separates it from a normal page — the discipline is in what you leave out.",
+          "It also has to load fast. If you are paying for the traffic arriving on it, every second of load time is spend you do not get back, and mobile visitors on a slow connection leave before the page finishes rendering.",
+        ],
+        problem: {
+          heading: "Why most landing pages underperform",
+          body: "Two causes, usually. The first is competing calls to action — a full navigation bar, footer links and three different offers, all giving the visitor somewhere else to go. The second is weight: a page assembled in a builder that ships the entire theme's assets in order to show one hero and a form, so the visitor you paid for never sees it.",
+        },
+        deliverables: [
+          {
+            title: "A page built around one action",
+            detail:
+              "Structured so everything supports a single conversion goal, with distractions deliberately removed.",
+          },
+          {
+            title: "Fast by construction",
+            detail:
+              "Only the assets this page needs, optimised images and a fast first paint — which matters most on paid mobile traffic.",
+          },
+          {
+            title: "Responsive across devices",
+            detail:
+              "Built and tested mobile-first, because that is where most campaign traffic actually arrives.",
+          },
+          {
+            title: "Forms and tracking wired up",
+            detail:
+              "Form handling connected to your CRM or email platform, with analytics and conversion tracking working from launch.",
+          },
+          {
+            title: "Editable variants",
+            detail:
+              "Built so headline and copy variants can be swapped for testing without a developer each time.",
+          },
+        ],
+        process: [
+          {
+            step: "Define the goal",
+            detail:
+              "One conversion action, and the objections the page has to answer in order to get there.",
+          },
+          {
+            step: "Structure",
+            detail:
+              "Section order settled before visual design — sequence does more for conversion than styling does.",
+          },
+          {
+            step: "Build",
+            detail:
+              "Implemented on WordPress or as a standalone Next.js page, whichever suits your stack.",
+          },
+          {
+            step: "Launch and measure",
+            detail:
+              "Tracking verified, then live — with the page ready for you to test variants against.",
+          },
+        ],
+        stack: ["WordPress", "Next.js", "HTML5", "CSS3", "JavaScript", "Responsive design"],
+        idealFor: [
+          "Paid campaigns needing a dedicated page",
+          "Product or feature launches",
+          "Lead generation for service businesses",
+          "Anyone sending ad traffic to a homepage",
+        ],
+        faqs: [
+          {
+            q: "WordPress or a standalone page?",
+            a: "It depends on who maintains it. If your team wants to edit the copy themselves and the rest of your site is WordPress, build it there. If it is a one-off campaign page where speed matters most, a standalone Next.js page will be lighter and faster.",
+          },
+          {
+            q: "Can you write the copy?",
+            a: "I will structure the page and tighten what you give me, but I am not a copywriter and will not pretend otherwise. Bring the messaging — or a copywriter — and I will build a page that presents it well.",
+          },
+          {
+            q: "Do you set up A/B testing?",
+            a: "I build the page so variants are straightforward to swap, and I will integrate with your testing tool if you use one. Running and interpreting the tests is your side of it.",
+          },
+          {
+            q: "Will the form connect to our CRM?",
+            a: "Yes — Mailchimp, HubSpot, your own endpoint, or whatever you use. Conversion tracking is set up and verified before launch, because a page you cannot measure is not finished.",
+          },
+          {
+            q: "How quickly can it be live?",
+            a: "A single landing page with copy and a direction ready is usually a few days. Add time if design work is needed first.",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 /* ── Lookup helpers ────────────────────────────────────────────────────── */

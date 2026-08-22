@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Google_Sans } from "next/font/google";
 import "./globals.css";
-import { site, summary } from "@/content/site";
+import { metaDescription, site } from "@/content/site";
 import { themeScript } from "@/components/theme-toggle";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     default: `${site.name} — ${site.role}`,
     template: `%s — ${site.name}`,
   },
-  description: summary,
+  description: metaDescription,
   keywords: [
     "Frontend Engineer",
     "React Developer",
@@ -49,12 +49,12 @@ export const metadata: Metadata = {
     url: site.url,
     siteName: site.name,
     title: `${site.name} — ${site.role}`,
-    description: summary,
+    description: metaDescription,
   },
   twitter: {
     card: "summary_large_image",
     title: `${site.name} — ${site.role}`,
-    description: summary,
+    description: metaDescription,
   },
   robots: {
     index: true,

@@ -32,6 +32,10 @@ export const socials = [
 export const summary =
   "Results-driven frontend developer with 5 years of experience building scalable, high-performance web applications from concept to deployment. Proven track record of delivering measurable impact, including a 30% Core Web Vitals improvement. Specialized in React.js and Next.js with strong command of SEO, responsive design, and pixel-perfect UI implementation.";
 
+/** Trimmed for search results — `summary` runs 359 chars and gets truncated. */
+export const metaDescription =
+  "Frontend engineer in Lahore with 5 years building React and Next.js apps. Available to hire, or for freelance frontend, full-stack, WordPress and AI automation work.";
+
 export const summaryShort =
   "Five years building production React and Next.js applications, extending into Node.js and AI automation. Available to hire full-time, or to take on your project.";
 
@@ -342,7 +346,7 @@ export const services: Service[] = [
   {
     slug: "fullstack",
     title: "Full-stack development",
-    accent: "green",
+    accent: "yellow",
     blurb:
       "The interface plus everything behind it — APIs, databases and auth — so one person owns the whole feature end to end.",
     includes: [
@@ -367,16 +371,17 @@ export const services: Service[] = [
     ],
   },
   {
-    slug: "performance",
-    title: "Performance & SEO",
-    accent: "yellow",
+    slug: "wordpress",
+    title: "WordPress development",
+    accent: "green",
+    href: "/services/wordpress",
     blurb:
-      "Audits and fixes that actually move Core Web Vitals — the same work that returned a 30% improvement on a live platform.",
+      "Custom themes, plugins and CMS architecture — and migrations off WordPress for when you've outgrown it.",
     includes: [
-      "Core Web Vitals audit & remediation",
-      "Bundle, asset & image optimisation",
-      "SSR / SSG rendering strategy",
-      "Technical SEO implementation",
+      "Custom theme development",
+      "Plugin development & customisation",
+      "Speed & Core Web Vitals optimisation",
+      "WordPress to Next.js migration",
     ],
   },
 ];

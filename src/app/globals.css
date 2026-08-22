@@ -45,6 +45,9 @@
   --color-g-red: #ea4335;
   --color-g-yellow: #fbbc04;
   --color-g-green: #34a853;
+  /* Brand red is 3.9:1 on white — below AA. Red 700 is 5.8:1 and is the
+     only variant allowed to carry text (the wordmark). */
+  --color-g-red-strong: #c5221f;
 
   --font-sans: var(--font-google-sans), "Google Sans", Roboto, Arial, sans-serif;
 }
@@ -80,6 +83,7 @@
   --color-g-red: #f28b82;
   --color-g-yellow: #fdd663;
   --color-g-green: #81c995;
+  --color-g-red-strong: #f28b82;
 
   color-scheme: dark;
 }

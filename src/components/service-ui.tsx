@@ -106,10 +106,17 @@ export function ProcessList({
     <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {steps.map((s, i) => (
         <li key={s.step} className="g-card-plain p-6">
+          {/*
+            The number sits on a tint of the accent with ink text, not white on
+            the solid colour. White reaches only 3.9:1 on Google red, 3.1:1 on
+            green and 1.7:1 on yellow — all below AA. A tint keeps the colour
+            association while the label stays readable at every accent.
+          */}
           <span
-            aria-hidden
-            className="flex h-9 w-9 items-center justify-center rounded-full text-[0.9375rem] font-medium text-white"
-            style={{ background: ACCENT_VAR[accent] }}
+            className="flex h-9 w-9 items-center justify-center rounded-full text-[0.9375rem] font-medium text-ink"
+            style={{
+              background: `color-mix(in srgb, ${ACCENT_VAR[accent]} 18%, transparent)`,
+            }}
           >
             {i + 1}
           </span>
@@ -197,6 +204,90 @@ export function ServiceJsonLd({
         name: f.q,
         acceptedAnswer: { "@type": "Answer", text: f.a },
       })),
+    },
+  ];
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({ "@context": "https://schema.org", "@graph": graph }),
+      }}
+    />
+  );
+}
+
+/**
+ * Schema for a category page: where it sits in the hierarchy, plus the list of
+ * services it contains so search engines can see the whole catalogue.
+ */
+export function CategoryJsonLd({ category }: { category: ServiceCategory }) {
+  const url = `${site.url}/services/${category.slug}`;
+
+  const graph = [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+        { "@type": "ListItem", position: 2, name: "Services", item: `${site.url}/services` },
+        { "@type": "ListItem", position: 3, name: category.shortTitle, item: url },
+      ],
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": url,
+      name: category.title,
+      description: category.metaDescription,
+      url,
+      mainEntity: {
+        "@type": "ItemList",
+        itemListElement: category.services.map((s, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: s.title,
+          url: `${url}/${s.slug}`,
+        })),
+      },
+    },
+  ];
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({ "@context": "https://schema.org", "@graph": graph }),
+      }}
+    />
+  );
+}
+
+/** Schema for the /services index — breadcrumb plus every category. */
+export function ServicesIndexJsonLd({ categories }: { categories: ServiceCategory[] }) {
+  const url = `${site.url}/services`;
+
+  const graph = [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+        { "@type": "ListItem", position: 2, name: "Services", item: url },
+      ],
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": url,
+      name: "Services",
+      url,
+      mainEntity: {
+        "@type": "ItemList",
+        itemListElement: categories.flatMap((c) =>
+          c.services.map((s) => ({
+            "@type": "ListItem",
+            name: s.title,
+            url: `${url}/${c.slug}/${s.slug}`,
+          })),
+        ),
+      },
     },
   ];
 

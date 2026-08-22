@@ -171,6 +171,12 @@ prerendered:
   /rag-chatbot-agent
   /dental-clinic-ai-assistant
   /n8n-workflow-automation
+/services/wordpress                           category overview
+  /custom-wordpress-theme-development
+  /wordpress-plugin-development
+  /wordpress-speed-optimization
+  /wordpress-to-nextjs-migration
+  /landing-page-development
 ```
 
 **All of it comes from [`src/content/services.ts`](src/content/services.ts).**
@@ -186,7 +192,8 @@ Each service object carries its own SEO fields (`metaTitle`, `metaDescription`,
 
 - A unique `<title>`, meta description and canonical URL
 - Open Graph and Twitter card metadata
-- `Service`, `BreadcrumbList` and `FAQPage` JSON-LD in one `@graph`
+- `Service`, `BreadcrumbList` and `FAQPage` JSON-LD in one `@graph` (category
+  pages emit `BreadcrumbList` + `CollectionPage` with an `ItemList` of services)
 - A clean outline — one `h1`, one `h2` per block
 - Internal links up to the category, sideways to sibling services, and back home
 
@@ -197,8 +204,14 @@ accessible, findable by in-page search, and zero client bundle.
 
 Add a `ServiceCategory` to `serviceCategories`, then point the matching entry in
 `services` (in `site.ts`) at it with `href: "/services/your-slug"` so the
-home-page card becomes a link. Full-stack and performance don't have pages yet —
-their cards stay unlinked until they do.
+home-page card becomes a link. Full-stack has no page yet, so its card stays
+unlinked until it does.
+
+**Accent colours must survive being used.** A category's `accent` drives artwork
+across its pages. Brand colours are graphics only — never text — and anything
+sitting *on* an accent needs care: white on Google red is 3.9:1, on green 3.1:1
+and on yellow 1.7:1, all below AA. That's why the numbered process badges use an
+18% tint of the accent with ink text rather than white on the solid colour.
 
 ## Dual purpose: CV and services
 
