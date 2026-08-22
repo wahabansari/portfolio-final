@@ -74,30 +74,6 @@ export const viewport: Viewport = {
   ],
 };
 
-/** Google Tag Manager container. */
-const GTM_ID = "GTM-WW4JKXNG";
-
-/**
- * Google Analytics 4. Runs alongside GTM: both define window.dataLayer, and
- * both snippets guard with `dataLayer || []`, so they coexist.
- *
- * Only safe while GA4 is NOT also configured as a tag inside the GTM
- * container — measuring the same property from both places double-counts
- * every pageview. Configure GA4 in one place or the other, never both.
- */
-const GA_ID = "G-Y5V2MKFRJ6";
-
-const gaScript = `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA_ID}');`;
-
-const gtmScript = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${GTM_ID}');`;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -108,33 +84,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        {/*
-          Google Tag Manager. GTM asks for this as high in the head as
-          possible; in practice Next hoists its own metadata, preloads and
-          stylesheet ahead of anything rendered here, so it lands near the end
-          of the head. That is fine — everything before it is metadata and
-          preload hints, the snippet only pushes to dataLayer, and gtm.js
-          itself loads async, so the container never blocks rendering.
-
-          Left as a raw tag rather than next/script: afterInteractive would
-          hold it until hydration and lose the early pageview timing.
-        */}
-        <script dangerouslySetInnerHTML={{ __html: gtmScript }} />
-
-        {/* Google tag (gtag.js) — GA4 */}
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
-        <script dangerouslySetInnerHTML={{ __html: gaScript }} />
       </head>
       <body className="antialiased">
-        {/* GTM fallback for no-JS clients. Must be the first thing in body. */}
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
         <a
           href="#main"
           className="sr-only rounded-full focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-primary focus:px-5 focus:py-3 focus:text-primary-fg"
