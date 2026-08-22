@@ -17,7 +17,7 @@ export const site = {
   timezone: "Asia/Karachi",
   coordinates: "31.5204° N, 74.3587° E",
   email: "wahabansari.dev@gmail.com",
-  url: "https://wahabansari.dev",
+  url: "https://wahabansari-portfolio-final.vercel.app/",
   available: true,
   availabilityNote: "Open to roles and freelance projects",
   resumeHref: "/Muhammad-Wahab-Ansari-Resume.pdf",
