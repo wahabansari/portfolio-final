@@ -82,12 +82,16 @@ export function Hero() {
                   <Field label="Experience" value="5+ years" />
                   <Field label="Location" value={site.location} />
                   <Field label="Timezone" value="PKT (UTC+5)" />
-                  <div className="col-span-2">
-                    <Field label="Core stack" value="React · Next.js · TypeScript" />
-                  </div>
-                  <div className="col-span-2">
-                    <Field label="Services" value="Full-stack · AI automation" />
-                  </div>
+                  <Field
+                    className="col-span-2"
+                    label="Core stack"
+                    value="React · Next.js · TypeScript"
+                  />
+                  <Field
+                    className="col-span-2"
+                    label="Services"
+                    value="Full-stack · AI automation"
+                  />
                 </dl>
 
                 <div className="mt-7 border-t border-border pt-6">
@@ -110,7 +114,14 @@ export function Hero() {
         <div className="g-container">
           <dl className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((s, i) => (
-              <div key={s.label}>
+              /* Reversed so the figure still reads first while the markup
+                 keeps dt before dd — a definition list has to be ordered that
+                 way, and the caption belongs to the term, not loose in the div. */
+              <div key={s.label} className="flex flex-col-reverse">
+                <dt className="mt-4">
+                  <span className="g-title-sm block text-ink">{s.label}</span>
+                  <span className="g-body-sm mt-1 block">{s.sub}</span>
+                </dt>
                 <dd className="g-display !text-[2.75rem] !leading-none text-primary">
                   {"display" in s && s.display ? (
                     s.display
@@ -120,8 +131,6 @@ export function Hero() {
                     `${s.value}${s.suffix}`
                   )}
                 </dd>
-                <dt className="g-title-sm mt-4 text-ink">{s.label}</dt>
-                <p className="g-body-sm mt-1">{s.sub}</p>
               </div>
             ))}
           </dl>

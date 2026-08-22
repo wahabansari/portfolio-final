@@ -101,9 +101,20 @@ export function SectionHeading({
 }
 
 /** A label above a value, used wherever meta data appears so it lines up. */
-export function Field({ label, value }: { label: string; value: ReactNode }) {
+export function Field({
+  label,
+  value,
+  className,
+}: {
+  label: string;
+  value: ReactNode;
+  /* Layout classes belong here rather than on a wrapper element: a <div>
+     inside a <dl> has to contain the dt/dd pair directly, so nesting one more
+     div around a Field makes the list malformed. */
+  className?: string;
+}) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className={cn("flex flex-col gap-1", className)}>
       <dt className="g-body-sm">{label}</dt>
       <dd className="text-[0.9375rem] font-medium text-ink">{value}</dd>
     </div>
