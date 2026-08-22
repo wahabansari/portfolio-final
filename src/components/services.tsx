@@ -9,9 +9,9 @@ const ACCENTS: Record<Service["accent"], string> = {
   green: "var(--color-g-green)",
 };
 
-export function Services() {
+export function Services({ tone = "plain" }: { tone?: "plain" | "grey" }) {
   return (
-    <Section id="services" tone="grey">
+    <Section id="services" tone={tone}>
       <SectionHeading
         overline="Services"
         title="What I can build for you"

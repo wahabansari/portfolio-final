@@ -16,8 +16,11 @@ export function Hero() {
     transition: { duration: 0.6, delay: 0.06 * i, ease: EASE },
   });
 
+  /* No bottom padding on the section: the stats strip below is a full-bleed
+     grey band and has to be the section's bottom edge. Padding under it left a
+     sliver of white between that band and the next one. */
   return (
-    <section id="home" className="scroll-mt-16 pt-16 pb-20 md:pt-24 md:pb-28">
+    <section id="home" className="scroll-mt-16 pt-16 md:pt-24">
       <div className="g-container">
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
