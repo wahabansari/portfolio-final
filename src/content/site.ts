@@ -319,6 +319,8 @@ export type Service = {
   accent: "blue" | "red" | "yellow" | "green";
   blurb: string;
   includes: string[];
+  /** Set once a category page exists under /services. */
+  href?: string;
 };
 
 /** Offered services. Each maps to a capability already listed in `skills`. */
@@ -327,6 +329,7 @@ export const services: Service[] = [
     slug: "frontend",
     title: "Frontend engineering",
     accent: "blue",
+    href: "/services/frontend",
     blurb:
       "Production React and Next.js interfaces, built from your designs and shipped pixel-perfect on every device.",
     includes: [
@@ -353,6 +356,7 @@ export const services: Service[] = [
     slug: "ai-automation",
     title: "AI automation",
     accent: "red",
+    href: "/services/automation",
     blurb:
       "Workflows that remove the manual steps — connecting your tools to each other, and to models that handle the repetitive thinking.",
     includes: [
@@ -377,13 +381,16 @@ export const services: Service[] = [
   },
 ];
 
-export const sections = [
+/** Nav entries. `href` overrides the default `/#id` anchor. */
+export type NavSection = { id: string; label: string; href?: string };
+
+export const sections: NavSection[] = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
-  { id: "services", label: "Services" },
+  { id: "services", label: "Services", href: "/services" },
   { id: "work", label: "Work" },
   { id: "experience", label: "Experience" },
   { id: "skills", label: "Skills" },
   { id: "background", label: "Background" },
   { id: "contact", label: "Contact" },
-] as const;
+];

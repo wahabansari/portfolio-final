@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { serviceCategories } from "@/content/services";
 import { sections, site, socials } from "@/content/site";
 
 export function Footer() {
@@ -7,34 +9,61 @@ export function Footer() {
     <footer className="border-t border-border bg-surface">
       <div className="g-container py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <a href="#home" className="-mx-2 inline-flex min-h-11 items-center rounded-full px-2">
+          <div className="md:col-span-4">
+            <Link href="/#home" className="-mx-2 inline-flex min-h-11 items-center rounded-full px-2">
               <span className="text-[1.375rem] leading-none font-medium tracking-[-0.01em] text-ink">
                 <span className="text-g-blue">W</span>ahab
                 <span className="text-g-red">.</span>
               </span>
-            </a>
+            </Link>
             <p className="g-body-sm mt-5 max-w-xs">{site.roleLong}</p>
             <p className="g-body-sm mt-2">{site.location}</p>
           </div>
 
-          <nav aria-label="Footer" className="md:col-span-4">
+          <nav aria-label="Footer" className="md:col-span-3">
             <p className="g-title-sm text-ink">Navigate</p>
-            <ul className="mt-4 grid grid-cols-2 gap-x-6">
+            <ul className="mt-4">
               {sections.map((s) => (
                 <li key={s.id}>
-                  <a
-                    href={`#${s.id}`}
+                  <Link
+                    href={s.href ?? `/#${s.id}`}
                     className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-ink-muted transition-colors hover:text-primary"
                   >
                     {s.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          <div className="md:col-span-3">
+          {/* Services — real routes, so they carry internal link value */}
+          <nav aria-label="Services" className="md:col-span-3">
+            <p className="g-title-sm text-ink">Services</p>
+            <ul className="mt-4">
+              <li>
+                <Link
+                  href="/services"
+                  className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-ink-muted transition-colors hover:text-primary"
+                >
+                  All services
+                </Link>
+              </li>
+              {serviceCategories.flatMap((c) =>
+                c.services.map((sv) => (
+                  <li key={`${c.slug}-${sv.slug}`}>
+                    <Link
+                      href={`/services/${c.slug}/${sv.slug}`}
+                      className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-ink-muted transition-colors hover:text-primary"
+                    >
+                      {sv.title}
+                    </Link>
+                  </li>
+                )),
+              )}
+            </ul>
+          </nav>
+
+          <div className="md:col-span-2">
             <p className="g-title-sm text-ink">Elsewhere</p>
             <ul className="mt-4">
               {socials.map((s) => (

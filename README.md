@@ -97,7 +97,7 @@ sitemap and all.
 | `summary`, `summaryShort` | SEO description and the hero paragraph |
 | `stats` | The four hero stat figures (`numeric: true` animates the count) |
 | `about` | Statement, body paragraphs, and the "At a glance" list |
-| `services` | The four offerings — title, blurb, what each includes; `accent` picks the brand colour |
+| `services` | The four offerings shown on the home page; `href` links a card to its category page |
 | `projects` | Project cards — links, blurb, tools; `plate` picks the brand-colour accent |
 | `experience` | Roles, bullets, per-role stack |
 | `skills` | The skills cards |
@@ -154,6 +154,51 @@ already on the résumé. If you add a service, add the underlying skill too.
   it's served on every "Download résumé" click.
 
 ---
+
+## Service pages
+
+Beyond the home-page teaser there is a full `/services` tree, all statically
+prerendered:
+
+```
+/services                                     index of every category
+/services/frontend                            category overview
+  /email-template-development
+  /website-dashboard-redesign
+  /ui-ux-design
+/services/automation                          category overview
+  /ai-chatbot-development
+  /rag-chatbot-agent
+  /dental-clinic-ai-assistant
+  /n8n-workflow-automation
+```
+
+**All of it comes from [`src/content/services.ts`](src/content/services.ts).**
+Adding a service means adding one object to a category's `services` array — the
+route, the category listing, the footer links, the sitemap and the structured
+data all pick it up with no further wiring.
+
+Each service object carries its own SEO fields (`metaTitle`, `metaDescription`,
+`keywords`) plus the page body: `intro`, `problem`, `deliverables`, `process`,
+`stack`, `idealFor` and `faqs`.
+
+### What each page emits for SEO
+
+- A unique `<title>`, meta description and canonical URL
+- Open Graph and Twitter card metadata
+- `Service`, `BreadcrumbList` and `FAQPage` JSON-LD in one `@graph`
+- A clean outline — one `h1`, one `h2` per block
+- Internal links up to the category, sideways to sibling services, and back home
+
+FAQs use native `<details>` rather than a JavaScript accordion: keyboard
+accessible, findable by in-page search, and zero client bundle.
+
+### Adding a category
+
+Add a `ServiceCategory` to `serviceCategories`, then point the matching entry in
+`services` (in `site.ts`) at it with `href: "/services/your-slug"` so the
+home-page card becomes a link. Full-stack and performance don't have pages yet —
+their cards stay unlinked until they do.
 
 ## Dual purpose: CV and services
 
