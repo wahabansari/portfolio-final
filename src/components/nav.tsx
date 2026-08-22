@@ -224,7 +224,7 @@ export function Nav() {
                                     aria-current={active ? "page" : undefined}
                                     style={
                                       {
-                                        "--row-tint": `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 12%, transparent)`,
+                                        "--row-tint": `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 7%, transparent)`,
                                       } as React.CSSProperties
                                     }
                                     className={cn(
