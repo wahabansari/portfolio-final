@@ -131,6 +131,8 @@ export const projects: Project[] = [
     slug: "sunhub",
     title: "Sunhub",
     kind: "Performance & Platform",
+    href: "https://www.sunhub.com/",
+    domain: "sunhub.com",
     blurb:
       "The platform behind the 30% Core Web Vitals improvement — React frontend, rebuilt build pipeline, and API-driven forms.",
     detail:

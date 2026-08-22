@@ -137,7 +137,7 @@ export function Faqs({ faqs }: { faqs: { q: string; a: string }[] }) {
   return (
     <div className="mx-auto max-w-3xl">
       {faqs.map((faq) => (
-        <details key={faq.q} className="group border-b border-border py-2">
+        <details key={faq.q} className="g-disclosure group border-b border-border py-2">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 marker:hidden [&::-webkit-details-marker]:hidden">
             <h3 className="g-title-sm">{faq.q}</h3>
             <svg

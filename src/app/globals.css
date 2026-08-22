@@ -53,6 +53,10 @@
 }
 
 :root {
+  /* Unlocks transitions to intrinsic sizes (height: auto), which the FAQ
+     disclosures animate to. */
+  interpolate-size: allow-keywords;
+
   --radius-card: 16px;
   --radius-lg: 24px;
   --radius-sm: 8px;
@@ -317,30 +321,63 @@
   }
 
   /* ── Surfaces ──────────────────────────────────────────────────────────────
-     Google's cards carry no outline at all — separation comes from the fill
-     being the inverse of the band behind it. Pick the variant by band:
-       grey band  -> .g-card-plain (white fill)
-       white band -> .g-card-soft  (#F8F9FA fill)
-     Adding a border here is the fastest way to stop looking like Google. */
-  .g-card-plain {
-    background-color: var(--color-card-raised);
-    border-radius: var(--radius-card);
+     A card's fill is the inverse of the band behind it, so it is never the
+     same colour as what it sits on. That pairing used to be hard-coded per
+     component, which meant re-toning a section silently turned its cards
+     invisible. The band now declares the fill and the card just reads it.
+
+     Cards also carry a hairline. Material 3's outlined card is a real
+     variant, and with fifteen service cards on a page the outline is what
+     keeps them reading as discrete objects. */
+  .g-section {
+    --card-fill: var(--color-surface); /* white band -> grey card */
+  }
+  .g-section.bg-surface,
+  .g-section.bg-surface-blue {
+    --card-fill: var(--color-card-raised); /* filled band -> raised card */
   }
 
+  .g-card-plain,
   .g-card-soft {
-    background-color: var(--color-surface);
+    /* Fallback covers cards outside a Section — the hero, page headers. */
+    background-color: var(--card-fill, var(--color-surface));
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
   }
 
   .g-card-interactive {
-    transition: background-color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
   }
-  /* Hover deepens the fill a touch rather than revealing an outline. */
-  .g-card-plain.g-card-interactive:hover {
-    background-color: color-mix(in srgb, var(--color-card-raised) 94%, var(--color-ink));
-  }
+  /* Hover deepens the fill and firms the outline. */
+  .g-card-plain.g-card-interactive:hover,
   .g-card-soft.g-card-interactive:hover {
-    background-color: color-mix(in srgb, var(--color-surface) 94%, var(--color-ink));
+    background-color: color-mix(in srgb, var(--card-fill, var(--color-surface)) 94%, var(--color-ink));
+    border-color: var(--color-border-strong);
+  }
+
+  /* ── Disclosure (FAQ accordions) ───────────────────────────────────────────
+     <details> snaps open natively. ::details-content plus interpolate-size
+     lets it animate to its natural height without measuring anything in JS —
+     `height: auto` is only animatable because of interpolate-size, and
+     content-visibility needs allow-discrete so the content isn't hidden for
+     the whole transition. Browsers without ::details-content just open
+     instantly, exactly as they do today. */
+  .g-disclosure::details-content {
+    height: 0;
+    overflow: hidden;
+    content-visibility: hidden;
+    transition:
+      height 0.28s ease,
+      content-visibility 0.28s allow-discrete;
+  }
+  .g-disclosure[open]::details-content {
+    height: auto;
+    /* Must be restored explicitly. Declaring content-visibility in the rule
+       above overrides the UA sheet's open value too, and without this the
+       answer stays collapsed at zero height — open, but invisible. */
+    content-visibility: visible;
   }
 
   /* ── Chips ─────────────────────────────────────────────────────────────── */

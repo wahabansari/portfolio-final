@@ -273,7 +273,7 @@ about.google** rather than guessed.
 | Headings | Google ships **weight 400** — large and light, never bold. This site uses 500, one step up |
 | Buttons | Full pills (999px), `12px 24px`, 16px/500 |
 | Elevation | **No shadows anywhere.** Depth comes from band and card fills |
-| Cards | 16px radius, **no outline** — the fill inverts against the band |
+| Cards | 16px radius, 1px hairline, fill derived from the band behind it |
 | Bands | Sections alternate white / `#F8F9FA` / `#E8F0FE`, full bleed |
 | Container | 1296px, matching about.google |
 
@@ -300,15 +300,25 @@ Dark mode uses Google's own dark palette — `#202124` surface, `#8AB4F8` blue.
 
 ### Cards
 
-**No card draws an outline** — that's Material 2 / Bootstrap, not Google.
-Separation comes from the fill inverting against the band: on a **grey** band use
-`.g-card-plain` (raised fill), on a **white** band use `.g-card-soft`
-(`#F8F9FA`). If a card looks weak, change the fill, never add a border.
+Cards carry a 1px hairline (`--color-border`) and a fill that is always the
+inverse of the band behind them. Material 3's outlined card is a real variant,
+and with fifteen service cards on a page the outline is what keeps them reading
+as discrete objects.
 
-Dark mode flips the direction — Material raises surfaces by *lightening* them, so
-`.g-card-plain` uses `--color-card-raised` (`#FFFFFF` light, `#35363A` dark)
-rather than the page background. Reusing the page background there makes dark
-cards *darker* than their band, which reads as an inset well instead of a card.
+**The fill is not chosen by the component — the band declares it.** `.g-section`
+sets `--card-fill` to the grey surface; a section toned grey or blue flips it to
+`--color-card-raised`. `.g-card-plain` and `.g-card-soft` both just read that
+variable, so a card can never come out the same colour as what it sits on.
+
+This used to be hard-coded per component, and it broke exactly as you'd expect:
+re-toning the home page sections left five of seven with cards the same colour
+as their band — invisible. If you add a card, put it inside a `Section` and the
+fill takes care of itself; outside one it falls back to the grey surface.
+
+Dark mode flips the direction — Material raises surfaces by *lightening* them,
+so a card on a filled band uses `--color-card-raised` (`#FFFFFF` light, `#35363A`
+dark) rather than the page background. Reusing the page background there makes
+dark cards *darker* than their band, which reads as an inset well, not a card.
 
 ### Tailwind v4 tokens
 
