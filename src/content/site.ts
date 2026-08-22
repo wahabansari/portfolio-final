@@ -113,8 +113,9 @@ export type Project = {
   title: string;
   year?: string;
   kind: string;
-  href: string;
-  domain: string;
+  /** Omit both when there is no public URL — the card renders unlinked. */
+  href?: string;
+  domain?: string;
   blurb: string;
   detail: string;
   tools: string[];
@@ -126,6 +127,21 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    slug: "sunhub",
+    title: "Sunhub",
+    kind: "Performance & Platform",
+    blurb:
+      "The platform behind the 30% Core Web Vitals improvement — React frontend, rebuilt build pipeline, and API-driven forms.",
+    detail:
+      "Owned frontend delivery on a production React platform at Oxiliry. Delivered a 30% performance improvement by eliminating unused assets, optimising the build pipeline and applying lazy loading, tree-shaking and image compression — improving Core Web Vitals and user retention. Built responsive, cross-browser interfaces from Figma, integrated RESTful APIs, and implemented robust form validation with React Hook Form.",
+    tools: ["React.js", "REST APIs", "React Hook Form", "Figma", "Git"],
+    metrics: [
+      { k: "Core Web Vitals", v: "+30%" },
+      { k: "Focus", v: "Performance & delivery" },
+    ],
+    plate: "app",
+  },
   {
     slug: "verdira",
     title: "Verdira",

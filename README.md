@@ -7,7 +7,7 @@ the four brand colours as accents, and no shadows anywhere.
 
 Light by default, with Google's own dark palette behind the toggle.
 
-**Live:** https://wahabansari.dev · **Stack:** Next.js 16 · React 19 · Tailwind CSS v4 · TypeScript
+**Live:** https://wahabansari-portfolio-final.vercel.app · **Stack:** Next.js 16 · React 19 · Tailwind CSS v4 · TypeScript
 
 ---
 
@@ -91,10 +91,12 @@ src/
 │   ├── ui.tsx               Section, SectionHeading, Field, Reveal, icons
 │   ├── nav.tsx  hero.tsx  about.tsx  services.tsx  work.tsx
 │   ├── experience.tsx  skills.tsx  credentials.tsx  contact.tsx  footer.tsx
-│   ├── theme-toggle.tsx     Light/dark switch + the no-flash script
-│   └── json-ld.tsx          Person + service structured data
+│   ├── service-ui.tsx       PageHeader, breadcrumbs, JSON-LD for /services/*
+│   ├── service-icons.tsx    One icon per service, used in the nav dropdown
+│   └── theme-toggle.tsx     Light/dark switch + the no-flash script
 ├── content/
-│   └── site.ts              ★ ALL text lives here
+│   ├── site.ts               ★ CV content — about, work, experience, skills
+│   └── services.ts           ★ Service catalogue — every /services page
 ├── hooks/use-media-query.ts
 └── lib/cn.ts
 ```
@@ -141,6 +143,11 @@ sitemap and all.
 
 `plate` only picks which brand colour tints the card — it has no other effect.
 
+`href` and `domain` are optional — omit both for client work with no public
+URL (e.g. an internal platform). The card still renders, just without a link:
+the domain label falls back to the project title, and the footer shows "Client
+work — not publicly linkable" instead of a link.
+
 ### Project screenshots
 
 Each card shows a generated browser-window placeholder tinted by `plate`. To use
@@ -161,8 +168,9 @@ already on the résumé. If you add a service, add the underlying skill too.
 
 ### Before you deploy
 
-- **`site.url`** is `https://wahabansari.dev`. Change it if you deploy elsewhere —
-  it's the base for canonical URLs, OG tags and the sitemap.
+- **`site.url`** is `https://wahabansari-portfolio-final.vercel.app`. Change it
+  if you move to a custom domain — it's the base for canonical URLs, OG tags
+  and the sitemap.
 - **`socials`** currently guesses `github.com/wahabansari` and
   `linkedin.com/in/wahabansari` from the résumé's `/wahabansari` handles.
   **Verify both.**
@@ -394,6 +402,14 @@ access still succeeds on the system sans.
 warning. It means Next can't compute fallback metrics for the fallback font, so
 there may be a small layout shift while the font loads. Harmless — `display: swap`
 means text is never invisible.
+
+**The services dropdown in `nav.tsx` is `position: fixed`, not `absolute`.**
+It's anchored to `top-16` (the header's own height) rather than to the trigger
+button, so it spans the full viewport width regardless of where "Services"
+sits in the nav. It stays a DOM descendant of the hover/click target above it,
+so moving the pointer down into the panel never fires the trigger's
+`mouseleave` — that's DOM containment, not visual containment, and it's what
+makes hover-to-browse work at all with a full-bleed panel.
 
 ---
 

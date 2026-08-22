@@ -55,16 +55,20 @@ export function Work({
 
 function ProjectCard({ project }: { project: Project }) {
   const accent = ACCENTS[project.plate];
+  /* Projects without a public URL still get a card — just not a dead link. */
+  const Shell = project.href ? "a" : "div";
+  const shellProps = project.href
+    ? {
+        href: project.href,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        "aria-label": `${project.title} — ${project.kind}. Opens ${project.domain} in a new tab.`,
+      }
+    : {};
 
   return (
     <article className="g-card-plain g-card-interactive group flex h-full flex-col overflow-hidden">
-      <a
-        href={project.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex h-full flex-col"
-        aria-label={`${project.title} — ${project.kind}. Opens ${project.domain} in a new tab.`}
-      >
+      <Shell {...shellProps} className="flex h-full flex-col">
         {/* Preview */}
         <div
           className="relative aspect-[16/10] overflow-hidden"
@@ -86,7 +90,7 @@ function ProjectCard({ project }: { project: Project }) {
                   <span className="h-2 w-2 rounded-full bg-border-strong" />
                   <span className="h-2 w-2 rounded-full bg-border-strong" />
                   <span className="ml-2 truncate text-[0.6875rem] font-medium text-ink-muted">
-                    {project.domain}
+                    {project.domain ?? project.title}
                   </span>
                 </div>
                 <div className="space-y-2 p-4">
@@ -122,12 +126,16 @@ function ProjectCard({ project }: { project: Project }) {
             ))}
           </ul>
 
-          <span className="g-link mt-6">
-            {project.domain}
-            <ExternalIcon className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </span>
+          {project.href ? (
+            <span className="g-link mt-6">
+              {project.domain}
+              <ExternalIcon className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </span>
+          ) : (
+            <span className="g-body-sm mt-6">Client work — not publicly linkable</span>
+          )}
         </div>
-      </a>
+      </Shell>
     </article>
   );
 }

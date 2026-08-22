@@ -6,6 +6,9 @@ import { useEffect, useRef, useState } from "react";
 import { serviceCategories } from "@/content/services";
 import { sections } from "@/content/site";
 import { ThemeToggle } from "./theme-toggle";
+import { ArrowIcon } from "./ui";
+import { ACCENT_VAR } from "./service-ui";
+import { ServiceIcon } from "./service-icons";
 import { cn } from "@/lib/cn";
 
 /**
@@ -124,23 +127,27 @@ export function Nav() {
                   <Chevron open={servicesOpen} />
                 </button>
 
-                {/* Full catalogue, grouped by category */}
+                {/* Full-bleed catalogue, grouped by category. Fixed (not
+                    absolute) so it spans the viewport regardless of where the
+                    trigger sits, anchored right under the header's h-16. It
+                    stays a DOM descendant of the hover target above, so
+                    pointer travel down into it never fires mouseleave. */}
                 <div
                   inert={!servicesOpen}
                   className={cn(
-                    "absolute top-full left-1/2 z-50 w-[46rem] -translate-x-1/2 pt-2 transition-[opacity,transform] duration-200",
+                    "fixed inset-x-0 top-16 z-50 transition-[opacity,transform] duration-200",
                     servicesOpen
                       ? "visible translate-y-0 opacity-100"
                       : "invisible -translate-y-1 opacity-0",
                   )}
                 >
-                  <div className="g-card-plain overflow-hidden border border-border p-6 shadow-[0_8px_24px_rgba(32,33,36,0.12)]">
-                    <div className="grid grid-cols-3 gap-6">
+                  <div className="border-b border-border bg-bg shadow-[0_8px_24px_rgba(32,33,36,0.12)]">
+                    <div className="g-container grid grid-cols-3 gap-8 py-8">
                       {serviceCategories.map((c) => (
                         <div key={c.slug}>
                           <Link
                             href={`/services/${c.slug}`}
-                            className="flex items-center gap-2 text-[0.9375rem] font-medium text-ink hover:text-primary"
+                            className="flex items-center gap-2 px-3 text-[0.9375rem] font-medium text-ink hover:text-primary"
                           >
                             <span
                               aria-hidden
@@ -154,41 +161,76 @@ export function Nav() {
                             />
                             {c.shortTitle}
                           </Link>
-                          <ul className="mt-3 space-y-1">
-                            {c.services.map((sv) => (
-                              <li key={sv.slug}>
-                                <Link
-                                  href={`/services/${c.slug}/${sv.slug}`}
-                                  aria-current={
-                                    pathname === `/services/${c.slug}/${sv.slug}`
-                                      ? "page"
-                                      : undefined
-                                  }
-                                  className={cn(
-                                    "block rounded-md px-2 py-1.5 text-[0.875rem] transition-colors",
-                                    pathname === `/services/${c.slug}/${sv.slug}`
-                                      ? "bg-surface-blue text-on-tonal"
-                                      : "text-ink-muted hover:bg-surface hover:text-ink",
-                                  )}
-                                >
-                                  {sv.title}
-                                </Link>
-                              </li>
-                            ))}
+                          <ul className="mt-2">
+                            {c.services.map((sv) => {
+                              const active = pathname === `/services/${c.slug}/${sv.slug}`;
+                              return (
+                                <li key={sv.slug}>
+                                  <Link
+                                    href={`/services/${c.slug}/${sv.slug}`}
+                                    aria-current={active ? "page" : undefined}
+                                    className={cn(
+                                      "group flex items-center gap-3 rounded-xl p-3 transition-colors",
+                                      active
+                                        ? "bg-surface-blue text-on-tonal"
+                                        : "text-ink hover:bg-surface",
+                                    )}
+                                  >
+                                    <span
+                                      aria-hidden
+                                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                                      style={{
+                                        background: `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 16%, transparent)`,
+                                      }}
+                                    >
+                                      <ServiceIcon
+                                        slug={sv.slug}
+                                        className={active ? "text-on-tonal" : "text-ink-muted"}
+                                      />
+                                    </span>
+                                    <span className="min-w-0 flex-1">
+                                      <span className="block truncate text-[0.875rem] font-medium">
+                                        {sv.title}
+                                      </span>
+                                      {/* Full-opacity, not /80 — on this light
+                                          tonal chip, on-tonal only clears AA at
+                                          full strength (4.68:1); dimming it
+                                          drops to 3.38:1 and fails. */}
+                                      <span
+                                        className={cn(
+                                          "block truncate text-[0.75rem]",
+                                          active ? "text-on-tonal" : "text-ink-muted",
+                                        )}
+                                      >
+                                        {sv.summary}
+                                      </span>
+                                    </span>
+                                    <ArrowIcon
+                                      className={cn(
+                                        "h-4 w-4 shrink-0 -translate-x-1 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100",
+                                        active && "translate-x-0 opacity-100",
+                                      )}
+                                    />
+                                  </Link>
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                       ))}
                     </div>
 
-                    <Link
-                      href="/services"
-                      className="g-link mt-5 border-t border-border pt-4 !text-[0.9375rem]"
-                    >
-                      All services
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                        <path d="M13.3 5.3a1 1 0 0 0 0 1.4l4.3 4.3H4a1 1 0 1 0 0 2h13.6l-4.3 4.3a1 1 0 1 0 1.4 1.4l6-6a1 1 0 0 0 0-1.4l-6-6a1 1 0 0 0-1.4 0z" />
-                      </svg>
-                    </Link>
+                    <div className="border-t border-border">
+                      <div className="g-container flex items-center justify-between py-4">
+                        <p className="g-body-sm">
+                          Every service, in one place — frontend, automation and WordPress.
+                        </p>
+                        <Link href="/services" className="g-link !text-[0.9375rem]">
+                          All services
+                          <ArrowIcon className="h-4 w-4" />
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -282,26 +324,35 @@ export function Nav() {
                               {c.shortTitle}
                             </Link>
                             <ul>
-                              {c.services.map((sv) => (
-                                <li key={sv.slug}>
-                                  <Link
-                                    href={`/services/${c.slug}/${sv.slug}`}
-                                    aria-current={
-                                      pathname === `/services/${c.slug}/${sv.slug}`
-                                        ? "page"
-                                        : undefined
-                                    }
-                                    className={cn(
-                                      "block rounded-md px-2 py-2 text-[0.875rem]",
-                                      pathname === `/services/${c.slug}/${sv.slug}`
-                                        ? "bg-surface-blue text-on-tonal"
-                                        : "text-ink-muted",
-                                    )}
-                                  >
-                                    {sv.title}
-                                  </Link>
-                                </li>
-                              ))}
+                              {c.services.map((sv) => {
+                                const active = pathname === `/services/${c.slug}/${sv.slug}`;
+                                return (
+                                  <li key={sv.slug}>
+                                    <Link
+                                      href={`/services/${c.slug}/${sv.slug}`}
+                                      aria-current={active ? "page" : undefined}
+                                      className={cn(
+                                        "flex items-center gap-3 rounded-md px-2 py-2 text-[0.875rem]",
+                                        active ? "bg-surface-blue text-on-tonal" : "text-ink-muted",
+                                      )}
+                                    >
+                                      <span
+                                        aria-hidden
+                                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
+                                        style={{
+                                          background: `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 16%, transparent)`,
+                                        }}
+                                      >
+                                        <ServiceIcon
+                                          slug={sv.slug}
+                                          className={cn("h-4 w-4", active ? "text-on-tonal" : "text-ink-muted")}
+                                        />
+                                      </span>
+                                      {sv.title}
+                                    </Link>
+                                  </li>
+                                );
+                              })}
                             </ul>
                           </li>
                         ))}
