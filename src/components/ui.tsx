@@ -73,18 +73,25 @@ export function SectionHeading({
   title,
   description,
   aside,
+  /* A section that owns its own route is that page's h1. Left as h2 when the
+     section is one block among several on a page. */
+  level = "h2",
 }: {
   overline: string;
   title: string;
   description?: string;
   aside?: ReactNode;
+  level?: "h1" | "h2";
 }) {
+  const Heading = level;
   return (
     <Reveal className="mb-12 md:mb-16">
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="max-w-3xl">
           <p className="g-overline">{overline}</p>
-          <h2 className="g-h2 mt-4">{title}</h2>
+          <Heading className={level === "h1" ? "g-display mt-4" : "g-h2 mt-4"}>
+            {title}
+          </Heading>
           {description && <p className="g-body-lg mt-5 max-w-2xl">{description}</p>}
         </div>
         {aside && <div className="shrink-0">{aside}</div>}

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { site, stats, summaryShort } from "@/content/site";
@@ -41,13 +42,13 @@ export function Hero() {
             </motion.p>
 
             <motion.div {...step(3)} className="mt-9 flex flex-wrap items-center gap-3">
-              <a href="#services" className="g-btn g-btn-filled">
+              <Link href="/services" className="g-btn g-btn-filled">
                 Hire me for a project
                 <ArrowIcon />
-              </a>
-              <a href="#work" className="g-btn g-btn-outlined">
+              </Link>
+              <Link href="/work" className="g-btn g-btn-outlined">
                 View my work
-              </a>
+              </Link>
               <a href={site.resumeHref} className="g-btn g-btn-tonal">
                 <DownloadIcon />
                 Résumé

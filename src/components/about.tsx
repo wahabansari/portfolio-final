@@ -5,6 +5,7 @@ export function About() {
   return (
     <Section id="about">
       <SectionHeading
+        level="h1"
         overline="About"
         title="Design sensibility, engineering discipline"
         description={about.statement}

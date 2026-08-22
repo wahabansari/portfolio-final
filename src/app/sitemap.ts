@@ -7,6 +7,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: site.url, lastModified: now, changeFrequency: "monthly", priority: 1 },
+    ...["about", "work", "experience", "skills", "contact"].map((r) => ({
+      url: `${site.url}/${r}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
     {
       url: `${site.url}/services`,
       lastModified: now,

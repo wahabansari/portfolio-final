@@ -33,7 +33,7 @@ export default function ServicesIndexPage() {
     <>
       <ServicesIndexJsonLd categories={serviceCategories} />
       <Nav />
-      <main>
+      <main id="main">
         {/* Hero */}
         <section className="pt-10 pb-16 md:pt-14 md:pb-20">
           <div className="g-container">
@@ -49,11 +49,11 @@ export default function ServicesIndexPage() {
                 Available full-time, or for individual projects. Pick a category to see the detail.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/#contact" className="g-btn g-btn-filled">
+                <Link href="/contact" className="g-btn g-btn-filled">
                   Start a project
                   <ArrowIcon />
                 </Link>
-                <Link href="/#work" className="g-btn g-btn-outlined">
+                <Link href="/work" className="g-btn g-btn-outlined">
                   See past work
                 </Link>
               </div>
@@ -119,7 +119,7 @@ export default function ServicesIndexPage() {
                 actually fix it — including when the answer is that you don&apos;t need me.
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Link href="/#contact" className="g-btn g-btn-filled w-full sm:w-auto">
+                <Link href="/contact" className="g-btn g-btn-filled w-full sm:w-auto">
                   Get in touch
                   <ArrowIcon />
                 </Link>

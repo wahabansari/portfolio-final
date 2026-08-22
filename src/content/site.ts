@@ -386,16 +386,14 @@ export const services: Service[] = [
   },
 ];
 
-/** Nav entries. `href` overrides the default `/#id` anchor. */
-export type NavSection = { id: string; label: string; href?: string };
+/** Nav entries. Every section is a real route — no fragments. */
+export type NavSection = { id: string; label: string; href: string };
 
 export const sections: NavSection[] = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
+  { id: "about", label: "About", href: "/about" },
   { id: "services", label: "Services", href: "/services" },
-  { id: "work", label: "Work" },
-  { id: "experience", label: "Experience" },
-  { id: "skills", label: "Skills" },
-  { id: "background", label: "Background" },
-  { id: "contact", label: "Contact" },
+  { id: "work", label: "Work", href: "/work" },
+  { id: "experience", label: "Experience", href: "/experience" },
+  { id: "skills", label: "Skills", href: "/skills" },
+  { id: "contact", label: "Contact", href: "/contact" },
 ];

@@ -83,7 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased">
         <a
-          href="#home"
+          href="#main"
           className="sr-only rounded-full focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-primary focus:px-5 focus:py-3 focus:text-primary-fg"
         >
           Skip to content

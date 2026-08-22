@@ -15,6 +15,7 @@ export function Work() {
   return (
     <Section id="work">
       <SectionHeading
+        level="h1"
         overline="Work"
         title="Selected projects"
         description="Production platforms I've designed, built or migrated. Every one is live and linked."

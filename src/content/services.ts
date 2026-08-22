@@ -41,6 +41,9 @@ export type ServiceDetail = {
   stack: string[];
   /** Who this is a good fit for. */
   idealFor: string[];
+  /** Concrete scenarios. Readers recognise themselves in these far faster
+     than in a feature list. */
+  useCases: { scenario: string; outcome: string }[];
   /** Also powers FAQPage structured data. */
   faqs: { q: string; a: string }[];
 };
@@ -89,9 +92,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "email-template-development",
         title: "Email template development",
-        tagline: "Responsive HTML email that survives Outlook",
-        summary:
-          "Hand-coded, responsive HTML email templates that render correctly across Gmail, Outlook, Apple Mail and mobile clients.",
+        tagline: "Emails that look right in Outlook, not just in the preview",
+        summary: "Hand-coded HTML emails that hold together across Gmail, Outlook and Apple Mail — and stay editable by your team.",
         metaTitle: "Email Template Development — Responsive HTML Email",
         metaDescription:
           "Hand-coded responsive HTML email templates tested across Gmail, Outlook, Apple Mail and mobile. Ready to drop into Mailchimp, Klaviyo, HubSpot or any ESP.",
@@ -105,12 +107,13 @@ export const serviceCategories: ServiceCategory[] = [
           "html email developer",
         ],
         intro: [
-          "Email is the one place on the web where modern CSS mostly does not apply. Outlook on Windows still renders through Microsoft Word. Gmail clips messages over 102KB. Dark mode inverts colours you never asked it to touch.",
-          "So email templates get hand-coded, not exported from a page builder. I build them the way they actually have to be built — tables, inline styles, and a tested fallback for every client that needs one.",
+          "You approved the design. It looked perfect in the builder preview. Then it went out, and half your list saw a stack of broken boxes because Outlook still renders email through Microsoft Word.",
+          "That is not bad luck, it is the format. Email support froze somewhere around 2007 and never caught up. I build templates for the rendering engines that actually exist, not the ones we wish existed.",
         ],
         problem: {
-          heading: "Why exported templates break",
-          body: "Drag-and-drop builders and design-tool exports produce markup that assumes a modern rendering engine. It looks right in the preview pane and then collapses in Outlook, stretches on Android, or gets clipped halfway down in Gmail. By the time you find out, the campaign has already gone.",
+          heading: "Your campaign is only as good as its worst inbox",
+          body:
+            "Roughly a third of business recipients open in Outlook, where floats collapse, background images vanish and padding is ignored. Another large share are on Gmail, which silently clips anything over 102KB — cutting off your call to action mid-page. You do not find out from a test send to your own inbox. You find out from a click rate that makes no sense.",
         },
         deliverables: [
           {
@@ -167,6 +170,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Agencies needing a reliable template partner",
           "Product teams sending transactional email",
         ],
+        useCases: [
+          { scenario: "A retailer's Black Friday campaign rendered as a single column of stacked images in Outlook, burying the discount code.", outcome: "Rebuilt on a table structure with a text-based code block. Same design, readable in every client, code visible without scrolling." },
+          { scenario: "A SaaS team's onboarding sequence was clipped by Gmail, so the activation button never appeared.", outcome: "Markup cut to a third of its weight, moving the whole sequence under the 102KB clipping threshold." },
+          { scenario: "A brand's white logo disappeared for every recipient using dark mode.", outcome: "Dark-mode handling per client, with a logo treatment that stays visible whichever way the palette inverts." },
+        ],
         faqs: [
           {
             q: "Which email clients do you test in?",
@@ -195,9 +203,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "website-dashboard-redesign",
         title: "Website & dashboard redesign",
-        tagline: "Rebuild what you already have, without starting over",
-        summary:
-          "Redesign and rebuild of existing sites, dashboards and admin panels — modernised, made responsive, and organised for future work.",
+        tagline: "Fix the product you have instead of rebuilding from zero",
+        summary: "Redesign and rebuild of existing sites, dashboards and admin panels — modernised, made responsive, and restructured so future features stop being expensive.",
         metaTitle: "Website & Dashboard Redesign Services",
         metaDescription:
           "Redesign and rebuild of existing websites, dashboards and admin panels. Modern responsive interfaces, component-based architecture, faster load times.",
@@ -210,12 +217,13 @@ export const serviceCategories: ServiceCategory[] = [
           "legacy website modernization",
         ],
         intro: [
-          "A redesign is rarely about taste. It's usually that the product has grown past its original structure — new features bolted onto screens that were never designed to hold them, and a codebase where every change risks breaking something else.",
-          "I've done this work end to end: a full LMS redesign covering dashboards, student portals and admin panels, and a large automotive marketplace moved off WordPress onto Next.js. Both cases were less about new colours and more about giving the product a structure it could keep growing into.",
+          "Nobody sets out to build a confusing dashboard. It happens gradually: a feature gets added to a screen that had no room for it, then another, and eventually your support team is explaining the interface on every call.",
+          "The rebuild instinct is usually wrong. Most of what you have works — it just needs a structure it can grow into. I have done this on a full LMS (dashboards, student portals, admin panels) and on a marketplace moved off WordPress onto Next.js, both without the site going dark.",
         ],
         problem: {
-          heading: "The real cost of an aging interface",
-          body: "Old interfaces get expensive quietly. Every new feature takes longer because there's no component to reuse. Support load rises because screens are confusing. Mobile traffic bounces because layouts never adapted. And performance degrades as assets accumulate — the kind of drag that shows up directly in Core Web Vitals and, from there, in search rankings.",
+          heading: "Old interfaces get expensive quietly",
+          body:
+            "There is rarely a moment where the interface fails. Instead every new feature takes a bit longer because nothing is reusable. Support tickets climb because a screen is ambiguous. Mobile visitors bounce because the layout never adapted. And Core Web Vitals slip as assets pile up, which now costs you search ranking as well as patience.",
         },
         deliverables: [
           {
@@ -281,6 +289,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Dashboards and admin panels that confuse users",
           "Sites losing mobile traffic to poor responsiveness",
         ],
+        useCases: [
+          { scenario: "An LMS where admins, tutors and students all shared one overloaded dashboard.", outcome: "Split into role-specific views built from one component library, so each user sees only what their role needs." },
+          { scenario: "A marketplace on WordPress where adding a filter meant a developer week.", outcome: "Migrated to Next.js in stages. New filters became a config change, and pages got measurably faster." },
+          { scenario: "A B2B tool losing mobile users because the admin panel assumed a 1440px screen.", outcome: "Responsive rebuild starting with the highest-traffic flows, shipped incrementally rather than as one risky release." },
+        ],
         faqs: [
           {
             q: "Do we have to rebuild everything at once?",
@@ -309,9 +322,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "ui-ux-design",
         title: "UI/UX design & design systems",
-        tagline: "Design that arrives ready to build",
-        summary:
-          "Interface design in Figma, plus the design system — tokens, components, typography and spacing — that keeps a product consistent as it grows.",
+        tagline: "Designs that survive contact with the browser",
+        summary: "Interface design in Figma plus the design system behind it — tokens, components and rules that keep a product consistent as it grows.",
         metaTitle: "UI/UX Design & Design System Services — Figma",
         metaDescription:
           "UI/UX design in Figma for web apps, dashboards and marketing sites, plus design systems with tokens and reusable components. Designed by someone who also builds.",
@@ -325,12 +337,13 @@ export const serviceCategories: ServiceCategory[] = [
           "design to development handoff",
         ],
         intro: [
-          "Design that can't be built is just a picture. The value in hiring someone who does both is that every screen you get has already been checked against what the browser can actually do — and against what it'll cost your developers to build it.",
-          "I spent a role as a user interface designer before moving into full-time engineering: leading an LMS redesign, migrating an entire design workflow from Adobe XD to Figma, and building the design system that product ran on — tokens, typography, spacing rules, icon library and component set.",
+          "The expensive gap in most teams is between the design file and the shipped screen. A designer hands over something beautiful, a developer builds what is technically feasible, and the result is neither — followed by three rounds of 'can we nudge this'.",
+          "I have worked both roles. Before engineering full-time I was a UI designer: I led an LMS redesign, moved a whole team from Adobe XD to Figma, and built the design system that product ran on. So what I hand over has already been checked against what a browser can do and what it will cost to build.",
         ],
         problem: {
-          heading: "Why products drift out of consistency",
-          body: "Without a system, every new screen is a fresh set of decisions. Three shades of grey become nine. Button padding varies by a few pixels per page. Developers rebuild the same card four times because there's no canonical version. The interface doesn't fail all at once — it just slowly stops feeling like one product.",
+          heading: "How products quietly stop looking like one product",
+          body:
+            "Without a system, every screen is a fresh set of decisions. Three greys become nine. Button padding drifts by a few pixels per page. The same card gets rebuilt four times because no canonical version exists. Nothing breaks — it just gets steadily harder to add anything, and users start to feel the seams even if they cannot name them.",
         },
         deliverables: [
           {
@@ -395,6 +408,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Dashboards that need structure before styling",
           "Founders who need design and build from one person",
         ],
+        useCases: [
+          { scenario: "A SaaS product where four developers had each built their own version of the same modal.", outcome: "One component library with defined states. New screens assembled from existing parts instead of being reinvented." },
+          { scenario: "A team whose colour palette failed accessibility review two weeks before launch.", outcome: "Palette rebuilt against WCAG AA at design time, so contrast was settled before a single component was coded." },
+          { scenario: "A founder needing both design and build, without hiring two people.", outcome: "Figma work and the React implementation from the same person — no handoff loss, no translation round." },
+        ],
         faqs: [
           {
             q: "Do you design and build, or only design?",
@@ -450,9 +468,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "ai-chatbot-development",
         title: "AI chatbot development",
-        tagline: "A chatbot that knows your business, not a generic bot",
-        summary:
-          "Custom AI chatbots for websites and apps — trained on your content, connected to your tools, and able to hand off to a human when it should.",
+        tagline: "A chatbot that actually knows your business",
+        summary: "Custom AI chatbots trained on your content and wired into your systems — answering real questions, and handing over to a human when it should.",
         metaTitle: "AI Chatbot Development — Custom Website Chatbots",
         metaDescription:
           "Custom AI chatbot development for websites and apps. Trained on your own content, integrated with your tools, with human handoff built in. Powered by n8n and LLMs.",
@@ -465,12 +482,13 @@ export const serviceCategories: ServiceCategory[] = [
           "chatbot integration services",
         ],
         intro: [
-          "The chatbots people dislike are the ones built on decision trees — rigid menus that force you down a path and dead-end when your question doesn't fit the script.",
-          "A language model changes the shape of that. It understands a question asked in the customer's own words, answers from your actual content, and knows when it should stop guessing and pass the conversation to a person.",
+          "Everyone has met the bad version: a menu tree that offers four options, none of which match your question, ending in 'I did not understand that' and a support email address you could have found yourself.",
+          "A language model removes that constraint. It understands the question as the customer actually phrased it, answers from your real content, and — critically — knows when to stop and fetch a person.",
         ],
         problem: {
-          heading: "Where support time actually goes",
-          body: "For most businesses, a large share of incoming messages are the same handful of questions: opening hours, pricing, delivery times, where an order is, how to reset something. Each one is quick, but together they consume the hours your team needed for the questions that genuinely require them.",
+          heading: "Your team is answering the same six questions forever",
+          body:
+            "Look at a week of your inbox and the pattern is stark: opening hours, pricing, delivery times, where an order is, how to reset a password, do you serve my area. Each takes two minutes. Together they consume the hours your team needed for the enquiries that actually required a human, and they arrive at nights and weekends when nobody is there.",
         },
         deliverables: [
           {
@@ -527,6 +545,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Service businesses handling booking questions",
           "Teams whose support inbox never empties",
         ],
+        useCases: [
+          { scenario: "An online store answering 'where is my order' dozens of times a day.", outcome: "Bot connected to the order system, answering with real tracking status. Support volume dropped to genuine exceptions." },
+          { scenario: "A service business losing weekend enquiries because nobody was in to reply.", outcome: "Round-the-clock answers to routine questions, with anything complex captured and queued for Monday." },
+          { scenario: "A company whose old bot confidently invented pricing that did not exist.", outcome: "Rebuilt grounded in the real pricing page, scoped so out-of-range questions escalate instead of being guessed at." },
+        ],
         faqs: [
           {
             q: "How is this different from an off-the-shelf chatbot?",
@@ -555,9 +578,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "rag-chatbot-agent",
         title: "RAG chatbot agent",
-        tagline: "Answers from your own documents, with sources",
-        summary:
-          "Retrieval-augmented agents that answer from your internal documents, policies and knowledge base — and cite where each answer came from.",
+        tagline: "Answers straight from your documents, with the receipts",
+        summary: "Retrieval agents that answer from your own policies, manuals and knowledge base — and cite the exact source, so answers can be checked.",
         metaTitle: "RAG Chatbot Agent Development — Retrieval AI",
         metaDescription:
           "RAG chatbot agents that answer from your own documents and cite their sources. Ideal for internal knowledge bases, policy libraries and technical documentation.",
@@ -570,12 +592,13 @@ export const serviceCategories: ServiceCategory[] = [
           "vector database chatbot",
         ],
         intro: [
-          "RAG — retrieval-augmented generation — is the difference between a model that sounds authoritative and one that actually is. Instead of answering from training data, the agent first retrieves the relevant passages from your documents, then answers using only those.",
-          "The practical consequence is that answers can be traced. Every response points at the document it came from, so a reader can verify it rather than trusting it.",
+          "Your company already wrote the answer down. It is in a policy PDF, or an onboarding doc, or a spec from two years ago. The problem is nobody can find it, so they ask a colleague — and now the question costs two people's time instead of none.",
+          "A RAG agent searches your documents first, then answers using only what it found, and links to the passage it used. That last part is what makes it trustworthy enough to actually deploy.",
         ],
         problem: {
-          heading: "Knowledge that exists but can't be found",
-          body: "Most organisations already have the answers written down — in policy PDFs, onboarding docs, technical specs, support wikis, contracts. The problem is retrieval. Nobody remembers which document covers a given case, search returns forty results, and so people ask a colleague instead, which costs two people's time instead of one.",
+          heading: "Search that returns forty results answers nothing",
+          body:
+            "Keyword search fails because people do not ask questions using the words in the document. Someone types 'how much holiday do I get' and the policy says 'annual leave entitlement'. Forty irrelevant results later they give up and ask in Slack. The knowledge exists; the retrieval does not.",
         },
         deliverables: [
           {
@@ -633,6 +656,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Onboarding-heavy organisations",
           "Anyone whose knowledge base is searched but rarely found",
         ],
+        useCases: [
+          { scenario: "An HR team answering the same policy questions across a 200-page handbook.", outcome: "Agent answering from the handbook with a link to the exact clause, so employees can verify rather than trust." },
+          { scenario: "A technical support team hunting through years of specs to answer customer questions.", outcome: "Retrieval across the whole spec archive, cutting the search step out of every ticket." },
+          { scenario: "An organisation where contractors must only see certain documents.", outcome: "Retrieval scoped by role, so each user's answers draw only on what they are cleared to read." },
+        ],
         faqs: [
           {
             q: "What is RAG, in plain terms?",
@@ -661,9 +689,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "dental-clinic-ai-assistant",
         title: "Dental clinic AI assistant",
-        tagline: "Front-desk help that works after the front desk closes",
-        summary:
-          "An AI assistant for dental and medical clinics — handling appointment enquiries, patient questions and reminders around the clock.",
+        tagline: "The bookings you are losing at 6pm",
+        summary: "An AI assistant for dental and medical clinics that answers patient questions, captures bookings after hours, and cuts no-shows with automatic reminders.",
         metaTitle: "Dental Clinic AI Assistant — Appointment & Patient Automation",
         metaDescription:
           "AI assistant for dental and medical clinics: handles appointment enquiries, answers patient questions and sends reminders automatically, 24/7. Built with n8n.",
@@ -676,12 +703,13 @@ export const serviceCategories: ServiceCategory[] = [
           "patient communication automation",
         ],
         intro: [
-          "A dental practice loses bookings in predictable ways: calls that come in while the team is with a patient, enquiries that arrive after closing, and appointments quietly forgotten because nobody had time to ring round with reminders.",
-          "An assistant covers those gaps. It answers the routine enquiries, captures booking requests when the practice is closed, and sends reminders on schedule — while anything clinical goes straight to your team.",
+          "A patient calls at 6:15pm to book a check-up. Your team has gone home. They reach voicemail, hang up, and call the practice down the road — who answered. You never learn that call happened.",
+          "That is the gap this fills. Routine questions answered at any hour, booking requests captured when the practice is closed, and reminders that go out on schedule instead of when someone remembers.",
         ],
         problem: {
-          heading: "The bookings a clinic never sees",
-          body: "Most missed revenue in a practice isn't a rejected quote — it's contact that never completed. A caller who reaches voicemail at 6pm rarely calls back the next morning; they call the next practice on the list. Meanwhile no-shows leave chairs empty at a cost no reminder system was in place to prevent.",
+          heading: "Empty chairs and calls that never called back",
+          body:
+            "Two quiet leaks drain a practice. The first is missed contact: calls during treatment hours, and enquiries after closing that go to voicemail and never return. The second is no-shows, where a chair sits empty because nobody had time to ring round confirming. Neither shows up as a lost sale in any report — they simply never appear.",
         },
         deliverables: [
           {
@@ -739,6 +767,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Single-site practices without a full-time receptionist",
           "Groups wanting consistent patient communication",
         ],
+        useCases: [
+          { scenario: "A two-chair practice where the receptionist is also chairside, so calls go unanswered for stretches of the day.", outcome: "Routine enquiries handled automatically, with the team called in only for clinical questions." },
+          { scenario: "A clinic with a steady no-show rate on hygienist appointments.", outcome: "Automated reminders with confirmation, so cancellations arrive early enough for the slot to be refilled." },
+          { scenario: "A physiotherapy group wanting the same setup across three sites.", outcome: "One assistant, per-site content and calendars — consistent answers whichever location a patient contacts." },
+        ],
         faqs: [
           {
             q: "Does it give medical or dental advice?",
@@ -767,9 +800,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "n8n-workflow-automation",
         title: "n8n workflow automation",
-        tagline: "Connect your tools and stop moving data by hand",
-        summary:
-          "Custom n8n workflows that connect the tools you already use, moving data between them automatically instead of by copy and paste.",
+        tagline: "Stop paying people to copy and paste",
+        summary: "Custom n8n workflows that connect the tools you already use, so data moves between them automatically instead of through a spreadsheet and a human.",
         metaTitle: "n8n Workflow Automation Services — Business Process Automation",
         metaDescription:
           "Custom n8n workflow automation connecting your existing tools. Automate data entry, reporting, lead routing and notifications without manual copy and paste.",
@@ -782,12 +814,13 @@ export const serviceCategories: ServiceCategory[] = [
           "zapier alternative automation",
         ],
         intro: [
-          "Most teams run on a handful of tools that don't talk to each other. Someone exports a CSV from one, reformats it, and pastes it into another. It works, until the person doing it is on holiday, or makes one transcription error that nobody catches for a fortnight.",
-          "n8n is the workflow layer that removes that step. It connects your systems over their APIs and moves data between them on a trigger or a schedule — and because it can be self-hosted, your data doesn't have to pass through someone else's platform.",
+          "Somewhere in your business, a person exports a CSV, reformats a few columns, and pastes it into another system. It has worked for years. It also stops entirely when they are on leave, and it introduces a typo roughly every hundred rows that nobody catches until a report looks wrong.",
+          "n8n is the layer that removes that step. It talks to your systems over their APIs and moves the data on a trigger or a schedule — and it can be self-hosted, so nothing has to pass through someone else's platform.",
         ],
         problem: {
-          heading: "Manual data entry is a reliability problem",
-          body: "The cost isn't only the hours. Manual transfer between systems introduces errors that surface later as wrong reports and bad decisions, and it creates a single point of failure in whoever knows the routine. Automating it makes the process both faster and repeatable — it runs the same way every time, and it's documented by existing.",
+          heading: "Manual data entry is a reliability problem, not a time problem",
+          body:
+            "The hours are the visible cost. The real one is that a manual process is undocumented, unrepeatable and dependent on one person remembering the steps. Errors surface weeks later as decisions made on wrong numbers. Automating it makes the process consistent and, by existing as a workflow, self-documenting.",
         },
         deliverables: [
           {
@@ -844,6 +877,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Operations that depend on one person's routine",
           "Anyone rebuilding the same report every week",
         ],
+        useCases: [
+          { scenario: "Leads from a website form retyped into a CRM by hand each morning.", outcome: "Form submissions routed straight into the CRM, tagged and assigned, within seconds of arriving." },
+          { scenario: "A weekly report rebuilt from four systems every Monday, taking most of a morning.", outcome: "Data pulled and assembled on a schedule. The report is waiting before anyone logs in." },
+          { scenario: "Support emails sorted by hand before anyone could act on them.", outcome: "An AI step classifies and routes each one on arrival, so urgent messages surface immediately." },
+        ],
         faqs: [
           {
             q: "Why n8n rather than Zapier or Make?",
@@ -898,9 +936,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "custom-wordpress-theme-development",
         title: "Custom WordPress theme development",
-        tagline: "A theme built for your site, not adapted from someone else's",
-        summary:
-          "Hand-built WordPress themes matched to your design, with an editing experience that makes sense to the people who publish.",
+        tagline: "A theme built for your site, not for forty thousand others",
+        summary: "Hand-built WordPress themes matched to your design — faster than a purchased theme, and with an editor your team can actually use.",
         metaTitle: "Custom WordPress Theme Development Services",
         metaDescription:
           "Custom WordPress theme development built from your design — fast, responsive, and easy for your team to edit. No page builders, no bloated purchased themes.",
@@ -913,12 +950,13 @@ export const serviceCategories: ServiceCategory[] = [
           "wordpress theme from scratch",
         ],
         intro: [
-          "A purchased theme is built to satisfy thousands of different sites, which means it ships with the features for all of them. You pay for that in load time, in settings panels nobody understands, and in the constant friction of bending a layout that was never meant for your content.",
-          "A custom theme contains what your site actually uses. It is smaller, it loads faster, and the editing screens show your content types rather than a generic set of options.",
+          "The theme you bought had to satisfy every possible buyer, so it ships with sliders, portfolio grids and shop layouts you will never enable. Your visitors download all of it anyway.",
+          "A custom theme contains only what your site uses. It is lighter, it loads faster, and the editing screens show your content — a Property with its own fields, not a blank post you format by hand every time.",
         ],
         problem: {
-          heading: "What a bought theme really costs",
-          body: "The licence is the cheap part. The expense arrives later: pages that load slowly because the theme carries features you never enable, layouts that need a developer to change because everything is a shortcode, and an update path that risks breaking whatever customisations were made to fit your brand. Meanwhile the people who write your content avoid the CMS because it confuses them.",
+          heading: "The licence fee was the cheapest part",
+          body:
+            "The real costs arrive later. Pages load slowly under the weight of unused features. Simple layout changes need a developer because everything is a shortcode. Updates threaten the customisations someone made to fit your brand. And your content team quietly stops using the CMS because it confuses them, so publishing routes back through you.",
         },
         deliverables: [
           {
@@ -974,6 +1012,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Teams who find their current editor confusing",
           "Sites where content structure matters",
         ],
+        useCases: [
+          { scenario: "An estate agency managing property listings as ordinary blog posts with formatted text.", outcome: "Custom post type with real fields for price, bedrooms and location — filterable, and impossible to format wrong." },
+          { scenario: "A clinic whose purchased theme scored poorly on mobile speed.", outcome: "Rebuilt as a custom theme carrying only what the site uses, with a measured before-and-after." },
+          { scenario: "A brand whose designer kept being told the theme could not do that.", outcome: "Figma implemented directly, so the site matches the design rather than the template's limits." },
+        ],
         faqs: [
           {
             q: "Why not just use a page builder like Elementor?",
@@ -1000,9 +1043,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "wordpress-plugin-development",
         title: "WordPress plugin development",
-        tagline: "The functionality no existing plugin quite provides",
-        summary:
-          "Custom plugins built for your workflow, plus safe customisation of the plugins you already run.",
+        tagline: "For the thing no plugin on the directory quite does",
+        summary: "Custom plugins built for your workflow, and update-safe customisation of the plugins you already run.",
         metaTitle: "WordPress Plugin Development & Customisation Services",
         metaDescription:
           "Custom WordPress plugin development for functionality no off-the-shelf plugin provides, plus update-safe customisation of existing plugins. Documented, portable code.",
@@ -1015,12 +1057,13 @@ export const serviceCategories: ServiceCategory[] = [
           "custom wordpress functionality",
         ],
         intro: [
-          "Most WordPress requirements are met by an existing plugin. The interesting cases are the ones that are not — a booking flow that does not match any calendar plugin's assumptions, a listing system with fields no directory plugin supports, an integration with a system nobody has written a connector for.",
-          "That is where a custom plugin belongs. Built as a proper plugin rather than dropped into the theme, so it survives a theme change and can be switched off without taking the site down.",
+          "Most WordPress needs are already solved by an existing plugin, and when one fits I will tell you to use it. The interesting cases are the ones where nothing fits — a booking flow that matches no calendar plugin's assumptions, or an integration with a system nobody has written a connector for.",
+          "That belongs in a proper plugin, not pasted into your theme's functions file where it vanishes the day you change themes.",
         ],
         problem: {
-          heading: "The plugin pile-up",
-          body: "The usual pattern is to solve each new requirement with another plugin. Twenty plugins later, three of them do overlapping things, two conflict in ways that only appear on certain pages, every one is another update to track and another potential security hole, and the site is measurably slower. A single custom plugin that does exactly what you need is usually lighter than the three you would otherwise stack to approximate it.",
+          heading: "Twenty plugins, three of which overlap",
+          body:
+            "The default strategy is to solve each requirement with another plugin. Eventually two of them conflict on one page only, several duplicate each other's work, every one is an update to track and a possible security hole, and the site has grown measurably slower. One custom plugin that does exactly your job is usually lighter than the three you stacked to approximate it.",
         },
         deliverables: [
           {
@@ -1077,6 +1120,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Businesses integrating WordPress with other systems",
           "Teams who have outgrown plugin settings screens",
         ],
+        useCases: [
+          { scenario: "A clinic needing appointment booking that wrote into their existing practice system.", outcome: "Custom plugin talking to the practice system's API, so bookings landed where staff already worked." },
+          { scenario: "A site where a plugin update wiped hand-edited customisations for the second time.", outcome: "Customisations rewritten through hooks and filters, so updates stopped destroying them." },
+          { scenario: "A business running four plugins to build one quote form.", outcome: "Replaced by a single plugin doing exactly that job, with fewer scripts on every page." },
+        ],
         faqs: [
           {
             q: "Would an off-the-shelf plugin not be cheaper?",
@@ -1103,9 +1151,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "wordpress-speed-optimization",
         title: "WordPress speed & SEO optimisation",
-        tagline: "Core Web Vitals fixed at the cause, not hidden behind a cache",
-        summary:
-          "Performance audits and fixes for slow WordPress sites — Core Web Vitals, asset weight, render blocking and technical SEO.",
+        tagline: "Your cache plugin was never going to fix this",
+        summary: "Core Web Vitals audits and fixes for slow WordPress sites — measured before, measured after, with the causes actually removed.",
         metaTitle: "WordPress Speed Optimization & Core Web Vitals Services",
         metaDescription:
           "Fix slow WordPress sites properly: Core Web Vitals audit and remediation, asset and image optimisation, render-blocking fixes and technical SEO. Measured before and after.",
@@ -1118,12 +1165,13 @@ export const serviceCategories: ServiceCategory[] = [
           "fix slow wordpress site",
         ],
         intro: [
-          "A cache plugin is usually the first thing tried and rarely the thing that fixes it. Caching hides a slow page behind a stored copy; it does not reduce the four megabytes of assets the page still ships, or the render-blocking scripts delaying the first paint.",
-          "This is the work I have spent the most time on. On a production platform the same approach — removing unused assets, tree-shaking, lazy loading, image compression and a streamlined build pipeline — returned a 30% Core Web Vitals improvement, with better user retention alongside it.",
+          "Installing a caching plugin is usually the first thing tried, and it rarely moves the number much. Caching stores a copy of the finished page; it does not make the page lighter. If that page still ships four megabytes and blocks rendering on six scripts, the cached copy does too.",
+          "This is the work I have spent the most time on. On a production platform, removing unused assets, tree-shaking, lazy loading, compressing images and streamlining the build returned a 30% Core Web Vitals improvement — and better retention with it.",
         ],
         problem: {
-          heading: "Why speed became a ranking problem",
-          body: "Core Web Vitals are part of how Google evaluates pages, so a slow site is not only losing visitors who will not wait — it is ranking below competitors who fixed it. The frustrating part is that most WordPress slowness traces back to a handful of identifiable causes: a theme loading assets for features you do not use, plugins queuing scripts on every page, and uncompressed images. All of them are fixable.",
+          heading: "Slow pages now cost you ranking as well as visitors",
+          body:
+            "Core Web Vitals feed into how Google evaluates pages, so a slow site is not just losing impatient visitors — it is sitting below a competitor who fixed theirs. The good news is that the causes are boringly consistent: a theme loading assets for features you never switched on, plugins queuing scripts site-wide, and images uploaded straight from a camera.",
         },
         deliverables: [
           {
@@ -1186,6 +1234,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Sites where a caching plugin did not help",
           "Anyone ranking below a faster competitor",
         ],
+        useCases: [
+          { scenario: "A site failing Core Web Vitals in Search Console despite three caching plugins.", outcome: "Cause traced to render-blocking scripts and 4MB of uncompressed images. Fixed at source, then re-measured." },
+          { scenario: "An e-commerce store where mobile visitors left before the page painted.", outcome: "Critical CSS inlined and non-essential scripts deferred, so the page became usable far sooner on 4G." },
+          { scenario: "A publisher whose traffic slipped after a Google update.", outcome: "Speed and technical SEO addressed together — metadata, structured data and crawlability alongside the weight." },
+        ],
         faqs: [
           {
             q: "We already use a caching plugin. Why is the site still slow?",
@@ -1212,9 +1265,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "wordpress-to-nextjs-migration",
         title: "WordPress to Next.js migration",
-        tagline: "Move off WordPress without losing your rankings",
-        summary:
-          "Staged migration from WordPress to Next.js — faster and more maintainable, with URLs and search rankings preserved.",
+        tagline: "Leave WordPress behind without losing your rankings",
+        summary: "Staged migration from WordPress to Next.js, with every URL mapped and redirected — faster, more maintainable, and no downtime.",
         metaTitle: "WordPress to Next.js Migration Services",
         metaDescription:
           "Migrate from WordPress to Next.js in stages, with URL structure and SEO rankings preserved. Faster load times and a maintainable codebase, with no downtime.",
@@ -1227,12 +1279,13 @@ export const serviceCategories: ServiceCategory[] = [
           "legacy cms migration",
         ],
         intro: [
-          "There is a point where WordPress stops being the reason a site works and starts being the reason it is slow. It usually arrives with scale: thousands of listings, complex filtering, dashboard views, or a front end that has become a fight against the CMS rather than a feature of it.",
-          "I have done this migration on a large automotive marketplace — moving off WordPress onto a Next.js application, which improved both maintainability and performance. The important part is that it happened in stages, not as one risky switchover.",
+          "There comes a point where WordPress stops being why your site works and starts being why it is slow. It usually arrives with scale: thousands of listings, filtering that grinds, or a front end that has become a fight with the CMS.",
+          "I have done exactly this migration on a large automotive marketplace. The part that matters is that it ran in stages, with the live site serving traffic the whole way, rather than one switchover with everything riding on it.",
         ],
         problem: {
-          heading: "The risk everyone worries about, correctly",
-          body: "The fear with any migration is losing search rankings, and it is justified — a mishandled move can drop traffic overnight through broken URLs, missing redirects, or metadata that did not carry across. That risk is manageable, but only if URL mapping and redirects are planned before anything moves, rather than patched afterwards once Search Console starts reporting 404s.",
+          heading: "The fear is losing your traffic. It is a fair fear.",
+          body:
+            "A mishandled migration can drop organic traffic overnight — broken URLs, missing redirects, metadata that never carried across. It is entirely avoidable, but only if the URL map and redirect table are written before anything is built. Patched afterwards, once Search Console fills with 404s, you are recovering rather than preventing.",
         },
         deliverables: [
           {
@@ -1297,6 +1350,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Teams fighting the CMS to ship features",
           "Businesses where load time is costing revenue",
         ],
+        useCases: [
+          { scenario: "A marketplace with 8,000 listing URLs earning steady organic traffic.", outcome: "Every URL mapped and redirected before launch, migrated section by section with rankings monitored at each stage." },
+          { scenario: "A team whose editors liked WordPress but whose front end was too slow.", outcome: "Headless setup — WordPress kept as the editor, Next.js as the front end reading it over the REST API." },
+          { scenario: "A business unsure whether migrating was worth it at all.", outcome: "Told plainly it was not. A custom theme and a speed pass solved it for a fraction of the cost." },
+        ],
         faqs: [
           {
             q: "Will we lose our Google rankings?",
@@ -1323,9 +1381,8 @@ export const serviceCategories: ServiceCategory[] = [
       {
         slug: "landing-page-development",
         title: "Landing page development",
-        tagline: "One page, built to convert and built to load",
-        summary:
-          "Fast, focused landing pages for campaigns and launches — on WordPress, or as a standalone Next.js page.",
+        tagline: "One page, one job, loads before they leave",
+        summary: "Focused landing pages for campaigns and launches — fast on mobile, built around a single conversion, and easy to test variants against.",
         metaTitle: "Landing Page Development — Fast, Converting Pages",
         metaDescription:
           "Custom landing page development for campaigns, launches and paid traffic. Fast-loading, responsive, conversion-focused pages built on WordPress or Next.js.",
@@ -1338,12 +1395,13 @@ export const serviceCategories: ServiceCategory[] = [
           "ppc landing page development",
         ],
         intro: [
-          "A landing page has one job, and every element on it either supports that job or competes with it. That is what separates it from a normal page — the discipline is in what you leave out.",
-          "It also has to load fast. If you are paying for the traffic arriving on it, every second of load time is spend you do not get back, and mobile visitors on a slow connection leave before the page finishes rendering.",
+          "A landing page has exactly one job, and everything on it either serves that job or competes with it. The discipline is in what you leave out — which is why most pages built from a normal template underperform.",
+          "Speed is the other half. If you are paying for the traffic landing here, every second of load time is budget you do not get back, and mobile visitors on a weak connection leave before the hero finishes rendering.",
         ],
         problem: {
-          heading: "Why most landing pages underperform",
-          body: "Two causes, usually. The first is competing calls to action — a full navigation bar, footer links and three different offers, all giving the visitor somewhere else to go. The second is weight: a page assembled in a builder that ships the entire theme's assets in order to show one hero and a form, so the visitor you paid for never sees it.",
+          heading: "You are paying for clicks that never see the offer",
+          body:
+            "Two causes account for most of it. First, competing exits: a full navigation bar, a footer full of links, and three offers all giving the visitor somewhere else to go. Second, weight: a page assembled in a builder that ships the entire theme's assets in order to display one headline and a form.",
         },
         deliverables: [
           {
@@ -1400,6 +1458,11 @@ export const serviceCategories: ServiceCategory[] = [
           "Product or feature launches",
           "Lead generation for service businesses",
           "Anyone sending ad traffic to a homepage",
+        ],
+        useCases: [
+          { scenario: "An agency sending paid traffic to their homepage and wondering why it never converted.", outcome: "A dedicated page with one offer and one action, and no navigation to wander off through." },
+          { scenario: "A launch page taking eight seconds to load on mobile, where most of the ad spend went.", outcome: "Rebuilt with only the assets that page needs, cutting the wait to a fraction and holding the traffic." },
+          { scenario: "A team wanting to test three headlines without a developer each round.", outcome: "Copy variants swappable from the CMS, so testing became a marketing task rather than a ticket." },
         ],
         faqs: [
           {

@@ -10,7 +10,7 @@ export function Footer() {
       <div className="g-container py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-4">
-            <Link href="/#home" className="-mx-2 inline-flex min-h-11 items-center rounded-full px-2">
+            <Link href="/" className="-mx-2 inline-flex min-h-11 items-center rounded-full px-2">
               <span className="text-[1.375rem] leading-none font-medium tracking-[-0.01em] text-ink">
                 <span className="text-primary">W</span>ahab
                 <span className="text-g-red-strong">.</span>
@@ -26,7 +26,7 @@ export function Footer() {
               {sections.map((s) => (
                 <li key={s.id}>
                   <Link
-                    href={s.href ?? `/#${s.id}`}
+                    href={s.href}
                     className="inline-flex min-h-9 items-center py-1.5 text-[0.9375rem] text-ink-muted transition-colors hover:text-primary"
                   >
                     {s.label}

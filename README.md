@@ -59,6 +59,18 @@ Type-check on its own: `npx tsc --noEmit`
 
 ## Project structure
 
+Routes:
+
+```
+/                    hero + services teaser
+/about  /work  /experience  /skills  /contact
+/services  →  /services/[category]  →  /services/[category]/[service]
+```
+
+Every link is a real path — there are no `#` fragments except the skip link,
+which targets `#main`. Each route owns exactly one `h1`, so pages rank for
+their own terms instead of competing with one long scroller.
+
 ```
 src/
 ├── app/
@@ -186,7 +198,11 @@ data all pick it up with no further wiring.
 
 Each service object carries its own SEO fields (`metaTitle`, `metaDescription`,
 `keywords`) plus the page body: `intro`, `problem`, `deliverables`, `process`,
-`stack`, `idealFor` and `faqs`.
+`stack`, `idealFor`, `useCases` and `faqs`.
+
+`useCases` is the field that does the most work. A reader recognises their own
+situation faster than they parse a feature list, so each service carries three
+concrete scenarios paired with what changed — not capabilities, situations.
 
 ### What each page emits for SEO
 

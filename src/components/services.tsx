@@ -44,7 +44,7 @@ export function Services() {
           </div>
           {/* Full width on phones, side by side from sm up. */}
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <Link href="/#contact" className="g-btn g-btn-filled w-full sm:w-auto sm:shrink-0">
+            <Link href="/contact" className="g-btn g-btn-filled w-full sm:w-auto sm:shrink-0">
               Start a project
               <ArrowIcon />
             </Link>

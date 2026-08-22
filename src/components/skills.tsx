@@ -10,6 +10,7 @@ export function Skills() {
   return (
     <Section id="skills">
       <SectionHeading
+        level="h1"
         overline="Skills"
         title="Tools and technologies"
         description="What I reach for, grouped by what it does."

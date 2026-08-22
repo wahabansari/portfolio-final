@@ -300,3 +300,50 @@ export function ServicesIndexJsonLd({ categories }: { categories: ServiceCategor
     />
   );
 }
+
+/**
+ * Real scenarios beat feature lists — a reader recognises their own situation
+ * far faster than they parse a bullet of capabilities. Each row pairs the
+ * situation with what changed.
+ */
+export function UseCases({
+  cases,
+  accent,
+}: {
+  cases: { scenario: string; outcome: string }[];
+  accent: Accent;
+}) {
+  return (
+    <ol className="grid gap-6 lg:grid-cols-3">
+      {cases.map((c, i) => (
+        <li key={i} className="g-card-plain flex h-full flex-col p-7">
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-full text-[0.875rem] font-medium text-ink"
+            style={{
+              background: `color-mix(in srgb, ${ACCENT_VAR[accent]} 18%, transparent)`,
+            }}
+          >
+            {i + 1}
+          </span>
+
+          <p className="mt-5 text-[1rem] leading-relaxed font-medium text-ink">{c.scenario}</p>
+
+          <div className="mt-5 flex flex-1 items-start gap-3 border-t border-border pt-5">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="mt-0.5 shrink-0"
+              style={{ color: ACCENT_VAR[accent] }}
+              aria-hidden
+            >
+              <path d="M13.3 5.3a1 1 0 0 0 0 1.4l4.3 4.3H4a1 1 0 1 0 0 2h13.6l-4.3 4.3a1 1 0 1 0 1.4 1.4l6-6a1 1 0 0 0 0-1.4l-6-6a1 1 0 0 0-1.4 0z" />
+            </svg>
+            <p className="g-body text-[0.9375rem]">{c.outcome}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+}

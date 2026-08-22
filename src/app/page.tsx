@@ -1,29 +1,22 @@
 import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
-import { About } from "@/components/about";
 import { Services } from "@/components/services";
-import { Work } from "@/components/work";
-import { Experience } from "@/components/experience";
-import { Skills } from "@/components/skills";
-import { Credentials } from "@/components/credentials";
-import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/json-ld";
 
+/**
+ * The landing page is deliberately short: hero, services, done. The detail
+ * lives on its own routes so those pages rank for their own terms instead of
+ * competing with a single page that repeats all of it.
+ */
 export default function Home() {
   return (
     <>
       <JsonLd />
       <Nav />
-      <main>
+      <main id="main">
         <Hero />
-        <About />
         <Services />
-        <Work />
-        <Experience />
-        <Skills />
-        <Credentials />
-        <Contact />
       </main>
       <Footer />
     </>

@@ -5,6 +5,7 @@ export function Experience() {
   return (
     <Section id="experience" tone="grey">
       <SectionHeading
+        level="h1"
         overline="Experience"
         title="Where I've worked"
         description="Five years across product engineering and interface design."

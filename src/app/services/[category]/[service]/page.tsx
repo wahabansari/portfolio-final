@@ -13,6 +13,7 @@ import {
   Faqs,
   ProcessList,
   ServiceJsonLd,
+  UseCases,
 } from "@/components/service-ui";
 
 type Props = { params: Promise<{ category: string; service: string }> };
@@ -61,7 +62,7 @@ export default async function ServicePage({ params }: Props) {
     <>
       <ServiceJsonLd category={category} service={service} />
       <Nav />
-      <main>
+      <main id="main">
         {/* ── Hero ────────────────────────────────────────────────────── */}
         <section className="pt-10 pb-16 md:pt-14 md:pb-20">
           <div className="g-container">
@@ -92,7 +93,7 @@ export default async function ServicePage({ params }: Props) {
                 </div>
 
                 <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                  <Link href="/#contact" className="g-btn g-btn-filled w-full sm:w-auto">
+                  <Link href="/contact" className="g-btn g-btn-filled w-full sm:w-auto">
                     Start a project
                     <ArrowIcon />
                   </Link>
@@ -166,8 +167,19 @@ export default async function ServicePage({ params }: Props) {
           </Reveal>
         </Section>
 
-        {/* ── Deliverables ────────────────────────────────────────────── */}
+        {/* ── Real situations ─────────────────────────────────────────── */}
         <Section>
+          <Reveal className="mb-12 md:mb-16">
+            <p className="g-overline">In practice</p>
+            <h2 className="g-h2 mt-4">What this looks like in the real world</h2>
+          </Reveal>
+          <Reveal>
+            <UseCases cases={service.useCases} accent={category.accent} />
+          </Reveal>
+        </Section>
+
+        {/* ── Deliverables ────────────────────────────────────────────── */}
+        <Section tone="grey">
           <Reveal className="mb-12 md:mb-16">
             <p className="g-overline">Deliverables</p>
             <h2 className="g-h2 mt-4">What you get</h2>
@@ -178,7 +190,7 @@ export default async function ServicePage({ params }: Props) {
         </Section>
 
         {/* ── Process ─────────────────────────────────────────────────── */}
-        <Section tone="grey">
+        <Section>
           <Reveal className="mb-12 md:mb-16">
             <p className="g-overline">Process</p>
             <h2 className="g-h2 mt-4">How the work runs</h2>
@@ -189,7 +201,7 @@ export default async function ServicePage({ params }: Props) {
         </Section>
 
         {/* ── FAQ ─────────────────────────────────────────────────────── */}
-        <Section>
+        <Section tone="grey">
           <Reveal className="mb-12 md:mb-16">
             <p className="g-overline">FAQ</p>
             <h2 className="g-h2 mt-4">Common questions</h2>
@@ -209,11 +221,11 @@ export default async function ServicePage({ params }: Props) {
                 timeline and a price. No obligation.
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Link href="/#contact" className="g-btn g-btn-filled w-full sm:w-auto">
+                <Link href="/contact" className="g-btn g-btn-filled w-full sm:w-auto">
                   Start a project
                   <ArrowIcon />
                 </Link>
-                <Link href="/#work" className="g-btn g-btn-outlined w-full sm:w-auto">
+                <Link href="/work" className="g-btn g-btn-outlined w-full sm:w-auto">
                   See past work
                 </Link>
               </div>

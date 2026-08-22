@@ -44,7 +44,7 @@ export default async function CategoryPage({ params }: Props) {
     <>
       <CategoryJsonLd category={category} />
       <Nav />
-      <main>
+      <main id="main">
         {/* Hero */}
         <section className="pt-10 pb-16 md:pt-14 md:pb-20">
           <div className="g-container">
@@ -73,7 +73,7 @@ export default async function CategoryPage({ params }: Props) {
               </div>
 
               <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/#contact" className="g-btn g-btn-filled">
+                <Link href="/contact" className="g-btn g-btn-filled">
                   Start a project
                   <ArrowIcon />
                 </Link>

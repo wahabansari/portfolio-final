@@ -58,7 +58,7 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/95 backdrop-blur-sm">
       <div className="g-container flex h-16 items-center justify-between gap-6">
-        <Link href="/#home" className="-mx-2 flex min-h-11 items-center gap-2 rounded-full px-2">
+        <Link href="/" className="-mx-2 flex min-h-11 items-center gap-2 rounded-full px-2">
           <Wordmark />
         </Link>
 
@@ -66,7 +66,7 @@ export function Nav() {
           {sections.map((s) => (
             <Link
               key={s.id}
-              href={s.href ?? `/#${s.id}`}
+              href={s.href}
               aria-current={activeId === s.id ? "true" : undefined}
               className={cn(
                 "rounded-full px-4 py-2 text-sm font-medium transition-colors",
@@ -83,7 +83,7 @@ export function Nav() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Link
-            href="/#contact"
+            href="/contact"
             className="g-btn g-btn-filled hidden h-10 min-h-10 px-5 text-sm sm:inline-flex"
           >
             Get in touch
@@ -122,7 +122,7 @@ export function Nav() {
             {sections.map((s) => (
               <Link
                 key={s.id}
-                href={s.href ?? `/#${s.id}`}
+                href={s.href}
                 onClick={() => setOpen(false)}
                 className={cn(
                   "rounded-full px-4 py-3 text-[0.9375rem] font-medium transition-colors",
@@ -135,7 +135,7 @@ export function Nav() {
               </Link>
             ))}
             <Link
-              href="/#contact"
+              href="/contact"
               onClick={() => setOpen(false)}
               className="g-btn g-btn-filled mt-3"
             >
