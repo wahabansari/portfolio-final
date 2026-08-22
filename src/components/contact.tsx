@@ -4,7 +4,8 @@ import { useState } from "react";
 import { site, socials } from "@/content/site";
 import { ArrowIcon, ExternalIcon, Reveal, Section } from "./ui";
 
-export function Contact() {
+/** `preview` keeps this an h2, since the home page hero already owns the h1. */
+export function Contact({ preview = false }: { preview?: boolean }) {
   const [copied, setCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -22,7 +23,11 @@ export function Contact() {
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
         <Reveal className="lg:col-span-7">
           <p className="g-overline">Contact</p>
-          <h1 className="g-display mt-4 max-w-xl">Let&apos;s build something together</h1>
+          {preview ? (
+            <h2 className="g-h2 mt-4 max-w-xl">Let&apos;s build something together</h2>
+          ) : (
+            <h1 className="g-display mt-4 max-w-xl">Let&apos;s build something together</h1>
+          )}
           <p className="g-body-lg mt-5 max-w-xl">
             Two ways to work with me: hire me full-time, or bring me a project. I take on
             frontend and full-stack builds, AI automation, and performance work. Email is

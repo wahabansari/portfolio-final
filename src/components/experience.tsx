@@ -1,20 +1,30 @@
 import { experience } from "@/content/site";
-import { Reveal, Section, SectionHeading } from "./ui";
+import Link from "next/link";
+import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
-export function Experience() {
+/** `preview` drops the bullet lists, leaving roles and their stacks. */
+export function Experience({ preview = false }: { preview?: boolean }) {
   return (
-    <Section id="experience" tone="grey">
+    <Section id="experience">
       <SectionHeading
-        level="h1"
+        level={preview ? "h2" : "h1"}
         overline="Experience"
         title="Where I've worked"
         description="Five years across product engineering and interface design."
+        aside={
+          preview ? (
+            <Link href="/experience" className="g-link">
+              Full history
+              <ArrowIcon className="h-4 w-4" />
+            </Link>
+          ) : undefined
+        }
       />
 
       <div className="space-y-6">
         {experience.map((role, i) => (
           <Reveal key={role.company} delay={i * 0.06}>
-            <article className="g-card-plain p-7 md:p-10">
+            <article className="g-card-soft p-7 md:p-10">
               <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
                 {/* Meta pinned to a fixed left column so both roles align. */}
                 <div className="lg:col-span-4">
@@ -39,17 +49,19 @@ export function Experience() {
                 <div className="lg:col-span-8">
                   <p className="text-[1.0625rem] leading-relaxed text-ink">{role.summary}</p>
 
-                  <ul className="mt-7 space-y-4">
-                    {role.highlights.map((h, hi) => (
-                      <li key={hi} className="grid grid-cols-[1.25rem_1fr] gap-x-3">
-                        <span
-                          aria-hidden
-                          className="mt-[0.55rem] h-1.5 w-1.5 rounded-full bg-primary"
-                        />
-                        <span className="g-body text-[0.9375rem]">{h}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {!preview && (
+                    <ul className="mt-7 space-y-4">
+                      {role.highlights.map((h, hi) => (
+                        <li key={hi} className="grid grid-cols-[1.25rem_1fr] gap-x-3">
+                          <span
+                            aria-hidden
+                            className="mt-[0.55rem] h-1.5 w-1.5 rounded-full bg-primary"
+                          />
+                          <span className="g-body text-[0.9375rem]">{h}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </article>

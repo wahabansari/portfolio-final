@@ -62,10 +62,16 @@ Type-check on its own: `npx tsc --noEmit`
 Routes:
 
 ```
-/                    hero + services teaser
+/                    every section in preview mode, linking to the full routes
 /about  /work  /experience  /skills  /contact
 /services  →  /services/[category]  →  /services/[category]/[service]
 ```
+
+The home page runs each section with a `preview` prop — a trimmed version (one
+paragraph, three projects, six skill groups, no bullet lists) with a link
+through to the full route. That keeps the landing page complete without
+republishing the detail pages word for word, which would leave the two
+competing for the same search terms.
 
 Every link is a real path — there are no `#` fragments except the skip link,
 which targets `#main`. Each route owns exactly one `h1`, so pages rank for

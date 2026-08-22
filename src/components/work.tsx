@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { projects, type Project } from "@/content/site";
-import { ExternalIcon, Reveal, Section, SectionHeading } from "./ui";
+import Link from "next/link";
+import { ArrowIcon, ExternalIcon, Reveal, Section, SectionHeading } from "./ui";
 
 /* Google's four brand colours, cycled across the cards. */
 const ACCENTS: Record<Project["plate"], { var: string; soft: string }> = {
@@ -11,18 +12,28 @@ const ACCENTS: Record<Project["plate"], { var: string; soft: string }> = {
   listing: { var: "var(--color-g-blue)", soft: "color-mix(in srgb, var(--color-g-blue) 12%, transparent)" },
 };
 
-export function Work() {
+/** `preview` shows the first three projects on the home page. */
+export function Work({ preview = false }: { preview?: boolean }) {
+  const shown = preview ? projects.slice(0, 3) : projects;
   return (
-    <Section id="work">
+    <Section id="work" tone="grey">
       <SectionHeading
-        level="h1"
+        level={preview ? "h2" : "h1"}
         overline="Work"
         title="Selected projects"
         description="Production platforms I've designed, built or migrated. Every one is live and linked."
+        aside={
+          preview ? (
+            <Link href="/work" className="g-link">
+              All {projects.length} projects
+              <ArrowIcon className="h-4 w-4" />
+            </Link>
+          ) : undefined
+        }
       />
 
       <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project, i) => (
+        {shown.map((project, i) => (
           <Reveal as="li" key={project.slug} delay={(i % 3) * 0.06} className="h-full">
             <ProjectCard project={project} />
           </Reveal>
@@ -36,7 +47,7 @@ function ProjectCard({ project }: { project: Project }) {
   const accent = ACCENTS[project.plate];
 
   return (
-    <article className="g-card-soft g-card-interactive group flex h-full flex-col overflow-hidden">
+    <article className="g-card-plain g-card-interactive group flex h-full flex-col overflow-hidden">
       <a
         href={project.href}
         target="_blank"
