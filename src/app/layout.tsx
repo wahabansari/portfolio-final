@@ -77,6 +77,21 @@ export const viewport: Viewport = {
 /** Google Tag Manager container. */
 const GTM_ID = "GTM-WW4JKXNG";
 
+/**
+ * Google Analytics 4. Runs alongside GTM: both define window.dataLayer, and
+ * both snippets guard with `dataLayer || []`, so they coexist.
+ *
+ * Only safe while GA4 is NOT also configured as a tag inside the GTM
+ * container — measuring the same property from both places double-counts
+ * every pageview. Configure GA4 in one place or the other, never both.
+ */
+const GA_ID = "G-Y5V2MKFRJ6";
+
+const gaScript = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`;
+
 const gtmScript = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -105,6 +120,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           hold it until hydration and lose the early pageview timing.
         */}
         <script dangerouslySetInnerHTML={{ __html: gtmScript }} />
+
+        {/* Google tag (gtag.js) — GA4 */}
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+        <script dangerouslySetInnerHTML={{ __html: gaScript }} />
       </head>
       <body className="antialiased">
         {/* GTM fallback for no-JS clients. Must be the first thing in body. */}
