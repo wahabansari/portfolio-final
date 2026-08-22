@@ -48,6 +48,35 @@ export function Nav() {
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const openerRef = useRef<HTMLButtonElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
+  const servicesBtnRef = useRef<HTMLButtonElement>(null);
+  const closeTimer = useRef<number | null>(null);
+
+  const cancelClose = () => {
+    if (closeTimer.current !== null) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const openServices = () => {
+    cancelClose();
+    setServicesOpen(true);
+  };
+
+  /* Google's menus forgive a fast or diagonal cursor: leaving starts a short
+     grace period rather than closing on the spot, so clipping a corner on the
+     way to an item doesn't dismiss the panel underneath you. */
+  const closeServicesSoon = () => {
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => setServicesOpen(false), 150);
+  };
+
+  useEffect(
+    () => () => {
+      if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
+    },
+    [],
+  );
 
   /** A route is current if it matches, or if it's the parent of the page. */
   const isActive = (href: string) =>
@@ -59,7 +88,11 @@ export function Nav() {
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (servicesOpen) setServicesOpen(false);
+      if (servicesOpen) {
+        cancelClose();
+        setServicesOpen(false);
+        servicesBtnRef.current?.focus();
+      }
       if (open) {
         setOpen(false);
         openerRef.current?.focus();
@@ -88,6 +121,8 @@ export function Nav() {
     setOpen(false);
     setServicesOpen(false);
     setMobileServicesOpen(false);
+    // No cancelClose() here — refs can't be touched during render, and a
+    // pending timer only sets `false` again. Re-opening clears it anyway.
   }
 
   const itemClass = (active: boolean) =>
@@ -108,16 +143,33 @@ export function Nav() {
         <nav aria-label="Sections" className="hidden items-center gap-1 lg:flex">
           {sections.map((s) =>
             s.href === "/services" ? (
+              /*
+                h-16 is load-bearing: it stretches the hover target to the full
+                height of the header so its bottom edge meets the panel's top
+                edge at exactly 4rem. Sized to the button instead, the ~12px of
+                header below it belongs to no one, and moving the pointer down
+                towards the menu fires mouseleave and closes it.
+              */
               <div
                 key={s.id}
                 ref={servicesRef}
-                className="relative"
-                onMouseEnter={() => setServicesOpen(true)}
-                onMouseLeave={() => setServicesOpen(false)}
+                className="relative flex h-16 items-center"
+                onMouseEnter={openServices}
+                onMouseLeave={closeServicesSoon}
+                /* Deliberately no onFocus: tabbing onto the trigger shouldn't
+                   drop fifteen links into the tab order. Enter/Space opens it,
+                   Escape closes it, and tabbing out closes it below. */
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                    cancelClose();
+                    setServicesOpen(false);
+                  }
+                }}
               >
                 <button
+                  ref={servicesBtnRef}
                   type="button"
-                  onClick={() => setServicesOpen((v) => !v)}
+                  onClick={() => (servicesOpen ? setServicesOpen(false) : openServices())}
                   aria-expanded={servicesOpen}
                   aria-haspopup="true"
                   aria-current={isActive(s.href) ? "page" : undefined}
@@ -141,26 +193,34 @@ export function Nav() {
                       : "invisible -translate-y-1 opacity-0",
                   )}
                 >
-                  <div className="border-b border-border bg-bg shadow-[0_8px_24px_rgba(32,33,36,0.12)]">
-                    <div className="g-container grid grid-cols-3 gap-8 py-8">
+                  {/* No drop shadow — this design system has none anywhere.
+                      Depth is the fill plus a hairline, same as every band.
+                      The max-height keeps all fifteen reachable on a short
+                      laptop screen instead of running off the bottom. */}
+                  <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-border bg-bg">
+                    <div className="g-container grid grid-cols-3 gap-x-8 gap-y-6 py-6">
                       {serviceCategories.map((c) => (
                         <div key={c.slug}>
-                          <Link
-                            href={`/services/${c.slug}`}
-                            className="flex items-center gap-2 px-3 text-[0.9375rem] font-medium text-ink hover:text-primary"
-                          >
-                            <span
-                              aria-hidden
-                              className={cn(
-                                "h-2 w-2 shrink-0 rounded-full",
-                                c.accent === "blue" && "bg-g-blue",
-                                c.accent === "red" && "bg-g-red",
-                                c.accent === "green" && "bg-g-green",
-                                c.accent === "yellow" && "bg-g-yellow",
-                              )}
-                            />
-                            {c.shortTitle}
-                          </Link>
+                          {/* Hairline under the category, so the three columns
+                              read as groups without drawing a box round each. */}
+                          <div className="border-b border-border pb-2">
+                            <Link
+                              href={`/services/${c.slug}`}
+                              className="flex items-center gap-2 rounded-[var(--radius-sm)] px-3 py-1.5 text-[0.9375rem] font-medium text-ink transition-colors hover:text-primary"
+                            >
+                              <span
+                                aria-hidden
+                                className={cn(
+                                  "h-2 w-2 shrink-0 rounded-full",
+                                  c.accent === "blue" && "bg-g-blue",
+                                  c.accent === "red" && "bg-g-red",
+                                  c.accent === "green" && "bg-g-green",
+                                  c.accent === "yellow" && "bg-g-yellow",
+                                )}
+                              />
+                              {c.shortTitle}
+                            </Link>
+                          </div>
                           <ul className="mt-2">
                             {c.services.map((sv) => {
                               const active = pathname === `/services/${c.slug}/${sv.slug}`;
@@ -170,36 +230,43 @@ export function Nav() {
                                     href={`/services/${c.slug}/${sv.slug}`}
                                     aria-current={active ? "page" : undefined}
                                     className={cn(
-                                      "group flex items-center gap-3 rounded-xl p-3 transition-colors",
-                                      active
-                                        ? "bg-surface-blue text-on-tonal"
-                                        : "text-ink hover:bg-surface",
+                                      "group flex items-start gap-3 rounded-[var(--radius-sm)] p-2.5 transition-colors",
+                                      active ? "bg-surface-blue" : "hover:bg-surface",
                                     )}
                                   >
+                                    {/* Tint plus ink, the same badge the
+                                        process steps and use cases use. */}
                                     <span
                                       aria-hidden
-                                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink"
                                       style={{
-                                        background: `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 16%, transparent)`,
+                                        background: `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 18%, transparent)`,
                                       }}
                                     >
-                                      <ServiceIcon
-                                        slug={sv.slug}
-                                        className={active ? "text-on-tonal" : "text-ink-muted"}
-                                      />
+                                      <ServiceIcon slug={sv.slug} />
                                     </span>
                                     <span className="min-w-0 flex-1">
-                                      <span className="block truncate text-[0.875rem] font-medium">
-                                        {sv.title}
-                                      </span>
-                                      {/* Full-opacity, not /80 — on this light
-                                          tonal chip, on-tonal only clears AA at
-                                          full strength (4.68:1); dimming it
-                                          drops to 3.38:1 and fails. */}
                                       <span
                                         className={cn(
-                                          "block truncate text-[0.75rem]",
-                                          active ? "text-on-tonal" : "text-ink-muted",
+                                          "block text-[0.9375rem] font-medium",
+                                          active ? "text-on-tonal" : "text-ink",
+                                        )}
+                                      >
+                                        {sv.title}
+                                      </span>
+                                      {/* Full opacity, never /80 — on the light
+                                          tonal fill, on-tonal clears AA at full
+                                          strength (4.68:1) and fails at 3.38:1
+                                          once dimmed. */}
+                                      {/* Two lines, clamped. The summaries are
+                                          written for the category pages and run
+                                          to three lines here, which pushes the
+                                          panel past the viewport and makes a
+                                          nav menu scroll. */}
+                                      <span
+                                        className={cn(
+                                          "g-body-sm g-clamp-2 mt-0.5",
+                                          active && "text-on-tonal",
                                         )}
                                       >
                                         {sv.summary}
@@ -207,8 +274,10 @@ export function Nav() {
                                     </span>
                                     <ArrowIcon
                                       className={cn(
-                                        "h-4 w-4 shrink-0 -translate-x-1 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100",
-                                        active && "translate-x-0 opacity-100",
+                                        "mt-1.5 h-4 w-4 shrink-0 -translate-x-1 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100",
+                                        active
+                                          ? "translate-x-0 text-on-tonal opacity-100"
+                                          : "text-ink-muted",
                                       )}
                                     />
                                   </Link>
@@ -220,8 +289,10 @@ export function Nav() {
                       ))}
                     </div>
 
-                    <div className="border-t border-border">
-                      <div className="g-container flex items-center justify-between py-4">
+                    {/* Grey band closes the panel, the way every section on the
+                        site alternates fill rather than drawing a box. */}
+                    <div className="border-t border-border bg-surface">
+                      <div className="g-container flex items-center justify-between gap-6 py-3">
                         <p className="g-body-sm">
                           Every service, in one place — frontend, automation and WordPress.
                         </p>
