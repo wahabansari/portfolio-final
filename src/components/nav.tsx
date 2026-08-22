@@ -6,25 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import { serviceCategories } from "@/content/services";
 import { sections } from "@/content/site";
 import { ThemeToggle } from "./theme-toggle";
-import { ArrowIcon } from "./ui";
+import { ArrowIcon, Wordmark } from "./ui";
 import { ACCENT_VAR } from "./service-ui";
 import { ServiceIcon } from "./service-icons";
 import { cn } from "@/lib/cn";
-
-/**
- * The wordmark. Uses the *accessible* variants of the brand colours rather than
- * the raw ones — brand blue is 4.27:1 on white and brand red 3.9:1, both below
- * AA. Blue 700 and Red 700 look the same at this size and clear it comfortably.
- */
-function Wordmark() {
-  return (
-    <span className="text-[1.375rem] leading-none font-medium tracking-[-0.01em] text-ink">
-      <span className="text-primary">W</span>
-      ahab
-      <span className="text-g-red-strong">.</span>
-    </span>
-  );
-}
 
 function Chevron({ open }: { open: boolean }) {
   return (
@@ -136,7 +121,11 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-bg/95 backdrop-blur-sm">
       <div className="g-container flex h-16 items-center justify-between gap-6">
-        <Link href="/" className="-mx-2 flex min-h-11 items-center gap-2 rounded-full px-2">
+        <Link
+          href="/"
+          aria-label="Wahab — home"
+          className="-mx-2 flex min-h-11 items-center gap-2 rounded-full px-2"
+        >
           <Wordmark />
         </Link>
 
@@ -187,17 +176,21 @@ export function Nav() {
                 <div
                   inert={!servicesOpen}
                   className={cn(
-                    "fixed inset-x-0 top-16 z-50 transition-[opacity,transform] duration-200",
+                    /* `translate`, not `transform`: Tailwind v4 compiles
+                       translate-* to the standalone `translate` property, so
+                       transitioning `transform` animates nothing and the panel
+                       snaps into place while only the opacity fades. */
+                    "fixed inset-x-0 top-16 z-50 transition-[opacity,translate] duration-300 ease-out",
                     servicesOpen
                       ? "visible translate-y-0 opacity-100"
-                      : "invisible -translate-y-1 opacity-0",
+                      : "invisible -translate-y-4 opacity-0",
                   )}
                 >
                   {/* No drop shadow — this design system has none anywhere.
                       Depth is the fill plus a hairline, same as every band.
                       The max-height keeps all fifteen reachable on a short
                       laptop screen instead of running off the bottom. */}
-                  <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-border bg-bg">
+                  <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-b border-border bg-bg">
                     <div className="g-container grid grid-cols-3 gap-x-8 gap-y-6 py-6">
                       {serviceCategories.map((c) => (
                         <div key={c.slug}>
@@ -229,9 +222,14 @@ export function Nav() {
                                   <Link
                                     href={`/services/${c.slug}/${sv.slug}`}
                                     aria-current={active ? "page" : undefined}
+                                    style={
+                                      {
+                                        "--row-tint": `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 12%, transparent)`,
+                                      } as React.CSSProperties
+                                    }
                                     className={cn(
                                       "group flex items-start gap-3 rounded-[var(--radius-sm)] p-2.5 transition-colors",
-                                      active ? "bg-surface-blue" : "hover:bg-surface",
+                                      active ? "bg-surface-blue" : "hover:bg-[var(--row-tint)]",
                                     )}
                                   >
                                     {/* Tint plus ink, the same badge the
@@ -258,14 +256,13 @@ export function Nav() {
                                           tonal fill, on-tonal clears AA at full
                                           strength (4.68:1) and fails at 3.38:1
                                           once dimmed. */}
-                                      {/* Two lines, clamped. The summaries are
-                                          written for the category pages and run
-                                          to three lines here, which pushes the
-                                          panel past the viewport and makes a
-                                          nav menu scroll. */}
+                                      {/* One line. The summaries are written
+                                          for the category pages and run long
+                                          here; a single line keeps the rows
+                                          scannable and the panel short. */}
                                       <span
                                         className={cn(
-                                          "g-body-sm g-clamp-2 mt-0.5",
+                                          "g-body-sm mt-0.5 block truncate",
                                           active && "text-on-tonal",
                                         )}
                                       >

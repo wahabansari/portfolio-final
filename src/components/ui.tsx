@@ -154,3 +154,25 @@ export function DownloadIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+/**
+ * The wordmark: a monogram tile plus the name, the way Google pairs its "G"
+ * mark with the Google wordmark. White on Blue 600 is 4.51:1, so the tile
+ * clears AA; the name itself stays ink so it never depends on the accent.
+ */
+export function Wordmark({ className }: { className?: string }) {
+  return (
+    <span className={cn("flex items-center gap-2", className)}>
+      <span
+        aria-hidden
+        className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-primary-bg text-[1.0625rem] leading-none font-medium text-primary-fg"
+      >
+        W
+      </span>
+      <span className="text-[1.375rem] leading-none font-medium tracking-[-0.01em] text-ink">
+        Wahab
+        <span className="text-g-red-strong">.</span>
+      </span>
+    </span>
+  );
+}

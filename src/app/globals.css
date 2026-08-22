@@ -255,17 +255,6 @@
     color: var(--color-primary);
   }
 
-  /* Two-line clamp for dense description text — the service cards in the nav
-     menu. Written out here rather than using Tailwind's `line-clamp-2`, which
-     this build does not emit a rule for. Sets its own display, so don't pair
-     it with `block`. */
-  .g-clamp-2 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-
   /* ── Buttons: full pills, exactly as Google builds them ────────────────── */
   .g-btn {
     display: inline-flex;

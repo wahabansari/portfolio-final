@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { serviceCategories } from "@/content/services";
 import { sections, site, socials } from "@/content/site";
-import { ArrowIcon } from "./ui";
+import { ArrowIcon, Wordmark } from "./ui";
 
 /** Muted by default, primary on hover — a wall of blue reads as noise. */
 const linkClass =
@@ -16,11 +16,12 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-12">
           {/* Identity + the one action worth repeating down here */}
           <div className="col-span-2 md:col-span-4">
-            <Link href="/" className="-mx-2 inline-flex min-h-11 items-center rounded-full px-2">
-              <span className="text-[1.375rem] leading-none font-medium tracking-[-0.01em] text-ink">
-                <span className="text-primary">W</span>ahab
-                <span className="text-g-red-strong">.</span>
-              </span>
+            <Link
+              href="/"
+              aria-label="Wahab — home"
+              className="-mx-2 inline-flex min-h-11 items-center rounded-full px-2"
+            >
+              <Wordmark />
             </Link>
             <p className="g-body-sm mt-4 max-w-xs">
               {site.role} · {site.location}

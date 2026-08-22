@@ -55,10 +55,10 @@ const ICONS: Record<string, (props: { className?: string }) => React.JSX.Element
   ),
   "website-dashboard-redesign": ({ className }) => (
     <Base className={className}>
-      <rect x="3" y="3" width="8" height="9" rx="1.5" />
-      <rect x="13" y="3" width="8" height="5" rx="1.5" />
-      <rect x="13" y="10" width="8" height="11" rx="1.5" />
-      <rect x="3" y="14" width="8" height="7" rx="1.5" />
+      <rect x="3" y="3" width="8" height="8" rx="1.5" />
+      <rect x="13" y="3" width="8" height="8" rx="1.5" />
+      <rect x="3" y="13" width="8" height="8" rx="1.5" />
+      <path d="M14 20.5c2.5 0 4-1.4 4-3.2 0-1.3-1-2-1-3 0-1.2 1.3-1.6 2.6-1.4" />
     </Base>
   ),
   "ui-ux-design": ({ className }) => (
@@ -78,18 +78,15 @@ const ICONS: Record<string, (props: { className?: string }) => React.JSX.Element
   ),
   "rag-chatbot-agent": ({ className }) => (
     <Base className={className}>
-      <rect x="5" y="8" width="14" height="10" rx="2" />
-      <circle cx="9.5" cy="13" r="1.1" fill="currentColor" stroke="none" />
-      <circle cx="14.5" cy="13" r="1.1" fill="currentColor" stroke="none" />
-      <path d="M12 8V5" />
-      <circle cx="12" cy="3.4" r="1.3" />
-      <path d="M2 12h3M19 12h3" />
+      <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7" />
+      <path d="M7.5 7.5h6M7.5 11h6M7.5 14.5h3" />
+      <circle cx="17" cy="16" r="3.4" />
+      <path d="m19.6 18.6 2.2 2.2" />
     </Base>
   ),
   "dental-clinic-ai-assistant": ({ className }) => (
     <Base className={className}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 8v8M8 12h8" />
+      <path d="M12 6.2c-1.6-1.4-4-1.9-5.6-.7C4.6 6.9 4.6 9.6 5.4 12c.6 1.8.7 3.6.9 5.4.1 1.2.5 2.4 1.5 2.4 1.2 0 1.4-1.6 1.6-3 .2-1.2.4-2.4 1.6-2.4s1.4 1.2 1.6 2.4c.2 1.4.4 3 1.6 3 1 0 1.4-1.2 1.5-2.4.2-1.8.3-3.6.9-5.4.8-2.4.8-5.1-1-6.5-1.6-1.2-4-.7-5.6.7Z" />
     </Base>
   ),
   "n8n-workflow-automation": ({ className }) => (
@@ -109,13 +106,17 @@ const ICONS: Record<string, (props: { className?: string }) => React.JSX.Element
   ),
   "wordpress-plugin-development": ({ className }) => (
     <Base className={className}>
-      <rect x="3" y="3" width="11" height="11" rx="2.5" />
-      <rect x="10" y="10" width="11" height="11" rx="2.5" />
+      <path d="M9 2v5M15 2v5" />
+      <path d="M6 7h12v4a6 6 0 0 1-6 6 6 6 0 0 1-6-6V7Z" />
+      <path d="M12 17v5" />
     </Base>
   ),
   "wordpress-speed-optimization": ({ className }) => (
     <Base className={className}>
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      <path d="M4 18a8 8 0 1 1 16 0" />
+      <path d="m12 14 4.5-4.5" />
+      <circle cx="12" cy="14" r="1.4" fill="currentColor" stroke="none" />
+      <path d="M4 18h3M17 18h3" />
     </Base>
   ),
   "wordpress-to-nextjs-migration": ({ className }) => (
@@ -129,11 +130,8 @@ const ICONS: Record<string, (props: { className?: string }) => React.JSX.Element
   "landing-page-development": ({ className }) => (
     <Base className={className}>
       <rect x="3" y="3" width="18" height="18" rx="2" />
-      <line x1="3" y1="8" x2="21" y2="8" />
-      <circle cx="6" cy="5.5" r="0.7" fill="currentColor" stroke="none" />
-      <circle cx="8.5" cy="5.5" r="0.7" fill="currentColor" stroke="none" />
-      <rect x="6" y="11" width="12" height="5" rx="1" />
-      <line x1="6" y1="19" x2="14" y2="19" />
+      <path d="M7 7.5h10M7 11h6" />
+      <rect x="7" y="14.5" width="7" height="3.5" rx="1.75" />
     </Base>
   ),
 };
