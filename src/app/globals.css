@@ -7,8 +7,8 @@
      · Headings are weight 400. Large and light, never bold. This is the single
        most identifying trait of Google's type.
      · Buttons are full pills (48px+ radius), 12px/24px padding, 16px/500.
-     · There are no shadows anywhere. Depth comes from #F8F9FA band fills and
-       #DADCE0 hairlines.
+     · Depth comes from #F8F9FA band fills and #DADCE0 hairlines. Cards add a
+       shallow elevation-1 shadow; nothing else on the page casts one.
      · Body #202124, secondary #5F6368, primary #1A73E8.
 
    Colours live in a plain @theme (NOT @theme inline) so utilities compile to
@@ -53,6 +53,15 @@
 }
 
 :root {
+  /* Google's elevation 1, softened — enough to lift a white card off a white
+     band without the page looking like it has drop shadows on it. */
+  --card-shadow:
+    0 1px 2px rgba(60, 64, 67, 0.1),
+    0 1px 3px 1px rgba(60, 64, 67, 0.06);
+  --card-shadow-hover:
+    0 1px 3px rgba(60, 64, 67, 0.16),
+    0 4px 8px 3px rgba(60, 64, 67, 0.08);
+
   /* Unlocks transitions to intrinsic sizes (height: auto), which the FAQ
      disclosures animate to. */
   interpolate-size: allow-keywords;
@@ -88,6 +97,15 @@
   --color-g-yellow: #fdd663;
   --color-g-green: #81c995;
   --color-g-red-strong: #f28b82;
+
+  /* Black on near-black barely registers, so dark leans on the lighter card
+     fill for elevation and only hints at a shadow. */
+  --card-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --card-shadow-hover:
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 4px 8px 3px rgba(0, 0, 0, 0.2);
 
   color-scheme: dark;
 }
@@ -321,40 +339,33 @@
   }
 
   /* ── Surfaces ──────────────────────────────────────────────────────────────
-     A card's fill is the inverse of the band behind it, so it is never the
-     same colour as what it sits on. That pairing used to be hard-coded per
-     component, which meant re-toning a section silently turned its cards
-     invisible. The band now declares the fill and the card just reads it.
+     Cards are always the raised fill — white in light, #35363A in dark — and
+     never take the grey band colour. On a grey band that reads as elevation
+     on its own; on a white band the hairline and a shallow shadow do the
+     separating instead.
 
-     Cards also carry a hairline. Material 3's outlined card is a real
-     variant, and with fifteen service cards on a page the outline is what
-     keeps them reading as discrete objects. */
-  .g-section {
-    --card-fill: var(--color-surface); /* white band -> grey card */
-  }
-  .g-section.bg-surface,
-  .g-section.bg-surface-blue {
-    --card-fill: var(--color-card-raised); /* filled band -> raised card */
-  }
-
+     Because the fill is always lighter than every band in both themes, a card
+     can't come out the same colour as what it sits on the way it used to when
+     each component picked its own. */
   .g-card-plain,
   .g-card-soft {
-    /* Fallback covers cards outside a Section — the hero, page headers. */
-    background-color: var(--card-fill, var(--color-surface));
+    background-color: var(--color-card-raised);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
+    box-shadow: var(--card-shadow);
   }
 
   .g-card-interactive {
     transition:
       background-color 0.2s ease,
-      border-color 0.2s ease;
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
   }
-  /* Hover deepens the fill and firms the outline. */
+  /* Hover lifts a little rather than repainting the card. */
   .g-card-plain.g-card-interactive:hover,
   .g-card-soft.g-card-interactive:hover {
-    background-color: color-mix(in srgb, var(--card-fill, var(--color-surface)) 94%, var(--color-ink));
     border-color: var(--color-border-strong);
+    box-shadow: var(--card-shadow-hover);
   }
 
   /* ── Disclosure (FAQ accordions) ───────────────────────────────────────────
