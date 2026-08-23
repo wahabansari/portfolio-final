@@ -145,6 +145,19 @@ export const projects: Project[] = [
     plate: "app",
   },
   {
+    slug: "cennetsol",
+    title: "Cennetsol",
+    kind: "AI Services Website",
+    href: "https://www.cennetsol.com/",
+    domain: "cennetsol.com",
+    blurb:
+      "Marketing site for an enterprise AI consultancy — services, case studies and team, structured to keep growing without a rebuild.",
+    detail:
+      "A Next.js site for an AI and digital-transformation consultancy working with industrial, healthcare and logistics clients. Built around the sections that do the selling: capability areas across automation, analytics, custom LLMs, MLOps and computer vision; case studies carrying real outcomes; testimonials, leadership profiles and an FAQ answering the integration and ROI questions buyers ask first. Component-driven and responsive throughout, so new services and case studies drop into the existing structure instead of needing new layouts.",
+    tools: ["Next.js", "React", "Tailwind CSS", "Vercel"],
+    plate: "portal",
+  },
+  {
     slug: "verdira",
     title: "Verdira",
     kind: "Web Application",
