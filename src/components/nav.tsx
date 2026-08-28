@@ -3,19 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { serviceCategories } from "@/content/services";
+import { services } from "@/content/services";
 import { sections } from "@/content/site";
 import { ThemeToggle } from "./theme-toggle";
 import { ArrowIcon, Wordmark } from "./ui";
-import { ACCENT_VAR } from "./service-ui";
-import { ServiceIcon } from "./service-icons";
 import { cn } from "@/lib/cn";
 
 function Chevron({ open }: { open: boolean }) {
   return (
     <svg
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden
@@ -48,9 +46,9 @@ export function Nav() {
     setServicesOpen(true);
   };
 
-  /* Google's menus forgive a fast or diagonal cursor: leaving starts a short
-     grace period rather than closing on the spot, so clipping a corner on the
-     way to an item doesn't dismiss the panel underneath you. */
+  /* Leaving starts a short grace period rather than closing on the spot, so
+     clipping a corner on the way to an item doesn't dismiss the panel from
+     under the cursor. */
   const closeServicesSoon = () => {
     cancelClose();
     closeTimer.current = window.setTimeout(() => setServicesOpen(false), 150);
@@ -63,11 +61,9 @@ export function Nav() {
     [],
   );
 
-  /** A route is current if it matches, or if it's the parent of the page. */
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
-  // Escape closes whichever menu is open; a click outside closes the dropdown.
   useEffect(() => {
     if (!open && !servicesOpen) return;
 
@@ -97,57 +93,51 @@ export function Nav() {
     };
   }, [open, servicesOpen]);
 
-  // Close everything when the route changes. Adjusting state during render is
-  // React's documented pattern for this — an effect would fire a second render
-  // pass with the menus still open.
+  /* Close everything on navigation. Adjusting state during render is React's
+     documented pattern for this — an effect fires a second render pass with
+     the menus still open. */
   const [lastPath, setLastPath] = useState(pathname);
   if (lastPath !== pathname) {
     setLastPath(pathname);
     setOpen(false);
     setServicesOpen(false);
     setMobileServicesOpen(false);
-    // No cancelClose() here — refs can't be touched during render, and a
-    // pending timer only sets `false` again. Re-opening clears it anyway.
   }
 
   const itemClass = (active: boolean) =>
     cn(
-      "rounded-full px-4 py-2 text-sm font-medium transition-colors",
-      active
-        ? "bg-surface-blue text-on-tonal"
-        : "text-ink-muted hover:bg-surface hover:text-ink",
+      "relative rounded-full px-3.5 py-2 text-[0.9375rem] font-medium transition-colors",
+      active ? "text-ink" : "text-ink-muted hover:text-ink",
     );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-bg/95 backdrop-blur-sm">
-      <div className="g-container flex h-16 items-center justify-between gap-6">
+    <header className="sticky top-0 z-50 border-b border-border bg-bg/85 backdrop-blur-md">
+      <div className="ds-container flex h-[4.5rem] items-center justify-between gap-6">
         <Link
           href="/"
-          aria-label="Wahab — home"
-          className="-mx-2 flex min-h-11 items-center gap-2 rounded-full px-2"
+          aria-label={`Wahab Ansari — home`}
+          className="-mx-2 flex min-h-11 items-center rounded-lg px-2"
         >
           <Wordmark />
         </Link>
 
-        <nav aria-label="Sections" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
           {sections.map((s) =>
             s.href === "/services" ? (
-              /*
-                h-16 is load-bearing: it stretches the hover target to the full
-                height of the header so its bottom edge meets the panel's top
-                edge at exactly 4rem. Sized to the button instead, the ~12px of
-                header below it belongs to no one, and moving the pointer down
-                towards the menu fires mouseleave and closes it.
-              */
+              /* h-[4.5rem] is load-bearing: it stretches the hover target to
+                 the full header height so its bottom edge meets the panel's
+                 top edge exactly. Sized to the button instead, the strip of
+                 header below it belongs to no one, and moving the pointer
+                 down towards the menu fires mouseleave and closes it. */
               <div
                 key={s.id}
                 ref={servicesRef}
-                className="relative flex h-16 items-center"
+                className="relative flex h-[4.5rem] items-center"
                 onMouseEnter={openServices}
                 onMouseLeave={closeServicesSoon}
                 /* Deliberately no onFocus: tabbing onto the trigger shouldn't
-                   drop fifteen links into the tab order. Enter/Space opens it,
-                   Escape closes it, and tabbing out closes it below. */
+                   drop the whole submenu into the tab order. Enter/Space
+                   opens it, Escape closes it, tabbing out closes it below. */
                 onBlur={(e) => {
                   if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
                     cancelClose();
@@ -168,9 +158,8 @@ export function Nav() {
                   <Chevron open={servicesOpen} />
                 </button>
 
-                {/* Full-bleed catalogue, grouped by category. Fixed (not
-                    absolute) so it spans the viewport regardless of where the
-                    trigger sits, anchored right under the header's h-16. It
+                {/* Fixed, not absolute, so it spans the viewport regardless of
+                    where the trigger sits — anchored under the header. It
                     stays a DOM descendant of the hover target above, so
                     pointer travel down into it never fires mouseleave. */}
                 <div
@@ -180,122 +169,64 @@ export function Nav() {
                        translate-* to the standalone `translate` property, so
                        transitioning `transform` animates nothing and the panel
                        snaps into place while only the opacity fades. */
-                    "fixed inset-x-0 top-16 z-50 transition-[opacity,translate] duration-300 ease-out",
+                    "fixed inset-x-0 top-[4.5rem] z-50 transition-[opacity,translate] duration-200 ease-out",
                     servicesOpen
                       ? "visible translate-y-0 opacity-100"
-                      : "invisible -translate-y-4 opacity-0",
+                      : "invisible -translate-y-3 opacity-0",
                   )}
                 >
-                  {/* No drop shadow — this design system has none anywhere.
-                      Depth is the fill plus a hairline, same as every band.
-                      The max-height keeps all fifteen reachable on a short
-                      laptop screen instead of running off the bottom. */}
-                  <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-b border-border bg-bg">
-                    <div className="g-container grid grid-cols-3 gap-x-8 gap-y-6 py-6">
-                      {serviceCategories.map((c) => (
-                        <div key={c.slug}>
-                          {/* Hairline under the category, so the three columns
-                              read as groups without drawing a box round each. */}
-                          <div className="border-b border-border pb-2">
-                            <Link
-                              href={`/services/${c.slug}`}
-                              className="flex items-center gap-2 rounded-[var(--radius-sm)] px-3 py-1.5 text-[0.9375rem] font-medium text-ink transition-colors hover:text-primary"
-                            >
-                              <span
-                                aria-hidden
+                  <div className="border-b border-border bg-bg">
+                    <div className="ds-container py-7">
+                      <ul className="grid grid-cols-3 gap-x-6 gap-y-1">
+                        {services.map((sv, i) => {
+                          const href = `/services/${sv.slug}`;
+                          const active = pathname === href;
+                          return (
+                            <li key={sv.slug}>
+                              <Link
+                                href={href}
+                                aria-current={active ? "page" : undefined}
                                 className={cn(
-                                  "h-2 w-2 shrink-0 rounded-full",
-                                  c.accent === "blue" && "bg-g-blue",
-                                  c.accent === "red" && "bg-g-red",
-                                  c.accent === "green" && "bg-g-green",
-                                  c.accent === "yellow" && "bg-g-yellow",
+                                  "group flex h-full items-start gap-3.5 rounded-[var(--radius-md)] p-3.5 transition-colors",
+                                  active ? "bg-accent-soft" : "hover:bg-surface",
                                 )}
-                              />
-                              {c.shortTitle}
-                            </Link>
-                          </div>
-                          <ul className="mt-2">
-                            {c.services.map((sv) => {
-                              const active = pathname === `/services/${c.slug}/${sv.slug}`;
-                              return (
-                                <li key={sv.slug}>
-                                  <Link
-                                    href={`/services/${c.slug}/${sv.slug}`}
-                                    aria-current={active ? "page" : undefined}
-                                    style={
-                                      {
-                                        "--row-tint": `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 7%, transparent)`,
-                                      } as React.CSSProperties
-                                    }
+                              >
+                                <span
+                                  aria-hidden
+                                  className={cn(
+                                    "mt-px font-mono text-[0.6875rem] tracking-widest",
+                                    active ? "text-accent" : "text-ink-soft",
+                                  )}
+                                >
+                                  {String(i + 1).padStart(2, "0")}
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                  <span
                                     className={cn(
-                                      "group flex items-start gap-3 rounded-[var(--radius-sm)] p-2.5 transition-colors",
-                                      active ? "bg-surface-blue" : "hover:bg-[var(--row-tint)]",
+                                      "flex items-center gap-1.5 font-display text-[0.9375rem] font-medium",
+                                      active ? "text-accent" : "text-ink",
                                     )}
                                   >
-                                    {/* Tint plus ink, the same badge the
-                                        process steps and use cases use. */}
-                                    <span
-                                      aria-hidden
-                                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink"
-                                      style={{
-                                        background: `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 18%, transparent)`,
-                                      }}
-                                    >
-                                      <ServiceIcon slug={sv.slug} />
-                                    </span>
-                                    <span className="min-w-0 flex-1">
-                                      <span
-                                        className={cn(
-                                          "block text-[0.9375rem] font-medium",
-                                          active ? "text-on-tonal" : "text-ink",
-                                        )}
-                                      >
-                                        {sv.title}
-                                      </span>
-                                      {/* Full opacity, never /80 — on the light
-                                          tonal fill, on-tonal clears AA at full
-                                          strength (4.68:1) and fails at 3.38:1
-                                          once dimmed. */}
-                                      {/* One line. The summaries are written
-                                          for the category pages and run long
-                                          here; a single line keeps the rows
-                                          scannable and the panel short. */}
-                                      <span
-                                        className={cn(
-                                          "g-body-sm mt-0.5 block truncate",
-                                          active && "text-on-tonal",
-                                        )}
-                                      >
-                                        {sv.summary}
-                                      </span>
-                                    </span>
-                                    <ArrowIcon
-                                      className={cn(
-                                        "mt-1.5 h-4 w-4 shrink-0 -translate-x-1 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100",
-                                        active
-                                          ? "translate-x-0 text-on-tonal opacity-100"
-                                          : "text-ink-muted",
-                                      )}
-                                    />
-                                  </Link>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
-                      ))}
+                                    {sv.title}
+                                    <ArrowIcon className="h-3.5 w-3.5 -translate-x-1 opacity-0 transition-[translate,opacity] duration-200 group-hover:translate-x-0 group-hover:opacity-100" />
+                                  </span>
+                                  <span className="ds-body-sm mt-1 block">{sv.summary}</span>
+                                </span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
                     </div>
 
-                    {/* Grey band closes the panel, the way every section on the
-                        site alternates fill rather than drawing a box. */}
                     <div className="border-t border-border bg-surface">
-                      <div className="g-container flex items-center justify-between gap-6 py-3">
-                        <p className="g-body-sm">
-                          Every service, in one place — frontend, automation and WordPress.
+                      <div className="ds-container flex items-center justify-between gap-6 py-3.5">
+                        <p className="ds-body-sm">
+                          Not sure which one? Describe the problem and I will tell you.
                         </p>
-                        <Link href="/services" className="g-link !text-[0.9375rem]">
-                          All services
-                          <ArrowIcon className="h-4 w-4" />
+                        <Link href="/services" className="ds-link">
+                          Compare all services
+                          <ArrowIcon className="h-3.5 w-3.5" />
                         </Link>
                       </div>
                     </div>
@@ -319,9 +250,9 @@ export function Nav() {
           <ThemeToggle />
           <Link
             href="/contact"
-            className="g-btn g-btn-filled hidden h-10 min-h-10 px-5 text-sm sm:inline-flex"
+            className="ds-btn ds-btn-primary hidden h-10 min-h-10 px-5 text-[0.875rem] sm:inline-flex"
           >
-            Get in touch
+            Start a project
           </Link>
           <button
             ref={openerRef}
@@ -330,9 +261,9 @@ export function Nav() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition-colors hover:bg-surface lg:hidden"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
               {open ? (
                 <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7l1.4-1.4L10.6 10.6l6.3-6.3z" />
               ) : (
@@ -343,7 +274,8 @@ export function Nav() {
         </div>
       </div>
 
-      {/* Mobile menu — grid-rows collapse, inert when closed. */}
+      {/* Mobile menu — grid-rows collapse, inert when closed so its links stay
+          out of the tab order. */}
       <div
         id="mobile-menu"
         inert={!open}
@@ -353,7 +285,7 @@ export function Nav() {
         )}
       >
         <div className="overflow-hidden">
-          <nav aria-label="Sections" className="g-container flex flex-col gap-1 py-4">
+          <nav aria-label="Primary" className="ds-container flex flex-col gap-1 py-5">
             {sections.map((s) =>
               s.href === "/services" ? (
                 <div key={s.id}>
@@ -362,10 +294,8 @@ export function Nav() {
                     onClick={() => setMobileServicesOpen((v) => !v)}
                     aria-expanded={mobileServicesOpen}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-full px-4 py-3 text-[0.9375rem] font-medium transition-colors",
-                      isActive(s.href)
-                        ? "bg-surface-blue text-on-tonal"
-                        : "text-ink-muted hover:bg-surface hover:text-ink",
+                      "flex w-full items-center justify-between rounded-[var(--radius-md)] px-3 py-3 text-[0.9375rem] font-medium transition-colors",
+                      isActive(s.href) ? "bg-accent-soft text-accent" : "text-ink-muted",
                     )}
                   >
                     {s.label}
@@ -376,54 +306,37 @@ export function Nav() {
                     inert={!mobileServicesOpen}
                     className={cn(
                       "grid overflow-hidden transition-[grid-template-rows,opacity] duration-300",
-                      mobileServicesOpen
-                        ? "grid-rows-[1fr] opacity-100"
-                        : "grid-rows-[0fr] opacity-0",
+                      mobileServicesOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
                     )}
                   >
                     <div className="overflow-hidden">
-                      <ul className="mt-1 ml-4 border-l border-border pl-3">
-                        {serviceCategories.map((c) => (
-                          <li key={c.slug} className="py-1">
-                            <Link
-                              href={`/services/${c.slug}`}
-                              className="block px-2 py-2 text-[0.9375rem] font-medium text-ink"
-                            >
-                              {c.shortTitle}
-                            </Link>
-                            <ul>
-                              {c.services.map((sv) => {
-                                const active = pathname === `/services/${c.slug}/${sv.slug}`;
-                                return (
-                                  <li key={sv.slug}>
-                                    <Link
-                                      href={`/services/${c.slug}/${sv.slug}`}
-                                      aria-current={active ? "page" : undefined}
-                                      className={cn(
-                                        "flex items-center gap-3 rounded-md px-2 py-2 text-[0.875rem]",
-                                        active ? "bg-surface-blue text-on-tonal" : "text-ink-muted",
-                                      )}
-                                    >
-                                      <span
-                                        aria-hidden
-                                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
-                                        style={{
-                                          background: `color-mix(in srgb, ${ACCENT_VAR[c.accent]} 16%, transparent)`,
-                                        }}
-                                      >
-                                        <ServiceIcon
-                                          slug={sv.slug}
-                                          className={cn("h-4 w-4", active ? "text-on-tonal" : "text-ink-muted")}
-                                        />
-                                      </span>
-                                      {sv.title}
-                                    </Link>
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          </li>
-                        ))}
+                      <ul className="mt-1 ml-3 border-l border-border pl-3">
+                        {services.map((sv) => {
+                          const href = `/services/${sv.slug}`;
+                          const active = pathname === href;
+                          return (
+                            <li key={sv.slug}>
+                              <Link
+                                href={href}
+                                aria-current={active ? "page" : undefined}
+                                className={cn(
+                                  "block rounded-[var(--radius-sm)] px-3 py-2.5 text-[0.9375rem]",
+                                  active ? "text-accent" : "text-ink-muted",
+                                )}
+                              >
+                                {sv.title}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                        <li>
+                          <Link
+                            href="/services"
+                            className="block rounded-[var(--radius-sm)] px-3 py-2.5 text-[0.9375rem] font-medium text-ink"
+                          >
+                            All services
+                          </Link>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -434,18 +347,16 @@ export function Nav() {
                   href={s.href}
                   aria-current={isActive(s.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-full px-4 py-3 text-[0.9375rem] font-medium transition-colors",
-                    isActive(s.href)
-                      ? "bg-surface-blue text-on-tonal"
-                      : "text-ink-muted hover:bg-surface hover:text-ink",
+                    "rounded-[var(--radius-md)] px-3 py-3 text-[0.9375rem] font-medium transition-colors",
+                    isActive(s.href) ? "bg-accent-soft text-accent" : "text-ink-muted",
                   )}
                 >
                   {s.label}
                 </Link>
               ),
             )}
-            <Link href="/contact" className="g-btn g-btn-filled mt-3">
-              Get in touch
+            <Link href="/contact" className="ds-btn ds-btn-primary mt-3">
+              Start a project
             </Link>
           </nav>
         </div>

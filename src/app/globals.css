@@ -1,93 +1,104 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Design system — Google.
+   DESIGN SYSTEM v2 — editorial product engineering.
 
-   Measured from about.google rather than guessed:
-     · Headings are weight 400. Large and light, never bold. This is the single
-       most identifying trait of Google's type.
-     · Buttons are full pills (48px+ radius), 12px/24px padding, 16px/500.
-     · There are no shadows anywhere. Depth comes from #F8F9FA band fills and
-       #DADCE0 hairlines.
-     · Body #202124, secondary #5F6368, primary #1A73E8.
+   The brief: calm, precise, technical, evidence-led. Less "developer
+   showcase", more "senior engineer who ships business-critical interfaces".
+
+   Rules this system holds to:
+     · One accent. Blue carries interaction and emphasis; nothing else does.
+     · Depth comes from hairlines and surface steps, never from drop shadows.
+     · Display type is large only in the hero and section openers. Body copy
+       stays compact, 60–75 characters per line.
+     · Mono is a labelling device — overlines, metadata, figures — not decor.
+     · Motion is progressive enhancement. Remove it and the page still reads.
 
    Colours live in a plain @theme (NOT @theme inline) so utilities compile to
    var(--color-*) and the dark block can re-point them. @theme inline bakes
-   literal values into utilities and breaks theming.
+   literal values into the utilities and breaks theming.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @theme {
-  /* Surfaces */
+  /* ── Surfaces ──────────────────────────────────────────────────────────
+     Three steps, always in this order light→dark of contrast:
+       bg      the page itself
+       surface the soft band that separates sections
+       card    the raised plane — always lighter than whatever it sits on   */
   --color-bg: #ffffff;
-  --color-surface: #f8f9fa; /* Grey 50 — the band fill */
-  --color-surface-blue: #e8f0fe; /* Blue 50 — tonal buttons, chips */
-  --color-card-raised: #ffffff; /* card on a filled band — always lighter than it */
+  --color-surface: #f8fafc; /* Slate 50 */
+  --color-surface-2: #f1f5f9; /* Slate 100 — the deeper band */
+  --color-card: #ffffff;
 
-  /* Hairlines */
-  --color-border: #dadce0; /* Grey 300 */
-  --color-border-strong: #bdc1c6; /* Grey 400 */
+  /* ── Hairlines ─────────────────────────────────────────────────────── */
+  --color-border: #e2e8f0; /* Slate 200 */
+  --color-border-strong: #cbd5e1; /* Slate 300 */
 
-  /* Text */
-  --color-ink: #202124; /* Grey 900 */
-  --color-ink-muted: #5f6368; /* Grey 700 */
+  /* ── Text ──────────────────────────────────────────────────────────── */
+  --color-ink: #0f172a; /* Slate 900 */
+  --color-ink-muted: #475569; /* Slate 600 — 8.2:1 on the soft band */
+  --color-ink-soft: #64748b; /* Slate 500 — metadata only, never body copy */
 
-  /* Primary. Google ships #1A73E8 as text too, but it only reaches 4.27:1 on
-     white — below AA for normal text. Blue 600 is kept for button fills (white
-     on it is 4.51:1) and blue text steps down to Blue 700 at 5.37:1. */
-  --color-primary: #1967d2; /* Blue 700 — links, overlines, blue text */
-  --color-primary-bg: #1a73e8; /* Blue 600 — filled button background */
-  --color-primary-bg-hover: #174ea6; /* Blue 800 */
-  --color-primary-fg: #ffffff;
-  --color-on-tonal: #1967d2;
+  /* ── Accent ─────────────────────────────────────────────────────────────
+     Blue 600 does double duty: 5.17:1 as text on white, and white on it is
+     the same ratio, so one value covers links and filled buttons alike. */
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8; /* Blue 700 */
+  --color-accent-fg: #ffffff;
+  --color-accent-soft: #eff6ff; /* Blue 50 — chips, tonal fills */
+  --color-accent-line: #bfdbfe; /* Blue 200 — hairline on tonal fills */
 
-  /* The four brand colours, used as accents */
-  --color-g-blue: #1a73e8;
-  --color-g-red: #ea4335;
-  --color-g-yellow: #fbbc04;
-  --color-g-green: #34a853;
-  /* Brand red is 3.9:1 on white — below AA. Red 700 is 5.8:1 and is the
-     only variant allowed to carry text (the wordmark). */
-  --color-g-red-strong: #c5221f;
+  /* ── Semantics ──────────────────────────────────────────────────────────
+     Success marks a verified, measured result and nothing else. Warning is
+     reserved for warnings — it is not a brand colour. */
+  --color-success: #15803d;
+  --color-success-soft: #f0fdf4;
+  --color-warn: #b45309;
 
+  /* Display and body are the same family — Google Sans carries both roles.
+     The distinction between them is size, weight and tracking, not family. */
   --font-sans: var(--font-google-sans), "Google Sans", Roboto, Arial, sans-serif;
+  --font-display: var(--font-google-sans), "Google Sans", Roboto, Arial, sans-serif;
+  --font-mono: var(--font-google-sans-code), ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 
 :root {
-  /* Unlocks transitions to intrinsic sizes (height: auto), which the FAQ
-     disclosures animate to. */
+  /* Unlocks transitions to intrinsic sizes, which is what lets the FAQ
+     disclosures animate to `height: auto` without measuring anything in JS. */
   interpolate-size: allow-keywords;
 
-  --radius-card: 16px;
-  --radius-lg: 24px;
+  /* 8–12px, per the spec. Nothing here is a pill except the buttons and
+     chips, where the pill is doing real work. */
+  --radius-card: 12px;
+  --radius-md: 10px;
   --radius-sm: 8px;
   color-scheme: light;
 }
 
-/* Google's own dark palette, as used in Search and Material dark. */
+/* Dark is a genuine second palette, not an inversion. Each surface step is
+   lighter than the one below it, so a card still reads as raised. */
 :root[data-theme="dark"] {
-  --color-bg: #202124;
-  --color-surface: #292a2d;
-  --color-surface-blue: #1f3047;
-  /* Material dark raises by lightening, so this sits above --color-surface. */
-  --color-card-raised: #35363a;
+  --color-bg: #0b1120;
+  --color-surface: #0f1729;
+  --color-surface-2: #131c30;
+  --color-card: #141d31;
 
-  --color-border: #3c4043;
-  --color-border-strong: #5f6368;
+  --color-border: #1e293b;
+  --color-border-strong: #334155;
 
-  --color-ink: #e8eaed;
-  --color-ink-muted: #9aa0a6;
+  --color-ink: #e6edf7;
+  --color-ink-muted: #94a3b8;
+  --color-ink-soft: #7e8ca3;
 
-  --color-primary: #8ab4f8;
-  --color-primary-bg: #8ab4f8;
-  --color-primary-bg-hover: #aecbfa;
-  --color-primary-fg: #202124;
-  --color-on-tonal: #8ab4f8;
+  --color-accent: #60a5fa; /* Blue 400 — 7.6:1 on the page ground */
+  --color-accent-hover: #93c5fd;
+  --color-accent-fg: #08111f;
+  --color-accent-soft: #16243d;
+  --color-accent-line: #24395c;
 
-  --color-g-blue: #8ab4f8;
-  --color-g-red: #f28b82;
-  --color-g-yellow: #fdd663;
-  --color-g-green: #81c995;
-  --color-g-red-strong: #f28b82;
+  --color-success: #4ade80;
+  --color-success-soft: #10251a;
+  --color-warn: #fbbf24;
 
   color-scheme: dark;
 }
@@ -101,9 +112,9 @@
 
   html {
     -webkit-text-size-adjust: 100%;
-    /* Deliberately NOT `smooth`: it hijacks the App Router's scroll-to-top
-       on navigation and leaves you part-way down the new page. */
-    scroll-padding-top: 5rem;
+    /* Deliberately NOT `smooth`: it hijacks the App Router's scroll-to-top on
+       navigation and leaves you part-way down the new page. */
+    scroll-padding-top: 5.5rem;
   }
 
   body {
@@ -111,66 +122,66 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
     overflow-x: clip;
 
-    /* Text rendering. Google Sans is loaded as a variable font, so it carries
-       an optical-size axis — `auto` lets the letterforms adapt to their size
-       instead of one drawing being scaled up to 60px and down to 14px. */
     font-optical-sizing: auto;
     font-kerning: normal;
     text-rendering: optimizeLegibility;
-
-    /* Never let the browser fake a weight or a slant; the variable font has
-       real ones, and synthesised versions are what look smeared. */
+    /* Never let the browser fake a weight or a slant — synthesised faces are
+       what look smeared. Both families ship real ones. */
     font-synthesis: none;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Large display type benefits most from the optical-size axis, and needs
-     kerning pairs respected — at 60px, loose pairs are very visible. */
-  h1,
-  h2,
-  h3,
-  h4,
-  .g-display,
-  .g-h2,
-  .g-h3 {
-    font-optical-sizing: auto;
-    font-variant-ligatures: common-ligatures contextual;
-  }
-
-  /* Figures line up in the stat readouts and keep an even colour. */
-  .tabular-nums {
-    font-variant-numeric: tabular-nums;
-  }
-
-  ::selection {
-    background-color: var(--color-surface-blue);
-    color: var(--color-on-tonal);
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  /* Google itself sets headings at 400. Bumped one step to 500 by request —
-     still light for display type, just with a little more presence. */
+  /* Google Sans ships its headings at 400 and it is the single most
+     identifying trait of the face — large and light, never bold. One step up
+     to 500 gives display type a little more presence without turning it into
+     a geometric slab, which is what 600 does to it. */
   h1,
   h2,
   h3,
   h4 {
+    font-family: var(--font-display);
     color: var(--color-ink);
     font-weight: 500;
     text-wrap: balance;
   }
 
+  /* Large display type benefits most from the optical-size axis, and needs
+     its kerning pairs respected — at 68px, loose pairs are very visible. */
+  h1,
+  h2,
+  h3,
+  h4,
+  .ds-display,
+  .ds-h1,
+  .ds-h2,
+  .ds-h3 {
+    font-optical-sizing: auto;
+    font-variant-ligatures: common-ligatures contextual;
+  }
+
   p {
     text-wrap: pretty;
+  }
+
+  /* Figures line up in the proof strip and keep an even colour. */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar {
@@ -186,175 +197,268 @@
   }
 }
 
-/* ── Type scale — Google's exact metrics ─────────────────────────────────── */
 @layer components {
-  /* 60px / -0.5px / 72px. Google ships 400; 500 here by request. */
-  .g-display {
-    font-size: clamp(2.5rem, 1.4rem + 3.6vw, 3.75rem);
-    line-height: 1.2;
+  /* ── Type scale ─────────────────────────────────────────────────────────
+     H1 56–72px desktop / 40–48px mobile, H2 32–44px, body 17–18px at 1.55–1.7
+     — the measurements from the brief, expressed as clamps.
+
+     Tracking is set from Google's own metrics (-0.5px at 60px, -0.25px at
+     36px) rather than the much tighter figures a compressed grotesque wants.
+     Google Sans is a wide, round face: pulled in to -0.028em its counters
+     close up and the headline turns into a dark band. Leading is a little
+     looser for the same reason — the tall x-height means 1.05 collides
+     ascenders with the descenders above them. */
+
+  .ds-display {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 1.35rem + 3.9vw, 4.25rem);
+    line-height: 1.1;
     letter-spacing: -0.0083em;
     font-weight: 500;
   }
 
-  /* 48px / -0.5px / 56px */
-  .g-h2 {
-    font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem);
-    line-height: 1.167;
+  .ds-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 3.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.0083em;
+    font-weight: 500;
+  }
+
+  .ds-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 1.35rem + 1.85vw, 2.75rem);
+    line-height: 1.16;
     letter-spacing: -0.0104em;
     font-weight: 500;
   }
 
-  /* 36px / -0.25px / 44px */
-  .g-h3 {
-    font-size: clamp(1.625rem, 1.25rem + 1.4vw, 2.25rem);
-    line-height: 1.22;
+  .ds-h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 1.15rem + 0.85vw, 1.75rem);
+    line-height: 1.25;
     letter-spacing: -0.007em;
     font-weight: 500;
   }
 
-  /* Card and panel titles */
-  .g-title {
-    font-size: 1.375rem;
-    line-height: 1.3;
+  .ds-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.32;
+    letter-spacing: -0.004em;
+    font-weight: 500;
+  }
+
+  .ds-title-sm {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    line-height: 1.38;
     letter-spacing: 0;
     font-weight: 500;
   }
 
-  .g-title-sm {
+  /* Body copy. The lede runs 18px, standard body 17px — both inside the
+     60–75 character measure enforced by .ds-measure. */
+  .ds-lede {
     font-size: 1.125rem;
-    line-height: 1.35;
-    font-weight: 500;
+    line-height: 1.65;
+    color: var(--color-ink-muted);
   }
 
-  /* 16px / 400 / 24px */
-  .g-body-lg {
-    font-size: 1.125rem;
+  .ds-body {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--color-ink-muted);
+  }
+
+  .ds-body-sm {
+    font-size: 0.9375rem;
     line-height: 1.6;
     color: var(--color-ink-muted);
   }
 
-  .g-body {
-    font-size: 1rem;
+  .ds-meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
     line-height: 1.5;
-    color: var(--color-ink-muted);
+    /* Google Sans Code already sets wide; the extra tracking that an
+       uppercase label needs is smaller here than it would be in a narrow
+       mono. */
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
   }
 
-  .g-body-sm {
-    font-size: 0.875rem;
-    line-height: 1.43;
-    color: var(--color-ink-muted);
-  }
-
-  .g-label {
-    font-size: 0.875rem;
+  /* The overline that opens a section — mono, accent, with a short rule in
+     front of it. The rule is drawn here so no markup has to carry it. */
+  .ds-overline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
     font-weight: 500;
-    line-height: 1.43;
-    color: var(--color-ink-muted);
+    color: var(--color-accent);
+  }
+  .ds-overline::before {
+    content: "";
+    width: 1.5rem;
+    height: 1px;
+    background-color: currentColor;
+    opacity: 0.55;
   }
 
-  .g-overline {
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.43;
-    color: var(--color-primary);
-  }
-
-  /* ── Buttons: full pills, exactly as Google builds them ────────────────── */
-  .g-btn {
+  /* ── Buttons ────────────────────────────────────────────────────────────
+     48px tall, two styles only. A section that needs a third CTA style needs
+     fewer CTAs. */
+  .ds-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     border-radius: 999px;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    padding: 0.6875rem 1.375rem;
+    font-size: 0.9375rem;
     font-weight: 500;
     line-height: 1.5;
-    min-height: 3rem;
+    min-height: 2.875rem;
     border: 1px solid transparent;
+    white-space: nowrap;
     transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
+      background-color 0.18s ease,
+      border-color 0.18s ease,
+      color 0.18s ease;
   }
 
-  .g-btn-filled {
-    background-color: var(--color-primary-bg);
-    color: var(--color-primary-fg);
+  .ds-btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-accent-fg);
   }
-  .g-btn-filled:hover {
-    background-color: var(--color-primary-bg-hover);
-  }
-
-  .g-btn-tonal {
-    background-color: var(--color-surface-blue);
-    color: var(--color-on-tonal);
-  }
-  .g-btn-tonal:hover {
-    background-color: color-mix(in srgb, var(--color-surface-blue) 85%, var(--color-primary-bg));
+  .ds-btn-primary:hover {
+    background-color: var(--color-accent-hover);
   }
 
-  .g-btn-outlined {
+  .ds-btn-secondary {
     background-color: transparent;
-    border-color: var(--color-border);
-    color: var(--color-primary);
+    border-color: var(--color-border-strong);
+    color: var(--color-ink);
   }
-  .g-btn-outlined:hover {
-    background-color: var(--color-surface-blue);
-    border-color: transparent;
+  .ds-btn-secondary:hover {
+    border-color: var(--color-ink-soft);
+    background-color: var(--color-surface);
   }
 
-  /* Google's text link: blue, weight 400, arrow optional. */
-  .g-link {
+  .ds-btn-ghost {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+  .ds-btn-ghost:hover {
+    background-color: color-mix(in srgb, var(--color-accent-soft) 82%, var(--color-accent));
+  }
+
+  /* Inline text link with an optional arrow. */
+  .ds-link {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    color: var(--color-primary);
-    font-size: 1rem;
+    color: var(--color-accent);
+    font-size: 0.9375rem;
     font-weight: 500;
-    transition: color 0.2s ease;
+    transition: color 0.18s ease;
   }
-  .g-link:hover {
-    color: var(--color-primary-bg-hover);
+  .ds-link:hover {
+    color: var(--color-accent-hover);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
 
-  /* ── Surfaces ──────────────────────────────────────────────────────────────
-     Cards are always the raised fill — white in light, #35363A in dark — and
-     never take the grey band colour. On a grey band that reads as elevation
-     on its own; on a white band the hairline alone does the separating. No
-     shadows, here or anywhere else on the page.
-
-     Because the fill is always lighter than every band in both themes, a card
-     can't come out the same colour as what it sits on the way it used to when
-     each component picked its own. */
-  .g-card-plain,
-  .g-card-soft {
-    background-color: var(--color-card-raised);
+  /* ── Surfaces ───────────────────────────────────────────────────────────
+     One card recipe. The fill is always --color-card, which is lighter than
+     every band in both themes, so a card can never come out the same colour
+     as what it sits on. */
+  .ds-card {
+    background-color: var(--color-card);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
   }
 
-  .g-card-interactive {
+  /* Hover firms the outline and warms the fill. Nothing lifts. */
+  .ds-card-interactive {
     transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease;
+      border-color 0.18s ease,
+      background-color 0.18s ease;
   }
-  /* Hover firms the outline rather than lifting the card. */
-  .g-card-plain.g-card-interactive:hover,
-  .g-card-soft.g-card-interactive:hover {
+  .ds-card-interactive:hover {
     border-color: var(--color-border-strong);
   }
 
-  /* ── Disclosure (FAQ accordions) ───────────────────────────────────────────
+  /* ── Chips ──────────────────────────────────────────────────────────── */
+  .ds-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+    padding: 0.3125rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+
+  .ds-chip-accent {
+    border-color: var(--color-accent-line);
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  .ds-chip-success {
+    border-color: color-mix(in srgb, var(--color-success) 35%, transparent);
+    background-color: var(--color-success-soft);
+    color: var(--color-success);
+  }
+
+  /* ── Form fields ───────────────────────────────────────────────────── */
+  .ds-field {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-strong);
+    background-color: var(--color-bg);
+    padding: 0.6875rem 0.875rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+    transition:
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+  .ds-field::placeholder {
+    color: var(--color-ink-soft);
+  }
+  .ds-field:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    /* The one ring in the system, and only on the focused field. */
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  }
+
+  /* ── Disclosure (FAQ accordions) ────────────────────────────────────────
      <details> snaps open natively. ::details-content plus interpolate-size
-     lets it animate to its natural height without measuring anything in JS —
-     `height: auto` is only animatable because of interpolate-size, and
-     content-visibility needs allow-discrete so the content isn't hidden for
-     the whole transition. Browsers without ::details-content just open
-     instantly, exactly as they do today. */
-  .g-disclosure::details-content {
+     animates it to its natural height with nothing measured in JS: `height:
+     auto` is only animatable because of interpolate-size, and
+     content-visibility needs allow-discrete so the answer is not hidden for
+     the duration of the transition.
+
+     Every step degrades safely. A browser without ::details-content drops
+     these rules entirely and opens natively; one that has ::details-content
+     but not interpolate-size still applies `height: auto` as a static value
+     and opens instantly. In no case can the answer end up open and clipped. */
+  .ds-disclosure::details-content {
     height: 0;
     overflow: hidden;
     content-visibility: hidden;
@@ -362,59 +466,56 @@
       height 0.28s ease,
       content-visibility 0.28s allow-discrete;
   }
-  .g-disclosure[open]::details-content {
+  .ds-disclosure[open]::details-content {
     height: auto;
-    /* Must be restored explicitly. Declaring content-visibility in the rule
-       above overrides the UA sheet's open value too, and without this the
-       answer stays collapsed at zero height — open, but invisible. */
+    /* Must be restored explicitly: declaring content-visibility above also
+       overrides the UA sheet's open value, and without this the answer stays
+       collapsed at zero height — open, but invisible. */
     content-visibility: visible;
-  }
-
-  /* ── Chips ─────────────────────────────────────────────────────────────── */
-  .g-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    border-radius: 999px;
-    border: 1px solid var(--color-border);
-    background-color: transparent;
-    padding: 0.375rem 0.875rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.43;
-    color: var(--color-ink);
-  }
-
-  .g-chip-tonal {
-    border-color: transparent;
-    background-color: var(--color-surface-blue);
-    color: var(--color-on-tonal);
   }
 }
 
 @layer utilities {
-  .g-container {
+  .ds-container {
     width: 100%;
-    max-width: 81rem;
+    max-width: 80rem; /* 1280px */
     margin-inline: auto;
     padding-inline: 1.5rem;
   }
 
   @media (min-width: 768px) {
-    .g-container {
+    .ds-container {
       padding-inline: 2.5rem;
     }
   }
 
-  /* Google's vertical rhythm is generous. */
-  .g-section {
+  /* 96–140px desktop, 72–96px mobile. */
+  .ds-section {
     padding-block: 4.5rem;
   }
 
   @media (min-width: 768px) {
-    .g-section {
+    .ds-section {
       padding-block: 7rem;
     }
+  }
+
+  /* The reading measure, applied wherever prose runs more than two lines. */
+  .ds-measure {
+    max-width: 68ch;
+  }
+
+  /* A precise, technical ground for the hero — a fine grid that fades out
+     before it competes with the type. Painted, so it costs no markup. */
+  .ds-grid-field {
+    background-image:
+      linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+    background-size: 72px 72px;
+    background-position: center top;
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 72%);
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 72%);
+    opacity: 0.7;
   }
 }
 

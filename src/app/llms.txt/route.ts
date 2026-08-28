@@ -1,13 +1,17 @@
-import { serviceCategories } from "@/content/services";
-import { projects, site, summaryShort } from "@/content/site";
+import { services } from "@/content/services";
+import { positioning, site } from "@/content/site";
+import { caseStudies, projects } from "@/content/work";
 
 /**
- * llms.txt — a plain-Markdown map of the site for AI agents and LLM crawlers.
- * Generated from the same content the pages render, so it can't drift the way
- * a hand-written copy would.
+ * llms.txt — a plain-Markdown map of the site, generated from the same content
+ * the pages render so it cannot drift the way a hand-written copy would.
  *
- * The format wants a single H1, an optional blockquote summary, then sections
- * of links with short descriptions.
+ * Worth being clear about what this is and is not: Google's current guidance
+ * says llms.txt is not required for Google Search or for its AI features, and
+ * it is not a ranking shortcut. It is here because it costs nothing to
+ * generate and some other agents do read it — the actual work of being legible
+ * to a generative system is the crawlable HTML, the answer-first sections and
+ * the structured data, all of which live in the pages themselves.
  */
 export const dynamic = "force-static";
 
@@ -17,47 +21,52 @@ export function GET() {
   const lines: string[] = [
     `# ${site.name}`,
     "",
-    `> ${site.role} in ${site.location}. ${summaryShort}`,
+    `> ${positioning} Based in ${site.location}.`,
     "",
     "## Pages",
     "",
-    `- [Home](${u("/")}): Overview, services, selected work and background.`,
-    `- [About](${u("/about")}): Background, working style and current focus.`,
-    `- [Work](${u("/work")}): Production platforms designed, built or migrated.`,
-    `- [Experience](${u("/experience")}): Roles, responsibilities and stack per role.`,
-    `- [Skills](${u("/skills")}): Technologies grouped by what they do.`,
-    `- [Contact](${u("/contact")}): How to start a project or get in touch.`,
+    `- [Home](${u("/")}): Positioning, proof, services, selected work and contact.`,
+    `- [Work](${u("/work")}): Production projects, with three written up as case studies.`,
+    `- [Services](${u("/services")}): The five services, in commercial order.`,
+    `- [About](${u("/about")}): Background, experience, capabilities and credentials.`,
+    `- [Contact](${u("/contact")}): Project brief form and direct contact paths.`,
     "",
     "## Services",
     "",
-    `- [All services](${u("/services")}): Index of every service, by category.`,
   ];
 
-  for (const category of serviceCategories) {
+  for (const service of services) {
     lines.push(
-      "",
-      `### ${category.title}`,
-      "",
-      `- [${category.shortTitle} overview](${u(`/services/${category.slug}`)}): ${category.tagline}.`,
+      `- [${service.title}](${u(`/services/${service.slug}`)}): ${service.definition}`,
     );
-    for (const service of category.services) {
-      lines.push(
-        `- [${service.title}](${u(`/services/${category.slug}/${service.slug}`)}): ${service.summary}`,
-      );
-    }
   }
 
-  lines.push("", "## Selected work", "");
-  for (const project of projects) {
-    lines.push(`- ${project.title} (${project.kind}): ${project.blurb}`);
+  lines.push("", "## Case studies", "");
+  for (const project of caseStudies) {
+    lines.push(
+      `- [${project.title}](${u(`/work/${project.slug}`)}): ${project.caseStudy.metaDescription}`,
+    );
+  }
+
+  lines.push("", "## Other production work", "");
+  for (const project of projects.filter((p) => !p.caseStudy)) {
+    lines.push(`- ${project.title} (${project.kind}): ${project.blurb}${project.href ? ` — ${project.href}` : ""}`);
   }
 
   lines.push(
+    "",
+    "## Verified claims",
+    "",
+    "- 5+ years of production frontend experience, working since 2020.",
+    "- 7 live projects, all publicly linked from /work.",
+    `- 30% Core Web Vitals improvement on the Sunhub platform — measured before and after; the work behind it is documented at ${u("/work/sunhub")}.`,
+    "- No other performance, traffic, revenue or conversion figures are claimed anywhere on this site.",
     "",
     "## Contact",
     "",
     `- Email: ${site.email}`,
     `- Location: ${site.location} (${site.timezone})`,
+    `- Résumé: ${u(site.resumeHref)}`,
     "",
   );
 

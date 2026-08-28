@@ -1,42 +1,40 @@
 import Link from "next/link";
-import { serviceCategories } from "@/content/services";
-import { sections, site, socials } from "@/content/site";
+import { services } from "@/content/services";
+import { positioning, sections, site, socials } from "@/content/site";
+import { caseStudies } from "@/content/work";
 import { ArrowIcon, Wordmark } from "./ui";
 
-/** Muted by default, primary on hover — a wall of blue reads as noise. */
+/* Muted by default, ink on hover. A wall of blue links reads as noise, and the
+   footer is not where the accent should be doing work. */
 const linkClass =
-  "inline-flex min-h-8 items-center py-1 text-[0.9375rem] text-ink-muted transition-colors hover:text-primary";
+  "inline-flex min-h-8 items-center py-1 text-[0.9375rem] text-ink-muted transition-colors hover:text-ink";
 
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="g-container py-10 md:py-12">
-        <div className="grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-12">
-          {/* Identity + the one action worth repeating down here */}
-          <div className="col-span-2 md:col-span-4">
+      <div className="ds-container py-14 md:py-16">
+        <div className="grid gap-10 md:grid-cols-12 md:gap-8">
+          {/* Identity, the positioning sentence, and the one repeated action */}
+          <div className="md:col-span-4">
             <Link
               href="/"
-              aria-label="Wahab — home"
-              className="-mx-2 inline-flex min-h-11 items-center rounded-full px-2"
+              aria-label="Wahab Ansari — home"
+              className="-mx-2 inline-flex min-h-11 items-center rounded-lg px-2"
             >
               <Wordmark />
             </Link>
-            <p className="g-body-sm mt-4 max-w-xs">
-              {site.role} · {site.location}
-            </p>
-
-            <Link href="/contact" className="g-link mt-4">
+            <p className="ds-body-sm mt-5 max-w-xs">{positioning}</p>
+            <Link href="/contact" className="ds-link mt-5">
               Start a project
-              <ArrowIcon className="h-4 w-4" />
+              <ArrowIcon className="h-3.5 w-3.5" />
             </Link>
           </div>
 
-          {/* Two columns keeps this three rows tall instead of six */}
-          <nav aria-label="Footer" className="col-span-2 md:col-span-4">
-            <p className="g-title-sm text-ink">Navigate</p>
-            <ul className="mt-3 grid grid-cols-2 gap-x-6">
+          <nav aria-label="Footer" className="md:col-span-2">
+            <p className="ds-meta">Site</p>
+            <ul className="mt-4">
               {sections.map((s) => (
                 <li key={s.id}>
                   <Link href={s.href} className={linkClass}>
@@ -47,33 +45,35 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/*
-            Categories only, not all twelve services. The full list made this
-            column thirteen rows tall and dragged the whole footer with it —
-            every service is still one click away from its category page and
-            listed in the sitemap.
-          */}
-          <nav aria-label="Services" className="md:col-span-2">
-            <p className="g-title-sm text-ink">Services</p>
-            <ul className="mt-3">
-              {serviceCategories.map((c) => (
-                <li key={c.slug}>
-                  <Link href={`/services/${c.slug}`} className={linkClass}>
-                    {c.shortTitle}
+          {/* The five core services and nothing else — the footer is not a
+              place to reproduce the sitemap. */}
+          <nav aria-label="Services" className="md:col-span-3">
+            <p className="ds-meta">Services</p>
+            <ul className="mt-4">
+              {services.map((s) => (
+                <li key={s.slug}>
+                  <Link href={`/services/${s.slug}`} className={linkClass}>
+                    {s.title}
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link href="/services" className={linkClass}>
-                  All services
-                </Link>
-              </li>
             </ul>
           </nav>
 
-          <div className="md:col-span-2">
-            <p className="g-title-sm text-ink">Elsewhere</p>
-            <ul className="mt-3">
+          <div className="md:col-span-3">
+            <p className="ds-meta">Case studies</p>
+            <ul className="mt-4">
+              {caseStudies.map((p) => (
+                <li key={p.slug}>
+                  <Link href={`/work/${p.slug}`} className={linkClass}>
+                    {p.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <p className="ds-meta mt-8">Elsewhere</p>
+            <ul className="mt-4">
               {socials.map((s) => (
                 <li key={s.label}>
                   <a
@@ -86,15 +86,20 @@ export function Footer() {
                   </a>
                 </li>
               ))}
+              <li>
+                <a href={site.resumeHref} className={linkClass}>
+                  Résumé (PDF)
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col gap-1 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="g-body-sm">
-            © {year} {site.name}
+        <div className="mt-12 flex flex-col gap-2 border-t border-border pt-7 sm:flex-row sm:items-center sm:justify-between">
+          <p className="ds-body-sm">
+            © {year} {site.name} · {site.location}
           </p>
-          <p className="g-body-sm">Built with Next.js and Tailwind CSS</p>
+          <p className="ds-body-sm">Built with Next.js, TypeScript and Tailwind CSS</p>
         </div>
       </div>
     </footer>

@@ -1,47 +1,67 @@
+import Link from "next/link";
 import { Nav } from "@/components/nav";
-import { Hero } from "@/components/hero";
-import { Services } from "@/components/services";
-import { About } from "@/components/about";
-import { Work } from "@/components/work";
-import { Experience } from "@/components/experience";
-import { Skills } from "@/components/skills";
-import { Contact } from "@/components/contact";
 import { Footer } from "@/components/footer";
-import { JsonLd } from "@/components/json-ld";
+import { Hero } from "@/components/hero";
+import { SelectedWork } from "@/components/work";
+import { ServicesOverview } from "@/components/services";
+import { AboutTeaser, Process } from "@/components/about";
+import { Capabilities } from "@/components/skills";
+import { Engagement } from "@/components/engagement";
+import { Contact } from "@/components/contact";
+import { HomeJsonLd } from "@/components/json-ld";
+import { ArrowIcon, Faqs, Reveal, Section, SectionHeading } from "@/components/ui";
+import { homeFaqs, process } from "@/content/site";
 
 /**
- * The home page runs each section in `preview` mode — a trimmed version with a
- * link through to the full route. That keeps the landing page complete without
- * republishing the detail pages word for word, which would leave the two
- * competing for the same search terms.
+ * Homepage.
+ *
+ * The order is the argument: identity, then proof, then what I sell, then how
+ * it runs, then who I am, then the ways to work together, then objections,
+ * then the ask. Proof sits above the services block deliberately — a visitor
+ * should see evidence before a pitch.
+ *
+ * Each section is a summary with a route behind it rather than a copy of that
+ * route's content, so the homepage and its detail pages are not competing for
+ * the same queries.
+ *
+ * Band rhythm is set here rather than left to each component's default, so the
+ * whole alternation is visible in one place. No two touching bands share a
+ * fill — the hero closes on a soft proof strip, so Work opens plain and it
+ * alternates from there.
  */
 export default function Home() {
   return (
     <>
-      <JsonLd />
+      <HomeJsonLd />
       <Nav />
       <main id="main">
-        {/*
-          Band rhythm, set here rather than left to each component's default so
-          the whole sequence is visible in one place. No two touching bands
-          share a fill: the hero closes on a grey stats strip, so Services has
-          to open white and everything below alternates from there.
-
-            hero      white  (closing on a grey strip)
-            services  white -> grey handled by the strip above it
-            about     grey
-            work      white
-            experience grey
-            skills    white
-            contact   blue   (the one accent band, at the end)
-        */}
         <Hero />
-        <Services tone="plain" />
-        <About preview tone="grey" />
-        <Work preview tone="plain" />
-        <Experience preview tone="grey" />
-        <Skills preview tone="plain" />
-        <Contact preview />
+        <SelectedWork tone="plain" />
+        <ServicesOverview tone="soft" />
+        <Process tone="plain" steps={process} />
+        <AboutTeaser tone="soft" />
+        <Capabilities tone="plain" />
+        <Engagement tone="soft" />
+
+        <Section id="faq" tone="plain">
+          <SectionHeading
+            overline="Questions"
+            title="Before you get in touch"
+            description="The things people actually ask first — about scope, fit, working arrangements and how the work runs."
+            align="between"
+            aside={
+              <Link href="/contact" className="ds-btn ds-btn-secondary">
+                Ask something else
+                <ArrowIcon />
+              </Link>
+            }
+          />
+          <Reveal>
+            <Faqs faqs={homeFaqs} className="mx-auto max-w-4xl" />
+          </Reveal>
+        </Section>
+
+        <Contact tone="soft" />
       </main>
       <Footer />
     </>

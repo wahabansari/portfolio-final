@@ -1,29 +1,59 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
-import { PageHeader, PageJsonLd } from "@/components/service-ui";
-import { Work } from "@/components/work";
+import { WorkIndex } from "@/components/work";
+import { WorkIndexJsonLd } from "@/components/json-ld";
+import { ArrowIcon, CtaBand, PageHeader } from "@/components/ui";
+import { projects } from "@/content/work";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Selected Work — Production Web Platforms",
-  description: "Production platforms designed, built or migrated: e-commerce, marketplaces, healthcare portals and real estate CMS builds. All live and linked.",
-  alternates: { canonical: "/work" },
-  openGraph: { title: "Selected Work — Production Web Platforms", description: "Production platforms designed, built or migrated: e-commerce, marketplaces, healthcare portals and real estate CMS builds. All live and linked.", url: "/work" },
-};
+const description =
+  "Explore selected production work across web platforms, AI services websites and authenticated web applications built with React and Next.js.";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Frontend Engineering Portfolio & Case Studies",
+  description,
+  path: "/work",
+});
 
 export default function WorkPage() {
   return (
     <>
-      <PageJsonLd name="Work" path="/work" description={"Production platforms designed, built or migrated: e-commerce, marketplaces, healthcare portals and real estate CMS builds."} />
+      <WorkIndexJsonLd projects={projects} />
       <Nav />
       <main id="main">
         <PageHeader
           trail={[{ label: "Home", href: "/" }, { label: "Work" }]}
-          overline="Work"
-          title="Selected projects"
-          lede="Production platforms I have designed, built or migrated. Every one is live and linked."
+          eyebrow="Work"
+          title="Selected production work"
+          lede="A focused selection of web products and interfaces I have designed, built, improved or migrated."
+          intro={[
+            "I prioritise production constraints, maintainability, responsive behaviour and the path from requirement to shipped feature. Where a project has a case study, it covers the problem, my role and the technical decisions rather than a screenshot and a stack list.",
+            "Every project below is live and linked. Nothing here is a concept, a redesign exercise or a template.",
+          ]}
+          actions={
+            <>
+              <Link href="/contact" className="ds-btn ds-btn-primary">
+                Start a project
+                <ArrowIcon />
+              </Link>
+              <Link href="/services" className="ds-btn ds-btn-secondary">
+                View services
+              </Link>
+            </>
+          }
         />
-        <Work hideHeading tone="plain" />
+
+        <WorkIndex />
+
+        <CtaBand
+          tone="plain"
+          heading="Have something with a similar shape?"
+          body="Send the product, the current site or the Figma file. I will tell you which of these is the closest comparison and what I would do differently for you."
+          primary={{ label: "Start a project", href: "/contact" }}
+          secondary={{ label: "View services", href: "/services" }}
+        />
       </main>
       <Footer />
     </>

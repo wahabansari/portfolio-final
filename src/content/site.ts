@@ -1,69 +1,194 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
  * SITE CONTENT — single source of truth.
- * Every word on the site comes from this file. Edit here, nowhere else.
+ *
+ * Accuracy rule: every claim on this site must be provable. The only measured
+ * number here is the 30% Core Web Vitals improvement on Sunhub, and the case
+ * study explains how it was reached. No invented client names, testimonials,
+ * traffic figures, revenue lifts or conversion uplifts. Before adding any
+ * future metric, record the baseline, the measurement method and the result.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 export const site = {
   name: "Muhammad Wahab Ansari",
   shortName: "Wahab Ansari",
-  initials: "MWA",
-  role: "Frontend Engineer",
-  roleLong: "Frontend Engineer specializing in React.js & Next.js",
-  tagline: "Expanding full-stack expertise with Node.js",
+  initials: "WA",
+  role: "Frontend Product Engineer",
   location: "Lahore, Pakistan",
-  locationShort: "LHR, PK",
-  timezone: "Asia/Karachi",
-  coordinates: "31.5204° N, 74.3587° E",
+  locationShort: "Lahore, PK",
+  timezone: "Asia/Karachi (UTC+5)",
   email: "wahabansari.dev@gmail.com",
   url: "https://wahabansari-portfolio-final.vercel.app",
   available: true,
-  availabilityNote: "Open to roles and freelance projects",
+  availabilityNote: "Open to remote roles and selected projects",
   resumeHref: "/Muhammad-Wahab-Ansari-Resume.pdf",
 } as const;
 
+/**
+ * The positioning sentence. Used verbatim on the homepage, /about, the résumé
+ * and the LinkedIn bio — entity consistency is the whole point, so it does not
+ * get reworded per surface.
+ */
+export const positioning =
+  "I am a Frontend Product Engineer specialising in React and Next.js, with 5+ years of production experience building web products, customer-facing interfaces and performance-focused frontend systems.";
+
+/** For direct clients. */
+export const commercialSentence =
+  "I help product teams and growing businesses redesign, build and improve web products that need better frontend execution.";
+
+/** For agency outreach. */
+export const agencySentence =
+  "I help agencies ship React and Next.js projects when their client pipeline is ahead of their internal frontend capacity.";
+
+/** Homepage <meta description>. Kept under 160 characters so it isn't truncated. */
+export const metaDescription =
+  "Frontend Product Engineer building production React and Next.js applications, SaaS products, conversion-focused websites and AI-enabled product experiences.";
+
 export const socials = [
-  { label: "GitHub", handle: "/wahabansari", href: "https://github.com/wahabansari" },
-  { label: "LinkedIn", handle: "/wahabansari", href: "https://linkedin.com/in/wahabansari" },
+  { label: "GitHub", handle: "github.com/wahabansari", href: "https://github.com/wahabansari" },
+  { label: "LinkedIn", handle: "linkedin.com/in/wahabansari", href: "https://linkedin.com/in/wahabansari" },
   { label: "Email", handle: site.email, href: `mailto:${site.email}` },
 ] as const;
 
-export const summary =
-  "Results-driven frontend developer with 5 years of experience building scalable, high-performance web applications from concept to deployment. Proven track record of delivering measurable impact, including a 30% Core Web Vitals improvement. Specialized in React.js and Next.js with strong command of SEO, responsive design, and pixel-perfect UI implementation.";
+/* ── Hero ──────────────────────────────────────────────────────────────── */
 
-/** Trimmed for search results — `summary` runs 359 chars and gets truncated. */
-export const metaDescription =
-  "Frontend engineer in Lahore with 5 years building React and Next.js apps. Available to hire, or for freelance frontend, full-stack, WordPress and AI automation work.";
+export const hero = {
+  eyebrow: "Open to remote roles + selected projects",
+  headline: "I build production-grade web products that are fast, clear and built to ship.",
+  support:
+    "Frontend Product Engineer with 5+ years of production experience building React and Next.js applications, product interfaces and customer-facing web experiences. I work with product teams, agencies and businesses that need reliable frontend execution.",
+  primaryCta: { label: "Start a project", href: "/contact" },
+  secondaryCta: { label: "View selected work", href: "/work" },
+} as const;
 
-export const summaryShort =
-  "Five years building production React and Next.js applications, extending into Node.js and AI automation. Available to hire full-time, or to take on your project.";
-
-/** Hero readouts. `value` is animated up from zero when `numeric` is set. */
-export const stats = [
-  { value: 5, suffix: "+", numeric: true, label: "Years shipping", sub: "since 2020" },
-  { value: 30, suffix: "%", numeric: true, label: "Core Web Vitals lift", sub: "measured, not guessed" },
-  { value: 5, suffix: "", numeric: true, label: "Production platforms", sub: "live & serving users" },
-  { value: 1, suffix: "", numeric: false, display: "∞", label: "Design systems built", sub: "tokens to components" },
+/**
+ * Proof strip. `numeric` values count up from zero; the rest render as-is.
+ * Every entry has to be verifiable from the case studies or the CV.
+ */
+export const proof = [
+  { value: 5, suffix: "+", numeric: true, label: "Years production experience", note: "Shipping since 2020" },
+  { value: 7, suffix: "", numeric: true, label: "Live projects", note: "All publicly linked" },
+  { value: 30, suffix: "%", numeric: true, label: "Core Web Vitals improvement", note: "Measured on Sunhub", verified: true },
+  { value: 0, suffix: "", numeric: false, display: "React · Next.js · TS", label: "Core stack", note: "Typed, in production" },
 ] as const;
 
+/* ── Process ───────────────────────────────────────────────────────────── */
+
+export const process = [
+  {
+    step: "Understand",
+    detail: "Clarify the user, the business goal and the constraints before anything is designed or written.",
+  },
+  {
+    step: "Structure",
+    detail: "Define the UX, the technical approach and the delivery scope, so what gets built is what was agreed.",
+  },
+  {
+    step: "Build",
+    detail: "Implement the interface with reusable components and clean integration points against your API.",
+  },
+  {
+    step: "Ship",
+    detail: "Test responsive behaviour, performance and production readiness, then deploy.",
+  },
+  {
+    step: "Improve",
+    detail: "Iterate from real usage, feedback and measurable issues rather than assumptions.",
+  },
+] as const;
+
+/* ── Engagement ────────────────────────────────────────────────────────── */
+
+export const engagements = [
+  {
+    title: "Full-time / remote product role",
+    detail:
+      "A frontend or product engineering seat on a team building something long-lived. Five years on a production platform is the experience I bring to it.",
+    cta: { label: "View résumé", href: site.resumeHref },
+  },
+  {
+    title: "Project or contract engagement",
+    detail:
+      "A defined build with a defined scope — a redesign, a product frontend, an MVP, or a performance pass on something already live.",
+    cta: { label: "Start a project", href: "/contact" },
+  },
+  {
+    title: "Agency frontend partnership",
+    detail:
+      "Ongoing white-label React and Next.js delivery behind your brand, under your process and your NDA. You keep the client relationship.",
+    cta: { label: "Discuss a partnership", href: "/services/agency-frontend-development" },
+  },
+] as const;
+
+/* ── Homepage FAQ ──────────────────────────────────────────────────────────
+   Objection handling and search intent, in the order buyers actually ask. */
+
+export const homeFaqs = [
+  {
+    q: "What does a frontend product engineer actually do?",
+    a: "Frontend product engineering is the implementation layer that turns product requirements and interface designs into responsive, API-connected web experiences that can be maintained as the product grows. In practice that means owning the interface end to end: architecture, components, state, data fetching, forms, auth-gated areas, performance and deployment — not just styling screens.",
+  },
+  {
+    q: "Can you work with our existing backend and design files?",
+    a: "Yes, and that is the usual case. I integrate against an existing REST or API layer rather than requiring a rewrite, and I work from Figma directly — the deliverable is production-ready UI, not a static mockup.",
+  },
+  {
+    q: "Do you take on rebuilds, or only new builds?",
+    a: "Both. A large share of the work is rebuilds and refactors: a product that has outgrown its structure, a marketing site that needs to become an application, or a codebase where shipping has become slow. Incremental feature delivery on an existing codebase is a normal engagement.",
+  },
+  {
+    q: "How do you work with agencies?",
+    a: "White-label. You sell and own the client relationship; I provide the React and Next.js implementation behind your brand, inside your process and under NDA where required. It adds delivery capacity without a permanent hire.",
+  },
+  {
+    q: "Are you available for full-time roles as well as project work?",
+    a: "Yes. I am open to remote product roles, and separately to contract, project and agency engagements. Which one makes sense usually becomes obvious in the first conversation.",
+  },
+  {
+    q: "How do you approach performance?",
+    a: "As a feature with a baseline, not a final polish step. On the Sunhub platform that meant removing unused assets, optimising the build pipeline, and applying lazy loading, tree-shaking and image compression — a measured 30% Core Web Vitals improvement. I do not quote performance numbers I have not measured.",
+  },
+  {
+    q: "Where are you based, and does timezone matter?",
+    a: "Lahore, Pakistan (UTC+5). I work remotely with teams in Europe, the UK, Australia and North America, with a real overlap window for European and UK mornings and Australian afternoons.",
+  },
+] as const;
+
+/* ── About ─────────────────────────────────────────────────────────────── */
+
 export const about = {
-  statement:
-    "I sit in the seam between design and engineering — the place where a Figma file becomes something a browser can render in under a second.",
-  paragraphs: [
-    "Five years in, most of my work has been the unglamorous kind that actually moves numbers: stripping unused assets out of a bundle, rewriting a build pipeline, arguing for a lazy-loading boundary. On one platform that discipline returned a 30% Core Web Vitals improvement — and with it, better retention.",
-    "Before I wrote production React full-time, I was the person building the design system. I migrated an entire LMS design workflow from Adobe XD to Figma, then defined the tokens, typography, spacing rules and component library the whole product ran on. That background is why my implementations tend to land pixel-perfect the first time — I already know what the designer meant.",
-    "These days I'm extending in two directions: backwards into the stack — Node, Express, Prisma, Postgres — so the frontend I own doesn't stop at the API boundary, and sideways into AI automation, wiring tools together with n8n and the Gemini API so the repetitive work runs itself.",
+  h1: "Frontend engineering shaped by real product work",
+  intro:
+    "I am Muhammad Wahab Ansari, a frontend product engineer based in Lahore, Pakistan. Since 2020 I have worked on production web products across frontend engineering, interface design, performance and client-facing applications.",
+  statement: "Design sensibility. Engineering discipline.",
+  teaser:
+    "I work at the seam between product design and frontend engineering — turning product requirements and Figma designs into interfaces that are maintainable, responsive and ready for real users. My experience spans production React platforms, design systems, performance work and client-facing web applications.",
+  narrative: [
+    {
+      heading: "How the work developed",
+      body: "I started from interface and frontend work, then expanded into product engineering: API-connected experiences, reusable component systems, performance optimisation, authentication flows and production delivery. Working on a long-lived product taught me to think beyond individual screens — how a change affects performance, maintainability, users and the features that come after it.",
+    },
+    {
+      heading: "Why a long run on one product is an asset",
+      body: "A long-running production platform creates a specific kind of engineering experience: maintaining real systems, shipping incremental change, dealing with regression risk, improving performance over time, and understanding how frontend decisions compound into product quality. My portfolio also includes externally delivered projects that show breadth across different environments and constraints.",
+    },
+    {
+      heading: "Where I am extending",
+      body: "Backwards into the stack — Node, Express, Prisma, Postgres — so the frontend I own does not stop at the API boundary. And sideways into practical AI integration: LLM and API-driven features inside real products, with grounded sources, sensible fallbacks and a human in the loop where the workflow needs one.",
+    },
   ],
   facts: [
     { k: "Based in", v: "Lahore, Pakistan" },
     { k: "Working since", v: "2020" },
+    { k: "Title", v: "Frontend Product Engineer" },
     { k: "Core stack", v: "React · Next.js · TypeScript" },
-    { k: "Backend", v: "Node.js · Express · Prisma" },
-    { k: "Currently learning", v: "AI automation · LLMs · n8n workflows" },
-    { k: "Available for", v: "Roles & freelance projects" },
+    { k: "Backend capability", v: "Node.js · Express · Prisma · Postgres" },
+    { k: "Available for", v: "Remote roles, projects, agency partnerships" },
   ],
 } as const;
+
+/* ── Experience ────────────────────────────────────────────────────────── */
 
 export type Experience = {
   company: string;
@@ -83,12 +208,12 @@ export const experience: Experience[] = [
     summary:
       "Owned frontend delivery on a production React platform, with performance treated as a feature rather than an afterthought.",
     highlights: [
-      "Delivered a 30% performance boost by eliminating unused assets, optimising the build pipeline, and implementing advanced front-end performance strategies — directly improving Core Web Vitals and user retention.",
-      "Achieved that improvement through lazy loading, tree-shaking, removal of unused assets, image compression, and a fully streamlined build-process optimisation pipeline.",
-      "Designed and developed responsive, high-performance React apps, ensuring cross-browser compatibility and a seamless experience across all devices.",
-      "Collaborated closely with UI/UX designers in Figma to translate wireframes and high-fidelity mock-ups into pixel-perfect, accessible frontend interfaces.",
-      "Integrated RESTful APIs and built robust form validation with React Hook Form, ensuring reliable data handling, error management, and smooth user interactions.",
-      "Participated in Agile/Scrum ceremonies — daily stand-ups, sprint planning, retrospectives — maintaining clean, version-controlled code across Git and Bitbucket.",
+      "Delivered a 30% performance improvement by eliminating unused assets, optimising the build pipeline and implementing front-end performance strategies — improving Core Web Vitals and user retention.",
+      "Reached that result through lazy loading, tree-shaking, removal of unused assets, image compression and a streamlined build process.",
+      "Built responsive, high-performance React interfaces with cross-browser consistency across devices.",
+      "Worked from Figma with UI/UX designers, translating wireframes and high-fidelity mockups into accessible production interfaces.",
+      "Integrated REST APIs and built form validation with React Hook Form, covering data handling, error states and recovery.",
+      "Worked in Agile/Scrum — stand-ups, sprint planning, retrospectives — with version control across Git and Bitbucket.",
     ],
     stack: ["React.js", "REST APIs", "React Hook Form", "Figma", "Git", "Bitbucket", "Jira"],
   },
@@ -97,214 +222,80 @@ export const experience: Experience[] = [
     role: "User Interface Designer",
     client: "EHS Group",
     summary:
-      "Led the end-to-end redesign of a full LMS platform and built the design system the product still runs on.",
+      "Led the end-to-end redesign of an LMS platform and built the design system the product still runs on.",
     highlights: [
-      "Led the end-to-end redesign of a full LMS platform — migrating the entire design workflow from Adobe XD to Figma, enabling real-time collaboration and cutting design-to-development handoff time significantly.",
-      "Executed a full redesign of the LMS — reimagining dashboards, student portals, and admin panels using a component-based approach built for long-term consistency and maintainability.",
-      "Built and maintained a comprehensive design system — defining reusable UI components, tokens, typography, spacing rules, and icon libraries to ensure visual consistency across the entire product.",
-      "Collaborated directly with developers through structured handoff sessions, ensuring pixel-perfect implementation and eliminating ambiguity between design intent and final output.",
+      "Led the redesign of a full LMS platform, migrating the design workflow from Adobe XD to Figma and cutting design-to-development handoff time.",
+      "Reimagined dashboards, student portals and admin panels using a component-based approach built for long-term consistency.",
+      "Built and maintained a design system — reusable components, tokens, typography, spacing rules and icon libraries — across the product.",
+      "Ran structured handoff sessions with developers, removing ambiguity between design intent and shipped output.",
     ],
     stack: ["Figma", "Adobe XD", "Design Systems", "Design Tokens", "Component Libraries"],
   },
 ];
 
-export type Project = {
-  slug: string;
+/* ── Capabilities ──────────────────────────────────────────────────────────
+   Depth before breadth. `lead` items are the ones a buyer or recruiter should
+   see first; `support` is the rest of the inventory, kept but de-emphasised —
+   it is not a 46-item wall any more. */
+
+export type CapabilityGroup = {
   title: string;
-  year?: string;
-  kind: string;
-  /** Omit both when there is no public URL — the card renders unlinked. */
-  href?: string;
-  domain?: string;
-  blurb: string;
-  detail: string;
-  tools: string[];
-  metrics?: { k: string; v: string }[];
-  /** Optional real screenshot dropped into /public/work — falls back to a generated plate. */
-  image?: string;
-  /** Drives the generated preview plate when no image exists. */
-  plate: "app" | "commerce" | "marketplace" | "portal" | "listing";
+  summary: string;
+  lead: string[];
+  support: string[];
 };
 
-export const projects: Project[] = [
+export const capabilities: CapabilityGroup[] = [
   {
-    slug: "sunhub",
-    title: "Sunhub",
-    kind: "Performance & Platform",
-    href: "https://www.sunhub.com/",
-    domain: "sunhub.com",
-    blurb:
-      "The platform behind the 30% Core Web Vitals improvement — React frontend, rebuilt build pipeline, and API-driven forms.",
-    detail:
-      "Owned frontend delivery on a production React platform at Oxiliry. Delivered a 30% performance improvement by eliminating unused assets, optimising the build pipeline and applying lazy loading, tree-shaking and image compression — improving Core Web Vitals and user retention. Built responsive, cross-browser interfaces from Figma, integrated RESTful APIs, and implemented robust form validation with React Hook Form.",
-    tools: ["React.js", "REST APIs", "React Hook Form", "Figma", "Git"],
-    metrics: [
-      { k: "Core Web Vitals", v: "+30%" },
-      { k: "Focus", v: "Performance & delivery" },
-    ],
-    plate: "app",
+    title: "Frontend",
+    summary: "The core build surface — typed React in production, not prototypes.",
+    lead: ["React.js", "Next.js", "TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3"],
+    support: ["Tailwind CSS", "Material UI", "Ant Design", "Mantine UI", "SASS", "PostCSS", "Bootstrap"],
   },
   {
-    slug: "cennetsol",
-    title: "Cennetsol",
-    kind: "AI Services Website",
-    href: "https://www.cennetsol.com/",
-    domain: "cennetsol.com",
-    blurb:
-      "Marketing site for an enterprise AI consultancy — services, case studies and team, structured to keep growing without a rebuild.",
-    detail:
-      "A Next.js site for an AI and digital-transformation consultancy working with industrial, healthcare and logistics clients. Built around the sections that do the selling: capability areas across automation, analytics, custom LLMs, MLOps and computer vision; case studies carrying real outcomes; testimonials, leadership profiles and an FAQ answering the integration and ROI questions buyers ask first. Component-driven and responsive throughout, so new services and case studies drop into the existing structure instead of needing new layouts.",
-    tools: ["Next.js", "React", "Tailwind CSS", "Vercel"],
-    plate: "portal",
+    title: "Product engineering",
+    summary: "What turns a set of screens into an application people can use.",
+    lead: ["API integration", "Responsive systems", "Complex forms", "Authentication flows", "Component libraries"],
+    support: ["Redux Toolkit", "Zustand", "Context API", "React Hook Form", "Role-based access"],
   },
   {
-    slug: "verdira",
-    title: "Verdira",
-    kind: "Web Application",
-    href: "https://verdira.com/",
-    domain: "verdira.com",
-    blurb:
-      "A static marketing site rebuilt as a scalable web application with authentication and password-protected client areas.",
-    detail:
-      "Rebuilt a static marketing website into a scalable web application with a structured architecture focused on long-term growth. Implemented authentication and password-protected client areas, improved application performance, and reorganized the codebase to make it easier to maintain and extend. Collaborated with stakeholders to deliver a secure, responsive, and user-friendly platform capable of supporting future business requirements.",
-    tools: ["Next.js", "Tailwind CSS", "Vercel", "Authentication"],
-    metrics: [
-      { k: "Scope", v: "Static → App" },
-      { k: "Focus", v: "Auth & architecture" },
-    ],
-    plate: "app",
+    title: "Backend capability",
+    summary: "Enough of the stack that the frontend I own does not stop at the API boundary.",
+    lead: ["Node.js", "Express.js", "REST APIs"],
+    support: ["PostgreSQL", "MongoDB", "Prisma", "Drizzle", "OAuth 2.0", "JWT"],
   },
   {
-    slug: "vape-planet",
-    title: "Vape Planet",
-    kind: "E-Commerce",
-    href: "https://vapeplanet.co.uk/",
-    domain: "vapeplanet.co.uk",
-    blurb:
-      "Production e-commerce frontend built solo — responsive, pixel-perfect, with integrated payment workflows.",
-    detail:
-      "Independently developed the frontend of a production e-commerce platform using Next.js, Material UI, and Tailwind CSS. Built responsive, pixel-perfect user interfaces from concept to implementation, integrated frontend payment workflows, and optimized the application for performance and scalability. Focused on creating reusable components and delivering a modern shopping experience across desktop and mobile.",
-    tools: ["Next.js", "React", "Tailwind CSS", "Material UI"],
-    metrics: [
-      { k: "Ownership", v: "Solo frontend" },
-      { k: "Focus", v: "Payments & reuse" },
-    ],
-    plate: "commerce",
+    title: "Performance",
+    summary: "Measured against a baseline, then measured again after the change.",
+    lead: ["Core Web Vitals", "Lazy loading", "SSR / SSG", "Image optimisation", "Bundle analysis"],
+    support: ["Tree-shaking", "Build pipeline tuning", "Caching strategy", "Technical SEO"],
   },
   {
-    slug: "aussiemotor",
-    title: "AussieMotor",
-    kind: "Marketplace",
-    href: "https://aussiemotor.com.au/",
-    domain: "aussiemotor.com.au",
-    blurb:
-      "Large automotive marketplace migrated off WordPress onto Next.js, with reusable dashboard interfaces.",
-    detail:
-      "Contributed to migrating a large automotive marketplace from WordPress to a scalable Next.js application, improving maintainability and overall performance. Developed responsive, reusable UI components with Mantine UI and Tailwind CSS while collaborating with the team on dashboard interfaces and frontend features that delivered a faster, more consistent experience across devices.",
-    tools: ["Next.js", "Tailwind CSS", "Mantine UI", "Firebase", "MongoDB"],
-    metrics: [
-      { k: "Migration", v: "WordPress → Next.js" },
-      { k: "Focus", v: "Dashboards & components" },
-    ],
-    plate: "marketplace",
+    title: "Delivery",
+    summary: "The unglamorous half of shipping — process, review, deployment.",
+    lead: ["Git", "Bitbucket", "Jira", "Vercel", "CI/CD", "Docker"],
+    support: ["Agile / Scrum", "Code review", "Figma handoff", "Documentation"],
   },
   {
-    slug: "digestive-care",
-    title: "Digestive Care",
-    kind: "Healthcare Portal",
-    href: "https://digestivecarepl.com/",
-    domain: "digestivecarepl.com",
-    blurb:
-      "Healthcare site with an integrated patient portal, appointment booking, and heavily customized WordPress internals.",
-    detail:
-      "Developed a healthcare website with an integrated patient portal by extensively customizing WordPress themes and functionality to match the client's branding and workflow requirements. Implemented responsive layouts, integrated appointment booking, and connected the patient portal to provide a seamless experience for both patients and healthcare professionals.",
-    tools: ["WordPress", "HTML5", "CSS3", "JavaScript"],
-    metrics: [
-      { k: "Feature", v: "Patient portal" },
-      { k: "Feature", v: "Appointment booking" },
-    ],
-    plate: "portal",
-  },
-  {
-    slug: "talha-estate",
-    title: "Talha Estate",
-    kind: "Real Estate CMS",
-    href: "https://talhaestate.com/",
-    domain: "talhaestate.com",
-    blurb:
-      "Full real estate platform with a scalable CMS architecture for managing property listings and content.",
-    detail:
-      "Designed and developed a complete real estate platform with a scalable CMS architecture for managing property listings and content efficiently. Built responsive interfaces using HTML, CSS, and JavaScript, customized WordPress functionality through custom plugins, and created a structured user experience that simplified property management while improving usability across all devices.",
-    tools: ["WordPress", "Custom Plugins", "HTML5", "CSS3", "JavaScript"],
-    metrics: [
-      { k: "Architecture", v: "Scalable CMS" },
-      { k: "Scope", v: "Design → build" },
-    ],
-    plate: "listing",
+    title: "AI integration",
+    summary: "Practical features inside real products — grounded, with fallbacks.",
+    lead: ["LLM / API integration", "Retrieval-based UI patterns", "n8n workflow automation"],
+    support: ["Streaming UI states", "Citations and sources", "Human-review workflows"],
   },
 ];
 
-export type SkillGroup = { title: string; code: string; items: string[] };
-
-export const skills: SkillGroup[] = [
-  {
-    title: "Frontend Development",
-    code: "FE",
-    items: ["React.js", "Next.js", "TypeScript", "JavaScript (ES6+)", "HTML5", "CSS3"],
-  },
-  {
-    title: "UI Frameworks & Styling",
-    code: "UI",
-    items: ["Tailwind CSS", "Material UI", "Mantine UI", "Ant Design", "Bootstrap", "SASS", "PostCSS"],
-  },
-  {
-    title: "State Management",
-    code: "ST",
-    items: ["Redux Toolkit", "Zustand", "Context API"],
-  },
-  {
-    title: "Backend & APIs",
-    code: "BE",
-    items: ["Node.js", "Express.js", "REST APIs"],
-  },
-  {
-    title: "Databases & ORM",
-    code: "DB",
-    items: ["PostgreSQL", "MongoDB", "Prisma", "Drizzle"],
-  },
-  {
-    title: "Authentication",
-    code: "AU",
-    items: ["OAuth 2.0", "JWT", "Role-Based Access Control"],
-  },
-  {
-    title: "Performance & SEO",
-    code: "PF",
-    items: ["Core Web Vitals", "Lazy Loading", "SSR", "SSG", "SEO Optimisation"],
-  },
-  {
-    title: "DevOps & Deployment",
-    code: "OP",
-    items: ["Git", "Bitbucket", "Jira", "Docker", "Vercel", "CI/CD Pipelines"],
-  },
-  {
-    title: "Mobile & Cross-Platform",
-    code: "MB",
-    items: ["NativeScript", "Progressive Web Apps", "Responsive Design"],
-  },
-  {
-    title: "AI & Automation",
-    code: "AI",
-    items: ["n8n Workflow Automation", "Gemini API", "REST API Integration"],
-  },
-  {
-    title: "CMS & Others",
-    code: "CM",
-    items: ["WordPress", "Email Template Design", "Landing Page Development"],
-  },
+/* Also available, but not sold as headline services — kept honest and visible
+   without letting it define the positioning. */
+export const byRequest = [
+  "WordPress theme and plugin development",
+  "WordPress speed and technical SEO",
+  "WordPress to Next.js migration",
+  "Email template development",
+  "Progressive Web Apps",
+  "Landing page development",
 ];
 
-/** Flat marquee list. */
+/** Flat list for the capability marquee. */
 export const marquee = [
   "React.js",
   "Next.js",
@@ -315,28 +306,16 @@ export const marquee = [
   "Prisma",
   "Figma",
   "Core Web Vitals",
-  "Redux Toolkit",
-  "Zustand",
-  "Docker",
+  "REST APIs",
   "Vercel",
   "Design Systems",
-  "REST APIs",
+  "Docker",
   "MongoDB",
 ];
 
 export const education = [
-  {
-    title: "Bachelors",
-    org: "University of Punjab",
-    period: "Aug 2020 — Present",
-    note: "In progress",
-  },
-  {
-    title: "Intermediate",
-    org: "Government College Township, Lahore",
-    period: "May 2018",
-    note: "Completed",
-  },
+  { title: "Bachelors", org: "University of Punjab", period: "Aug 2020 — Present", note: "In progress" },
+  { title: "Intermediate", org: "Government College Township, Lahore", period: "May 2018", note: "Completed" },
 ];
 
 export const certifications = [
@@ -348,83 +327,14 @@ export const certifications = [
   },
 ];
 
-export type Service = {
-  slug: string;
-  title: string;
-  accent: "blue" | "red" | "yellow" | "green";
-  blurb: string;
-  includes: string[];
-  /** Set once a category page exists under /services. */
-  href?: string;
-};
+/* ── Navigation ────────────────────────────────────────────────────────────
+   Four entries. Work leads, because proof comes before pitch. */
 
-/** Offered services. Each maps to a capability already listed in `skills`. */
-export const services: Service[] = [
-  {
-    slug: "frontend",
-    title: "Frontend engineering",
-    accent: "blue",
-    href: "/services/frontend",
-    blurb:
-      "Production React and Next.js interfaces, built from your designs and shipped pixel-perfect on every device.",
-    includes: [
-      "React.js & Next.js applications",
-      "Figma handoff to pixel-perfect UI",
-      "Responsive, cross-browser builds",
-      "Reusable component libraries",
-    ],
-  },
-  {
-    slug: "fullstack",
-    title: "Full-stack development",
-    accent: "yellow",
-    blurb:
-      "The interface plus everything behind it — APIs, databases and auth — so one person owns the whole feature end to end.",
-    includes: [
-      "Node.js & Express REST APIs",
-      "PostgreSQL & MongoDB via Prisma or Drizzle",
-      "OAuth 2.0, JWT & role-based access",
-      "Vercel deployment with CI/CD",
-    ],
-  },
-  {
-    slug: "ai-automation",
-    title: "AI automation",
-    accent: "red",
-    href: "/services/automation",
-    blurb:
-      "Workflows that remove the manual steps — connecting your tools to each other, and to models that handle the repetitive thinking.",
-    includes: [
-      "n8n workflow automation",
-      "Gemini API & LLM integrations",
-      "REST integrations between existing tools",
-      "Automated content & data pipelines",
-    ],
-  },
-  {
-    slug: "wordpress",
-    title: "WordPress development",
-    accent: "green",
-    href: "/services/wordpress",
-    blurb:
-      "Custom themes, plugins and CMS architecture — and migrations off WordPress for when you've outgrown it.",
-    includes: [
-      "Custom theme development",
-      "Plugin development & customisation",
-      "Speed & Core Web Vitals optimisation",
-      "WordPress to Next.js migration",
-    ],
-  },
-];
-
-/** Nav entries. Every section is a real route — no fragments. */
 export type NavSection = { id: string; label: string; href: string };
 
 export const sections: NavSection[] = [
-  { id: "about", label: "About", href: "/about" },
-  { id: "services", label: "Services", href: "/services" },
   { id: "work", label: "Work", href: "/work" },
-  { id: "experience", label: "Experience", href: "/experience" },
-  { id: "skills", label: "Skills", href: "/skills" },
+  { id: "services", label: "Services", href: "/services" },
+  { id: "about", label: "About", href: "/about" },
   { id: "contact", label: "Contact", href: "/contact" },
 ];

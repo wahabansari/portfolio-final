@@ -1,63 +1,71 @@
-import { skills } from "@/content/site";
 import Link from "next/link";
+import { byRequest, capabilities } from "@/content/site";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
-/* Cycle the four brand colours across the groups. */
-const DOTS = ["bg-g-blue", "bg-g-red", "bg-g-yellow", "bg-g-green"];
-
-/** `preview` shows the first six groups on the home page. */
-export function Skills({
-  preview = false,
+/**
+ * Capabilities, grouped and ranked — depth before breadth.
+ *
+ * This replaced a flat 46-item technology wall. The inventory is all still
+ * here; what changed is the hierarchy. Each group leads with what I would want
+ * to be judged on, and keeps the rest as a secondary line, so a reader can
+ * tell in one pass what is central and what is supporting.
+ *
+ * There is deliberately no /skills route. A page whose only purpose is to list
+ * technologies is thin by construction — this is a section on the homepage and
+ * on /about instead.
+ */
+export function Capabilities({
+  tone = "plain",
   hideHeading = false,
-  tone = "grey",
 }: {
-  preview?: boolean;
+  tone?: "plain" | "soft" | "deep";
   hideHeading?: boolean;
-  tone?: "plain" | "grey";
 }) {
-  const total = skills.reduce((n, g) => n + g.items.length, 0);
-  const shown = skills;
-
   return (
-    <Section id="skills" tone={tone}>
+    <Section id="capabilities" tone={tone}>
       {!hideHeading && (
         <SectionHeading
-          level={preview ? "h2" : "h1"}
-          overline="Skills"
-          title="Tools and technologies"
-          description="What I reach for, grouped by what it does."
-          aside={
-            preview ? (
-              <Link href="/skills" className="g-link">
-                All {total} technologies
-                <ArrowIcon className="h-4 w-4" />
-              </Link>
-            ) : (
-              <p className="g-body-sm">{total} technologies</p>
-            )
-          }
+          overline="Capabilities"
+          title="What I am actually deep in"
+          description="Grouped by what it does rather than listed alphabetically. The first line of each group is the part I would want to be judged on; the second is the supporting inventory."
         />
       )}
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {shown.map((group, i) => (
-          <Reveal key={group.title} delay={(i % 3) * 0.05}>
-            <div className="g-card-plain h-full p-6">
-              <div className="flex items-center gap-2.5">
-                <span aria-hidden className={`h-2.5 w-2.5 rounded-full ${DOTS[i % 4]}`} />
-                <h3 className="g-title-sm">{group.title}</h3>
-              </div>
-              <ul className="mt-5 flex flex-wrap gap-2">
-                {group.items.map((item) => (
-                  <li key={item} className="g-chip !py-1 !text-[0.8125rem] font-normal text-ink-muted">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+      <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
+        {capabilities.map((group, i) => (
+          <Reveal as="li" key={group.title} delay={i * 0.04} className="flex flex-col bg-card p-7">
+            <h3 className="ds-title-sm">{group.title}</h3>
+            <p className="ds-body-sm mt-2">{group.summary}</p>
+
+            <ul className="mt-5 flex flex-wrap gap-1.5">
+              {group.lead.map((item) => (
+                <li key={item} className="ds-chip ds-chip-accent text-[0.75rem]">
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <p className="ds-body-sm mt-4 flex-1 text-[0.8125rem] text-ink-soft">
+              {group.support.join(" · ")}
+            </p>
           </Reveal>
         ))}
-      </div>
+      </ul>
+
+      {/* The honest footnote: capabilities that are real but are not what I
+          lead with commercially. Kept visible so nobody has to guess. */}
+      <Reveal delay={0.1} className="mt-8">
+        <div className="ds-card flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between md:p-7">
+          <div>
+            <p className="ds-meta">Also available, by request</p>
+            <p className="ds-body-sm mt-2">{byRequest.join(" · ")}</p>
+          </div>
+          <Link href="/contact" className="ds-link shrink-0">
+            Ask about one
+            <ArrowIcon className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </Reveal>
     </Section>
   );
 }

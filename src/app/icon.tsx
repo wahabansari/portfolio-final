@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
 
-/** The rounded indigo "W" mark from the nav. */
+/** The rounded blue "W" mark from the nav wordmark. */
 export default function Icon() {
   return new ImageResponse(
     (
@@ -14,12 +14,12 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#1a73e8",
+          background: "#2563eb",
           color: "#ffffff",
-          fontSize: 42,
-          fontWeight: 500,
+          fontSize: 40,
+          fontWeight: 600,
           fontFamily: "sans-serif",
-          borderRadius: 999,
+          borderRadius: 16,
         }}
       >
         W

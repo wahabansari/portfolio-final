@@ -1,113 +1,80 @@
 import Link from "next/link";
-import { services, site, type Service } from "@/content/site";
+import { services } from "@/content/services";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
-const ACCENTS: Record<Service["accent"], string> = {
-  blue: "var(--color-g-blue)",
-  red: "var(--color-g-red)",
-  yellow: "var(--color-g-yellow)",
-  green: "var(--color-g-green)",
-};
+/**
+ * The services list. Rows rather than a card grid: five services read as an
+ * ordered set of choices this way, and the ordering itself is information —
+ * it says which one is the primary offering.
+ */
+function ServiceRows({ dense = false }: { dense?: boolean }) {
+  return (
+    <ul className="border-t border-border">
+      {services.map((service, i) => (
+        <Reveal as="li" key={service.slug} delay={i * 0.04}>
+          <Link
+            href={`/services/${service.slug}`}
+            className="group grid grid-cols-1 items-baseline gap-x-8 gap-y-3 border-b border-border py-7 transition-colors hover:bg-surface md:grid-cols-12 md:py-8"
+          >
+            <span
+              aria-hidden
+              className="ds-meta text-accent md:col-span-1 md:pl-2"
+            >
+              {String(i + 1).padStart(2, "0")}
+            </span>
 
-export function Services({ tone = "plain" }: { tone?: "plain" | "grey" }) {
+            <span className="md:col-span-4">
+              <span className="ds-h3 block text-ink transition-colors group-hover:text-accent">
+                {service.title}
+              </span>
+              {!dense && (
+                <span className="ds-meta mt-2 block normal-case">{service.eyebrow}</span>
+              )}
+            </span>
+
+            <span className="ds-body md:col-span-6">{service.summary}</span>
+
+            <span className="flex md:col-span-1 md:justify-end md:pr-2">
+              <span
+                aria-hidden
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink-soft transition-[border-color,color,translate] duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:text-accent"
+              >
+                <ArrowIcon />
+              </span>
+            </span>
+          </Link>
+        </Reveal>
+      ))}
+    </ul>
+  );
+}
+
+/** Homepage block. */
+export function ServicesOverview({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
     <Section id="services" tone={tone}>
       <SectionHeading
-        overline="Services"
-        title="What I can build for you"
-        description="Available for full-time roles, and for freelance and contract projects. Four things I take on most often — all of them work I already do in production."
+        overline="What I do"
+        title="Five services, not a capability list"
+        description="Each one is a distinct engagement with its own scope, process and proof. The page for each states who it is for, what it includes, and where the scope ends."
+        align="between"
         aside={
-          <Link href="/services" className="g-link">
-            All services
-            <ArrowIcon className="h-4 w-4" />
+          <Link href="/services" className="ds-btn ds-btn-secondary">
+            Compare services
+            <ArrowIcon />
           </Link>
         }
       />
-
-      <ul className="grid gap-6 md:grid-cols-2">
-        {services.map((service, i) => (
-          <Reveal as="li" key={service.slug} delay={(i % 2) * 0.06} className="h-full">
-            <ServiceCard service={service} />
-          </Reveal>
-        ))}
-      </ul>
-
-      {/* Closing call to action for the client half of the audience. */}
-      <Reveal delay={0.12}>
-        <div className="g-card-plain mt-10 flex flex-col gap-6 p-8 md:mt-12 md:flex-row md:items-center md:justify-between md:p-10">
-          <div>
-            <h3 className="g-title">Have a project in mind?</h3>
-            <p className="g-body mt-2 max-w-lg">
-              Tell me what you&apos;re building and I&apos;ll come back with an approach, a
-              timeline and a price. No obligation.
-            </p>
-          </div>
-          {/* Full width on phones, side by side from sm up. */}
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <Link href="/contact" className="g-btn g-btn-filled w-full sm:w-auto sm:shrink-0">
-              Start a project
-              <ArrowIcon />
-            </Link>
-            <a
-              href={site.resumeHref}
-              className="g-btn g-btn-outlined w-full sm:w-auto sm:shrink-0"
-            >
-              Download résumé
-            </a>
-          </div>
-        </div>
-      </Reveal>
+      <ServiceRows />
     </Section>
   );
 }
 
-function ServiceCard({ service }: { service: Service }) {
-  const accent = ACCENTS[service.accent];
-  /* Categories with a page behind them become links; the rest stay plain
-     until their pages exist. */
-  const Wrapper = service.href ? Link : "div";
-  const wrapperProps = service.href ? { href: service.href } : {};
-
+/** /services hub — the same rows, without the section heading around them. */
+export function ServicesList() {
   return (
-    <article className="g-card-plain flex h-full flex-col p-7 md:p-8">
-      <Wrapper {...(wrapperProps as { href: string })} className="group flex h-full flex-col">
-        <div className="flex items-center gap-3">
-          <span
-            aria-hidden
-            className="h-2.5 w-2.5 shrink-0 rounded-full"
-            style={{ background: accent }}
-          />
-          <h3 className="g-title">{service.title}</h3>
-        </div>
-
-        <p className="g-body mt-4">{service.blurb}</p>
-
-          <ul className="mt-6 space-y-3 border-t border-border pt-6">
-        {service.includes.map((item) => (
-          <li key={item} className="grid grid-cols-[1.125rem_1fr] gap-x-3">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="mt-0.5 shrink-0"
-              style={{ color: accent }}
-              aria-hidden
-            >
-              <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-            </svg>
-            <span className="text-[0.9375rem] leading-relaxed text-ink">{item}</span>
-          </li>
-        ))}
-        </ul>
-
-        {service.href && (
-          <span className="g-link mt-auto pt-6">
-            Explore {service.title.toLowerCase()}
-            <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </span>
-        )}
-      </Wrapper>
-    </article>
+    <Section tone="plain">
+      <ServiceRows />
+    </Section>
   );
 }

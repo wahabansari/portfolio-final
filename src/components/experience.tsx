@@ -1,81 +1,60 @@
 import { experience } from "@/content/site";
-import Link from "next/link";
-import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
+import { ChipList, Reveal, Section, SectionHeading } from "./ui";
 
-/** `preview` drops the bullet lists, leaving roles and their stacks. */
-export function Experience({
-  preview = false,
-  hideHeading = false,
+/**
+ * Experience. Two roles, both written up in full — a long run on one product
+ * is the substance of the CV, not a gap to apologise for, so it gets the space
+ * rather than being compressed into a two-line timeline entry.
+ */
+export function ExperienceList({
   tone = "plain",
+  hideHeading = false,
 }: {
-  preview?: boolean;
+  tone?: "plain" | "soft" | "deep";
   hideHeading?: boolean;
-  tone?: "plain" | "grey";
 }) {
   return (
     <Section id="experience" tone={tone}>
       {!hideHeading && (
         <SectionHeading
-          level={preview ? "h2" : "h1"}
           overline="Experience"
-          title="Where I've worked"
-          description="Five years across product engineering and interface design."
-          aside={
-            preview ? (
-              <Link href="/experience" className="g-link">
-                Full history
-                <ArrowIcon className="h-4 w-4" />
-              </Link>
-            ) : undefined
-          }
+          title="Where the five years went"
+          description="Production frontend engineering, and the interface and design-system work underneath it."
         />
       )}
 
-      <div className="space-y-6">
+      <ol className="space-y-6">
         {experience.map((role, i) => (
-          <Reveal key={role.company} delay={i * 0.06}>
-            <article className="g-card-soft p-7 md:p-10">
+          <Reveal as="li" key={role.company} delay={i * 0.05}>
+            <article className="ds-card p-7 md:p-9">
               <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-                {/* Meta pinned to a fixed left column so both roles align. */}
-                <div className="lg:col-span-4">
-                  <h3 className="g-title">{role.company}</h3>
-                  <p className="mt-2 text-[0.9375rem] font-medium text-primary">{role.role}</p>
+                <header className="lg:col-span-4">
+                  <h3 className="ds-title">{role.role}</h3>
+                  <p className="mt-2 text-[0.9375rem] font-medium text-accent">{role.company}</p>
+                  {role.client && <p className="ds-meta mt-2 normal-case">Client · {role.client}</p>}
+                  {role.period && <p className="ds-meta mt-1 normal-case">{role.period}</p>}
+                  <p className="ds-body-sm mt-5">{role.summary}</p>
+                  <ChipList items={role.stack} className="mt-6" />
+                </header>
 
-                  {role.client && (
-                    <p className="g-body-sm mt-4">
-                      <span className="text-ink">{role.client}</span>
-                    </p>
-                  )}
-
-                  <ul className="mt-6 flex flex-wrap gap-2">
-                    {role.stack.map((s) => (
-                      <li key={s} className="g-chip !py-1 !text-[0.8125rem] font-normal text-ink-muted">
-                        {s}
+                <div className="lg:col-span-8">
+                  <ul className="space-y-4 border-t border-border pt-6 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
+                    {role.highlights.map((h) => (
+                      <li key={h} className="flex gap-3.5">
+                        <span
+                          aria-hidden
+                          className="mt-[0.6rem] h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                        />
+                        <p className="ds-body-sm">{h}</p>
                       </li>
                     ))}
                   </ul>
-                </div>
-
-                <div className="lg:col-span-8">
-                  <p className="text-[1.0625rem] leading-relaxed text-ink">{role.summary}</p>
-
-                  <ul className="mt-7 space-y-4">
-                      {(preview ? role.highlights.slice(0, 3) : role.highlights).map((h, hi) => (
-                        <li key={hi} className="grid grid-cols-[1.25rem_1fr] gap-x-3">
-                          <span
-                            aria-hidden
-                            className="mt-[0.55rem] h-1.5 w-1.5 rounded-full bg-primary"
-                          />
-                          <span className="g-body text-[0.9375rem]">{h}</span>
-                        </li>
-                      ))}
-                    </ul>
                 </div>
               </div>
             </article>
           </Reveal>
         ))}
-      </div>
+      </ol>
     </Section>
   );
 }

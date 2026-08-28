@@ -1,1907 +1,774 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- * SERVICE CATALOGUE — single source of truth for every /services route.
+ * SERVICE CATALOGUE — five sellable services, one route each.
  *
- * Two levels:
- *   ServiceCategory  → /services/[category]        e.g. /services/frontend
- *   ServiceDetail    → /services/[category]/[slug] e.g. .../email-templates
+ * This replaced a sixteen-service catalogue split across three categories. The
+ * problem with that structure was not the work — all of it is real — it was
+ * that it presented every capability at equal visual weight, so a buyer had no
+ * way to tell what the primary offering was. Capabilities that are genuine but
+ * not commercially central (WordPress, PWAs, email templates, generic n8n
+ * automation) now live inside service pages and `byRequest` on /about, rather
+ * than each owning a thin page of its own.
  *
- * Everything the detail pages render — copy, SEO metadata, FAQs, schema — comes
- * from here. Adding a service means adding one object; the routes, sitemap,
- * category listing and structured data all pick it up automatically.
+ * Every page follows one anatomy, in this order:
+ *   breadcrumb → eyebrow + h1 + value proposition → answer-first definition →
+ *   who it is / is not for → the problem → what gets delivered → how the
+ *   engagement runs → technical depth → proof → scope boundaries → FAQ → CTA
+ *
+ * That order is deliberate: it front-loads the answer for anyone scanning (a
+ * reader or a generative-search system), states fit before pitch, and shows
+ * proof before it asks for anything.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-export type Accent = "blue" | "red" | "yellow" | "green";
-
-export type ServiceDetail = {
+export type Service = {
   slug: string;
-  /** H1 and card title. */
+  /** H1-adjacent name, used in nav, cards and breadcrumbs. */
   title: string;
-  /** Sits under the title on the detail page. */
-  tagline: string;
-  /** One sentence, used on category and index cards. */
-  summary: string;
-
-  /* ── SEO ────────────────────────────────────────────────────────────── */
-  metaTitle: string;
-  metaDescription: string;
-  keywords: string[];
-
-  /* ── Page body ──────────────────────────────────────────────────────── */
-  /** Opening paragraphs. */
-  intro: string[];
-  /** The pain this service addresses. */
-  problem: { heading: string; body: string };
-  /** Concrete deliverables. */
-  deliverables: { title: string; detail: string }[];
-  /** How the engagement runs. */
-  process: { step: string; detail: string }[];
-  /** Tools and technologies used. */
-  stack: string[];
-  /** Who this is a good fit for. */
-  idealFor: string[];
-  /** Concrete scenarios. Readers recognise themselves in these far faster
-     than in a feature list. */
-  useCases: { scenario: string; outcome: string }[];
-  /** Also powers FAQPage structured data. */
-  faqs: { q: string; a: string }[];
-};
-
-export type ServiceCategory = {
-  slug: string;
-  title: string;
-  /** Nav and breadcrumb label. */
+  /** Short label for tight spaces. */
   shortTitle: string;
-  accent: Accent;
-  tagline: string;
+  eyebrow: string;
+
+  /* ── SEO ─────────────────────────────────────────────────────────────── */
   metaTitle: string;
   metaDescription: string;
   keywords: string[];
+
+  /* ── Page body ───────────────────────────────────────────────────────── */
+  h1: string;
+  subhead: string;
+  /** One line, used on the services hub and homepage cards. */
+  summary: string;
+  /**
+   * The answer-first block. One sentence that defines the service plainly
+   * enough to be quoted out of context and still be correct.
+   */
+  definition: string;
   intro: string[];
-  services: ServiceDetail[];
+
+  idealFor: string[];
+  notIdealFor: string[];
+
+  problems: { title: string; detail: string }[];
+  deliverables: { title: string; detail: string }[];
+  engagement: { step: string; detail: string }[];
+
+  technical: { summary: string; groups: { label: string; items: string[] }[] };
+  /** Scope boundaries, stated up front so they are not a negotiation later. */
+  scope: { includes: string[]; excludes: string[] };
+
+  /** Slugs from content/work.ts. Every service links to at least one. */
+  proofSlugs: string[];
+  faqs: { q: string; a: string }[];
+
+  cta: { heading: string; body: string; primaryLabel: string };
 };
 
-export const serviceCategories: ServiceCategory[] = [
+export const services: Service[] = [
   /* ══════════════════════════════════════════════════════════════════════
-     FRONTEND
+     1 · FRONTEND PRODUCT ENGINEERING — primary
      ══════════════════════════════════════════════════════════════════════ */
   {
-    slug: "frontend",
-    title: "Frontend & interface services",
-    shortTitle: "Frontend",
-    accent: "blue",
-    tagline: "Web applications built, and the interface work around them",
-    metaTitle: "Frontend Development Services — React, Next.js & UI Design",
+    slug: "frontend-product-engineering",
+    title: "Frontend Product Engineering",
+    shortTitle: "Frontend engineering",
+    eyebrow: "Primary service",
+    metaTitle: "React & Next.js Development Services",
     metaDescription:
-      "Frontend development services: React and Next.js web applications, responsive websites and PWAs, plus dashboard redesigns, UI/UX design and email template development.",
+      "Production React and Next.js development for SaaS products, web applications, dashboards and customer-facing interfaces.",
     keywords: [
-      "frontend development services",
-      "react developer for hire",
-      "next.js development services",
-      "responsive website development",
-      "progressive web app development",
-      "ui ux design services",
-      "dashboard redesign",
-      "email template development",
+      "React development services",
+      "Next.js development",
+      "React developer",
+      "Next.js developer",
+      "frontend product engineering",
+      "hire React developer",
     ],
+    h1: "React and Next.js development for production web products",
+    subhead:
+      "I build responsive, maintainable frontend systems for SaaS products, dashboards, customer portals and business-critical web applications.",
+    summary:
+      "Production React and Next.js interfaces, reusable components, API integration and responsive product delivery.",
+    definition:
+      "Frontend product engineering is the implementation layer that turns product requirements and interface designs into responsive, API-connected web experiences that can be maintained as the product grows.",
     intro: [
-      "The core of this is building web applications: React and Next.js in production, typed, with a rendering strategy chosen per page and a structure that is still workable a year later. Responsive websites and installable PWAs come out of the same stack.",
-      "Around that sits the interface work most teams need alongside a build — redesigning a product that has outgrown its structure, the UI/UX and design system underneath it, and the email templates nobody wants to hand-code. Same person, so a design does not lose anything on the way into the browser.",
+      "This is the core service everything else here supports. Not a landing page and not a mockup — the actual application: routing, state, data fetching, forms, auth-gated areas, and the hundred small decisions that determine whether the codebase is still pleasant to work in a year from now.",
+      "Five years of it, in production. The stack is React and Next.js with TypeScript, and the choices that matter get made deliberately: what renders on the server, what ships to the client, and where state actually belongs.",
     ],
-    services: [
+    idealFor: [
+      "You have a working product, designs or clear requirements, and need someone to own the frontend",
+      "A React or Next.js application that has outgrown its original structure",
+      "A Figma file that needs to become production UI, not another prototype",
+      "A team with backend capacity but no dedicated frontend engineer",
+      "A product where performance and maintainability have become real constraints",
+    ],
+    notIdealFor: [
+      "Tiny one-off HTML or CSS edits with no broader engineering scope",
+      "Work that needs a designer to originate the visual direction from nothing",
+      "Projects where the requirements have not been thought about at all yet",
+    ],
+    problems: [
       {
-        slug: "react-nextjs-development",
-        title: "React & Next.js development",
-        tagline: "The core build — your product, in production",
-        summary:
-          "Production web applications in React and Next.js: architecture, components, state, API integration and deployment.",
-        metaTitle: "React & Next.js Development Services",
-        metaDescription:
-          "Production React and Next.js development — web applications built with TypeScript, proper state management, API integration and a rendering strategy chosen per page.",
-        keywords: [
-          "react development services",
-          "next.js development services",
-          "react developer for hire",
-          "hire nextjs developer",
-          "react web application development",
-          "typescript react development",
-        ],
-        intro: [
-          "This is the work everything else on this page supports. Not a landing page or a redesign — the actual application: routing, state, data, forms, auth-gated areas, and the hundred small decisions that determine whether it is still pleasant to work on in a year.",
-          "Five years of it, in production. The stack is React and Next.js with TypeScript, and the choices that matter get made deliberately: what renders on the server, what ships to the client, and where state actually belongs.",
-        ],
-        problem: {
-          heading: "Most React projects do not fail at the start",
-          body: "They fail around month four. State that began as one useState is now threaded through nine components. Every page ships the whole bundle because nothing was ever split. Nobody is sure which components are still used. The app still works — it has just become slow to change, which is the expensive kind of broken.",
-        },
-        deliverables: [
-          {
-            title: "Architecture set before the first screen",
-            detail:
-              "Folder structure, state strategy and data flow decided up front, so the fifth feature costs about what the first one did.",
-          },
-          {
-            title: "Typed end to end",
-            detail:
-              "TypeScript across components, API responses and forms — so a renamed field breaks the build rather than production.",
-          },
-          {
-            title: "Rendering chosen per page",
-            detail:
-              "Static where content is stable, server-rendered where it is not, client-side only where it genuinely must be. Next.js gives you the choice; using it well is the point.",
-          },
-          {
-            title: "State that stays understandable",
-            detail:
-              "Redux Toolkit, Zustand or Context — picked for the size of the problem rather than habit, and kept out of components that do not need it.",
-          },
-          {
-            title: "API integration and forms",
-            detail:
-              "REST integration with real error and loading states, and validated forms via React Hook Form rather than hand-rolled checks.",
-          },
-        ],
-        process: [
-          {
-            step: "Scope",
-            detail:
-              "Agree what the application does and which parts are genuinely complex, before estimating anything.",
-          },
-          {
-            step: "Architect",
-            detail:
-              "Data flow, routing and state settled and written down, so decisions are not relitigated mid-build.",
-          },
-          {
-            step: "Build in slices",
-            detail:
-              "Feature by feature, deployable at each step, so you see working software early rather than at the end.",
-          },
-          {
-            step: "Harden",
-            detail:
-              "Performance pass, error states, accessibility and cross-browser checks before launch — not after.",
-          },
-        ],
-        stack: [
-          "React.js",
-          "Next.js",
-          "TypeScript",
-          "Redux Toolkit",
-          "Zustand",
-          "React Hook Form",
-          "REST APIs",
-          "Vercel",
-        ],
-        idealFor: [
-          "Startups building their first real product",
-          "Teams needing a senior frontend for a build",
-          "Companies replacing an aging web app",
-          "Founders without an in-house frontend",
-        ],
-        useCases: [
-          {
-            scenario:
-              "A marketing site that had grown into an application, with authentication bolted on and no clear structure.",
-            outcome:
-              "Rebuilt as a proper Next.js application with password-protected client areas, and a codebase organised so new sections could be added without touching the old ones.",
-          },
-          {
-            scenario:
-              "An e-commerce frontend needed from design to production, with payment flows, by one developer.",
-            outcome:
-              "Built solo in Next.js with reusable components and integrated payment workflows, responsive from phone to desktop.",
-          },
-          {
-            scenario:
-              "A team whose page bundle had grown to the point where mobile users waited seconds for a first paint.",
-            outcome:
-              "Code splitting, lazy boundaries and a cleaned-up build pipeline — the same approach that returned a 30% Core Web Vitals improvement elsewhere.",
-          },
-        ],
-        faqs: [
-          {
-            q: "React or Next.js — which do we need?",
-            a: "Next.js, in almost every case where the app has pages and needs to be found in search. Plain React makes sense for something that lives entirely behind a login and never needs server rendering or SEO. I will tell you which applies rather than defaulting to the bigger framework.",
-          },
-          {
-            q: "Can you work with our existing codebase?",
-            a: "Yes. Joining an existing React project is common — I start by reading it and telling you honestly what is worth keeping. Rewrites get proposed only when the alternative genuinely costs more.",
-          },
-          {
-            q: "Do you handle the backend too?",
-            a: "For APIs, databases and auth, yes — Node.js, Express, PostgreSQL or MongoDB with Prisma or Drizzle. For heavy backend systems you want a specialist, and I will say so.",
-          },
-          {
-            q: "How do you keep it maintainable after you leave?",
-            a: "TypeScript throughout, a component structure that follows the product rather than the framework, and no clever abstractions that need me to explain them. The test is whether your next developer can add a feature without asking questions.",
-          },
-          {
-            q: "What about accessibility?",
-            a: "Built in, not bolted on. Semantic markup, keyboard support, focus management and contrast checked against WCAG AA while building — retrofitting all of that later costs far more than doing it once.",
-          },
-        ],
+        title: "Most React projects do not fail at the start",
+        detail:
+          "They fail around month four. State that began as one useState is threaded through nine components, every page ships the whole bundle because nothing was ever split, and nobody is sure which components are still used. The app still works — it has just become slow to change, which is the expensive kind of broken.",
       },
       {
-        slug: "responsive-web-development",
-        title: "Responsive website development",
-        tagline: "One build that works from a phone to a widescreen",
-        summary:
-          "Pixel-perfect, responsive websites built from your design — fast, cross-browser, and correct at every width your visitors actually use.",
-        metaTitle: "Responsive Website Development Services",
-        metaDescription:
-          "Responsive website development from Figma to production: pixel-perfect, cross-browser, mobile-first, and fast. Built in React, Next.js or plain HTML and CSS.",
-        keywords: [
-          "responsive website development",
-          "mobile first web development",
-          "figma to code",
-          "cross browser website development",
-          "pixel perfect website",
-          "html css developer",
-        ],
-        intro: [
-          "Most traffic arrives on a phone, and most designs are drawn on a desktop. The gap between those two facts is where responsive work actually lives — not in adding a media query, but in deciding what a layout should become when there is a third of the width available.",
-          "I build from the design file, mobile-first, and check the result at the widths your analytics show rather than the three breakpoints a framework happens to ship with.",
-        ],
-        problem: {
-          heading: "It looked fine in the browser you tested",
-          body: "Responsive failures are rarely dramatic. A table scrolls sideways and cuts off a column. A fixed-width card forces the whole page to pan. A tap target sits four pixels from another one. Individually small, together they are why mobile visitors leave — and you rarely see it, because you check on the machine you built it on.",
-        },
-        deliverables: [
-          {
-            title: "Mobile-first build",
-            detail:
-              "Written for the small screen and expanded upward, which produces better layouts than shrinking a desktop design down.",
-          },
-          {
-            title: "Pixel-perfect against the design",
-            detail:
-              "Spacing, type and colour read straight off the Figma file, not approximated — I came from design, so I know what the file intends.",
-          },
-          {
-            title: "Cross-browser and cross-device",
-            detail:
-              "Checked in Chrome, Safari, Firefox and Edge, on real device widths rather than only in a simulator.",
-          },
-          {
-            title: "Accessible by construction",
-            detail:
-              "Semantic markup, keyboard order, contrast checked against WCAG AA and tap targets sized properly.",
-          },
-          {
-            title: "Fast on a poor connection",
-            detail:
-              "Optimised images, sensible asset weight and no layout shift while things load.",
-          },
-        ],
-        process: [
-          {
-            step: "Review the design",
-            detail:
-              "Flag anything that will not survive a narrow screen before building, while it is still cheap to change.",
-          },
-          {
-            step: "Build mobile-first",
-            detail: "Small screen first, then the breakpoints your traffic actually uses.",
-          },
-          {
-            step: "Test on real widths",
-            detail: "Across browsers and devices, including the awkward in-between sizes.",
-          },
-          {
-            step: "Hand over",
-            detail: "Deployed, with the component structure documented for your team.",
-          },
-        ],
-        stack: [
-          "HTML5",
-          "CSS3",
-          "Tailwind CSS",
-          "React.js",
-          "Next.js",
-          "SASS",
-          "Figma",
-          "Responsive design",
-        ],
-        idealFor: [
-          "Businesses losing mobile visitors",
-          "Designs that need faithful implementation",
-          "Sites that predate mobile traffic",
-          "Teams needing a reliable build partner",
-        ],
-        useCases: [
-          {
-            scenario:
-              "A marketplace whose listing grid collapsed into an unusable single column below 900px.",
-            outcome:
-              "Rebuilt with a layout that reflows rather than stacks, keeping filters reachable at every width.",
-          },
-          {
-            scenario:
-              "A design team frustrated that shipped pages never quite matched their Figma file.",
-            outcome:
-              "Implementation read directly off the file — spacing, type scale and colour tokens matched rather than eyeballed.",
-          },
-          {
-            scenario:
-              "A healthcare site where the appointment form was unusable on a phone.",
-            outcome:
-              "Form rebuilt mobile-first with proper input types and tap targets, so booking worked on the device most patients used.",
-          },
-        ],
-        faqs: [
-          {
-            q: "Which breakpoints do you build for?",
-            a: "Whichever your traffic uses. Analytics beats convention — if a meaningful share of your visitors are on a 360px Android or a 1024px tablet, those get treated as real cases rather than edges.",
-          },
-          {
-            q: "Do you need a design first?",
-            a: "It helps, but no. If you have a Figma file I build from it. If you do not, design can be part of the engagement rather than something you hire separately for.",
-          },
-          {
-            q: "Can you make our existing site responsive?",
-            a: "Usually, yes. Whether it is worth retrofitting or rebuilding depends on how the current CSS is structured — I will look and tell you which is cheaper, including when the answer is to leave it alone.",
-          },
-          {
-            q: "Does this include a CMS?",
-            a: "It can. Pair it with WordPress if your team needs to publish without a developer, or keep it as static pages if the content rarely changes.",
-          },
-          {
-            q: "How do you test?",
-            a: "Real browsers at real widths, plus keyboard-only passes and contrast checks. Not just the responsive toggle in devtools, which hides plenty of real problems.",
-          },
-        ],
+        title: "The design lost something on the way into the browser",
+        detail:
+          "Spacing drifts, states that were designed are missing, and the responsive behaviour was improvised. Usually this is a handoff problem, not a skill problem — and it is why I read a Figma file as a specification rather than a picture.",
       },
       {
-        slug: "progressive-web-app-development",
-        title: "Progressive Web App development",
-        tagline: "App-like, without the app store",
-        summary:
-          "Installable, offline-capable web apps that behave like native ones — no store submission, no separate codebase.",
-        metaTitle: "Progressive Web App (PWA) Development Services",
-        metaDescription:
-          "Progressive Web App development: installable, offline-capable and fast on poor connections. One codebase, no app store submission, works on Android and iOS.",
-        keywords: [
-          "progressive web app development",
-          "pwa development services",
-          "installable web app",
-          "offline web app",
-          "pwa developer",
-          "web app instead of native app",
-        ],
-        intro: [
-          "A PWA is a website that behaves like an installed app: it sits on the home screen, opens without browser chrome, and keeps working when the connection does not. No store submission, no review queue, no second codebase for a second platform.",
-          "For a large share of businesses asking for a mobile app, this is what they actually needed — the same reach at a fraction of the cost and none of the release friction.",
-        ],
-        problem: {
-          heading: "You may not need a native app",
-          body: "Native means two codebases, two skill sets, store review on every release, and asking users to install something before they can even try it. Plenty of products are asking for a fast, installable, offline-tolerant experience — not for platform APIs. Building native for that means paying twice for something a PWA delivers from one codebase.",
-        },
-        deliverables: [
-          {
-            title: "Installable on the home screen",
-            detail:
-              "A configured manifest and icon set, so the app installs from the browser and launches without browser chrome.",
-          },
-          {
-            title: "Works offline",
-            detail:
-              "Service worker caching so key screens still load with no connection, and requests queue rather than fail.",
-          },
-          {
-            title: "Fast on weak connections",
-            detail:
-              "Assets cached and prioritised, so a second visit is near-instant even on poor mobile data.",
-          },
-          {
-            title: "One codebase",
-            detail:
-              "The same build serves desktop, Android and iOS — no separate app to maintain or ship.",
-          },
-          {
-            title: "Honest about the limits",
-            detail:
-              "Where a PWA genuinely cannot do what you need — deep OS integration, certain hardware APIs — I will tell you before we start, not after.",
-          },
-        ],
-        process: [
-          {
-            step: "Qualify",
-            detail:
-              "Check that a PWA fits what you actually need. If it does not, better to know in the first conversation.",
-          },
-          {
-            step: "Build the app",
-            detail: "The web application itself, in React or Next.js, responsive from the start.",
-          },
-          {
-            step: "Add the app layer",
-            detail:
-              "Manifest, icons, service worker and a caching strategy matched to how the app is used.",
-          },
-          {
-            step: "Test installed",
-            detail:
-              "Verified as an installed app on Android and iOS, offline and on throttled connections.",
-          },
-        ],
-        stack: [
-          "Progressive Web Apps",
-          "Service workers",
-          "React.js",
-          "Next.js",
-          "NativeScript",
-          "Responsive design",
-        ],
-        idealFor: [
-          "Businesses quoted a large native app budget",
-          "Field teams working with patchy connectivity",
-          "Products needing fast iteration without store review",
-          "Anyone wanting reach on Android and iOS at once",
-        ],
-        useCases: [
-          {
-            scenario:
-              "A company quoted separately for iOS and Android builds of what was essentially a form and a dashboard.",
-            outcome:
-              "Delivered as one installable PWA covering both platforms, at a fraction of the two-app cost.",
-          },
-          {
-            scenario:
-              "Field staff losing work when they dropped out of coverage mid-form.",
-            outcome:
-              "Offline caching with queued submissions, so entries sync automatically once signal returns.",
-          },
-          {
-            scenario:
-              "A team blocked for days at a time by app store review on every small fix.",
-            outcome:
-              "Moved to a PWA, where a fix deploys in minutes and users get it on next open.",
-          },
-        ],
-        faqs: [
-          {
-            q: "Do PWAs work on iPhone?",
-            a: "Yes — they install to the home screen and run standalone. iOS supports less than Android on some APIs, notably around push notifications and background work, so if those are central to your product that needs discussing up front.",
-          },
-          {
-            q: "Is a PWA as good as a native app?",
-            a: "For most business applications, close enough that the difference does not justify two codebases. For anything leaning heavily on OS integration, camera pipelines or heavy graphics, native is genuinely better and I will say so.",
-          },
-          {
-            q: "How does it work offline?",
-            a: "A service worker caches the shell and key data, so screens load without a connection. Actions taken offline can queue and sync when the connection returns, rather than failing silently.",
-          },
-          {
-            q: "Can we still put it in the app store?",
-            a: "Yes, via a wrapper — Google Play accepts PWAs directly through Trusted Web Activity. Whether it is worth the overhead depends on whether your users search stores for you at all.",
-          },
-          {
-            q: "Can our existing site become a PWA?",
-            a: "Often, yes. If it is already responsive and reasonably fast, adding the app layer is a small piece of work. If it is neither, that comes first — a slow site does not improve by being installable.",
-          },
-        ],
-      },
-      /* ── Email templates ─────────────────────────────────────────────── */
-      {
-        slug: "email-template-development",
-        title: "Email template development",
-        tagline: "Emails that look right in Outlook, not just in the preview",
-        summary: "Hand-coded HTML emails that hold together across Gmail, Outlook and Apple Mail — and stay editable by your team.",
-        metaTitle: "Email Template Development — Responsive HTML Email",
-        metaDescription:
-          "Hand-coded responsive HTML email templates tested across Gmail, Outlook, Apple Mail and mobile. Ready to drop into Mailchimp, Klaviyo, HubSpot or any ESP.",
-        keywords: [
-          "email template development",
-          "responsive html email",
-          "custom email template",
-          "mailchimp email template",
-          "klaviyo email template",
-          "outlook compatible email template",
-          "html email developer",
-        ],
-        intro: [
-          "You approved the design. It looked perfect in the builder preview. Then it went out, and half your list saw a stack of broken boxes because Outlook still renders email through Microsoft Word.",
-          "That is not bad luck, it is the format. Email support froze somewhere around 2007 and never caught up. I build templates for the rendering engines that actually exist, not the ones we wish existed.",
-        ],
-        problem: {
-          heading: "Your campaign is only as good as its worst inbox",
-          body:
-            "Roughly a third of business recipients open in Outlook, where floats collapse, background images vanish and padding is ignored. Another large share are on Gmail, which silently clips anything over 102KB — cutting off your call to action mid-page. You do not find out from a test send to your own inbox. You find out from a click rate that makes no sense.",
-        },
-        deliverables: [
-          {
-            title: "Hand-coded responsive HTML",
-            detail:
-              "Table-based structure with inline CSS, built to degrade gracefully rather than depend on support that isn't there.",
-          },
-          {
-            title: "Tested across major clients",
-            detail:
-              "Checked in Gmail (web, iOS, Android), Outlook on Windows, Apple Mail and common mobile clients before handoff.",
-          },
-          {
-            title: "Dark mode handling",
-            detail:
-              "Colours and logos that stay legible when a client inverts the palette, instead of turning into dark text on a dark background.",
-          },
-          {
-            title: "Modular sections",
-            detail:
-              "Reusable blocks — hero, feature row, product grid, footer — so your team can assemble future campaigns without going back to a developer.",
-          },
-          {
-            title: "ESP-ready delivery",
-            detail:
-              "Uploaded and configured in Mailchimp, Klaviyo, HubSpot or your own platform, with merge tags wired up.",
-          },
-        ],
-        process: [
-          {
-            step: "Brief and design",
-            detail:
-              "You send a design, a rough sketch, or an existing email you want rebuilt. If there's no design yet, I can produce one first.",
-          },
-          {
-            step: "Build",
-            detail: "Hand-coded to your brand, with the modular blocks agreed up front.",
-          },
-          {
-            step: "Test",
-            detail:
-              "Rendered across the major clients and fixed until it holds, including dark mode and mobile widths.",
-          },
-          {
-            step: "Handoff",
-            detail:
-              "Delivered as source files and loaded into your ESP, with a short guide on editing the blocks safely.",
-          },
-        ],
-        stack: ["HTML5", "Inline CSS", "Mailchimp", "Klaviyo", "HubSpot", "Responsive design"],
-        idealFor: [
-          "Teams whose campaigns break in Outlook",
-          "Brands moving off a drag-and-drop builder",
-          "Agencies needing a reliable template partner",
-          "Product teams sending transactional email",
-        ],
-        useCases: [
-          { scenario: "A retailer's Black Friday campaign rendered as a single column of stacked images in Outlook, burying the discount code.", outcome: "Rebuilt on a table structure with a text-based code block. Same design, readable in every client, code visible without scrolling." },
-          { scenario: "A SaaS team's onboarding sequence was clipped by Gmail, so the activation button never appeared.", outcome: "Markup cut to a third of its weight, moving the whole sequence under the 102KB clipping threshold." },
-          { scenario: "A brand's white logo disappeared for every recipient using dark mode.", outcome: "Dark-mode handling per client, with a logo treatment that stays visible whichever way the palette inverts." },
-        ],
-        faqs: [
-          {
-            q: "Which email clients do you test in?",
-            a: "Gmail on web, iOS and Android; Outlook on Windows (the Word rendering engine, which is usually where problems appear); Apple Mail on macOS and iOS; and common Android clients. If your audience skews toward a client outside that list, tell me and it goes into the test matrix.",
-          },
-          {
-            q: "Can you work from a Figma design?",
-            a: "Yes — a Figma file is the ideal starting point. I come from a design-systems background, so I read spacing, type and colour straight off the file rather than guessing. A PDF, a screenshot or an existing email works too.",
-          },
-          {
-            q: "Do you handle dark mode?",
-            a: "Yes. Dark mode is handled per client, because they behave differently — some invert everything, some respect your colours, some only change the background. Logos and text get treated so they stay legible either way.",
-          },
-          {
-            q: "Will my team be able to edit it afterwards?",
-            a: "That's the point of building it in modular blocks. Your team can reorder, duplicate and swap content in sections without touching the structural markup, which is where things usually break.",
-          },
-          {
-            q: "How long does a template take?",
-            a: "A single template with an existing design is typically a few days. A set of modular blocks that covers a whole campaign programme takes longer — I'll give you a firm timeline once I've seen the scope.",
-          },
-        ],
-      },
-
-      /* ── Redesign ────────────────────────────────────────────────────── */
-      {
-        slug: "website-dashboard-redesign",
-        title: "Website & dashboard redesign",
-        tagline: "Fix the product you have instead of rebuilding from zero",
-        summary: "Redesign and rebuild of existing sites, dashboards and admin panels — modernised, made responsive, and restructured so future features stop being expensive.",
-        metaTitle: "Website & Dashboard Redesign Services",
-        metaDescription:
-          "Redesign and rebuild of existing websites, dashboards and admin panels. Modern responsive interfaces, component-based architecture, faster load times.",
-        keywords: [
-          "website redesign services",
-          "dashboard redesign",
-          "admin panel redesign",
-          "web app redesign",
-          "wordpress to nextjs migration",
-          "legacy website modernization",
-        ],
-        intro: [
-          "Nobody sets out to build a confusing dashboard. It happens gradually: a feature gets added to a screen that had no room for it, then another, and eventually your support team is explaining the interface on every call.",
-          "The rebuild instinct is usually wrong. Most of what you have works — it just needs a structure it can grow into. I have done this on a full LMS (dashboards, student portals, admin panels) and on a marketplace moved off WordPress onto Next.js, both without the site going dark.",
-        ],
-        problem: {
-          heading: "Old interfaces get expensive quietly",
-          body:
-            "There is rarely a moment where the interface fails. Instead every new feature takes a bit longer because nothing is reusable. Support tickets climb because a screen is ambiguous. Mobile visitors bounce because the layout never adapted. And Core Web Vitals slip as assets pile up, which now costs you search ranking as well as patience.",
-        },
-        deliverables: [
-          {
-            title: "Audit before anything changes",
-            detail:
-              "A pass over the current interface, codebase and performance numbers, so the redesign targets the actual problems rather than assumed ones.",
-          },
-          {
-            title: "Redesigned screens",
-            detail:
-              "Dashboards, portals and admin panels reworked in Figma with a component-based approach, so patterns repeat instead of multiplying.",
-          },
-          {
-            title: "Production build",
-            detail:
-              "Implemented in React or Next.js, responsive across devices, with reusable components your team can extend.",
-          },
-          {
-            title: "Performance work included",
-            detail:
-              "Lazy loading, asset and image optimisation, and a cleaned-up build pipeline. On one platform this approach returned a 30% Core Web Vitals improvement.",
-          },
-          {
-            title: "Migration path",
-            detail:
-              "If you're moving off WordPress or another legacy stack, the move happens in stages so the live site keeps working throughout.",
-          },
-        ],
-        process: [
-          {
-            step: "Audit",
-            detail:
-              "Review the existing interface, code and metrics. You get a written summary of what's worth fixing and what isn't.",
-          },
-          {
-            step: "Design",
-            detail:
-              "Screens reworked in Figma, starting with the highest-traffic flows so you see value early.",
-          },
-          {
-            step: "Build",
-            detail:
-              "Implemented component by component, reviewable as it goes rather than in one large reveal at the end.",
-          },
-          {
-            step: "Measure",
-            detail:
-              "Performance re-measured against the audit baseline, so the improvement is a number rather than an impression.",
-          },
-        ],
-        stack: [
-          "React.js",
-          "Next.js",
-          "TypeScript",
-          "Tailwind CSS",
-          "Material UI",
-          "Mantine UI",
-          "Figma",
-        ],
-        idealFor: [
-          "Products that have outgrown their original design",
-          "Teams migrating off WordPress or a legacy stack",
-          "Dashboards and admin panels that confuse users",
-          "Sites losing mobile traffic to poor responsiveness",
-        ],
-        useCases: [
-          { scenario: "An LMS where admins, tutors and students all shared one overloaded dashboard.", outcome: "Split into role-specific views built from one component library, so each user sees only what their role needs." },
-          { scenario: "A marketplace on WordPress where adding a filter meant a developer week.", outcome: "Migrated to Next.js in stages. New filters became a config change, and pages got measurably faster." },
-          { scenario: "A B2B tool losing mobile users because the admin panel assumed a 1440px screen.", outcome: "Responsive rebuild starting with the highest-traffic flows, shipped incrementally rather than as one risky release." },
-        ],
-        faqs: [
-          {
-            q: "Do we have to rebuild everything at once?",
-            a: "No, and usually you shouldn't. The work is staged — highest-value screens first, with the existing site running the whole time. That keeps risk low and means you see improvement before the project ends.",
-          },
-          {
-            q: "Can you redesign without touching our backend?",
-            a: "Yes. A frontend-only redesign against your existing APIs is a common shape for this work. If the API is the constraint, I can work on that side too — Node.js, Express and REST are part of my stack.",
-          },
-          {
-            q: "What if we don't have designs?",
-            a: "Then design is part of the engagement. I came into engineering from interface design, so I can produce the Figma work and then build it, rather than you having to hire twice.",
-          },
-          {
-            q: "How do you handle our existing content and SEO?",
-            a: "Content and URL structure get mapped before the migration, with redirects in place so existing rankings carry over. Technical SEO — rendering strategy, metadata, structured data — is handled as part of the build rather than bolted on afterwards.",
-          },
-          {
-            q: "Will the redesign actually be faster?",
-            a: "That's measured, not assumed. Performance is baselined during the audit and re-measured at the end. The techniques are the unglamorous ones that work: removing unused assets, tree-shaking, lazy loading, image compression and a streamlined build.",
-          },
-        ],
-      },
-
-      /* ── UI/UX ───────────────────────────────────────────────────────── */
-      {
-        slug: "ui-ux-design",
-        title: "UI/UX design & design systems",
-        tagline: "Designs that survive contact with the browser",
-        summary: "Interface design in Figma plus the design system behind it — tokens, components and rules that keep a product consistent as it grows.",
-        metaTitle: "UI/UX Design & Design System Services — Figma",
-        metaDescription:
-          "UI/UX design in Figma for web apps, dashboards and marketing sites, plus design systems with tokens and reusable components. Designed by someone who also builds.",
-        keywords: [
-          "ui ux design services",
-          "figma designer for hire",
-          "design system services",
-          "dashboard ui design",
-          "saas ui design",
-          "web app design",
-          "design to development handoff",
-        ],
-        intro: [
-          "The expensive gap in most teams is between the design file and the shipped screen. A designer hands over something beautiful, a developer builds what is technically feasible, and the result is neither — followed by three rounds of 'can we nudge this'.",
-          "I have worked both roles. Before engineering full-time I was a UI designer: I led an LMS redesign, moved a whole team from Adobe XD to Figma, and built the design system that product ran on. So what I hand over has already been checked against what a browser can do and what it will cost to build.",
-        ],
-        problem: {
-          heading: "How products quietly stop looking like one product",
-          body:
-            "Without a system, every screen is a fresh set of decisions. Three greys become nine. Button padding drifts by a few pixels per page. The same card gets rebuilt four times because no canonical version exists. Nothing breaks — it just gets steadily harder to add anything, and users start to feel the seams even if they cannot name them.",
-        },
-        deliverables: [
-          {
-            title: "Interface design in Figma",
-            detail:
-              "Screens designed to a real grid with real content, at the breakpoints your users actually browse at — not just a desktop mockup.",
-          },
-          {
-            title: "A design system, not just screens",
-            detail:
-              "Colour and spacing tokens, a type scale, and a component library with states defined, so future screens assemble instead of being invented.",
-          },
-          {
-            title: "Accessibility built in",
-            detail:
-              "Contrast checked against WCAG AA at design time rather than discovered in a later audit, with focus and keyboard states specified.",
-          },
-          {
-            title: "Developer-ready handoff",
-            detail:
-              "Structured handoff sessions and annotated files, so there's no ambiguity between design intent and what gets built.",
-          },
-          {
-            title: "Optional implementation",
-            detail:
-              "I can build what I design in React or Next.js, which removes the handoff gap entirely.",
-          },
-        ],
-        process: [
-          {
-            step: "Understand",
-            detail:
-              "What the product does, who uses it, and where the current interface gets in their way.",
-          },
-          {
-            step: "Structure",
-            detail:
-              "Flows and layout before visual design, so the arrangement is settled before the styling starts.",
-          },
-          {
-            step: "Design",
-            detail:
-              "Screens built from a component set from the first file, so the system emerges with the design rather than after it.",
-          },
-          {
-            step: "Hand off",
-            detail:
-              "Walkthrough with your developers, plus documentation for the tokens and components.",
-          },
-        ],
-        stack: [
-          "Figma",
-          "Design systems",
-          "Design tokens",
-          "Component libraries",
-          "Adobe XD",
-          "WCAG AA",
-        ],
-        idealFor: [
-          "SaaS products with an inconsistent interface",
-          "Teams with no design system in place",
-          "Dashboards that need structure before styling",
-          "Founders who need design and build from one person",
-        ],
-        useCases: [
-          { scenario: "A SaaS product where four developers had each built their own version of the same modal.", outcome: "One component library with defined states. New screens assembled from existing parts instead of being reinvented." },
-          { scenario: "A team whose colour palette failed accessibility review two weeks before launch.", outcome: "Palette rebuilt against WCAG AA at design time, so contrast was settled before a single component was coded." },
-          { scenario: "A founder needing both design and build, without hiring two people.", outcome: "Figma work and the React implementation from the same person — no handoff loss, no translation round." },
-        ],
-        faqs: [
-          {
-            q: "Do you design and build, or only design?",
-            a: "Either. Plenty of clients want the Figma work alone, to hand to their own team. Others want the same person to carry it through to production React — which removes handoff loss entirely and is usually faster overall.",
-          },
-          {
-            q: "What is a design system and do we need one?",
-            a: "It's the shared vocabulary of your interface — colour and spacing tokens, a type scale, and a component library with defined states. You need one once more than one person is producing screens, or once you've noticed the same component existing in several slightly different versions.",
-          },
-          {
-            q: "Can you work with our existing brand?",
-            a: "Yes. Most engagements start from an existing brand and extend it into an interface system, which is a different job from branding. If the brand itself needs work, I'll tell you plainly rather than quietly redesigning it.",
-          },
-          {
-            q: "How do you handle accessibility?",
-            a: "Contrast gets checked against WCAG AA while designing, not in a later audit — retrofitting accessible colour into a finished palette is far more disruptive. Focus states, keyboard order and target sizes are specified as part of the component definitions.",
-          },
-          {
-            q: "What do we actually receive?",
-            a: "A Figma file with the screens and the component library, tokens documented, and a handoff session with your developers. If I'm building it too, you also get the implemented components.",
-          },
-        ],
+        title: "The frontend stops at the API boundary",
+        detail:
+          "Loading, empty, error and partial states get treated as edge cases and built last, if at all. In a real product they are most of what a user actually sees.",
       },
     ],
+    deliverables: [
+      {
+        title: "New React and Next.js product interfaces",
+        detail:
+          "Whole surfaces built from the routing down: page structure, data flow, component boundaries and deployment.",
+      },
+      {
+        title: "Figma to production implementation",
+        detail:
+          "Designs implemented as real UI, with the states the design implied — hover, focus, loading, empty, error — not just the frames that were drawn.",
+      },
+      {
+        title: "Reusable component systems",
+        detail:
+          "A typed component library with real props and real variants, so the tenth screen is faster to build than the first rather than slower.",
+      },
+      {
+        title: "Complex forms and API-driven workflows",
+        detail:
+          "Multi-step forms, validation, optimistic updates and error recovery — wired to your existing REST or API layer.",
+      },
+      {
+        title: "Authentication and role-aware interfaces",
+        detail:
+          "Sign-in flows, protected routes and interfaces that change with the user's role, enforced server-side rather than hidden in the UI.",
+      },
+      {
+        title: "Performance and Core Web Vitals work",
+        detail:
+          "Diagnosis against a measured baseline, then bundle, asset and rendering changes — with a second measurement to prove the change did what it claimed.",
+      },
+      {
+        title: "Refactors for products that outgrew their structure",
+        detail:
+          "Incremental restructuring of a working application, delivered in shippable slices rather than as a rewrite that blocks feature work for a quarter.",
+      },
+    ],
+    engagement: [
+      {
+        step: "Scope call",
+        detail: "You send the product, repo or designs. We establish what needs to exist, what already does, and what the real constraint is.",
+      },
+      {
+        step: "Technical plan",
+        detail: "A written approach: architecture, rendering strategy, component boundaries, integration points and delivery order.",
+      },
+      {
+        step: "Build in slices",
+        detail: "Work lands in reviewable increments against your branch and your process, not as one drop at the end.",
+      },
+      {
+        step: "Ship and hand over",
+        detail: "Responsive and cross-browser verification, performance check, deployment, and documentation of anything non-obvious.",
+      },
+    ],
+    technical: {
+      summary:
+        "TypeScript throughout. Rendering strategy chosen per route rather than by default, server state kept out of client state, and component boundaries drawn where the data changes — not where the layout does.",
+      groups: [
+        { label: "Core", items: ["React", "Next.js (App Router)", "TypeScript", "JavaScript (ES6+)"] },
+        { label: "Data", items: ["REST / API integration", "Server-state patterns", "React Query or equivalent", "Caching and revalidation"] },
+        { label: "Interface", items: ["Component libraries", "Tailwind CSS", "Material UI", "Mantine", "Ant Design", "Responsive systems"] },
+        { label: "Forms & auth", items: ["React Hook Form", "Schema validation", "OAuth 2.0", "JWT", "Role-based access"] },
+        { label: "Performance", items: ["Core Web Vitals", "Code splitting", "Lazy loading", "Image optimisation", "Bundle analysis"] },
+        { label: "Delivery", items: ["Git / Bitbucket", "Jira", "CI/CD", "Vercel", "Docker"] },
+      ],
+    },
+    scope: {
+      includes: [
+        "Frontend architecture, implementation and code review",
+        "Integration against your existing API or backend",
+        "Responsive and cross-browser behaviour",
+        "Accessibility fundamentals: semantics, keyboard, focus, contrast",
+        "Deployment and handover documentation",
+      ],
+      excludes: [
+        "Backend and database work beyond agreed integration support",
+        "Brand and visual identity design from scratch",
+        "Ongoing content updates after handover, unless retained separately",
+      ],
+    },
+    proofSlugs: ["sunhub", "verdira", "cennetsol"],
+    faqs: [
+      {
+        q: "Can you work from Figma?",
+        a: "Yes, and it is the usual starting point. The deliverable is production-ready UI rather than a static mockup — which means implementing the states the design implies as well as the frames that were drawn.",
+      },
+      {
+        q: "Can you work with an existing backend?",
+        a: "Yes. Most engagements integrate against an API layer that already exists. I do not require a rewrite of your backend to do frontend work, and I am comfortable working around an API I cannot change.",
+      },
+      {
+        q: "Do you only build from scratch?",
+        a: "No. Rebuilds, refactors and incremental feature delivery on an existing codebase are a normal part of the service — often the majority of it.",
+      },
+      {
+        q: "React or Next.js — which should we use?",
+        a: "Next.js when the product needs routing, server rendering, SEO or a mix of static and dynamic pages, which covers most products with a public surface. Plain React when it is a fully authenticated application behind a login and server rendering buys nothing. The decision is made once, early, because reversing it later is expensive.",
+      },
+      {
+        q: "How do you handle handover?",
+        a: "Code in your repository, in your branching model, reviewed through your process. Anything non-obvious — architecture decisions, integration points, environment configuration — is documented in the repo rather than living only in my head.",
+      },
+    ],
+    cta: {
+      heading: "Discuss a frontend project",
+      body: "Send the product, the repo or the Figma file. I will reply with what I would build first, the approach I would take, and what I need in order to estimate it.",
+      primaryLabel: "Discuss a frontend project",
+    },
   },
 
   /* ══════════════════════════════════════════════════════════════════════
-     AUTOMATION
+     2 · WEBSITE REDESIGN & CONVERSION
      ══════════════════════════════════════════════════════════════════════ */
   {
-    slug: "automation",
-    title: "AI & automation services",
-    shortTitle: "AI & Automation",
-    accent: "red",
-    tagline: "Workflows and assistants that handle the repetitive work",
-    metaTitle: "AI Automation Services — Chatbots, RAG Agents & n8n Workflows",
+    slug: "website-redesign-conversion",
+    title: "Website Redesign & Conversion",
+    shortTitle: "Redesign & conversion",
+    eyebrow: "High demand",
+    metaTitle: "Website Redesign & Conversion-Focused Frontend Development",
     metaDescription:
-      "AI automation built on n8n and modern language models: website chatbots, RAG agents that answer from your own documents, industry assistants and workflow automation.",
+      "Redesign and rebuild websites that are clearer, faster and easier to convert — from UX structure and responsive UI to performance and production implementation.",
     keywords: [
-      "ai automation services",
-      "n8n automation expert",
-      "ai chatbot development",
-      "rag chatbot development",
-      "workflow automation services",
-      "business process automation",
+      "website redesign",
+      "conversion-focused website",
+      "website UX redesign",
+      "frontend redesign",
+      "website rebuild",
+      "WordPress to Next.js migration",
     ],
+    h1: "Website redesigns that improve clarity, speed and conversion",
+    subhead:
+      "I redesign and rebuild websites where the problem is not more pages — it is clearer messaging, stronger UX, faster delivery and a better path from visitor to action.",
+    summary:
+      "Clearer UX, responsive rebuilds, faster pages and conversion-focused frontend implementation.",
+    definition:
+      "A conversion-focused redesign is a rebuild that changes the structure and clarity of a website — what it says first, how it is organised and how fast it loads — rather than only its appearance.",
     intro: [
-      "Most businesses have a short list of tasks that eat hours every week and require almost no judgement: answering the same questions, copying data between tools, chasing appointments, formatting reports.",
-      "That's what this work targets. Not replacing people — removing the parts of their week that never needed a person in the first place. Built on n8n for the workflow layer and language models where the task genuinely needs comprehension.",
+      "Most sites that need a redesign do not need more content. They need fewer, clearer decisions: what the offer is, who it is for, and what the visitor is supposed to do next. That is an information architecture problem before it is a visual one.",
+      "The build half matters just as much. A redesign that arrives slower than the site it replaced has not improved anything, so performance is part of the work rather than a phase after it.",
     ],
-    services: [
-      /* ── AI chatbot ──────────────────────────────────────────────────── */
+    idealFor: [
+      "A site that looks dated or inconsistent against how the business now presents itself",
+      "A business whose offer is not clear within the first screen",
+      "A site that is slow, overloaded or weak on mobile",
+      "A WordPress site that has become hard to extend or maintain",
+      "A team that wants a rebuild without changing their existing backend or CMS",
+    ],
+    notIdealFor: [
+      "A cosmetic refresh where the structure and messaging cannot be touched",
+      "Sites where the underlying offer has not been decided yet",
+      "Work that is really a brand identity project rather than a web project",
+    ],
+    problems: [
       {
-        slug: "ai-chatbot-development",
-        title: "AI chatbot development",
-        tagline: "A chatbot that actually knows your business",
-        summary: "Custom AI chatbots trained on your content and wired into your systems — answering real questions, and handing over to a human when it should.",
-        metaTitle: "AI Chatbot Development — Custom Website Chatbots",
-        metaDescription:
-          "Custom AI chatbot development for websites and apps. Trained on your own content, integrated with your tools, with human handoff built in. Powered by n8n and LLMs.",
-        keywords: [
-          "ai chatbot development",
-          "custom chatbot for website",
-          "llm chatbot development",
-          "customer support chatbot",
-          "gemini api chatbot",
-          "chatbot integration services",
-        ],
-        intro: [
-          "Everyone has met the bad version: a menu tree that offers four options, none of which match your question, ending in 'I did not understand that' and a support email address you could have found yourself.",
-          "A language model removes that constraint. It understands the question as the customer actually phrased it, answers from your real content, and — critically — knows when to stop and fetch a person.",
-        ],
-        problem: {
-          heading: "Your team is answering the same six questions forever",
-          body:
-            "Look at a week of your inbox and the pattern is stark: opening hours, pricing, delivery times, where an order is, how to reset a password, do you serve my area. Each takes two minutes. Together they consume the hours your team needed for the enquiries that actually required a human, and they arrive at nights and weekends when nobody is there.",
-        },
-        deliverables: [
-          {
-            title: "A bot grounded in your content",
-            detail:
-              "Answers drawn from your site, documents and FAQs, so responses reflect your business rather than the model's general knowledge.",
-          },
-          {
-            title: "Tool integrations",
-            detail:
-              "Connected to the systems the answer lives in — order status, bookings, CRM records — through n8n workflows and REST APIs.",
-          },
-          {
-            title: "Human handoff",
-            detail:
-              "Clear escalation rules, so an uncertain or sensitive conversation routes to a person instead of being guessed at.",
-          },
-          {
-            title: "Guardrails",
-            detail:
-              "Scoped to what it should discuss, with a defined response when a question falls outside that scope.",
-          },
-          {
-            title: "Embedded and styled",
-            detail:
-              "A chat widget that matches your site's design, responsive and accessible, rather than an obvious third-party box.",
-          },
-        ],
-        process: [
-          {
-            step: "Scope",
-            detail:
-              "Work out which questions the bot should own and which must always reach a person.",
-          },
-          {
-            step: "Ground",
-            detail: "Collect and structure the content the bot answers from.",
-          },
-          {
-            step: "Build",
-            detail:
-              "Conversation flow, integrations and escalation wired up in n8n, with the model handling comprehension.",
-          },
-          {
-            step: "Test and tune",
-            detail:
-              "Run real questions through it, fix the wrong answers, and tighten the scope before it goes live.",
-          },
-        ],
-        stack: ["n8n", "Gemini API", "REST APIs", "Next.js", "Node.js", "Webhooks"],
-        idealFor: [
-          "Businesses answering the same questions daily",
-          "E-commerce stores with order-status enquiries",
-          "Service businesses handling booking questions",
-          "Teams whose support inbox never empties",
-        ],
-        useCases: [
-          { scenario: "An online store answering 'where is my order' dozens of times a day.", outcome: "Bot connected to the order system, answering with real tracking status. Support volume dropped to genuine exceptions." },
-          { scenario: "A service business losing weekend enquiries because nobody was in to reply.", outcome: "Round-the-clock answers to routine questions, with anything complex captured and queued for Monday." },
-          { scenario: "A company whose old bot confidently invented pricing that did not exist.", outcome: "Rebuilt grounded in the real pricing page, scoped so out-of-range questions escalate instead of being guessed at." },
-        ],
-        faqs: [
-          {
-            q: "How is this different from an off-the-shelf chatbot?",
-            a: "Off-the-shelf widgets answer from a script or a generic model. This one is grounded in your content and connected to your systems, so it can answer questions that require knowing something specific about your business — like whether a particular order has shipped.",
-          },
-          {
-            q: "What stops it inventing answers?",
-            a: "Two things: it answers from a defined body of your content rather than open-ended generation, and it's scoped so out-of-range questions get a defined response and an escalation path instead of a confident guess. Testing before launch is where most of this gets tightened.",
-          },
-          {
-            q: "Can it pass a conversation to a person?",
-            a: "Yes, and it should. Escalation rules are part of the build — by topic, by detected uncertainty, or on explicit request from the customer.",
-          },
-          {
-            q: "Which model does it use?",
-            a: "Usually the Gemini API, which is what I work with most. The workflow layer is built in n8n, so the model is a component that can be swapped without rebuilding the automation around it.",
-          },
-          {
-            q: "What does it cost to run?",
-            a: "Two parts: hosting for the workflow layer and per-use model costs, which scale with conversation volume. Both are modest at typical small-business volumes, and I'll estimate them against your actual traffic before you commit.",
-          },
-        ],
+        title: "Visitors cannot quickly understand the offer",
+        detail:
+          "The homepage explains the company rather than the value, and the reader has to assemble the point from three sections. This is the single most common cause of a site that gets traffic and no enquiries.",
       },
-
-      /* ── RAG agent ───────────────────────────────────────────────────── */
       {
-        slug: "rag-chatbot-agent",
-        title: "RAG chatbot agent",
-        tagline: "Answers straight from your documents, with the receipts",
-        summary: "Retrieval agents that answer from your own policies, manuals and knowledge base — and cite the exact source, so answers can be checked.",
-        metaTitle: "RAG Chatbot Agent Development — Retrieval AI",
-        metaDescription:
-          "RAG chatbot agents that answer from your own documents and cite their sources. Ideal for internal knowledge bases, policy libraries and technical documentation.",
-        keywords: [
-          "rag chatbot development",
-          "retrieval augmented generation",
-          "document ai agent",
-          "knowledge base chatbot",
-          "internal documentation ai",
-          "vector database chatbot",
-        ],
-        intro: [
-          "Your company already wrote the answer down. It is in a policy PDF, or an onboarding doc, or a spec from two years ago. The problem is nobody can find it, so they ask a colleague — and now the question costs two people's time instead of none.",
-          "A RAG agent searches your documents first, then answers using only what it found, and links to the passage it used. That last part is what makes it trustworthy enough to actually deploy.",
-        ],
-        problem: {
-          heading: "Search that returns forty results answers nothing",
-          body:
-            "Keyword search fails because people do not ask questions using the words in the document. Someone types 'how much holiday do I get' and the policy says 'annual leave entitlement'. Forty irrelevant results later they give up and ask in Slack. The knowledge exists; the retrieval does not.",
-        },
-        deliverables: [
-          {
-            title: "Document ingestion",
-            detail:
-              "Your PDFs, docs and pages processed, chunked sensibly and indexed so retrieval returns the right passage rather than the right file.",
-          },
-          {
-            title: "Cited answers",
-            detail:
-              "Every response links to the source passage, so answers can be checked instead of taken on faith.",
-          },
-          {
-            title: "Access control",
-            detail:
-              "Retrieval scoped by role where needed, so people only get answers from documents they're allowed to read.",
-          },
-          {
-            title: "Keeps up to date",
-            detail:
-              "An update path so revised documents re-index, rather than the agent slowly drifting out of date.",
-          },
-          {
-            title: "Interface",
-            detail:
-              "A clean chat interface, embedded in your site or internal tool, matching your design.",
-          },
-        ],
-        process: [
-          {
-            step: "Inventory",
-            detail:
-              "Identify which documents matter, what shape they're in, and who should be able to see what.",
-          },
-          {
-            step: "Index",
-            detail:
-              "Ingest and chunk the corpus, then tune retrieval so queries return genuinely relevant passages.",
-          },
-          {
-            step: "Build",
-            detail:
-              "Agent, citation handling and interface, orchestrated in n8n and connected to your document source.",
-          },
-          {
-            step: "Evaluate",
-            detail:
-              "Run real questions against it and measure whether the retrieved passage was the right one — the step most RAG builds skip.",
-          },
-        ],
-        stack: ["n8n", "Gemini API", "Vector search", "PostgreSQL", "REST APIs", "Next.js"],
-        idealFor: [
-          "Teams with large internal documentation",
-          "Support teams answering from policy documents",
-          "Onboarding-heavy organisations",
-          "Anyone whose knowledge base is searched but rarely found",
-        ],
-        useCases: [
-          { scenario: "An HR team answering the same policy questions across a 200-page handbook.", outcome: "Agent answering from the handbook with a link to the exact clause, so employees can verify rather than trust." },
-          { scenario: "A technical support team hunting through years of specs to answer customer questions.", outcome: "Retrieval across the whole spec archive, cutting the search step out of every ticket." },
-          { scenario: "An organisation where contractors must only see certain documents.", outcome: "Retrieval scoped by role, so each user's answers draw only on what they are cleared to read." },
-        ],
-        faqs: [
-          {
-            q: "What is RAG, in plain terms?",
-            a: "The agent looks things up before it answers. It searches your documents for passages relevant to the question, then writes an answer using only those passages. That's what allows it to cite sources and to stay current when documents change.",
-          },
-          {
-            q: "How is this different from a normal AI chatbot?",
-            a: "A standard chatbot answers from a fixed set of prepared content or from the model's general knowledge. A RAG agent retrieves from a live document corpus, which suits bodies of material too large to prepare by hand and material that changes regularly.",
-          },
-          {
-            q: "What file types can it handle?",
-            a: "PDFs, Word documents, plain text, Markdown and web pages are the common cases. Scanned documents need OCR first, which can be part of the pipeline.",
-          },
-          {
-            q: "Can it be kept private?",
-            a: "Retrieval can be scoped by role, so responses only draw on documents a given user may read. Where confidentiality requirements are strict, we should talk about them at the scoping stage — they shape the architecture rather than being added later.",
-          },
-          {
-            q: "How do you know the answers are good?",
-            a: "By evaluating retrieval, not just reading the replies. The measurable question is whether the correct passage was retrieved for a given query — if retrieval is right, answer quality follows. That evaluation pass is part of the build.",
-          },
-        ],
+        title: "Important actions are buried",
+        detail:
+          "The primary action competes with five secondary ones, or sits below three sections nobody scrolls past. One dominant action per page fixes more than a new colour palette will.",
       },
-
-      /* ── Clinic assistant ────────────────────────────────────────────── */
       {
-        slug: "dental-clinic-ai-assistant",
-        title: "Dental clinic AI assistant",
-        tagline: "The bookings you are losing at 6pm",
-        summary: "An AI assistant for dental and medical clinics that answers patient questions, captures bookings after hours, and cuts no-shows with automatic reminders.",
-        metaTitle: "Dental Clinic AI Assistant — Appointment & Patient Automation",
-        metaDescription:
-          "AI assistant for dental and medical clinics: handles appointment enquiries, answers patient questions and sends reminders automatically, 24/7. Built with n8n.",
-        keywords: [
-          "dental clinic ai assistant",
-          "dental practice automation",
-          "ai receptionist for clinic",
-          "appointment booking automation",
-          "medical practice ai assistant",
-          "patient communication automation",
-        ],
-        intro: [
-          "A patient calls at 6:15pm to book a check-up. Your team has gone home. They reach voicemail, hang up, and call the practice down the road — who answered. You never learn that call happened.",
-          "That is the gap this fills. Routine questions answered at any hour, booking requests captured when the practice is closed, and reminders that go out on schedule instead of when someone remembers.",
-        ],
-        problem: {
-          heading: "Empty chairs and calls that never called back",
-          body:
-            "Two quiet leaks drain a practice. The first is missed contact: calls during treatment hours, and enquiries after closing that go to voicemail and never return. The second is no-shows, where a chair sits empty because nobody had time to ring round confirming. Neither shows up as a lost sale in any report — they simply never appear.",
-        },
-        deliverables: [
-          {
-            title: "Round-the-clock enquiry handling",
-            detail:
-              "Answers common questions — opening hours, treatments offered, what a first visit involves, parking, insurance — at any hour.",
-          },
-          {
-            title: "Appointment capture",
-            detail:
-              "Collects booking requests with the details your team needs, and can write into your scheduling system where it supports integration.",
-          },
-          {
-            title: "Automated reminders",
-            detail:
-              "Scheduled reminders before appointments, with confirmation handling, to reduce no-shows.",
-          },
-          {
-            title: "Clinical escalation",
-            detail:
-              "Anything symptomatic, urgent or clinical routes to a human immediately. The assistant does not give clinical advice.",
-          },
-          {
-            title: "Adapts to other clinic types",
-            detail:
-              "The same structure fits physiotherapy, optometry, veterinary and general practice — the workflow is the same, the content differs.",
-          },
-        ],
-        process: [
-          {
-            step: "Map the front desk",
-            detail:
-              "Work through what your team actually gets asked, and which of those should never be automated.",
-          },
-          {
-            step: "Define boundaries",
-            detail:
-              "Set explicitly what the assistant may answer and what escalates — this is decided before anything is built.",
-          },
-          {
-            step: "Build and integrate",
-            detail:
-              "Assistant, reminders and scheduling connection wired up in n8n, with your calendar or practice system.",
-          },
-          {
-            step: "Pilot",
-            detail:
-              "Run it alongside your existing process first, review the transcripts together, then widen its scope.",
-          },
-        ],
-        stack: ["n8n", "Gemini API", "Calendar integration", "REST APIs", "Webhooks", "Next.js"],
-        idealFor: [
-          "Practices missing calls during treatment hours",
-          "Clinics with high no-show rates",
-          "Single-site practices without a full-time receptionist",
-          "Groups wanting consistent patient communication",
-        ],
-        useCases: [
-          { scenario: "A two-chair practice where the receptionist is also chairside, so calls go unanswered for stretches of the day.", outcome: "Routine enquiries handled automatically, with the team called in only for clinical questions." },
-          { scenario: "A clinic with a steady no-show rate on hygienist appointments.", outcome: "Automated reminders with confirmation, so cancellations arrive early enough for the slot to be refilled." },
-          { scenario: "A physiotherapy group wanting the same setup across three sites.", outcome: "One assistant, per-site content and calendars — consistent answers whichever location a patient contacts." },
-        ],
-        faqs: [
-          {
-            q: "Does it give medical or dental advice?",
-            a: "No, and it's explicitly built not to. Anything symptomatic, urgent or clinical escalates to your team. The assistant handles logistics — hours, services, appointments, reminders — which is where the repetitive volume actually is.",
-          },
-          {
-            q: "Can it book directly into our calendar?",
-            a: "Where your scheduling system offers an API, yes. Where it doesn't, the assistant captures the request with all the details your team needs and routes it to them, which still removes the back-and-forth.",
-          },
-          {
-            q: "What about patient data and privacy?",
-            a: "Handled deliberately: only the minimum information needed for the task, with a clear boundary on what is stored and where. If you have specific regulatory obligations, raise them at scoping — they shape the architecture, so they need to be known before the build rather than after.",
-          },
-          {
-            q: "Will patients know they're talking to an assistant?",
-            a: "Yes. It identifies itself, which is both the right thing to do and practically better — patients ask more direct questions and escalate sooner when they need a person.",
-          },
-          {
-            q: "Does this only work for dentists?",
-            a: "No. Dental practices are a natural fit because the enquiry mix is so repetitive, but the same structure serves physiotherapy, optometry, veterinary and general practice. Only the content changes.",
-          },
-        ],
+        title: "The mobile experience is an afterthought",
+        detail:
+          "The desktop layout was designed, and mobile was made to fit. When most of the traffic is mobile, that ordering is backwards.",
       },
-
-      /* ── n8n workflows ───────────────────────────────────────────────── */
       {
-        slug: "n8n-workflow-automation",
-        title: "n8n workflow automation",
-        tagline: "Stop paying people to copy and paste",
-        summary: "Custom n8n workflows that connect the tools you already use, so data moves between them automatically instead of through a spreadsheet and a human.",
-        metaTitle: "n8n Workflow Automation Services — Business Process Automation",
-        metaDescription:
-          "Custom n8n workflow automation connecting your existing tools. Automate data entry, reporting, lead routing and notifications without manual copy and paste.",
-        keywords: [
-          "n8n workflow automation",
-          "n8n developer for hire",
-          "business process automation",
-          "api integration services",
-          "workflow automation consultant",
-          "zapier alternative automation",
-        ],
-        intro: [
-          "Somewhere in your business, a person exports a CSV, reformats a few columns, and pastes it into another system. It has worked for years. It also stops entirely when they are on leave, and it introduces a typo roughly every hundred rows that nobody catches until a report looks wrong.",
-          "n8n is the layer that removes that step. It talks to your systems over their APIs and moves the data on a trigger or a schedule — and it can be self-hosted, so nothing has to pass through someone else's platform.",
-        ],
-        problem: {
-          heading: "Manual data entry is a reliability problem, not a time problem",
-          body:
-            "The hours are the visible cost. The real one is that a manual process is undocumented, unrepeatable and dependent on one person remembering the steps. Errors surface weeks later as decisions made on wrong numbers. Automating it makes the process consistent and, by existing as a workflow, self-documenting.",
-        },
-        deliverables: [
-          {
-            title: "Workflows built to your process",
-            detail:
-              "Automations shaped around how your team actually works, rather than forcing your process into a template.",
-          },
-          {
-            title: "API integrations",
-            detail:
-              "Your CRM, spreadsheets, email, forms, databases and internal tools connected over REST — including systems without an off-the-shelf connector.",
-          },
-          {
-            title: "Error handling that tells you",
-            detail:
-              "Retries and failure notifications, so a broken workflow surfaces immediately instead of failing silently for weeks.",
-          },
-          {
-            title: "AI steps where they help",
-            detail:
-              "Language models dropped into a workflow for the steps that need comprehension — classifying enquiries, summarising, extracting fields from messy text.",
-          },
-          {
-            title: "Documented and handed over",
-            detail:
-              "Workflows documented so your team can adjust them, rather than needing me back for every change.",
-          },
-        ],
-        process: [
-          {
-            step: "Find the repetition",
-            detail:
-              "Walk through where time actually goes. The best candidates are usually tasks nobody thinks of as a process.",
-          },
-          {
-            step: "Prioritise",
-            detail:
-              "Rank by hours saved against build effort, and start with the one that pays back fastest.",
-          },
-          {
-            step: "Build",
-            detail: "Workflows built, connected and tested against real data, not sample data.",
-          },
-          {
-            step: "Hand over",
-            detail:
-              "Documentation and a walkthrough so your team owns it, plus monitoring so failures are visible.",
-          },
-        ],
-        stack: ["n8n", "REST APIs", "Webhooks", "Gemini API", "PostgreSQL", "MongoDB", "Node.js"],
-        idealFor: [
-          "Teams copying data between systems by hand",
-          "Businesses whose tools have no native integration",
-          "Operations that depend on one person's routine",
-          "Anyone rebuilding the same report every week",
-        ],
-        useCases: [
-          { scenario: "Leads from a website form retyped into a CRM by hand each morning.", outcome: "Form submissions routed straight into the CRM, tagged and assigned, within seconds of arriving." },
-          { scenario: "A weekly report rebuilt from four systems every Monday, taking most of a morning.", outcome: "Data pulled and assembled on a schedule. The report is waiting before anyone logs in." },
-          { scenario: "Support emails sorted by hand before anyone could act on them.", outcome: "An AI step classifies and routes each one on arrival, so urgent messages surface immediately." },
-        ],
-        faqs: [
-          {
-            q: "Why n8n rather than Zapier or Make?",
-            a: "Mainly control. n8n can be self-hosted, so your data stays on infrastructure you own, and its pricing doesn't scale per task — which matters once volume grows. It also handles branching logic and custom code more comfortably, so complex workflows don't hit a ceiling.",
-          },
-          {
-            q: "What if our tool has no n8n integration?",
-            a: "If it has an API, it can be connected — n8n makes HTTP requests to anything, and I build the integration against the API directly. That covers most internal and niche tools.",
-          },
-          {
-            q: "What happens when a workflow breaks?",
-            a: "It tells you. Error handling with retries and notifications is part of the build, because the real danger with automation isn't failure — it's silent failure that nobody notices until the data is already wrong.",
-          },
-          {
-            q: "Can our team edit the workflows afterwards?",
-            a: "Yes, and they should be able to. n8n's editor is visual, and everything is documented at handover so your team can make adjustments without calling me back for a field change.",
-          },
-          {
-            q: "How do we know what's worth automating?",
-            a: "Start with frequency times duration. A ten-minute task done daily costs more per year than a two-hour task done quarterly. We rank candidates against build effort and start where the payback is quickest.",
-          },
-        ],
+        title: "The site is slow or overloaded",
+        detail:
+          "Uncompressed hero images, render-blocking third-party scripts and a page that shifts while it loads. Speed is not a technical nicety here — it is the first thing a visitor experiences.",
+      },
+      {
+        title: "The current site is hard to extend",
+        detail:
+          "Every new page needs a developer and a new layout. That is a structural problem, and it is why redesigns tend to be needed again two years later.",
       },
     ],
+    deliverables: [
+      { title: "Diagnosis", detail: "A written read of what is actually wrong: structure, messaging, UX, performance and the paths a visitor can take." },
+      { title: "Information architecture", detail: "The page set, the hierarchy, and what each page is for — decided before anything is designed." },
+      { title: "UI redesign", detail: "A visual system with real type, spacing and component rules, applied consistently rather than page by page." },
+      { title: "Responsive implementation", detail: "Built mobile-first in Next.js or your existing stack, with behaviour verified across the breakpoint range." },
+      { title: "Performance pass", detail: "Image strategy, script discipline, layout-shift removal and Core Web Vitals measured before and after." },
+      { title: "Measurement handoff", detail: "Analytics and conversion events wired so the next decision is made from data rather than opinion." },
+      { title: "Migration where it is warranted", detail: "WordPress to Next.js when the CMS has become the constraint — including content structure and redirect mapping so existing rankings survive." },
+    ],
+    engagement: [
+      { step: "Diagnosis", detail: "Review the current site against its goal, its analytics if available, and its technical baseline." },
+      { step: "Structure", detail: "Agree the page set, the message hierarchy and the primary action per page before any design work." },
+      { step: "Design and build", detail: "UI system, then responsive implementation, delivered page group by page group." },
+      { step: "Performance and launch", detail: "Optimisation pass, redirect map, analytics verification, then go live." },
+    ],
+    technical: {
+      summary:
+        "Usually Next.js, statically rendered where the content allows it, on Vercel. When the content team is committed to an existing CMS, the frontend can be rebuilt against it rather than replacing it.",
+      groups: [
+        { label: "Build", items: ["Next.js", "React", "TypeScript", "Tailwind CSS"] },
+        { label: "Content", items: ["Headless CMS integration", "WordPress", "Structured content models", "Redirect mapping"] },
+        { label: "Performance", items: ["Core Web Vitals", "Image optimisation", "Layout-shift removal", "Third-party script control"] },
+        { label: "Search", items: ["Semantic HTML", "Canonical URLs", "Structured data", "Sitemaps and robots"] },
+        { label: "Measurement", items: ["Analytics setup", "Conversion events", "Search Console"] },
+      ],
+    },
+    scope: {
+      includes: [
+        "Structure, messaging hierarchy and UX decisions",
+        "Visual design system and responsive implementation",
+        "Performance optimisation with before and after measurement",
+        "Technical SEO baseline: canonicals, sitemap, redirects, structured data",
+      ],
+      excludes: [
+        "Copywriting for the whole site, unless agreed as part of scope",
+        "Paid media, ad campaigns or ongoing SEO retainers",
+        "Guaranteed ranking positions or guaranteed conversion uplift",
+      ],
+    },
+    proofSlugs: ["cennetsol", "aussiemotor", "sunhub"],
+    faqs: [
+      {
+        q: "Will this increase our conversion rate?",
+        a: "I will not promise a percentage, because an honest number requires a measured baseline and a measured post-launch result — and anyone quoting one before the work starts is guessing. What I will do is build around clearer conversion paths: one dominant action per page, the offer stated before the detail, and faster pages. Where you have analytics in place, we measure the before and after and find out.",
+      },
+      {
+        q: "Can you rebuild the frontend without changing our backend?",
+        a: "Yes. A frontend rebuild against an existing API or CMS is a common engagement, and it is usually the lower-risk option. Replacing the backend as well is a separate decision that should be made on its own merits.",
+      },
+      {
+        q: "Will we lose our search rankings?",
+        a: "Not if the migration is done properly. That means a URL-by-URL redirect map for anything that moves, canonical URLs preserved, content parity on the pages that rank, and Search Console monitored after launch. Rankings are lost in redesigns that skip this, not in redesigns as such.",
+      },
+      {
+        q: "When should a website actually be redesigned?",
+        a: "When the structure is the constraint — the offer is unclear, the important actions are buried, mobile is weak, the site is slow, or adding a page requires a developer every time. If those are all fine and it simply looks a few years old, a targeted refresh is usually a better use of the budget than a rebuild.",
+      },
+      {
+        q: "Do you work with WordPress?",
+        a: "Yes, in two ways: improving an existing WordPress site where the CMS is genuinely the right tool, and migrating off it to Next.js when it has become the thing holding the site back. I will tell you which one I think applies before you commit to either.",
+      },
+    ],
+    cta: {
+      heading: "Request a redesign assessment",
+      body: "Send the current site. I will reply with what I think is actually costing you conversions, what I would change first, and whether a redesign or a targeted fix is the better spend.",
+      primaryLabel: "Request a redesign assessment",
+    },
   },
 
   /* ══════════════════════════════════════════════════════════════════════
-     WORDPRESS
+     3 · SAAS & MVP PRODUCT DEVELOPMENT
      ══════════════════════════════════════════════════════════════════════ */
   {
-    slug: "wordpress",
-    title: "WordPress development services",
-    shortTitle: "WordPress",
-    accent: "green",
-    tagline: "Custom builds, not another page-builder site",
-    metaTitle: "WordPress Development Services — Custom Themes & Plugins",
+    slug: "saas-product-development",
+    title: "SaaS & MVP Product Development",
+    shortTitle: "SaaS & MVP",
+    eyebrow: "Product focused",
+    metaTitle: "SaaS MVP & Product Development with React and Next.js",
     metaDescription:
-      "WordPress development services: custom themes, plugin development, speed and Core Web Vitals optimisation, landing pages, and migration from WordPress to Next.js.",
+      "Build and ship SaaS products and MVPs with React, Next.js, TypeScript, APIs, authentication, dashboards and production-ready architecture.",
     keywords: [
-      "wordpress development services",
-      "custom wordpress theme development",
-      "wordpress plugin development",
-      "wordpress speed optimization",
-      "wordpress developer for hire",
-      "wordpress to nextjs migration",
+      "SaaS development",
+      "SaaS MVP development",
+      "React SaaS developer",
+      "Next.js SaaS development",
+      "MVP development",
+      "product development",
     ],
+    h1: "Build and ship a SaaS MVP without overbuilding it",
+    subhead:
+      "I turn validated product requirements into usable web applications — from the first dashboard and auth flow to API-connected features and production deployment.",
+    summary:
+      "Customer-facing SaaS products, dashboards, authentication and end-to-end feature delivery.",
+    definition:
+      "An MVP is the smallest version of a product that lets a real user complete the one workflow the product exists for, built well enough that the next version extends it instead of replacing it.",
     intro: [
-      "WordPress still runs a large share of the web, and for good reason — when a client needs to publish without calling a developer, nothing else is as immediately useful. The problem is usually what gets built on top of it: a bought theme, a dozen plugins, and a page builder that turns one paragraph into forty nested divs.",
-      "I build the other kind. Custom themes and plugins written for the site they are on, CMS structures that stay manageable as content grows, and — where WordPress has genuinely been outgrown — a clean path off it. I have worked in both directions: healthcare and real-estate platforms built on heavily customised WordPress, and a large automotive marketplace migrated from WordPress onto Next.js.",
+      "The failure mode in MVP work is not building too little. It is building a settings page, a billing tier, an admin panel and a notification system before anyone has confirmed that the core workflow is worth using.",
+      "So the scope question comes first: what is the one thing a user must be able to do, and what is the shortest honest path to them doing it in production. Everything else is a later decision made with better information.",
     ],
-    services: [
+    idealFor: [
+      "A clearly defined workflow that needs to become a working product",
+      "A founder or team with validated requirements and no frontend engineer",
+      "An internal tool that has outgrown a spreadsheet or a no-code stack",
+      "A product with a backend or API already in progress that needs its interface built",
+      "A first paid version that has to be solid enough to charge for",
+    ],
+    notIdealFor: [
+      "An idea that has not been narrowed to a specific workflow yet",
+      "Products needing a large backend build with no backend team involved",
+      "Anything where the expectation is a full platform in a fortnight",
+    ],
+    problems: [
       {
-        slug: "custom-wordpress-theme-development",
-        title: "Custom WordPress theme development",
-        tagline: "A theme built for your site, not for forty thousand others",
-        summary: "Hand-built WordPress themes matched to your design — faster than a purchased theme, and with an editor your team can actually use.",
-        metaTitle: "Custom WordPress Theme Development Services",
-        metaDescription:
-          "Custom WordPress theme development built from your design — fast, responsive, and easy for your team to edit. No page builders, no bloated purchased themes.",
-        keywords: [
-          "custom wordpress theme development",
-          "bespoke wordpress theme",
-          "wordpress theme developer",
-          "figma to wordpress",
-          "custom wordpress design",
-          "wordpress theme from scratch",
-        ],
-        intro: [
-          "The theme you bought had to satisfy every possible buyer, so it ships with sliders, portfolio grids and shop layouts you will never enable. Your visitors download all of it anyway.",
-          "A custom theme contains only what your site uses. It is lighter, it loads faster, and the editing screens show your content — a Property with its own fields, not a blank post you format by hand every time.",
-        ],
-        problem: {
-          heading: "The licence fee was the cheapest part",
-          body:
-            "The real costs arrive later. Pages load slowly under the weight of unused features. Simple layout changes need a developer because everything is a shortcode. Updates threaten the customisations someone made to fit your brand. And your content team quietly stops using the CMS because it confuses them, so publishing routes back through you.",
-        },
-        deliverables: [
-          {
-            title: "Theme built from your design",
-            detail:
-              "Your Figma file or brand implemented directly, so the site matches the design instead of approximating it within a template's constraints.",
-          },
-          {
-            title: "Editor-friendly content types",
-            detail:
-              "Custom post types and fields shaped around your actual content, so editing screens make sense to the people using them.",
-          },
-          {
-            title: "Responsive and cross-browser",
-            detail:
-              "Tested across devices and browsers, with layouts that hold at the breakpoints your visitors actually use.",
-          },
-          {
-            title: "Built for speed from the start",
-            detail:
-              "Only the assets the site uses, loaded when they are needed — rather than optimising a bloated theme afterwards.",
-          },
-          {
-            title: "Documented handover",
-            detail:
-              "A short guide to the content types and templates, so your team can publish confidently without calling me.",
-          },
-        ],
-        process: [
-          {
-            step: "Content model",
-            detail:
-              "Work out what content types you have before any code — this is what makes the CMS pleasant to use later.",
-          },
-          {
-            step: "Design",
-            detail:
-              "Use your existing design, or I produce one first. Either way it is settled before implementation starts.",
-          },
-          {
-            step: "Build",
-            detail: "Theme, templates and custom fields implemented, reviewable as they go.",
-          },
-          {
-            step: "Handover",
-            detail: "Deployed, documented, and walked through with whoever will be publishing.",
-          },
-        ],
-        stack: ["WordPress", "PHP", "HTML5", "CSS3", "JavaScript", "Custom post types", "Figma"],
-        idealFor: [
-          "Businesses stuck with a slow purchased theme",
-          "Brands whose design a template cannot quite fit",
-          "Teams who find their current editor confusing",
-          "Sites where content structure matters",
-        ],
-        useCases: [
-          { scenario: "An estate agency managing property listings as ordinary blog posts with formatted text.", outcome: "Custom post type with real fields for price, bedrooms and location — filterable, and impossible to format wrong." },
-          { scenario: "A clinic whose purchased theme scored poorly on mobile speed.", outcome: "Rebuilt as a custom theme carrying only what the site uses, with a measured before-and-after." },
-          { scenario: "A brand whose designer kept being told the theme could not do that.", outcome: "Figma implemented directly, so the site matches the design rather than the template's limits." },
-        ],
-        faqs: [
-          {
-            q: "Why not just use a page builder like Elementor?",
-            a: "Page builders are genuinely useful for simple marketing sites, and I will not talk you out of one if that is all you need. The trade-off is output: they generate deeply nested markup that slows pages down, and they lock your content into that builder's format. For a site where speed or longevity matters, a custom theme is the better investment.",
-          },
-          {
-            q: "Can you work from a Figma design?",
-            a: "Yes, and it is the ideal starting point. I came into engineering from interface design, so I read spacing, type and colour straight off the file rather than guessing. If there is no design yet, I can produce that first.",
-          },
-          {
-            q: "Will my team still be able to edit the site?",
-            a: "More easily than before, usually. Custom post types and fields mean the editing screens show your actual content — a Property with its own fields, rather than a generic post you have to format by hand each time.",
-          },
-          {
-            q: "What happens when WordPress updates?",
-            a: "A custom theme built with WordPress's own APIs updates cleanly. What breaks on update is a purchased theme somebody has hacked to fit their brand, because those changes sit outside the supported extension points.",
-          },
-          {
-            q: "Do you handle hosting and deployment?",
-            a: "I will deploy to your host and configure what the site needs. If you have not chosen a host yet, I will recommend one based on your traffic and budget rather than an affiliate link.",
-          },
-        ],
+        title: "Scope expands faster than the product ships",
+        detail:
+          "Every conversation adds a feature, the launch date moves, and the thing that was supposed to test an assumption never reaches a user. The fix is a scope boundary agreed in writing before the build starts.",
       },
       {
-        slug: "wordpress-plugin-development",
-        title: "WordPress plugin development",
-        tagline: "For the thing no plugin on the directory quite does",
-        summary: "Custom plugins built for your workflow, and update-safe customisation of the plugins you already run.",
-        metaTitle: "WordPress Plugin Development & Customisation Services",
-        metaDescription:
-          "Custom WordPress plugin development for functionality no off-the-shelf plugin provides, plus update-safe customisation of existing plugins. Documented, portable code.",
-        keywords: [
-          "wordpress plugin development",
-          "custom wordpress plugin",
-          "wordpress plugin developer",
-          "wordpress plugin customization",
-          "wordpress api integration",
-          "custom wordpress functionality",
-        ],
-        intro: [
-          "Most WordPress needs are already solved by an existing plugin, and when one fits I will tell you to use it. The interesting cases are the ones where nothing fits — a booking flow that matches no calendar plugin's assumptions, or an integration with a system nobody has written a connector for.",
-          "That belongs in a proper plugin, not pasted into your theme's functions file where it vanishes the day you change themes.",
-        ],
-        problem: {
-          heading: "Twenty plugins, three of which overlap",
-          body:
-            "The default strategy is to solve each requirement with another plugin. Eventually two of them conflict on one page only, several duplicate each other's work, every one is an update to track and a possible security hole, and the site has grown measurably slower. One custom plugin that does exactly your job is usually lighter than the three you stacked to approximate it.",
-        },
-        deliverables: [
-          {
-            title: "Custom plugin built to your requirement",
-            detail:
-              "Functionality written for your workflow as a self-contained plugin — not code buried in a theme that disappears when the theme changes.",
-          },
-          {
-            title: "Existing plugin customisation",
-            detail:
-              "Changes made through hooks and filters rather than by editing plugin files, so your customisations survive updates.",
-          },
-          {
-            title: "External integrations",
-            detail:
-              "Connections to CRMs, booking systems, payment providers and internal tools over their REST APIs.",
-          },
-          {
-            title: "Native admin interfaces",
-            detail:
-              "Settings screens that follow WordPress's own conventions, so they feel built-in to whoever administers the site.",
-          },
-          {
-            title: "Documented code you own",
-            detail:
-              "Commented and documented, so a future developer — including a future you — can pick it up without archaeology.",
-          },
-        ],
-        process: [
-          {
-            step: "Define",
-            detail:
-              "Pin down exactly what it must do, and check first whether an existing plugin already does it well.",
-          },
-          {
-            step: "Design the data",
-            detail:
-              "Decide how the information is stored and structured before writing behaviour around it.",
-          },
-          {
-            step: "Build",
-            detail:
-              "Written against WordPress's hook system so it plays properly with your theme and other plugins.",
-          },
-          {
-            step: "Test and hand over",
-            detail: "Tested on a staging copy of your site, then deployed with documentation.",
-          },
-        ],
-        stack: ["WordPress", "PHP", "REST APIs", "JavaScript", "MySQL", "Custom post types"],
-        idealFor: [
-          "Requirements no existing plugin fits",
-          "Sites carrying too many overlapping plugins",
-          "Businesses integrating WordPress with other systems",
-          "Teams who have outgrown plugin settings screens",
-        ],
-        useCases: [
-          { scenario: "A clinic needing appointment booking that wrote into their existing practice system.", outcome: "Custom plugin talking to the practice system's API, so bookings landed where staff already worked." },
-          { scenario: "A site where a plugin update wiped hand-edited customisations for the second time.", outcome: "Customisations rewritten through hooks and filters, so updates stopped destroying them." },
-          { scenario: "A business running four plugins to build one quote form.", outcome: "Replaced by a single plugin doing exactly that job, with fewer scripts on every page." },
-        ],
-        faqs: [
-          {
-            q: "Would an off-the-shelf plugin not be cheaper?",
-            a: "Often, yes — and when one fits, I will tell you to use it. Custom becomes worth it when the alternative is stacking several plugins that each do part of the job, or paying for a subscription tier to unlock the one feature you actually need.",
-          },
-          {
-            q: "Can you modify a plugin we already use?",
-            a: "Yes, and the important part is how. Changes go through WordPress hooks and filters rather than editing the plugin's own files — otherwise the next update silently wipes your customisation.",
-          },
-          {
-            q: "Will it break when WordPress updates?",
-            a: "Plugins written against WordPress's documented APIs are stable across updates. What breaks are plugins reaching into internals they should not touch, which is precisely what building properly avoids.",
-          },
-          {
-            q: "Can it connect to our CRM or booking system?",
-            a: "If the system has an API, yes. I have built appointment booking and patient-portal integrations on WordPress before, and REST integration work is a core part of what I do.",
-          },
-          {
-            q: "Do we own the code?",
-            a: "Yes. You get the source, documented, and you are free to have anyone maintain it. No licence, no lock-in, no dependency on me.",
-          },
-        ],
+        title: "The MVP is built as a throwaway",
+        detail:
+          "So when it works, there is nothing to build on and the second version is a rewrite. Minimal in scope does not have to mean disposable in architecture — and the difference costs very little at the start.",
       },
       {
-        slug: "wordpress-speed-optimization",
-        title: "WordPress speed & SEO optimisation",
-        tagline: "Your cache plugin was never going to fix this",
-        summary: "Core Web Vitals audits and fixes for slow WordPress sites — measured before, measured after, with the causes actually removed.",
-        metaTitle: "WordPress Speed Optimization & Core Web Vitals Services",
-        metaDescription:
-          "Fix slow WordPress sites properly: Core Web Vitals audit and remediation, asset and image optimisation, render-blocking fixes and technical SEO. Measured before and after.",
-        keywords: [
-          "wordpress speed optimization",
-          "core web vitals wordpress",
-          "wordpress performance optimization",
-          "improve wordpress page speed",
-          "wordpress technical seo",
-          "fix slow wordpress site",
-        ],
-        intro: [
-          "Installing a caching plugin is usually the first thing tried, and it rarely moves the number much. Caching stores a copy of the finished page; it does not make the page lighter. If that page still ships four megabytes and blocks rendering on six scripts, the cached copy does too.",
-          "This is the work I have spent the most time on. On a production platform, removing unused assets, tree-shaking, lazy loading, compressing images and streamlining the build returned a 30% Core Web Vitals improvement — and better retention with it.",
-        ],
-        problem: {
-          heading: "Slow pages now cost you ranking as well as visitors",
-          body:
-            "Core Web Vitals feed into how Google evaluates pages, so a slow site is not just losing impatient visitors — it is sitting below a competitor who fixed theirs. The good news is that the causes are boringly consistent: a theme loading assets for features you never switched on, plugins queuing scripts site-wide, and images uploaded straight from a camera.",
-        },
-        deliverables: [
-          {
-            title: "Audit with a real baseline",
-            detail:
-              "Current Core Web Vitals measured and the causes identified, so any improvement is a number rather than an impression.",
-          },
-          {
-            title: "Asset and plugin cleanup",
-            detail:
-              "Unused CSS and JavaScript removed, plugin scripts loaded only where they are needed, overlapping plugins consolidated.",
-          },
-          {
-            title: "Image and media optimisation",
-            detail:
-              "Compression, modern formats and correct sizing — usually the single largest weight saving available on a WordPress site.",
-          },
-          {
-            title: "Render-blocking fixes",
-            detail:
-              "Critical CSS and deferred scripts, so the page paints without waiting on resources it does not need yet.",
-          },
-          {
-            title: "Technical SEO pass",
-            detail:
-              "Metadata, structured data, heading structure, sitemap and crawlability checked and corrected alongside the speed work.",
-          },
-        ],
-        process: [
-          {
-            step: "Measure",
-            detail:
-              "Baseline Core Web Vitals and identify what is actually costing time — often not what people assume.",
-          },
-          {
-            step: "Prioritise",
-            detail: "Rank fixes by impact against effort, and start where the payback is largest.",
-          },
-          {
-            step: "Fix",
-            detail: "Applied on staging first, so nothing changes on the live site unverified.",
-          },
-          {
-            step: "Re-measure",
-            detail:
-              "Measured again against the baseline, with a written before-and-after you can keep.",
-          },
-        ],
-        stack: [
-          "WordPress",
-          "Core Web Vitals",
-          "Lazy loading",
-          "Image optimisation",
-          "Technical SEO",
-          "PHP",
-        ],
-        idealFor: [
-          "Sites failing Core Web Vitals in Search Console",
-          "Businesses losing mobile visitors to load time",
-          "Sites where a caching plugin did not help",
-          "Anyone ranking below a faster competitor",
-        ],
-        useCases: [
-          { scenario: "A site failing Core Web Vitals in Search Console despite three caching plugins.", outcome: "Cause traced to render-blocking scripts and 4MB of uncompressed images. Fixed at source, then re-measured." },
-          { scenario: "An e-commerce store where mobile visitors left before the page painted.", outcome: "Critical CSS inlined and non-essential scripts deferred, so the page became usable far sooner on 4G." },
-          { scenario: "A publisher whose traffic slipped after a Google update.", outcome: "Speed and technical SEO addressed together — metadata, structured data and crawlability alongside the weight." },
-        ],
-        faqs: [
-          {
-            q: "We already use a caching plugin. Why is the site still slow?",
-            a: "Because caching stores a copy of the finished page — it does not make the page lighter. If that page loads three megabytes of images and blocks rendering on half a dozen scripts, the cached copy does all of that too, just without regenerating the HTML first. The fix has to happen at the cause.",
-          },
-          {
-            q: "How much faster will it get?",
-            a: "That depends on the starting point, and I will not quote a number before seeing the site. What I will do is baseline it during the audit and re-measure at the end, so you get an actual figure rather than a claim. On one production platform this approach produced a 30% Core Web Vitals improvement.",
-          },
-          {
-            q: "Will you break the site removing plugins?",
-            a: "Nothing is removed without first checking what depends on it, and all work happens on a staging copy. You approve the changes before they reach the live site.",
-          },
-          {
-            q: "Does this include SEO, or only speed?",
-            a: "Both, because they overlap. Core Web Vitals are a ranking input, and the same audit is the natural moment to fix metadata, structured data, heading structure and crawlability. Content strategy and link building are not included — that is a different discipline and you would be better served by a specialist.",
-          },
-          {
-            q: "How long does it take?",
-            a: "A typical audit and remediation runs one to two weeks, depending on how much has accumulated. You will have the audit findings within the first few days, before committing to the full fix.",
-          },
-        ],
-      },
-      {
-        slug: "wordpress-to-nextjs-migration",
-        title: "WordPress to Next.js migration",
-        tagline: "Leave WordPress behind without losing your rankings",
-        summary: "Staged migration from WordPress to Next.js, with every URL mapped and redirected — faster, more maintainable, and no downtime.",
-        metaTitle: "WordPress to Next.js Migration Services",
-        metaDescription:
-          "Migrate from WordPress to Next.js in stages, with URL structure and SEO rankings preserved. Faster load times and a maintainable codebase, with no downtime.",
-        keywords: [
-          "wordpress to nextjs migration",
-          "migrate wordpress to react",
-          "headless wordpress nextjs",
-          "wordpress replacement",
-          "wordpress migration services",
-          "legacy cms migration",
-        ],
-        intro: [
-          "There comes a point where WordPress stops being why your site works and starts being why it is slow. It usually arrives with scale: thousands of listings, filtering that grinds, or a front end that has become a fight with the CMS.",
-          "I have done exactly this migration on a large automotive marketplace. The part that matters is that it ran in stages, with the live site serving traffic the whole way, rather than one switchover with everything riding on it.",
-        ],
-        problem: {
-          heading: "The fear is losing your traffic. It is a fair fear.",
-          body:
-            "A mishandled migration can drop organic traffic overnight — broken URLs, missing redirects, metadata that never carried across. It is entirely avoidable, but only if the URL map and redirect table are written before anything is built. Patched afterwards, once Search Console fills with 404s, you are recovering rather than preventing.",
-        },
-        deliverables: [
-          {
-            title: "Migration plan before any code",
-            detail:
-              "URL inventory, content mapping and a staged sequence, so you can see the whole route before committing to it.",
-          },
-          {
-            title: "Redirects and SEO preservation",
-            detail:
-              "Every existing URL mapped to its new home, with redirects in place and metadata and structured data carried across.",
-          },
-          {
-            title: "Next.js rebuild",
-            detail:
-              "Rebuilt with the rendering strategy each page type actually needs — static where content is stable, server-rendered where it is not.",
-          },
-          {
-            title: "Content migration",
-            detail:
-              "Existing content moved into the new system, or WordPress kept as a headless CMS if your team wants to keep the editor they know.",
-          },
-          {
-            title: "Staged rollout",
-            detail:
-              "Migrated section by section with the live site running throughout, rather than one switchover with everything riding on it.",
-          },
-        ],
-        process: [
-          {
-            step: "Inventory",
-            detail:
-              "Catalogue every URL, content type and integration, and identify what genuinely needs to move.",
-          },
-          {
-            step: "Map",
-            detail:
-              "Old URLs mapped to new ones and the redirect table written before the first page is built.",
-          },
-          {
-            step: "Migrate in stages",
-            detail:
-              "Section by section, verified at each step, with the existing site serving traffic throughout.",
-          },
-          {
-            step: "Monitor",
-            detail:
-              "Crawl errors, rankings and Core Web Vitals watched after each stage, so problems surface in days rather than months.",
-          },
-        ],
-        stack: [
-          "Next.js",
-          "React.js",
-          "TypeScript",
-          "WordPress REST API",
-          "Vercel",
-          "Technical SEO",
-        ],
-        idealFor: [
-          "Sites that have outgrown WordPress at scale",
-          "Marketplaces and listing-heavy platforms",
-          "Teams fighting the CMS to ship features",
-          "Businesses where load time is costing revenue",
-        ],
-        useCases: [
-          { scenario: "A marketplace with 8,000 listing URLs earning steady organic traffic.", outcome: "Every URL mapped and redirected before launch, migrated section by section with rankings monitored at each stage." },
-          { scenario: "A team whose editors liked WordPress but whose front end was too slow.", outcome: "Headless setup — WordPress kept as the editor, Next.js as the front end reading it over the REST API." },
-          { scenario: "A business unsure whether migrating was worth it at all.", outcome: "Told plainly it was not. A custom theme and a speed pass solved it for a fraction of the cost." },
-        ],
-        faqs: [
-          {
-            q: "Will we lose our Google rankings?",
-            a: "Not if the migration is planned properly. URL mapping and redirects are written before anything is built, metadata and structured data carry across, and rankings are monitored after each stage. The horror stories come from migrations where redirects were an afterthought.",
-          },
-          {
-            q: "Can our team keep using the WordPress editor?",
-            a: "Yes — that is the headless approach. WordPress stays as the editor your team already knows, and Next.js becomes the front end reading from it over the REST API. It is often the right compromise when your editors are happy but the front end is not.",
-          },
-          {
-            q: "Does the site go down during migration?",
-            a: "No. The work is staged and the existing site keeps serving traffic until each section is verified. That is the main reason to migrate incrementally rather than all at once.",
-          },
-          {
-            q: "How do we know it is even worth migrating?",
-            a: "Sometimes it is not, and I will say so. If yours is a marketing site publishing a few posts a month, a custom theme and a speed pass will serve you better at a fraction of the cost. Migration earns its price at scale — heavy listings, complex filtering, or a front end the CMS is actively obstructing.",
-          },
-          {
-            q: "What happens to our existing content?",
-            a: "It migrates. Content and media move into the new system, or stay in WordPress if you keep it headless. Either way nothing is retyped by hand.",
-          },
-        ],
-      },
-      {
-        slug: "landing-page-development",
-        title: "Landing page development",
-        tagline: "One page, one job, loads before they leave",
-        summary: "Focused landing pages for campaigns and launches — fast on mobile, built around a single conversion, and easy to test variants against.",
-        metaTitle: "Landing Page Development — Fast, Converting Pages",
-        metaDescription:
-          "Custom landing page development for campaigns, launches and paid traffic. Fast-loading, responsive, conversion-focused pages built on WordPress or Next.js.",
-        keywords: [
-          "landing page development",
-          "custom landing page design",
-          "wordpress landing page",
-          "high converting landing page",
-          "campaign landing page",
-          "ppc landing page development",
-        ],
-        intro: [
-          "A landing page has exactly one job, and everything on it either serves that job or competes with it. The discipline is in what you leave out — which is why most pages built from a normal template underperform.",
-          "Speed is the other half. If you are paying for the traffic landing here, every second of load time is budget you do not get back, and mobile visitors on a weak connection leave before the hero finishes rendering.",
-        ],
-        problem: {
-          heading: "You are paying for clicks that never see the offer",
-          body:
-            "Two causes account for most of it. First, competing exits: a full navigation bar, a footer full of links, and three offers all giving the visitor somewhere else to go. Second, weight: a page assembled in a builder that ships the entire theme's assets in order to display one headline and a form.",
-        },
-        deliverables: [
-          {
-            title: "A page built around one action",
-            detail:
-              "Structured so everything supports a single conversion goal, with distractions deliberately removed.",
-          },
-          {
-            title: "Fast by construction",
-            detail:
-              "Only the assets this page needs, optimised images and a fast first paint — which matters most on paid mobile traffic.",
-          },
-          {
-            title: "Responsive across devices",
-            detail:
-              "Built and tested mobile-first, because that is where most campaign traffic actually arrives.",
-          },
-          {
-            title: "Forms and tracking wired up",
-            detail:
-              "Form handling connected to your CRM or email platform, with analytics and conversion tracking working from launch.",
-          },
-          {
-            title: "Editable variants",
-            detail:
-              "Built so headline and copy variants can be swapped for testing without a developer each time.",
-          },
-        ],
-        process: [
-          {
-            step: "Define the goal",
-            detail:
-              "One conversion action, and the objections the page has to answer in order to get there.",
-          },
-          {
-            step: "Structure",
-            detail:
-              "Section order settled before visual design — sequence does more for conversion than styling does.",
-          },
-          {
-            step: "Build",
-            detail:
-              "Implemented on WordPress or as a standalone Next.js page, whichever suits your stack.",
-          },
-          {
-            step: "Launch and measure",
-            detail:
-              "Tracking verified, then live — with the page ready for you to test variants against.",
-          },
-        ],
-        stack: ["WordPress", "Next.js", "HTML5", "CSS3", "JavaScript", "Responsive design"],
-        idealFor: [
-          "Paid campaigns needing a dedicated page",
-          "Product or feature launches",
-          "Lead generation for service businesses",
-          "Anyone sending ad traffic to a homepage",
-        ],
-        useCases: [
-          { scenario: "An agency sending paid traffic to their homepage and wondering why it never converted.", outcome: "A dedicated page with one offer and one action, and no navigation to wander off through." },
-          { scenario: "A launch page taking eight seconds to load on mobile, where most of the ad spend went.", outcome: "Rebuilt with only the assets that page needs, cutting the wait to a fraction and holding the traffic." },
-          { scenario: "A team wanting to test three headlines without a developer each round.", outcome: "Copy variants swappable from the CMS, so testing became a marketing task rather than a ticket." },
-        ],
-        faqs: [
-          {
-            q: "WordPress or a standalone page?",
-            a: "It depends on who maintains it. If your team wants to edit the copy themselves and the rest of your site is WordPress, build it there. If it is a one-off campaign page where speed matters most, a standalone Next.js page will be lighter and faster.",
-          },
-          {
-            q: "Can you write the copy?",
-            a: "I will structure the page and tighten what you give me, but I am not a copywriter and will not pretend otherwise. Bring the messaging — or a copywriter — and I will build a page that presents it well.",
-          },
-          {
-            q: "Do you set up A/B testing?",
-            a: "I build the page so variants are straightforward to swap, and I will integrate with your testing tool if you use one. Running and interpreting the tests is your side of it.",
-          },
-          {
-            q: "Will the form connect to our CRM?",
-            a: "Yes — Mailchimp, HubSpot, your own endpoint, or whatever you use. Conversion tracking is set up and verified before launch, because a page you cannot measure is not finished.",
-          },
-          {
-            q: "How quickly can it be live?",
-            a: "A single landing page with copy and a direction ready is usually a few days. Add time if design work is needed first.",
-          },
-        ],
+        title: "The product UI is treated as decoration",
+        detail:
+          "In a SaaS product the interface is the product. Empty states, loading behaviour, error recovery and the first-run experience are what determine whether someone comes back, not the feature list.",
       },
     ],
+    deliverables: [
+      { title: "Product UI architecture", detail: "Routing, layout system, navigation model and the component boundaries the rest of the build fits into." },
+      { title: "Next.js / React application build", detail: "The application itself, in TypeScript, structured by feature so it can grow past the MVP." },
+      { title: "Authentication and role-based access", detail: "Sign-up, sign-in, session handling and permissions enforced on the server." },
+      { title: "Dashboards, forms and workflows", detail: "The screens where the product actually gets used, including the states that are not the happy path." },
+      { title: "API integration", detail: "Wiring to your backend, or coordination with your backend team on the contract between us." },
+      { title: "Production deployment", detail: "Environments, CI/CD and a deployment you can ship from repeatedly, not once." },
+      { title: "An iteration loop", detail: "Analytics on the core workflow, so the next build decision comes from usage rather than opinion." },
+    ],
+    engagement: [
+      { step: "Define the workflow", detail: "Name the single workflow the MVP exists to prove, and write down what is explicitly out of scope." },
+      { step: "Shape the build", detail: "Screens, data model touchpoints, auth requirements and the delivery order that gets something usable soonest." },
+      { step: "Build to usable", detail: "Ship the core path end to end first — a working narrow product beats four half-built features." },
+      { step: "Launch and learn", detail: "Deploy, instrument the core workflow, and decide version two from what the data says." },
+    ],
+    technical: {
+      summary:
+        "Next.js and TypeScript, structured by feature. Auth and access control enforced server-side. Where the backend is someone else's, the API contract gets agreed early and in writing, because that boundary is where MVP timelines usually go wrong.",
+      groups: [
+        { label: "Application", items: ["Next.js (App Router)", "React", "TypeScript", "Feature-based architecture"] },
+        { label: "Auth", items: ["OAuth 2.0", "JWT", "Session handling", "Role-based access control", "Protected routing"] },
+        { label: "Data", items: ["REST APIs", "Server-state patterns", "PostgreSQL", "MongoDB", "Prisma", "Drizzle"] },
+        { label: "Interface", items: ["Dashboards", "Complex forms", "Tables and filtering", "Empty and error states"] },
+        { label: "Operations", items: ["Vercel", "CI/CD", "Docker", "Environment management", "Analytics instrumentation"] },
+      ],
+    },
+    scope: {
+      includes: [
+        "Frontend application build, end to end",
+        "Authentication, protected areas and role-aware interfaces",
+        "API integration, and coordination with your backend team",
+        "Deployment pipeline and production launch",
+      ],
+      excludes: [
+        "A full backend build without a backend engineer involved",
+        "Payment provider compliance, contracts or legal setup",
+        "Open-ended feature development outside the agreed MVP scope",
+      ],
+    },
+    proofSlugs: ["verdira", "sunhub", "vape-planet"],
+    faqs: [
+      {
+        q: "What actually belongs in an MVP?",
+        a: "One workflow, done properly, with authentication if the product needs identity, and the states around that workflow — empty, loading, error, first run. What does not belong: settings pages nobody has asked for, admin panels before there are users to administer, and billing tiers before anyone has agreed to pay.",
+      },
+      {
+        q: "Can you build any SaaS product?",
+        a: "No, and I would be careful of anyone who says yes. What I build well is a focused MVP around a clearly defined workflow — the frontend, the auth, the dashboards and the integration. A product needing a large custom backend needs a backend engineer alongside me, and I will say so at the scope call rather than halfway through.",
+      },
+      {
+        q: "How do you avoid overbuilding?",
+        a: "By writing the out-of-scope list at the same time as the scope list, and treating additions as a decision with a cost rather than a small favour. The out-of-scope list is not a refusal — it is a record of what version two is for.",
+      },
+      {
+        q: "We have a backend team. How does that work?",
+        a: "Well, usually. We agree the API contract early — endpoints, shapes, error semantics — and I build against it, with mocked responses if the endpoints are not ready. The most common cause of MVP delay is that boundary being left vague, so it gets settled first.",
+      },
+      {
+        q: "Will the MVP have to be rewritten later?",
+        a: "It should not. Minimal scope and disposable architecture are different things, and the second one is a choice. Typed code, feature boundaries and server-enforced auth cost very little at the start and are what let version two extend the codebase rather than replace it.",
+      },
+    ],
+    cta: {
+      heading: "Discuss an MVP",
+      body: "Tell me the workflow the product exists for and who it is for. I will reply with what I would put in version one, what I would leave out, and why.",
+      primaryLabel: "Discuss an MVP",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     4 · AGENCY / WHITE-LABEL FRONTEND
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "agency-frontend-development",
+    title: "Agency / White-Label Frontend",
+    shortTitle: "Agency partnership",
+    eyebrow: "B2B delivery channel",
+    metaTitle: "White-Label Frontend Development for Agencies",
+    metaDescription:
+      "A frontend engineering partner for agencies that need reliable React and Next.js delivery without hiring another full-time developer.",
+    keywords: [
+      "white label frontend developer",
+      "agency frontend developer",
+      "React development partner",
+      "Next.js agency partner",
+      "outsourced frontend development",
+      "Figma to React",
+    ],
+    h1: "Your frontend engineering partner, behind the scenes",
+    subhead:
+      "I help agencies deliver React and Next.js projects when the client is already sold but internal engineering capacity is full, stretched or specialised elsewhere.",
+    summary:
+      "Reliable React and Next.js delivery for agencies that need extra engineering capacity.",
+    definition:
+      "White-label frontend development is delivery capacity an agency can sell as its own: the agency keeps the client relationship, the brand and the process, and an external engineer implements the work inside them.",
+    intro: [
+      "You sell the relationship. I provide the implementation. That is the whole arrangement, and it works because it does not ask either side to change how they operate.",
+      "The practical value is not cheaper hours — it is not having to turn down work, or hire permanently against a pipeline that has not proven it is permanent.",
+    ],
+    idealFor: [
+      "Design and branding agencies without in-house React capacity",
+      "Development agencies whose team is committed and whose pipeline is not",
+      "Agencies who need Figma implemented accurately, not approximately",
+      "Teams that need a partner able to work under NDA and inside their process",
+      "Agencies wanting extra capacity without a permanent hire",
+    ],
+    notIdealFor: [
+      "Arrangements where I would need to hold the client relationship",
+      "Work with no defined design direction or requirements at all",
+      "Engagements that are really a full-time role in a different shape",
+    ],
+    problems: [
+      {
+        title: "The work is sold and the capacity is not there",
+        detail:
+          "The proposal is signed, the timeline is agreed, and the team is committed to two other builds. Turning it down costs the client relationship; hiring for it costs more than the project.",
+      },
+      {
+        title: "The design does not survive implementation",
+        detail:
+          "The build comes back approximately right — spacing drifted, states missing, responsive behaviour improvised — and the design team spends a week in review getting it back to the file.",
+      },
+      {
+        title: "A permanent hire against a temporary pipeline",
+        detail:
+          "Frontend demand arrives in waves. Hiring for the peak means carrying the cost through the trough, and hiring after the peak means missing it.",
+      },
+    ],
+    deliverables: [
+      { title: "Figma to React / Next.js", detail: "Accurate implementation of the design file, including the states and responsive behaviour it implies." },
+      { title: "Existing product frontend work", detail: "Feature delivery and maintenance on a client codebase you already hold." },
+      { title: "Responsive implementation", detail: "Verified across the breakpoint range, not just at the three widths in the design file." },
+      { title: "Component systems", detail: "A reusable library your team can extend after I hand it over." },
+      { title: "API integration", detail: "Wiring to your backend, the client's backend, or a headless CMS." },
+      { title: "Performance and frontend cleanup", detail: "Rescue work on a build that shipped and is now slow or hard to change." },
+      { title: "White-label delivery", detail: "Your brand, your repository, your process, your client. NDA-friendly by default." },
+    ],
+    engagement: [
+      { step: "Fit call", detail: "Your process, your stack, your timelines. Establish whether this is a project engagement or ongoing capacity." },
+      { step: "Project scope", detail: "Per-project scope and estimate, so you can price the client work with a known cost." },
+      { step: "Delivery inside your process", detail: "Your repo, your branching model, your project management tool, your review cadence." },
+      { step: "Handover", detail: "Documented and reviewable, so your team owns it afterwards rather than depending on me." },
+    ],
+    technical: {
+      summary:
+        "I work in your stack and your conventions rather than importing mine. Where there is no established convention, I will propose one and document it rather than leave the next developer guessing.",
+      groups: [
+        { label: "Core", items: ["React", "Next.js", "TypeScript", "JavaScript"] },
+        { label: "Styling", items: ["Tailwind CSS", "SASS", "Material UI", "Mantine", "Ant Design", "Styled components"] },
+        { label: "Integration", items: ["REST APIs", "Headless CMS", "WordPress", "Firebase", "Authentication"] },
+        { label: "Process", items: ["Git / Bitbucket", "Jira", "Code review", "CI/CD", "NDA-friendly workflows"] },
+      ],
+    },
+    scope: {
+      includes: [
+        "Implementation under your brand and inside your process",
+        "Direct collaboration with your designers and project managers",
+        "NDA and white-label delivery as the default arrangement",
+        "Documented handover so your team can maintain the work",
+      ],
+      excludes: [
+        "Holding the client relationship or client-facing account management",
+        "Originating visual design direction, unless agreed separately",
+        "Exclusivity, unless it is contracted as a retained arrangement",
+      ],
+    },
+    proofSlugs: ["sunhub", "aussiemotor", "cennetsol"],
+    faqs: [
+      {
+        q: "How does white-label frontend development work in practice?",
+        a: "You keep the client relationship, the contract and the brand. I work inside your repository, your project management tool and your review process, and appear to the client as part of your team or not at all — whichever you prefer. Scope and estimates come to you, not to them.",
+      },
+      {
+        q: "Can you work under our NDA?",
+        a: "Yes, and it is the default assumption. Client work delivered this way does not appear in my portfolio unless you explicitly agree to it.",
+      },
+      {
+        q: "What handoff do you need to start?",
+        a: "The design file with the states you expect implemented, API documentation or endpoints, repository access with your branching conventions, and one named person who can answer questions. Missing that last one delays projects more than anything technical.",
+      },
+      {
+        q: "Project work or ongoing capacity?",
+        a: "Both. Project engagements are scoped and estimated individually. Ongoing capacity is a recurring allocation you can plan your pipeline against — which tends to suit agencies with steady frontend demand better than repeatedly scoping small builds.",
+      },
+      {
+        q: "How do you price agency work?",
+        a: "Per project where the scope is clear enough to fix, and on a retained allocation where it is not. Either way you get the number before you quote your client, so your margin is known rather than discovered.",
+      },
+    ],
+    cta: {
+      heading: "Discuss an agency partnership",
+      body: "Tell me what is in your pipeline and where the capacity gap is. I will come back with how I would slot into your process and what it would cost you per project.",
+      primaryLabel: "Discuss an agency partnership",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     5 · AI PRODUCT INTEGRATION
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "ai-product-integration",
+    title: "AI Product Integration",
+    shortTitle: "AI integration",
+    eyebrow: "Supporting specialisation",
+    metaTitle: "AI Product Integration for Web Applications",
+    metaDescription:
+      "Add practical AI features to web products: assistants, search, content workflows, retrieval-based interfaces and API-driven AI experiences.",
+    keywords: [
+      "AI product development",
+      "AI integration",
+      "AI web application",
+      "LLM integration",
+      "retrieval augmented generation",
+      "AI UX",
+    ],
+    h1: "Practical AI features inside real web products",
+    subhead:
+      "I integrate useful AI capabilities into web applications — from assistants and retrieval-based interfaces to structured workflows that connect model output to the product your users already have.",
+    summary:
+      "Practical AI features integrated into real web products — not AI for its own sake.",
+    definition:
+      "AI product integration is adding model-driven features to an existing web product — search, assistants, generation or classification — grounded in a defined source of truth, with fallbacks for when the model is wrong.",
+    intro: [
+      "The interesting engineering in an AI feature is rarely the model call. It is everything around it: where the grounding data comes from, what the interface does while it waits, what it shows when the answer is wrong, and where a human re-enters the loop.",
+      "This is a supporting specialisation rather than the headline. I am a frontend product engineer who integrates AI into products — not an ML engineer, and I will tell you when a problem needs one.",
+    ],
+    idealFor: [
+      "An existing product where a specific AI feature would remove real friction",
+      "Documentation, catalogues or knowledge bases that need genuinely good search",
+      "A defined support or onboarding use case suitable for an assistant",
+      "Content or data workflows that would benefit from a first pass plus human review",
+      "Teams who want AI in the product and want it grounded rather than improvised",
+    ],
+    notIdealFor: [
+      "Adding AI because it should be there, with no defined use case",
+      "Training or fine-tuning custom models — that needs an ML engineer",
+      "Assistants expected to give authoritative advice in regulated domains",
+    ],
+    problems: [
+      {
+        title: "The feature is ungrounded, so it is untrustworthy",
+        detail:
+          "A model answering from general knowledge about your specific product will be confidently wrong often enough to cost you more support tickets than it saves. Grounding it in your actual content is the difference between a feature and a liability.",
+      },
+      {
+        title: "The interface ignores that the model can be wrong",
+        detail:
+          "No citation, no confidence signal, no way to escalate to a person. Users trust it once, get burned, and never use it again — which is a worse outcome than not shipping it.",
+      },
+      {
+        title: "Latency was not designed for",
+        detail:
+          "A spinner over a blank panel for eight seconds reads as broken. Streaming, progressive disclosure and honest progress states are part of the feature, not polish on top of it.",
+      },
+    ],
+    deliverables: [
+      { title: "AI-assisted search and knowledge experiences", detail: "Search over your own content that answers the question rather than returning ten links to it." },
+      { title: "LLM and API integration inside existing products", detail: "Model calls wired into your application with the error handling, rate limiting and cost controls a production feature needs." },
+      { title: "Customer-facing assistants", detail: "Where the use case is well defined and the knowledge base is real — scoped deliberately narrow." },
+      { title: "Retrieval-based interfaces", detail: "Answers grounded in a client knowledge base, with sources shown so a user can verify them." },
+      { title: "Content and data workflows with human review", detail: "The model does the first pass, a person approves it, and the approval is part of the system rather than a convention." },
+      { title: "AI interface design", detail: "Streaming states, citations, confidence signals, graceful fallbacks and a clear handoff to a human." },
+      { title: "Workflow automation", detail: "n8n and API integrations that connect the tools you already run, where a model is one step rather than the point." },
+    ],
+    engagement: [
+      { step: "Define the use case", detail: "One specific job the feature does, and what a good answer looks like — stated concretely enough to test." },
+      { step: "Establish the ground truth", detail: "What the feature is allowed to answer from, and how that source stays current." },
+      { step: "Build the loop", detail: "Retrieval, model call, interface states and fallback path, built as one feature rather than three." },
+      { step: "Evaluate honestly", detail: "Test against real questions including the ones it should refuse, then set the boundaries from what you find." },
+    ],
+    technical: {
+      summary:
+        "Integration-level work: API-driven models, retrieval over your own content, and the interface layer around both. Model training and fine-tuning are outside what I offer, and I will say so rather than take the work.",
+      groups: [
+        { label: "Integration", items: ["LLM / model APIs", "Gemini API", "Streaming responses", "Rate limiting and cost control"] },
+        { label: "Retrieval", items: ["Retrieval-based interfaces", "Knowledge base structuring", "Source citation", "Content freshness"] },
+        { label: "Interface", items: ["Streaming UI states", "Citations and sources", "Fallback and refusal states", "Human handoff"] },
+        { label: "Workflow", items: ["n8n workflow automation", "REST integrations", "Human-review steps", "Scheduled pipelines"] },
+      ],
+    },
+    scope: {
+      includes: [
+        "Feature scoping against a defined, testable use case",
+        "Integration, retrieval and the full interface layer",
+        "Fallback behaviour and human handoff paths",
+        "Honest evaluation against real questions before launch",
+      ],
+      excludes: [
+        "Model training, fine-tuning or ML research",
+        "Regulated-domain advice systems where a wrong answer causes harm",
+        "Guarantees about model accuracy — no honest engineer can give one",
+      ],
+    },
+    proofSlugs: ["cennetsol", "verdira"],
+    faqs: [
+      {
+        q: "What AI features are actually practical in a web product?",
+        a: "Search and question-answering over your own content, assistants scoped to a defined support or onboarding job, first-pass content or data generation with human review, and classification or extraction inside a workflow. What is generally not practical is an open-ended assistant expected to answer anything about anything.",
+      },
+      {
+        q: "How do you keep answers grounded?",
+        a: "By retrieving from a defined source of truth and constraining the model to it, then showing the source in the interface so a user can check. If the retrieval finds nothing relevant, the correct behaviour is to say so and offer a human — not to generate something plausible.",
+      },
+      {
+        q: "Do you train custom models?",
+        a: "No. This is integration work: API-driven models, retrieval over your content, and the product layer around them. Training or fine-tuning needs an ML engineer, and I will tell you that rather than take the project.",
+      },
+      {
+        q: "What does the interface do when the model is wrong?",
+        a: "It has to be designed for, because it will happen. That means citations the user can verify, a visible way to escalate to a person, and refusal states that are honest rather than evasive. A feature designed only for the case where the model is right is not finished.",
+      },
+      {
+        q: "Is this the same as building a chatbot?",
+        a: "Sometimes, but a chatbot is one shape an AI feature can take and often not the best one. Search that returns a grounded answer, or a generation step inside a workflow, frequently does more for users than a chat window — and is easier to keep accurate.",
+      },
+    ],
+    cta: {
+      heading: "Discuss an AI feature",
+      body: "Describe the job you want the feature to do and what it would answer from. I will tell you whether it is a good fit for this approach — including if I think it is not.",
+      primaryLabel: "Discuss an AI feature",
+    },
   },
 ];
 
-/* ── Lookup helpers ────────────────────────────────────────────────────── */
-
-export function getCategory(slug: string): ServiceCategory | undefined {
-  return serviceCategories.find((c) => c.slug === slug);
+export function getService(slug: string): Service | undefined {
+  return services.find((s) => s.slug === slug);
 }
 
-export function getService(
-  categorySlug: string,
-  serviceSlug: string,
-): { category: ServiceCategory; service: ServiceDetail } | undefined {
-  const category = getCategory(categorySlug);
-  const service = category?.services.find((s) => s.slug === serviceSlug);
-  return category && service ? { category, service } : undefined;
-}
+export const serviceSlugs = services.map((s) => s.slug);
 
-/** Flat list of every category/service pair — used by the sitemap. */
-export const allServicePaths = serviceCategories.flatMap((c) =>
-  c.services.map((s) => ({ category: c.slug, service: s.slug })),
-);
+/** Hub page copy. */
+export const servicesHub = {
+  metaTitle: "Frontend Development & Product Engineering Services",
+  metaDescription:
+    "Explore frontend product engineering, website redesign, SaaS MVP development, AI product integration and agency white-label frontend services.",
+  h1: "Frontend development and product engineering services",
+  intro:
+    "I help SaaS teams, agencies and growing businesses design, rebuild and ship web products that need strong frontend execution.",
+  note: "Five services rather than a capability list. Pick the one that matches what you are trying to do — each page states who it is for, what it includes and where the scope ends.",
+} as const;
