@@ -26,7 +26,7 @@ export function Footer() {
               <Wordmark />
             </Link>
             <p className="ds-body-sm mt-5 max-w-xs">{positioning}</p>
-            <Link href="/contact" className="ds-link mt-5">
+            <Link href="/contact" data-track="cta_start_project" data-track-label="footer" className="ds-link mt-5">
               Start a project
               <ArrowIcon className="h-3.5 w-3.5" />
             </Link>
@@ -87,7 +87,7 @@ export function Footer() {
                 </li>
               ))}
               <li>
-                <a href={site.resumeHref} className={linkClass}>
+                <a href={site.resumeHref} data-track="resume_click" className={linkClass}>
                   Résumé (PDF)
                 </a>
               </li>

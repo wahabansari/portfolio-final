@@ -102,7 +102,13 @@ export function AboutNarrative() {
   );
 }
 
-/** Process. Same five steps everywhere they appear. */
+/**
+ * Process. The same five steps wherever they appear.
+ *
+ * Each step carries a benefit line as well as an activity line. A process
+ * diagram that only lists what the supplier does is decoration; what a buyer
+ * is actually reading for is what each stage gets them.
+ */
 export function Process({
   tone = "soft",
   steps,
@@ -111,7 +117,7 @@ export function Process({
   description,
 }: {
   tone?: "plain" | "soft" | "deep";
-  steps: readonly { step: string; detail: string }[];
+  steps: readonly { step: string; detail: string; benefit?: string }[];
   overline?: string;
   title?: string;
   description?: string;
@@ -119,21 +125,21 @@ export function Process({
   return (
     <Section tone={tone}>
       <SectionHeading overline={overline} title={title} description={description} />
-      <StepGrid steps={steps} />
+      <ol className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
+        {steps.map((s, i) => (
+          <Reveal as="li" key={s.step} delay={i * 0.04} className="flex flex-col bg-card p-6">
+            <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
+            <h3 className="ds-title-sm mt-3">{s.step}</h3>
+            <p className="ds-body-sm mt-2.5">{s.detail}</p>
+            {s.benefit && (
+              <p className="mt-4 flex-1 border-t border-border pt-4 text-[0.875rem] leading-relaxed text-ink">
+                <span className="ds-meta block text-success">What you get</span>
+                <span className="mt-1.5 block">{s.benefit}</span>
+              </p>
+            )}
+          </Reveal>
+        ))}
+      </ol>
     </Section>
-  );
-}
-
-function StepGrid({ steps }: { steps: readonly { step: string; detail: string }[] }) {
-  return (
-    <ol className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
-      {steps.map((s, i) => (
-        <Reveal as="li" key={s.step} delay={i * 0.04} className="flex flex-col bg-card p-6">
-          <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
-          <h3 className="ds-title-sm mt-3">{s.step}</h3>
-          <p className="ds-body-sm mt-2.5">{s.detail}</p>
-        </Reveal>
-      ))}
-    </ol>
   );
 }

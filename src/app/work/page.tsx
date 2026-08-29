@@ -9,10 +9,10 @@ import { projects } from "@/content/work";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
-  "Explore selected production work across web platforms, AI services websites and authenticated web applications built with React and Next.js.";
+  "Explore shipped React, Next.js and product engineering work, including production interfaces, performance improvements and client projects.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Frontend Engineering Portfolio & Case Studies",
+  title: "Frontend & Product Engineering Work",
   description,
   path: "/work",
 });

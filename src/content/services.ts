@@ -65,17 +65,19 @@ export type Service = {
 };
 
 export const services: Service[] = [
+
   /* ══════════════════════════════════════════════════════════════════════
      1 · FRONTEND PRODUCT ENGINEERING — primary
      ══════════════════════════════════════════════════════════════════════ */
+
   {
     slug: "frontend-product-engineering",
     title: "Frontend Product Engineering",
     shortTitle: "Frontend engineering",
     eyebrow: "Primary service",
-    metaTitle: "React & Next.js Development Services",
+    metaTitle: "React & Next.js Development | Frontend Product Engineer",
     metaDescription:
-      "Production React and Next.js development for SaaS products, web applications, dashboards and customer-facing interfaces.",
+      "Production React and Next.js frontend development for SaaS products, dashboards, customer portals and business-critical web applications.",
     keywords: [
       "React development services",
       "Next.js development",
@@ -234,18 +236,18 @@ export const services: Service[] = [
       primaryLabel: "Discuss a frontend project",
     },
   },
-
   /* ══════════════════════════════════════════════════════════════════════
      2 · WEBSITE REDESIGN & CONVERSION
      ══════════════════════════════════════════════════════════════════════ */
+
   {
     slug: "website-redesign-conversion",
     title: "Website Redesign & Conversion",
     shortTitle: "Redesign & conversion",
     eyebrow: "High demand",
-    metaTitle: "Website Redesign & Conversion-Focused Frontend Development",
+    metaTitle: "Website Redesign & Conversion",
     metaDescription:
-      "Redesign and rebuild websites that are clearer, faster and easier to convert — from UX structure and responsive UI to performance and production implementation.",
+      "Redesign and rebuild your website for clearer UX, stronger conversion paths, responsive performance and maintainable frontend code.",
     keywords: [
       "website redesign",
       "conversion-focused website",
@@ -372,18 +374,145 @@ export const services: Service[] = [
       primaryLabel: "Request a redesign assessment",
     },
   },
-
   /* ══════════════════════════════════════════════════════════════════════
-     3 · SAAS & MVP PRODUCT DEVELOPMENT
+     3 · AGENCY / WHITE-LABEL FRONTEND
      ══════════════════════════════════════════════════════════════════════ */
+
+  {
+    slug: "agency-frontend-development",
+    title: "Agency / White-Label Frontend",
+    shortTitle: "Agency partnership",
+    eyebrow: "Agency channel",
+    metaTitle: "White-label React & Next.js Development for Agencies",
+    metaDescription:
+      "Reliable white-label React and Next.js frontend development for agencies that need extra implementation capacity without hiring full-time.",
+    keywords: [
+      "white label frontend developer",
+      "agency frontend developer",
+      "React development partner",
+      "Next.js agency partner",
+      "outsourced frontend development",
+      "Figma to React",
+    ],
+    h1: "Your frontend engineering partner, behind the scenes",
+    subhead:
+      "I help agencies deliver React and Next.js projects when the client is already sold but internal engineering capacity is full, stretched or specialised elsewhere.",
+    summary:
+      "Reliable React and Next.js delivery for agencies that need extra engineering capacity.",
+    definition:
+      "White-label frontend development is delivery capacity an agency can sell as its own: the agency keeps the client relationship, the brand and the process, and an external engineer implements the work inside them.",
+    intro: [
+      "You sell the relationship. I provide the implementation. That is the whole arrangement, and it works because it does not ask either side to change how they operate.",
+      "The practical value is not cheaper hours — it is not having to turn down work, or hire permanently against a pipeline that has not proven it is permanent.",
+    ],
+    idealFor: [
+      "Design and branding agencies without in-house React capacity",
+      "Development agencies whose team is committed and whose pipeline is not",
+      "Agencies who need Figma implemented accurately, not approximately",
+      "Teams that need a partner able to work under NDA and inside their process",
+      "Agencies wanting extra capacity without a permanent hire",
+    ],
+    notIdealFor: [
+      "Arrangements where I would need to hold the client relationship",
+      "Work with no defined design direction or requirements at all",
+      "Engagements that are really a full-time role in a different shape",
+    ],
+    problems: [
+      {
+        title: "The work is sold and the capacity is not there",
+        detail:
+          "The proposal is signed, the timeline is agreed, and the team is committed to two other builds. Turning it down costs the client relationship; hiring for it costs more than the project.",
+      },
+      {
+        title: "The design does not survive implementation",
+        detail:
+          "The build comes back approximately right — spacing drifted, states missing, responsive behaviour improvised — and the design team spends a week in review getting it back to the file.",
+      },
+      {
+        title: "A permanent hire against a temporary pipeline",
+        detail:
+          "Frontend demand arrives in waves. Hiring for the peak means carrying the cost through the trough, and hiring after the peak means missing it.",
+      },
+    ],
+    deliverables: [
+      { title: "Figma to React / Next.js", detail: "Accurate implementation of the design file, including the states and responsive behaviour it implies." },
+      { title: "Existing product frontend work", detail: "Feature delivery and maintenance on a client codebase you already hold." },
+      { title: "Responsive implementation", detail: "Verified across the breakpoint range, not just at the three widths in the design file." },
+      { title: "Component systems", detail: "A reusable library your team can extend after I hand it over." },
+      { title: "API integration", detail: "Wiring to your backend, the client's backend, or a headless CMS." },
+      { title: "Performance and frontend cleanup", detail: "Rescue work on a build that shipped and is now slow or hard to change." },
+      { title: "White-label delivery", detail: "Your brand, your repository, your process, your client. NDA-friendly by default." },
+    ],
+    engagement: [
+      { step: "Fit call", detail: "Your process, your stack, your timelines. Establish whether this is a project engagement or ongoing capacity." },
+      { step: "Project scope", detail: "Per-project scope and estimate, so you can price the client work with a known cost." },
+      { step: "Delivery inside your process", detail: "Your repo, your branching model, your project management tool, your review cadence." },
+      { step: "Handover", detail: "Documented and reviewable, so your team owns it afterwards rather than depending on me." },
+    ],
+    technical: {
+      summary:
+        "I work in your stack and your conventions rather than importing mine. Where there is no established convention, I will propose one and document it rather than leave the next developer guessing.",
+      groups: [
+        { label: "Core", items: ["React", "Next.js", "TypeScript", "JavaScript"] },
+        { label: "Styling", items: ["Tailwind CSS", "SASS", "Material UI", "Mantine", "Ant Design", "Styled components"] },
+        { label: "Integration", items: ["REST APIs", "Headless CMS", "WordPress", "Firebase", "Authentication"] },
+        { label: "Process", items: ["Git / Bitbucket", "Jira", "Code review", "CI/CD", "NDA-friendly workflows"] },
+      ],
+    },
+    scope: {
+      includes: [
+        "Implementation under your brand and inside your process",
+        "Direct collaboration with your designers and project managers",
+        "NDA and white-label delivery as the default arrangement",
+        "Documented handover so your team can maintain the work",
+      ],
+      excludes: [
+        "Holding the client relationship or client-facing account management",
+        "Originating visual design direction, unless agreed separately",
+        "Exclusivity, unless it is contracted as a retained arrangement",
+      ],
+    },
+    proofSlugs: ["sunhub", "aussiemotor", "cennetsol"],
+    faqs: [
+      {
+        q: "How does white-label frontend development work in practice?",
+        a: "You keep the client relationship, the contract and the brand. I work inside your repository, your project management tool and your review process, and appear to the client as part of your team or not at all — whichever you prefer. Scope and estimates come to you, not to them.",
+      },
+      {
+        q: "Can you work under our NDA?",
+        a: "Yes, and it is the default assumption. Client work delivered this way does not appear in my portfolio unless you explicitly agree to it.",
+      },
+      {
+        q: "What handoff do you need to start?",
+        a: "The design file with the states you expect implemented, API documentation or endpoints, repository access with your branching conventions, and one named person who can answer questions. Missing that last one delays projects more than anything technical.",
+      },
+      {
+        q: "Project work or ongoing capacity?",
+        a: "Both. Project engagements are scoped and estimated individually. Ongoing capacity is a recurring allocation you can plan your pipeline against — which tends to suit agencies with steady frontend demand better than repeatedly scoping small builds.",
+      },
+      {
+        q: "How do you price agency work?",
+        a: "Per project where the scope is clear enough to fix, and on a retained allocation where it is not. Either way you get the number before you quote your client, so your margin is known rather than discovered.",
+      },
+    ],
+    cta: {
+      heading: "Discuss an agency partnership",
+      body: "Tell me what is in your pipeline and where the capacity gap is. I will come back with how I would slot into your process and what it would cost you per project.",
+      primaryLabel: "Discuss an agency partnership",
+    },
+  },
+  /* ══════════════════════════════════════════════════════════════════════
+     4 · SAAS & MVP PRODUCT DEVELOPMENT
+     ══════════════════════════════════════════════════════════════════════ */
+
   {
     slug: "saas-product-development",
     title: "SaaS & MVP Product Development",
     shortTitle: "SaaS & MVP",
-    eyebrow: "Product focused",
-    metaTitle: "SaaS MVP & Product Development with React and Next.js",
+    eyebrow: "Product builds",
+    metaTitle: "SaaS MVP Development | React & Next.js",
     metaDescription:
-      "Build and ship SaaS products and MVPs with React, Next.js, TypeScript, APIs, authentication, dashboards and production-ready architecture.",
+      "Build a focused, production-ready SaaS MVP with React, Next.js and a clear scope around the smallest valuable workflow.",
     keywords: [
       "SaaS development",
       "SaaS MVP development",
@@ -500,137 +629,10 @@ export const services: Service[] = [
       primaryLabel: "Discuss an MVP",
     },
   },
-
-  /* ══════════════════════════════════════════════════════════════════════
-     4 · AGENCY / WHITE-LABEL FRONTEND
-     ══════════════════════════════════════════════════════════════════════ */
-  {
-    slug: "agency-frontend-development",
-    title: "Agency / White-Label Frontend",
-    shortTitle: "Agency partnership",
-    eyebrow: "B2B delivery channel",
-    metaTitle: "White-Label Frontend Development for Agencies",
-    metaDescription:
-      "A frontend engineering partner for agencies that need reliable React and Next.js delivery without hiring another full-time developer.",
-    keywords: [
-      "white label frontend developer",
-      "agency frontend developer",
-      "React development partner",
-      "Next.js agency partner",
-      "outsourced frontend development",
-      "Figma to React",
-    ],
-    h1: "Your frontend engineering partner, behind the scenes",
-    subhead:
-      "I help agencies deliver React and Next.js projects when the client is already sold but internal engineering capacity is full, stretched or specialised elsewhere.",
-    summary:
-      "Reliable React and Next.js delivery for agencies that need extra engineering capacity.",
-    definition:
-      "White-label frontend development is delivery capacity an agency can sell as its own: the agency keeps the client relationship, the brand and the process, and an external engineer implements the work inside them.",
-    intro: [
-      "You sell the relationship. I provide the implementation. That is the whole arrangement, and it works because it does not ask either side to change how they operate.",
-      "The practical value is not cheaper hours — it is not having to turn down work, or hire permanently against a pipeline that has not proven it is permanent.",
-    ],
-    idealFor: [
-      "Design and branding agencies without in-house React capacity",
-      "Development agencies whose team is committed and whose pipeline is not",
-      "Agencies who need Figma implemented accurately, not approximately",
-      "Teams that need a partner able to work under NDA and inside their process",
-      "Agencies wanting extra capacity without a permanent hire",
-    ],
-    notIdealFor: [
-      "Arrangements where I would need to hold the client relationship",
-      "Work with no defined design direction or requirements at all",
-      "Engagements that are really a full-time role in a different shape",
-    ],
-    problems: [
-      {
-        title: "The work is sold and the capacity is not there",
-        detail:
-          "The proposal is signed, the timeline is agreed, and the team is committed to two other builds. Turning it down costs the client relationship; hiring for it costs more than the project.",
-      },
-      {
-        title: "The design does not survive implementation",
-        detail:
-          "The build comes back approximately right — spacing drifted, states missing, responsive behaviour improvised — and the design team spends a week in review getting it back to the file.",
-      },
-      {
-        title: "A permanent hire against a temporary pipeline",
-        detail:
-          "Frontend demand arrives in waves. Hiring for the peak means carrying the cost through the trough, and hiring after the peak means missing it.",
-      },
-    ],
-    deliverables: [
-      { title: "Figma to React / Next.js", detail: "Accurate implementation of the design file, including the states and responsive behaviour it implies." },
-      { title: "Existing product frontend work", detail: "Feature delivery and maintenance on a client codebase you already hold." },
-      { title: "Responsive implementation", detail: "Verified across the breakpoint range, not just at the three widths in the design file." },
-      { title: "Component systems", detail: "A reusable library your team can extend after I hand it over." },
-      { title: "API integration", detail: "Wiring to your backend, the client's backend, or a headless CMS." },
-      { title: "Performance and frontend cleanup", detail: "Rescue work on a build that shipped and is now slow or hard to change." },
-      { title: "White-label delivery", detail: "Your brand, your repository, your process, your client. NDA-friendly by default." },
-    ],
-    engagement: [
-      { step: "Fit call", detail: "Your process, your stack, your timelines. Establish whether this is a project engagement or ongoing capacity." },
-      { step: "Project scope", detail: "Per-project scope and estimate, so you can price the client work with a known cost." },
-      { step: "Delivery inside your process", detail: "Your repo, your branching model, your project management tool, your review cadence." },
-      { step: "Handover", detail: "Documented and reviewable, so your team owns it afterwards rather than depending on me." },
-    ],
-    technical: {
-      summary:
-        "I work in your stack and your conventions rather than importing mine. Where there is no established convention, I will propose one and document it rather than leave the next developer guessing.",
-      groups: [
-        { label: "Core", items: ["React", "Next.js", "TypeScript", "JavaScript"] },
-        { label: "Styling", items: ["Tailwind CSS", "SASS", "Material UI", "Mantine", "Ant Design", "Styled components"] },
-        { label: "Integration", items: ["REST APIs", "Headless CMS", "WordPress", "Firebase", "Authentication"] },
-        { label: "Process", items: ["Git / Bitbucket", "Jira", "Code review", "CI/CD", "NDA-friendly workflows"] },
-      ],
-    },
-    scope: {
-      includes: [
-        "Implementation under your brand and inside your process",
-        "Direct collaboration with your designers and project managers",
-        "NDA and white-label delivery as the default arrangement",
-        "Documented handover so your team can maintain the work",
-      ],
-      excludes: [
-        "Holding the client relationship or client-facing account management",
-        "Originating visual design direction, unless agreed separately",
-        "Exclusivity, unless it is contracted as a retained arrangement",
-      ],
-    },
-    proofSlugs: ["sunhub", "aussiemotor", "cennetsol"],
-    faqs: [
-      {
-        q: "How does white-label frontend development work in practice?",
-        a: "You keep the client relationship, the contract and the brand. I work inside your repository, your project management tool and your review process, and appear to the client as part of your team or not at all — whichever you prefer. Scope and estimates come to you, not to them.",
-      },
-      {
-        q: "Can you work under our NDA?",
-        a: "Yes, and it is the default assumption. Client work delivered this way does not appear in my portfolio unless you explicitly agree to it.",
-      },
-      {
-        q: "What handoff do you need to start?",
-        a: "The design file with the states you expect implemented, API documentation or endpoints, repository access with your branching conventions, and one named person who can answer questions. Missing that last one delays projects more than anything technical.",
-      },
-      {
-        q: "Project work or ongoing capacity?",
-        a: "Both. Project engagements are scoped and estimated individually. Ongoing capacity is a recurring allocation you can plan your pipeline against — which tends to suit agencies with steady frontend demand better than repeatedly scoping small builds.",
-      },
-      {
-        q: "How do you price agency work?",
-        a: "Per project where the scope is clear enough to fix, and on a retained allocation where it is not. Either way you get the number before you quote your client, so your margin is known rather than discovered.",
-      },
-    ],
-    cta: {
-      heading: "Discuss an agency partnership",
-      body: "Tell me what is in your pipeline and where the capacity gap is. I will come back with how I would slot into your process and what it would cost you per project.",
-      primaryLabel: "Discuss an agency partnership",
-    },
-  },
-
   /* ══════════════════════════════════════════════════════════════════════
      5 · AI PRODUCT INTEGRATION
      ══════════════════════════════════════════════════════════════════════ */
+
   {
     slug: "ai-product-integration",
     title: "AI Product Integration",
@@ -638,7 +640,7 @@ export const services: Service[] = [
     eyebrow: "Supporting specialisation",
     metaTitle: "AI Product Integration for Web Applications",
     metaDescription:
-      "Add practical AI features to web products: assistants, search, content workflows, retrieval-based interfaces and API-driven AI experiences.",
+      "Add practical AI features to web products using reliable UI, API integration and human-review workflows where needed.",
     keywords: [
       "AI product development",
       "AI integration",

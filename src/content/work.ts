@@ -23,6 +23,10 @@ export type CaseStudy = {
 
   role: string;
   period?: string;
+  /** What the engagement covered, in one phrase. */
+  scope: string;
+  /** Where the work stands now. */
+  status: string;
   stack: string[];
 
   /** Where the product sits and who it serves. */
@@ -37,6 +41,9 @@ export type CaseStudy = {
   decisions: { title: string; detail: string }[];
   /** Verified outcomes or observable changes. No invented numbers. */
   outcome: { statement: string; verified: boolean }[];
+  /** How a quoted figure was arrived at, and what it does not claim. Shown
+      beside the outcomes so a number is never left to speak for itself. */
+  measurement?: string;
   /** Honesty section — what I would change with more time. */
   next: string[];
   /** The service this case study should route a buyer into. */
@@ -51,6 +58,9 @@ export type Project = {
   /** Omitted when there is no public URL — the card renders unlinked. */
   href?: string;
   domain?: string;
+  /** Personal role. Stated on every card, including collaborative and
+      outsourced work, so ownership is never implied by omission. */
+  role: string;
   /** One line, used on cards. */
   blurb: string;
   /** Paragraph, used on /work and the case-study intro. */
@@ -71,6 +81,7 @@ export const projects: Project[] = [
      ══════════════════════════════════════════════════════════════════════ */
   {
     slug: "sunhub",
+    role: "Frontend Developer, via Oxiliry",
     title: "Sunhub",
     kind: "Performance & platform",
     href: "https://www.sunhub.com/",
@@ -98,6 +109,8 @@ export const projects: Project[] = [
       h1: "Sunhub frontend performance and platform work",
       lede: "A production React platform where performance had become a product problem — and the build-pipeline work that fixed it.",
       role: "Frontend Developer (via Oxiliry)",
+      scope: "Performance work and ongoing frontend delivery",
+      status: "Live and in production",
       stack: ["React.js", "REST APIs", "React Hook Form", "Figma", "Git", "Bitbucket", "Jira"],
       context:
         "Sunhub is a production solar equipment marketplace serving buyers and sellers across the United States. By the time I joined the frontend, the application had been through several years of feature delivery: the surface area was large, the asset pipeline had accumulated things nobody was using any more, and page weight had grown quietly with every release.",
@@ -150,11 +163,14 @@ export const projects: Project[] = [
         },
       ],
       outcome: [
-        { statement: "30% Core Web Vitals improvement, measured before and after the performance work", verified: true },
+        { statement: "30% performance improvement, measured before and after the optimisation work", verified: true },
         { statement: "Lighter build output, with unused assets removed from the pipeline", verified: false },
         { statement: "Responsive, cross-browser consistency across the interfaces delivered", verified: false },
       ],
+      measurement:
+        "To be precise about what this figure is: 30% is the aggregate improvement recorded across the performance work on this platform, taken before the optimisation pass began and again after it shipped. It is not a claim about one specific Core Web Vital, and it is not a synthetic score reproduced here — I have not published per-metric LCP, INP or CLS values because I am not going to quote numbers I cannot show you the workings for. The changes behind it are listed above and are the honest part of the claim.",
       next: [
+        "Publish the per-metric before and after values — LCP, INP and CLS — so the headline figure can be checked rather than taken on trust.",
         "A performance budget enforced in CI, so a regression fails the build instead of being discovered in production a month later.",
         "Field data alongside lab data — synthetic scores and real-user metrics disagree, and the disagreement is usually the interesting part.",
         "Route-level code splitting extended further, now that the import boundaries are clean enough to make it predictable.",
@@ -172,6 +188,7 @@ export const projects: Project[] = [
      ══════════════════════════════════════════════════════════════════════ */
   {
     slug: "cennetsol",
+    role: "Frontend / product implementation",
     title: "Cennetsol",
     kind: "Marketing site architecture",
     href: "https://www.cennetsol.com/",
@@ -199,6 +216,8 @@ export const projects: Project[] = [
       h1: "Cennetsol: a scalable AI consultancy website",
       lede: "A marketing site that had to present a wide service catalogue without becoming impossible to extend six months later.",
       role: "Frontend / product implementation",
+      scope: "Full site: information architecture through build",
+      status: "Live",
       stack: ["Next.js", "React", "Tailwind CSS", "Vercel"],
       context:
         "Cennetsol is an AI and digital-transformation consultancy working with industrial, healthcare and logistics clients. Its buyers are enterprise: they arrive sceptical, they want to see comparable work before capability claims, and they have specific integration and ROI questions that decide whether a conversation happens at all.",
@@ -263,6 +282,7 @@ export const projects: Project[] = [
      ══════════════════════════════════════════════════════════════════════ */
   {
     slug: "verdira",
+    role: "Frontend / application development",
     title: "Verdira",
     kind: "Web application & auth",
     href: "https://verdira.com/",
@@ -290,6 +310,8 @@ export const projects: Project[] = [
       h1: "Verdira: a marketing site rebuilt as a web application",
       lede: "The point where a website stops being a website — adding accounts, protected areas and an architecture that can carry both.",
       role: "Frontend / application development",
+      scope: "Static site rebuilt as an authenticated application",
+      status: "Live",
       stack: ["Next.js", "Tailwind CSS", "Authentication", "Vercel"],
       context:
         "Verdira had a static marketing presence that was doing its job as a brochure, and a business that had moved past what a brochure can do. Clients needed somewhere to sign in and reach material that was not for the public — which is a different kind of software from the one they had.",
@@ -355,6 +377,7 @@ export const projects: Project[] = [
      ══════════════════════════════════════════════════════════════════════ */
   {
     slug: "vape-planet",
+    role: "Sole frontend developer",
     title: "Vape Planet",
     kind: "E-commerce",
     href: "https://vapeplanet.co.uk/",
@@ -371,6 +394,7 @@ export const projects: Project[] = [
   },
   {
     slug: "aussiemotor",
+    role: "Frontend developer, part of a team",
     title: "AussieMotor",
     kind: "Marketplace migration",
     href: "https://aussiemotor.com.au/",
@@ -387,6 +411,7 @@ export const projects: Project[] = [
   },
   {
     slug: "digestive-care",
+    role: "Sole developer",
     title: "Digestive Care",
     kind: "Healthcare portal",
     href: "https://digestivecarepl.com/",
@@ -403,6 +428,7 @@ export const projects: Project[] = [
   },
   {
     slug: "talha-estate",
+    role: "Design and development",
     title: "Talha Estate",
     kind: "Real estate CMS",
     href: "https://talhaestate.com/",

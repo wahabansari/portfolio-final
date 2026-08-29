@@ -4,6 +4,7 @@ import "./globals.css";
 import { metaDescription, site } from "@/content/site";
 import { themeScript } from "@/components/theme-toggle";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { TrackClicks } from "@/components/analytics";
 
 /*
  * One superfamily, two cuts.
@@ -51,7 +52,7 @@ const googleSansCode = Google_Sans_Code({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | ${site.role}`,
+    default: "Frontend Product Engineer | React & Next.js | Wahab Ansari",
     /* The short name in the suffix, not the full one. Google truncates titles
        around 60 characters, and nine characters of brand is nine characters
        of the actual page title that survives. */
@@ -70,12 +71,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: site.name,
-    title: `${site.name} | ${site.role}`,
+    title: "Frontend Product Engineer | React & Next.js | Wahab Ansari",
     description: metaDescription,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} | ${site.role}`,
+    title: "Frontend Product Engineer | React & Next.js | Wahab Ansari",
     description: metaDescription,
   },
   robots: {
@@ -121,6 +122,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         {children}
+        <TrackClicks />
         <SpeedInsights />
       </body>
     </html>

@@ -24,7 +24,11 @@ export function Engagement({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
               <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="ds-title mt-4">{option.title}</h3>
               <p className="ds-body-sm mt-4 flex-1">{option.detail}</p>
-              <Link href={option.cta.href} className="ds-link mt-7">
+              <Link
+                href={option.cta.href}
+                data-track={option.cta.href.includes("agency") ? "agency_cta" : undefined}
+                className="ds-link mt-7"
+              >
                 {option.cta.label}
                 <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
               </Link>

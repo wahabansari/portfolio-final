@@ -43,7 +43,7 @@ export const agencySentence =
 
 /** Homepage <meta description>. Kept under 160 characters so it isn't truncated. */
 export const metaDescription =
-  "Frontend Product Engineer building production React and Next.js applications, SaaS products, conversion-focused websites and AI-enabled product experiences.";
+  "Wahab Ansari is a frontend product engineer building production React and Next.js products, SaaS interfaces, conversion-focused websites and AI-powered product features.";
 
 export const socials = [
   { label: "GitHub", handle: "github.com/wahabansari", href: "https://github.com/wahabansari" },
@@ -54,47 +54,146 @@ export const socials = [
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 
 export const hero = {
-  eyebrow: "Open to remote roles + selected projects",
-  headline: "I build production-grade web products that are fast, clear and built to ship.",
+  eyebrow: "Frontend Product Engineer",
+  headline: "I build production-grade web products with React and Next.js.",
   support:
-    "Frontend Product Engineer with 5+ years of production experience building React and Next.js applications, product interfaces and customer-facing web experiences. I work with product teams, agencies and businesses that need reliable frontend execution.",
+    "Frontend Product Engineer with 5+ years of production experience building SaaS interfaces, customer-facing applications, high-converting websites and AI-powered product features.",
   primaryCta: { label: "Start a project", href: "/contact" },
-  secondaryCta: { label: "View selected work", href: "/work" },
+  secondaryCta: { label: "View my work", href: "/work" },
+  availability: "Open to remote roles and selected projects",
 } as const;
 
-/**
- * Proof strip. `numeric` values count up from zero; the rest render as-is.
- * Every entry has to be verifiable from the case studies or the CV.
- */
-export const proof = [
-  { value: 5, suffix: "+", numeric: true, label: "Years production experience", note: "Shipping since 2020" },
-  { value: 7, suffix: "", numeric: true, label: "Live projects", note: "All publicly linked" },
-  { value: 30, suffix: "%", numeric: true, label: "Core Web Vitals improvement", note: "Measured on Sunhub", verified: true },
-  { value: 0, suffix: "", numeric: false, display: "React · Next.js · TS", label: "Core stack", note: "Typed, in production" },
+/* ── Who I work with ───────────────────────────────────────────────────────
+   Three audiences, named explicitly. A visitor should be able to find their
+   own situation here rather than infer it from a services list. */
+
+export const audiences = [
+  {
+    who: "SaaS & product teams",
+    detail:
+      "Frontend delivery for products with an existing backend, design system or evolving roadmap — where the constraint is implementation capacity, not direction.",
+  },
+  {
+    who: "Agencies",
+    detail:
+      "White-label React and Next.js delivery capacity behind your brand, inside your process and under your NDA. You keep the client relationship.",
+  },
+  {
+    who: "Businesses",
+    detail:
+      "Website redesigns, conversion improvements and customer-facing web applications, where the current site is the thing getting in the way.",
+  },
 ] as const;
+
+/* ── Why work with me ──────────────────────────────────────────────────────
+   Four principles, each tied to something demonstrable rather than to an
+   adjective. These repeat on every service page, so the argument is the same
+   wherever a buyer enters the site. */
+
+export const principles = [
+  {
+    title: "Production ownership",
+    detail:
+      "Five years on a live product rather than a sequence of handovers. I have maintained what I shipped, which is what teaches you where regressions come from and what a change actually costs.",
+  },
+  {
+    title: "Design-to-code judgment",
+    detail:
+      "I built and maintained a design system before I wrote production React full-time, so I read a Figma file as a specification rather than a picture — including the states it implies but does not draw.",
+  },
+  {
+    title: "Performance awareness",
+    detail:
+      "Treated as a feature with a baseline and a second measurement, not a polish step at the end. On Sunhub that discipline produced a measured 30% performance improvement.",
+  },
+  {
+    title: "Clean handover",
+    detail:
+      "Typed code, feature boundaries and documented decisions in your repository. The test is whether your team can extend it without me, and that is the state I aim to leave it in.",
+  },
+] as const;
+
+/**
+ * Proof strip.
+ *
+ * `display` is the literal string rendered — there is no count-up animation
+ * and no numeric interpolation. A counter that starts at zero exposes a false
+ * value to anyone who reads the first frame, and to any crawler that renders
+ * the page before the animation settles. These are claims about verifiable
+ * facts, so they are static text in the server HTML and correct with
+ * JavaScript disabled.
+ */
+export type ProofItem = {
+  /** The literal string rendered. Never a number to be animated. */
+  display: string;
+  label: string;
+  note: string;
+  /** Marks a measured result, which is styled and linked differently. */
+  verified?: boolean;
+  /** Where the claim is substantiated. */
+  href?: string;
+  /** Set on the stack readout, which is words rather than a figure. */
+  wide?: boolean;
+};
+
+export const proof: ProofItem[] = [
+  {
+    display: "5+",
+    label: "Years production experience",
+    note: "Shipping since 2020",
+  },
+  {
+    display: "7",
+    label: "Live projects",
+    note: "All publicly linked",
+  },
+  {
+    display: "30%",
+    label: "Measured performance improvement",
+    note: "Core Web Vitals, on Sunhub",
+    verified: true,
+    href: "/work/sunhub",
+  },
+  {
+    display: "React · Next.js · TS",
+    label: "Core stack",
+    note: "Typed, in production",
+    wide: true,
+  },
+];
 
 /* ── Process ───────────────────────────────────────────────────────────── */
 
 export const process = [
   {
     step: "Understand",
-    detail: "Clarify the user, the business goal and the constraints before anything is designed or written.",
+    detail:
+      "Clarify the user, the business goal and the constraints before anything is designed.",
+    benefit: "You find out early whether the thing you asked for is the thing you need.",
   },
   {
     step: "Structure",
-    detail: "Define the UX, the technical approach and the delivery scope, so what gets built is what was agreed.",
+    detail:
+      "Define the UX, the technical approach and the delivery scope in writing.",
+    benefit: "Scope is agreed before code exists, so change is a decision rather than a surprise.",
   },
   {
     step: "Build",
-    detail: "Implement the interface with reusable components and clean integration points against your API.",
+    detail:
+      "Implement the interface with reusable components and clean integration points against your API.",
+    benefit: "You see working software in reviewable slices instead of one drop at the end.",
   },
   {
     step: "Ship",
-    detail: "Test responsive behaviour, performance and production readiness, then deploy.",
+    detail:
+      "Verify responsive behaviour, performance and production readiness, then deploy.",
+    benefit: "What goes live has been checked on real devices, not only on my screen.",
   },
   {
     step: "Improve",
-    detail: "Iterate from real usage, feedback and measurable issues rather than assumptions.",
+    detail:
+      "Iterate from real usage, feedback and measurable issues rather than assumptions.",
+    benefit: "The next round of work is chosen from evidence, so budget goes where it moves something.",
   },
 ] as const;
 

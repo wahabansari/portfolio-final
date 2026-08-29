@@ -30,6 +30,7 @@ export function Nav() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const openerRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const servicesBtnRef = useRef<HTMLButtonElement>(null);
   const closeTimer = useRef<number | null>(null);
@@ -63,6 +64,58 @@ export function Nav() {
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+
+  /* Mobile drawer: lock the page behind it and keep focus inside.
+   *
+   * `inert` already removes the closed drawer from the tab order, but an open
+   * drawer over a scrollable page is only a dialog if focus cannot wander out
+   * of it. Tab is cycled manually rather than relying on DOM order, because
+   * everything behind the drawer is still focusable — it is a panel in the
+   * header, not a portal at the end of <body>. */
+  useEffect(() => {
+    if (!open) return;
+
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+
+    const focusable = () =>
+      Array.from(
+        drawer.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.offsetParent !== null);
+
+    focusable()[0]?.focus();
+
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const items = focusable();
+      if (items.length === 0) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+
+      /* Wrap at both ends, and pull focus back in if it has escaped — which
+         it will have if the drawer's contents changed while it was open. */
+      if (e.shiftKey && (active === first || !drawer.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !drawer.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onTab);
+    return () => {
+      window.removeEventListener("keydown", onTab);
+      document.body.style.overflow = overflow;
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open && !servicesOpen) return;
@@ -250,6 +303,8 @@ export function Nav() {
           <ThemeToggle />
           <Link
             href="/contact"
+            data-track="cta_start_project"
+            data-track-label="header"
             className="ds-btn ds-btn-primary hidden h-10 min-h-10 px-5 text-[0.875rem] sm:inline-flex"
           >
             Start a project
@@ -278,7 +333,11 @@ export function Nav() {
           out of the tab order. */}
       <div
         id="mobile-menu"
+        ref={drawerRef}
         inert={!open}
+        role="dialog"
+        aria-modal={open || undefined}
+        aria-label="Site menu"
         className={cn(
           "grid overflow-hidden bg-bg transition-[grid-template-rows,opacity] duration-300 ease-out lg:hidden",
           open ? "grid-rows-[1fr] border-t border-border opacity-100" : "grid-rows-[0fr] opacity-0",
@@ -355,7 +414,12 @@ export function Nav() {
                 </Link>
               ),
             )}
-            <Link href="/contact" className="ds-btn ds-btn-primary mt-3">
+            <Link
+              href="/contact"
+              data-track="cta_start_project"
+              data-track-label="mobile-menu"
+              className="ds-btn ds-btn-primary mt-3"
+            >
               Start a project
             </Link>
           </nav>

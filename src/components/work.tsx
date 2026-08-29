@@ -2,6 +2,7 @@ import Link from "next/link";
 import { featuredProjects, projects, type Project } from "@/content/work";
 import { Plate } from "./plate";
 import { ArrowIcon, ExternalIcon, Reveal, Section, SectionHeading } from "./ui";
+import { OutboundLink } from "./outbound";
 import { cn } from "@/lib/cn";
 
 /* ── Featured card ──────────────────────────────────────────────────────────
@@ -27,6 +28,10 @@ function FeaturedCard({ project, priority = false }: { project: Project; priorit
             {project.title}
           </Link>
         </h3>
+
+        {/* Role on the card, not buried in the case study. On collaborative
+            and outsourced work, saying nothing reads as claiming everything. */}
+        <p className="mt-2 text-[0.8125rem] text-ink-soft">{project.role}</p>
 
         <p className="ds-body-sm mt-3 flex-1">{project.blurb}</p>
 
@@ -54,15 +59,15 @@ function FeaturedCard({ project, priority = false }: { project: Project; priorit
             <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
           {project.href && (
-            <a
+            <OutboundLink
               href={project.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              event="outbound_project_click"
+              payload={{ project: project.slug }}
               className="ds-body-sm inline-flex items-center gap-1.5 transition-colors hover:text-ink"
             >
               {project.domain}
               <ExternalIcon className="h-3.5 w-3.5" />
-            </a>
+            </OutboundLink>
           )}
         </div>
       </div>
@@ -83,19 +88,21 @@ function SupportingCard({ project }: { project: Project }) {
           <h3 className="ds-title-sm mt-2.5">{project.title}</h3>
         </div>
         {project.href && (
-          <a
+          <OutboundLink
             href={project.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Open ${project.title} in a new tab`}
+            event="outbound_project_click"
+            payload={{ project: project.slug }}
+            ariaLabel={`Open ${project.title} in a new tab`}
             className="mt-0.5 shrink-0 text-ink-soft transition-colors hover:text-accent"
           >
             <ExternalIcon />
-          </a>
+          </OutboundLink>
         )}
       </div>
 
-      <p className="ds-body-sm mt-3.5 flex-1">{project.blurb}</p>
+      <p className="mt-2 text-[0.8125rem] text-ink-soft">{project.role}</p>
+
+      <p className="ds-body-sm mt-3 flex-1">{project.blurb}</p>
 
       <ul className="mt-5 flex flex-wrap gap-1.5 border-t border-border pt-4">
         {project.tools.slice(0, 4).map((t) => (
@@ -179,12 +186,14 @@ export function WorkIndex() {
 
 /** Related work, rendered at the foot of a service or case-study page. */
 export function RelatedWork({
+  id,
   slugs,
   heading = "Relevant proof",
   description,
   tone = "soft",
   exclude,
 }: {
+  id?: string;
   slugs: string[];
   heading?: string;
   description?: string;
@@ -199,7 +208,7 @@ export function RelatedWork({
   if (related.length === 0) return null;
 
   return (
-    <Section tone={tone}>
+    <Section id={id} tone={tone}>
       <SectionHeading overline="Proof" title={heading} description={description} />
       <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
         {related.map((project, i) => (

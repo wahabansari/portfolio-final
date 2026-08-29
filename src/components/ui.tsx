@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { Accordion } from "./accordion";
 import { Reveal } from "./motion";
 
-export { Reveal, Counter } from "./motion";
+export { Reveal } from "./motion";
 
 /* ── Layout ─────────────────────────────────────────────────────────────── */
 
@@ -131,7 +132,7 @@ export function Wordmark({ compact = false }: { compact?: boolean }) {
     <span className="flex items-center gap-2.5">
       <span
         aria-hidden
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-accent font-display text-[0.9375rem] leading-none font-medium text-accent-fg"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-accent font-display text-[0.9375rem] leading-none font-medium text-accent-fg"
       >
         W
       </span>
@@ -186,9 +187,9 @@ export function ChipList({ items, className }: { items: readonly string[]; class
 }
 
 /* ── FAQ ────────────────────────────────────────────────────────────────────
-   Native <details>: keyboard accessible, findable by in-page search, present
-   in the initial HTML so the answers are crawlable, and opening one costs no
-   client JavaScript at all. */
+   Delegates to the client accordion, which owns the open state. The answers
+   themselves are rendered server-side inside it, so they are in the initial
+   HTML whether or not a panel is open. */
 
 export function Faqs({
   faqs,
@@ -197,27 +198,7 @@ export function Faqs({
   faqs: readonly { q: string; a: string }[];
   className?: string;
 }) {
-  return (
-    <div className={cn("border-t border-border", className)}>
-      {faqs.map((faq) => (
-        <details key={faq.q} className="ds-disclosure group border-b border-border">
-          <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-5 marker:hidden [&::-webkit-details-marker]:hidden">
-            <h3 className="ds-title-sm pr-2">{faq.q}</h3>
-            <span
-              aria-hidden
-              className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-ink-muted transition-[rotate,border-color,color] duration-200 group-open:rotate-45 group-open:border-accent group-open:text-accent"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M11 5h2v14h-2z" />
-                <path d="M5 11h14v2H5z" />
-              </svg>
-            </span>
-          </summary>
-          <p className="ds-body ds-measure pr-10 pb-6">{faq.a}</p>
-        </details>
-      ))}
-    </div>
-  );
+  return <Accordion items={faqs} className={className} />;
 }
 
 /* ── Fit lists ──────────────────────────────────────────────────────────────
@@ -315,7 +296,11 @@ export function CtaBand({
             <h2 className="ds-h2">{heading}</h2>
             <p className="ds-lede mt-5">{body}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link href={primary.href} className="ds-btn ds-btn-primary">
+              <Link
+                href={primary.href}
+                data-track={primary.href === "/contact" ? "cta_start_project" : undefined}
+                className="ds-btn ds-btn-primary"
+              >
                 {primary.label}
                 <ArrowIcon />
               </Link>

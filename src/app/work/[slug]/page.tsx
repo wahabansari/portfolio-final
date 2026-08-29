@@ -6,6 +6,8 @@ import { Footer } from "@/components/footer";
 import { CaseStudyJsonLd } from "@/components/json-ld";
 import { Plate } from "@/components/plate";
 import { RelatedWork } from "@/components/work";
+import { OutboundLink } from "@/components/outbound";
+import { PageEvent } from "@/components/analytics";
 import {
   ArrowIcon,
   CheckIcon,
@@ -59,6 +61,7 @@ export default async function CaseStudyPage({
   return (
     <>
       <CaseStudyJsonLd project={project} study={study} />
+      <PageEvent event="view_case_study" label={project.slug} />
       <Nav />
       <main id="main">
         <PageHeader
@@ -71,17 +74,28 @@ export default async function CaseStudyPage({
           title={study.h1}
           lede={study.lede}
           actions={
-            project.href ? (
-              <a
-                href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ds-btn ds-btn-secondary"
+            <>
+              <Link
+                href="/contact"
+                data-track="cta_start_project"
+                data-track-label={`case-study:${project.slug}`}
+                className="ds-btn ds-btn-primary"
               >
-                Visit {project.domain}
-                <ExternalIcon />
-              </a>
-            ) : undefined
+                Discuss a similar project
+                <ArrowIcon />
+              </Link>
+              {project.href && (
+                <OutboundLink
+                  href={project.href}
+                  event="outbound_project_click"
+                  payload={{ project: project.slug }}
+                  className="ds-btn ds-btn-secondary"
+                >
+                  Visit {project.domain}
+                  <ExternalIcon />
+                </OutboundLink>
+              )}
+            </>
           }
           aside={
             <div className="ds-card overflow-hidden">
@@ -89,7 +103,8 @@ export default async function CaseStudyPage({
               <div className="p-7">
                 <dl className="grid grid-cols-2 gap-x-6 gap-y-5">
                   <Field label="Role" value={study.role} className="col-span-2" />
-                  {study.period && <Field label="Period" value={study.period} />}
+                  <Field label="Scope" value={study.scope} className="col-span-2" />
+                  <Field label="Status" value={study.status} />
                   <Field
                     label="Live at"
                     value={
@@ -202,6 +217,15 @@ export default async function CaseStudyPage({
               </Reveal>
             ))}
           </ul>
+
+          {study.measurement && (
+            <Reveal delay={0.1} className="mt-8">
+              <div className="ds-card border-l-2 border-l-success p-7 md:p-8">
+                <p className="ds-meta text-success">How this was measured</p>
+                <p className="ds-body ds-measure mt-3">{study.measurement}</p>
+              </div>
+            </Reveal>
+          )}
         </Section>
 
         <Section tone="plain">
@@ -246,7 +270,7 @@ export default async function CaseStudyPage({
           tone="plain"
           heading={study.cta.line}
           body="Send what you have — a product, a repository, a Figma file or a description of the problem. I will reply with what I would do first and what I would need to estimate it."
-          primary={{ label: "Start a project", href: "/contact" }}
+          primary={{ label: "Discuss a similar project", href: "/contact" }}
           secondary={{ label: study.cta.label, href: study.cta.href }}
         />
 

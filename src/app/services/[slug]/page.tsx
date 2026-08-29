@@ -5,6 +5,9 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { ServiceJsonLd } from "@/components/json-ld";
 import { RelatedWork } from "@/components/work";
+import { Principles } from "@/components/positioning";
+import { ServiceToc } from "@/components/service-toc";
+import { PageEvent } from "@/components/analytics";
 import { Contact } from "@/components/contact";
 import {
   ArrowIcon,
@@ -22,6 +25,20 @@ import {
 } from "@/components/ui";
 import { getService, services, serviceSlugs } from "@/content/services";
 import { pageMetadata } from "@/lib/seo";
+
+/* One source for the in-page navigation and the anchors it points at, so a
+   renamed section cannot leave a dead chip behind. */
+const SECTIONS = [
+  { id: "fit", label: "Who it is for" },
+  { id: "problems", label: "Problems" },
+  { id: "deliverables", label: "Deliverables" },
+  { id: "engagement", label: "Process" },
+  { id: "technical", label: "Technical depth" },
+  { id: "proof", label: "Proof" },
+  { id: "scope", label: "Scope" },
+  { id: "why", label: "Why me" },
+  { id: "faq", label: "FAQ" },
+];
 
 export function generateStaticParams() {
   return serviceSlugs.map((slug) => ({ slug }));
@@ -56,6 +73,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <ServiceJsonLd service={service} />
+      <PageEvent event="view_service" label={service.slug} />
       <Nav />
       <main id="main">
         <PageHeader
@@ -69,7 +87,16 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           lede={service.subhead}
           actions={
             <>
-              <Link href="/contact" className="ds-btn ds-btn-primary">
+              <Link
+                href="/contact"
+                data-track={
+                  service.slug === "agency-frontend-development"
+                    ? "agency_cta"
+                    : "cta_start_project"
+                }
+                data-track-label={service.slug}
+                className="ds-btn ds-btn-primary"
+              >
                 {service.cta.primaryLabel}
                 <ArrowIcon />
               </Link>
@@ -79,32 +106,22 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             </>
           }
           aside={
-            <div className="ds-card h-full p-7">
-              <p className="ds-meta">In this service</p>
-              <ol className="mt-5 space-y-3">
-                {[
-                  ["Who it is for", "#fit"],
-                  ["The problems it solves", "#problems"],
-                  ["What gets delivered", "#deliverables"],
-                  ["How the engagement runs", "#engagement"],
-                  ["Technical depth", "#technical"],
-                  ["Scope boundaries", "#scope"],
-                  ["Questions", "#faq"],
-                ].map(([label, href], i) => (
-                  <li key={href}>
-                    <a
-                      href={href}
-                      className="flex items-baseline gap-3 text-[0.9375rem] text-ink-muted transition-colors hover:text-accent"
-                    >
-                      <span className="ds-meta shrink-0">{String(i + 1).padStart(2, "0")}</span>
-                      {label}
-                    </a>
-                  </li>
-                ))}
-              </ol>
+            <div className="ds-card h-full p-7 md:p-8">
+              <p className="ds-meta">Best fit</p>
+              <p className="ds-body-sm mt-3">{service.idealFor[0]}.</p>
+              <div className="mt-6 border-t border-border pt-6">
+                <p className="ds-meta">Not this</p>
+                <p className="ds-body-sm mt-3">{service.notIdealFor[0]}.</p>
+              </div>
+              <Link href="#faq" className="ds-link mt-6">
+                Jump to common questions
+                <ArrowIcon className="h-3.5 w-3.5" />
+              </Link>
             </div>
           }
         />
+
+        <ServiceToc sections={SECTIONS} />
 
         {/* Answer-first. One quotable sentence before any sales copy. */}
         <Section tone="plain">
@@ -196,6 +213,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         </Section>
 
         <RelatedWork
+          id="proof"
           tone="plain"
           slugs={service.proofSlugs}
           heading="Where this has been done before"
@@ -240,18 +258,25 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           </div>
         </Section>
 
-        <Section id="faq" tone="plain">
+        <Principles
+          id="why"
+          tone="plain"
+          heading="Why work with me on this"
+          description="The same four things whichever service you are reading. Each is tied to something you can check rather than to an adjective."
+        />
+
+        <Section id="faq" tone="soft">
           <SectionHeading overline="Questions" title="Common questions" />
           <Reveal>
             <Faqs faqs={service.faqs} className="mx-auto max-w-4xl" />
           </Reveal>
         </Section>
 
-        <Contact tone="soft" heading={service.cta.heading} body={service.cta.body} />
+        <Contact tone="plain" heading={service.cta.heading} body={service.cta.body} />
 
         {/* Next service. Every service page links onward rather than dead-ending
             for a reader who has decided this one is not theirs. */}
-        <Section tone="plain" bordered>
+        <Section tone="soft" bordered>
           <Reveal>
             <Link
               href={`/services/${nextService.slug}`}

@@ -9,10 +9,10 @@ import { site } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
-  "Start a project, discuss an agency partnership or ask about a full-time role. Frontend product engineering in React, Next.js and TypeScript.";
+  "Tell Wahab what you are building, improving or redesigning. Send a project brief for frontend engineering, website, SaaS or AI product work.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Contact | Start a Project",
+  title: "Start a Web Product or Frontend Project",
   description,
   path: "/contact",
 });

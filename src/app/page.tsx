@@ -5,24 +5,22 @@ import { Hero } from "@/components/hero";
 import { SelectedWork } from "@/components/work";
 import { ServicesOverview } from "@/components/services";
 import { AboutTeaser, Process } from "@/components/about";
-import { Capabilities } from "@/components/skills";
-import { Engagement } from "@/components/engagement";
-import { Contact } from "@/components/contact";
+import { Audiences, Principles } from "@/components/positioning";
 import { HomeJsonLd } from "@/components/json-ld";
-import { ArrowIcon, Faqs, Reveal, Section, SectionHeading } from "@/components/ui";
+import { ArrowIcon, CtaBand, Faqs, Reveal, Section, SectionHeading } from "@/components/ui";
 import { homeFaqs, process } from "@/content/site";
 
 /**
  * Homepage.
  *
- * The order is the argument: identity, then proof, then what I sell, then how
- * it runs, then who I am, then the ways to work together, then objections,
- * then the ask. Proof sits above the services block deliberately — a visitor
- * should see evidence before a pitch.
+ * The section order is the argument: who I am, then proof, then who I work
+ * with, then what I sell, then why me, then how it runs, then background, then
+ * objections, then the ask. Proof sits above the services block deliberately —
+ * a visitor should see evidence before a pitch.
  *
- * Each section is a summary with a route behind it rather than a copy of that
- * route's content, so the homepage and its detail pages are not competing for
- * the same queries.
+ * Capabilities, experience and credentials are on /about rather than here.
+ * This page is a summary with routes behind it, not a copy of them, so the
+ * homepage and its detail pages are not competing for the same queries.
  *
  * Band rhythm is set here rather than left to each component's default, so the
  * whole alternation is visible in one place. No two touching bands share a
@@ -37,11 +35,11 @@ export default function Home() {
       <main id="main">
         <Hero />
         <SelectedWork tone="plain" />
-        <ServicesOverview tone="soft" />
+        <Audiences tone="soft" />
+        <ServicesOverview tone="plain" />
+        <Principles tone="soft" />
         <Process tone="plain" steps={process} />
         <AboutTeaser tone="soft" />
-        <Capabilities tone="plain" />
-        <Engagement tone="soft" />
 
         <Section id="faq" tone="plain">
           <SectionHeading
@@ -61,7 +59,13 @@ export default function Home() {
           </Reveal>
         </Section>
 
-        <Contact tone="soft" />
+        <CtaBand
+          tone="soft"
+          heading="Have a product or website that needs a stronger frontend?"
+          body="Send the product, the current site or the Figma file. I will reply with what I would build first, the approach I would take, and what I need in order to estimate it."
+          primary={{ label: "Start a project", href: "/contact" }}
+          secondary={{ label: "View my work", href: "/work" }}
+        />
       </main>
       <Footer />
     </>
