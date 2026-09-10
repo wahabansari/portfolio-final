@@ -1,5 +1,6 @@
+import { insights } from "@/content/insights";
 import { services } from "@/content/services";
-import { positioning, site } from "@/content/site";
+import { positioning, promise, site } from "@/content/site";
 import { caseStudies, projects } from "@/content/work";
 
 /**
@@ -21,13 +22,14 @@ export function GET() {
   const lines: string[] = [
     `# ${site.name}`,
     "",
-    `> ${positioning} Based in ${site.location}.`,
+    `> ${positioning} ${promise} Based in ${site.location}.`,
     "",
     "## Pages",
     "",
     `- [Home](${u("/")}): Positioning, proof, services, selected work and contact.`,
     `- [Work](${u("/work")}): Production projects, with three written up as case studies.`,
-    `- [Services](${u("/services")}): The five services, in commercial order.`,
+    `- [Services](${u("/services")}): The six services, in commercial order.`,
+    `- [Insights](${u("/insights")}): First-hand articles on migration and performance.`,
     `- [About](${u("/about")}): Background, experience, capabilities and credentials.`,
     `- [Contact](${u("/contact")}): Project brief form and direct contact paths.`,
     "",
@@ -46,6 +48,11 @@ export function GET() {
     lines.push(
       `- [${project.title}](${u(`/work/${project.slug}`)}): ${project.caseStudy.metaDescription}`,
     );
+  }
+
+  lines.push("", "## Insights", "");
+  for (const insight of insights) {
+    lines.push(`- [${insight.title}](${u(`/insights/${insight.slug}`)}): ${insight.definition}`);
   }
 
   lines.push("", "## Other production work", "");

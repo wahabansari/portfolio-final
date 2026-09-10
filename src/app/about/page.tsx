@@ -13,10 +13,10 @@ import { about } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
-  "Learn about Wahab Ansari, a frontend product engineer with 5+ years of production experience building React and Next.js web products.";
+  "Learn about Wahab Ansari, a React & Next.js product engineer with 5+ years of production experience building web products.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About Wahab Ansari | Frontend Product Engineer",
+  title: "About Wahab Ansari | React & Next.js Product Engineer",
   description,
   path: "/about",
   type: "profile",

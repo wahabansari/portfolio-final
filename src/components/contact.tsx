@@ -2,12 +2,12 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { services } from "@/content/services";
-import { site, socials } from "@/content/site";
+import { contactSteps, site, socials } from "@/content/site";
 import { track } from "@/lib/analytics";
 import { ArrowIcon, CheckIcon, ExternalIcon, Reveal, Section } from "./ui";
 import { cn } from "@/lib/cn";
 
-/* The five services plus the two paths that are not a service — a hiring
+/* Every service plus the two paths that are not a service — a hiring
    conversation, and the honest "I do not know yet". Forcing a buyer to
    classify their own problem before they have described it loses leads. */
 const PROJECT_TYPES = [
@@ -121,20 +121,22 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 /**
  * The project brief form.
  *
- * There is no backend behind this site, and rather than pretend otherwise the
- * form composes the brief and hands it to the visitor's own mail client. That
- * is an honest mechanism: nothing is silently dropped, the sender keeps a copy
- * in their sent folder, and no third-party form service ends up holding other
- * people's project details.
+ * Submissions POST to /api/contact, which delivers the brief and answers with
+ * a real result — which is the point. A `mailto:` hand-off cannot tell anyone
+ * whether a message was sent, only that a compose window was requested, and a
+ * conversion metric built on that measures intention rather than delivery.
  *
- * The limits of that are worth stating plainly. Validation here is a usability
- * feature, not a security boundary — there is no server to validate on, and no
- * spam control beyond what a mail client imposes. If this ever moves to a real
- * endpoint, every rule in `validate` has to be repeated server-side.
+ * Validation appears twice on purpose. The rules here are a usability feature:
+ * they catch a typo before a round-trip and put the message next to the field.
+ * The identical rules in the route handler are the ones that actually hold,
+ * because anything can POST to an endpoint.
  *
- * Every path has a fallback: if the mail client does not open, the composed
- * brief can be copied; if the clipboard is blocked, the address is on the page
- * as plain selectable text.
+ * Every path still ends somewhere useful. If delivery is not configured the
+ * server says so and the brief goes to the visitor's mail client instead; if
+ * the request fails outright the composed text can be copied; if the clipboard
+ * is blocked the address is on the page as plain selectable text. The one
+ * thing that never happens is a visitor believing a message was sent when it
+ * was not.
  */
 export function ContactForm() {
   const id = useId();
@@ -143,8 +145,19 @@ export function ContactForm() {
   /* Errors appear on submit, then update live. Validating a field the moment
      it is focused and left empty scolds people for tabbing through. */
   const [submitted, setSubmitted] = useState(false);
-  const [sent, setSent] = useState(false);
+  /**
+   * The four terminal states of a submission, kept apart because they are
+   * genuinely different things to tell someone: delivered and confirmed;
+   * handed to their mail client because the server has no delivery configured;
+   * failed; or not yet attempted. A single boolean would have to claim one of
+   * the first three was the others.
+   */
+  const [sent, setSent] = useState<"idle" | "sent" | "handed-off" | "failed">("idle");
+  const [sending, setSending] = useState(false);
   const [copied, setCopied] = useState(false);
+  /* Honeypot. Hidden from people, irresistible to bots, and never rendered
+     visibly — see the field at the foot of the form. */
+  const [honeypot, setHoneypot] = useState("");
   const startedRef = useRef(false);
   const summaryRef = useRef<HTMLDivElement>(null);
   /* Bumped on every failed submit, including a repeat one. Focus has to move
@@ -163,7 +176,7 @@ export function ContactForm() {
   const set = (field: keyof Fields) => (value: string) => {
     if (!startedRef.current) {
       startedRef.current = true;
-      track("contact_start");
+      track("contact_form_start");
     }
     setValues((v) => {
       const next = { ...v, [field]: value };
@@ -192,7 +205,15 @@ export function ContactForm() {
     };
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  /** Hands the composed brief to the visitor's mail client. */
+  const openMailClient = () => {
+    const { subject, body } = compose();
+    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(body)}`;
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
 
@@ -208,17 +229,56 @@ export function ContactForm() {
       return;
     }
 
-    /* Duplicate guard. A second mailto: while the first is still opening does
-       nothing useful and produces two draft windows. */
-    if (sent) return;
+    /* Duplicate guard — a second submit while the first is in flight produces
+       either two emails or two draft windows, and neither helps anyone. */
+    if (sending || sent === "sent" || sent === "handed-off") return;
 
-    const { subject, body } = compose();
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`;
+    setSending(true);
+    track("contact_form_submit", { project_type: values.projectType });
 
-    track("contact_submit", { project_type: values.projectType });
-    setSent(true);
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...values, website: honeypot }),
+      });
+
+      if (response.ok) {
+        /* The only path where delivery is actually confirmed, so the only
+           path where the key event represents a real lead rather than an
+           intention to send one. */
+        track("generate_lead", { project_type: values.projectType });
+        setSent("sent");
+        return;
+      }
+
+      /* 501 means the server is fine but has no delivery configured. That is
+         a deployment state, not a visitor's problem — hand the brief to their
+         mail client instead of showing them an error they cannot act on. */
+      if (response.status === 501) {
+        openMailClient();
+        setSent("handed-off");
+        return;
+      }
+
+      const data = (await response.json().catch(() => null)) as
+        | { errors?: Partial<Record<keyof Fields, string>> }
+        | null;
+
+      if (data?.errors) {
+        setErrors(data.errors);
+        setFailedAt((n) => n + 1);
+        return;
+      }
+
+      setSent("failed");
+    } catch {
+      /* Offline, or the request never left the browser. The mail client is
+         still reachable, so offer that rather than a dead end. */
+      setSent("failed");
+    } finally {
+      setSending(false);
+    }
   };
 
   const onCopy = async () => {
@@ -243,11 +303,11 @@ export function ContactForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="ds-card p-7 md:p-9">
+    <form onSubmit={onSubmit} noValidate className="ds-card relative p-7 md:p-9">
       <p className="ds-meta">Project brief</p>
       <p className="ds-body-sm mt-2">
-        It opens in your own mail client, so nothing is stored anywhere but your sent folder
-        and my inbox. No form service, no tracking, no third party in between.
+        This goes straight to my inbox. Only what you type here is sent — no account, no
+        newsletter, and nothing shared with anyone else.
       </p>
 
       {/* Error summary. Focusable so submit can move focus here, and announced
@@ -382,12 +442,40 @@ export function ContactForm() {
         </div>
       </div>
 
+      {/* Honeypot. Hidden from people in every way that matters — off-screen,
+          aria-hidden, and out of the tab order — but present in the DOM, which
+          is all a form-filling bot inspects. Anything typed here is treated as
+          automated and silently discarded server-side.
+
+          Deliberately not `display: none`: some bots skip those. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0"
+      >
+        <label htmlFor={`${id}-website`}>Website</label>
+        <input
+          id={`${id}-website`}
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+        />
+      </div>
+
       <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <button type="submit" className="ds-btn ds-btn-primary" disabled={sent}>
-          {sent ? (
+        <button
+          type="submit"
+          className="ds-btn ds-btn-primary"
+          disabled={sending || sent === "sent" || sent === "handed-off"}
+        >
+          {sending ? (
+            "Sending…"
+          ) : sent === "sent" || sent === "handed-off" ? (
             <>
               <CheckIcon />
-              Brief handed to your mail app
+              Brief sent
             </>
           ) : (
             <>
@@ -401,26 +489,65 @@ export function ContactForm() {
         </button>
       </div>
 
-      {sent && (
-        <div role="status" className="mt-6 rounded-[var(--radius-sm)] border border-border bg-surface p-5">
-          <p className="text-[0.9375rem] font-medium text-ink">
-            Your mail client should have opened with the brief filled in.
-          </p>
-          <p className="ds-body-sm mt-2">
-            Nothing has been sent until you press send there. If it did not open, use{" "}
-            <span className="font-medium text-ink">Copy it instead</span> and email{" "}
-            <a href={`mailto:${site.email}`} className="text-accent hover:underline">
-              {site.email}
-            </a>
-            .
-          </p>
-          <button
-            type="button"
-            onClick={() => setSent(false)}
-            className="ds-link mt-4"
-          >
-            Edit the brief and try again
-          </button>
+      {/* One region for every terminal state, so a screen reader hears the
+          outcome once rather than hearing three panels appear and disappear. */}
+      {sent !== "idle" && (
+        <div
+          role="status"
+          className={cn(
+            "mt-6 rounded-[var(--radius-md)] border p-5",
+            sent === "failed" ? "border-warn/40 bg-warn/5" : "border-border bg-surface",
+          )}
+        >
+          {sent === "sent" && (
+            <>
+              <p className="text-[0.9375rem] font-semibold text-ink">
+                Sent — it is in my inbox.
+              </p>
+              <p className="ds-body-sm mt-2">
+                I will read the brief and reply with what I would tackle first and what I would
+                need to estimate it. If anything was missing, just reply to that email.
+              </p>
+            </>
+          )}
+
+          {sent === "handed-off" && (
+            <>
+              <p className="text-[0.9375rem] font-semibold text-ink">
+                Your mail client should have opened with the brief filled in.
+              </p>
+              <p className="ds-body-sm mt-2">
+                Nothing is sent until you press send there. If it did not open, use{" "}
+                <span className="font-medium text-ink">Copy it instead</span> and email{" "}
+                <a href={`mailto:${site.email}`} className="text-accent hover:underline">
+                  {site.email}
+                </a>
+                .
+              </p>
+            </>
+          )}
+
+          {sent === "failed" && (
+            <>
+              <p className="text-[0.9375rem] font-semibold text-warn">
+                That did not go through.
+              </p>
+              <p className="ds-body-sm mt-2">
+                Something on my end failed rather than anything you did. Use{" "}
+                <span className="font-medium text-ink">Copy it instead</span> and send it to{" "}
+                <a href={`mailto:${site.email}`} className="text-accent hover:underline">
+                  {site.email}
+                </a>{" "}
+                — it reaches exactly the same place.
+              </p>
+            </>
+          )}
+
+          {sent !== "sent" && (
+            <button type="button" onClick={() => setSent("idle")} className="ds-link mt-4">
+              Edit the brief and try again
+            </button>
+          )}
         </div>
       )}
     </form>
@@ -434,8 +561,8 @@ export function ContactForm() {
  */
 export function Contact({
   tone = "plain",
-  heading = "Tell me what you are building",
-  body = "Share the current site, a Figma file, a product idea, or a short description of the problem. I will use that context to suggest the most practical next step — including telling you if I am not the right person for it.",
+  heading = "Tell me what you're building, or what's getting in the way",
+  body = "Send your current site, a Figma file, a repository, API notes or a short description of the problem. I'll review it and tell you what I would tackle first — including telling you if I am not the right person for it.",
   level = "h2",
 }: {
   tone?: "plain" | "soft" | "deep";
@@ -459,11 +586,39 @@ export function Contact({
 
         <Reveal delay={0.06} className="lg:col-span-5">
           <div className="lg:sticky lg:top-28">
+            {/* What happens next, before anyone fills anything in. The friction
+                in a contact form is rarely the fields — it is not knowing what
+                the reply will be, or whether sending one commits you to a
+                sales call. */}
             <div className="ds-card p-7 md:p-8">
+              <p className="ds-meta">What happens next</p>
+              <ol className="mt-5 space-y-5">
+                {contactSteps.map((item, i) => (
+                  <li key={item.step} className="flex gap-4">
+                    <span
+                      aria-hidden
+                      className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.75rem] font-semibold text-accent"
+                    >
+                      {i + 1}
+                    </span>
+                    <span>
+                      <span className="block text-[0.9375rem] font-medium text-ink">
+                        {item.step}
+                      </span>
+                      <span className="ds-body-sm mt-1 block">{item.detail}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="ds-card mt-6 p-7 md:p-8">
               <p className="ds-meta">Direct</p>
               <a
                 href={`mailto:${site.email}`}
-                className="mt-4 block font-display text-[1.0625rem] font-medium break-all text-accent hover:underline"
+                data-track="email_click"
+                data-track-label="contact-panel"
+                className="mt-4 block font-display text-[1.0625rem] font-semibold break-all text-accent hover:underline"
               >
                 {site.email}
               </a>

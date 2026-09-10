@@ -29,11 +29,26 @@ function FeaturedCard({ project, priority = false }: { project: Project; priorit
           </Link>
         </h3>
 
-        {/* Role on the card, not buried in the case study. On collaborative
-            and outsourced work, saying nothing reads as claiming everything. */}
-        <p className="mt-2 text-[0.8125rem] text-ink-soft">{project.role}</p>
+        {/* Role and scope on the card, not buried in the case study. On
+            collaborative and outsourced work, saying nothing reads as
+            claiming everything. */}
+        <p className="mt-2 text-[0.8125rem] text-ink-soft">
+          {project.role} · {project.scope}
+        </p>
 
-        <p className="ds-body-sm mt-3 flex-1">{project.blurb}</p>
+        {/* Problem and outcome, labelled. This is what makes a card scannable
+            against three others: a reader comparing projects is asking what
+            was wrong and what changed, not for a summary sentence. */}
+        <dl className="mt-5 flex-1 space-y-3.5">
+          <div>
+            <dt className="ds-meta">Problem</dt>
+            <dd className="ds-body-sm mt-1">{project.problem}</dd>
+          </div>
+          <div>
+            <dt className="ds-meta">Outcome</dt>
+            <dd className="ds-body-sm mt-1">{project.outcome}</dd>
+          </div>
+        </dl>
 
         {project.metrics && (
           <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-5">
@@ -61,7 +76,7 @@ function FeaturedCard({ project, priority = false }: { project: Project; priorit
           {project.href && (
             <OutboundLink
               href={project.href}
-              event="outbound_project_click"
+              event="case_study_view"
               payload={{ project: project.slug }}
               className="ds-body-sm inline-flex items-center gap-1.5 transition-colors hover:text-ink"
             >
@@ -90,7 +105,7 @@ function SupportingCard({ project }: { project: Project }) {
         {project.href && (
           <OutboundLink
             href={project.href}
-            event="outbound_project_click"
+            event="case_study_view"
             payload={{ project: project.slug }}
             ariaLabel={`Open ${project.title} in a new tab`}
             className="mt-0.5 shrink-0 text-ink-soft transition-colors hover:text-accent"
@@ -102,7 +117,7 @@ function SupportingCard({ project }: { project: Project }) {
 
       <p className="mt-2 text-[0.8125rem] text-ink-soft">{project.role}</p>
 
-      <p className="ds-body-sm mt-3 flex-1">{project.blurb}</p>
+      <p className="ds-body-sm mt-3 flex-1">{project.outcome}</p>
 
       <ul className="mt-5 flex flex-wrap gap-1.5 border-t border-border pt-4">
         {project.tools.slice(0, 4).map((t) => (
@@ -146,40 +161,76 @@ export function SelectedWork({ tone = "plain" }: { tone?: "plain" | "soft" | "de
 
 /* ── /work: the full index ──────────────────────────────────────────────── */
 
-export function WorkIndex() {
-  const supporting = projects.filter((p) => !p.featured);
+/**
+ * Projects grouped by the problem they solved, not by the technology used.
+ *
+ * A buyer arriving at an evidence library is asking "has this person solved my
+ * problem before", and a stack list cannot answer that — two projects sharing
+ * React tells them nothing about whether either one resembles their situation.
+ * Grouping by problem lets someone with a slow platform, or a site that has
+ * outgrown its CMS, find the relevant proof without reading all seven.
+ *
+ * The `problems` array on each group is matched against project slugs rather
+ * than inferred, so a project's placement is a deliberate editorial decision
+ * rather than a keyword coincidence.
+ */
+const PROBLEM_GROUPS: { label: string; description: string; slugs: string[] }[] = [
+  {
+    label: "Performance & platform health",
+    description:
+      "Products that worked but had become slow to load or slow to change, where the fix was measured rather than guessed at.",
+    slugs: ["sunhub"],
+  },
+  {
+    label: "Rebuilds & migrations",
+    description:
+      "Sites and platforms that had outgrown what they were built on — including a marketplace moved off WordPress onto Next.js.",
+    slugs: ["verdira", "aussiemotor"],
+  },
+  {
+    label: "New product surfaces",
+    description:
+      "Interfaces built from structure upward: marketing sites, storefronts and portals that had to carry content and features they did not have yet.",
+    slugs: ["cennetsol", "vape-planet", "digestive-care", "talha-estate"],
+  },
+];
 
+export function WorkIndex() {
   return (
     <>
-      <Section tone="plain">
-        <SectionHeading
-          overline="Case studies"
-          title="Three projects, written up properly"
-          description="The work where there is enough to say that a page is worth reading: the problem, my role, the decisions and what actually came out of it."
-        />
-        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
-          {featuredProjects.map((project, i) => (
-            <Reveal as="li" key={project.slug} delay={i * 0.05} className="h-full">
-              <FeaturedCard project={project} priority={i === 0} />
-            </Reveal>
-          ))}
-        </ul>
-      </Section>
+      {PROBLEM_GROUPS.map((group, groupIndex) => {
+        const items = group.slugs
+          .map((slug) => projects.find((p) => p.slug === slug))
+          .filter((p): p is Project => Boolean(p));
 
-      <Section tone="soft">
-        <SectionHeading
-          overline="Also shipped"
-          title="Further production work"
-          description="Live projects without a full case study behind them — commerce, marketplace, healthcare and CMS builds. Each one links to the running site."
-        />
-        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {supporting.map((project, i) => (
-            <Reveal as="li" key={project.slug} delay={i * 0.04} className="h-full">
-              <SupportingCard project={project} />
-            </Reveal>
-          ))}
-        </ul>
-      </Section>
+        if (items.length === 0) return null;
+
+        return (
+          <Section key={group.label} tone={groupIndex % 2 === 0 ? "plain" : "soft"}>
+            <SectionHeading
+              overline={`0${groupIndex + 1} · ${items.length} ${items.length === 1 ? "project" : "projects"}`}
+              title={group.label}
+              description={group.description}
+            />
+            <ul
+              className={cn(
+                "grid gap-6 lg:gap-7",
+                items.length === 1 ? "md:grid-cols-2" : "md:grid-cols-2 lg:grid-cols-3",
+              )}
+            >
+              {items.map((project, i) => (
+                <Reveal as="li" key={project.slug} delay={i * 0.05} className="h-full">
+                  {project.caseStudy ? (
+                    <FeaturedCard project={project} priority={groupIndex === 0 && i === 0} />
+                  ) : (
+                    <SupportingCard project={project} />
+                  )}
+                </Reveal>
+              ))}
+            </ul>
+          </Section>
+        );
+      })}
     </>
   );
 }

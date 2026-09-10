@@ -20,26 +20,21 @@ export function Hero() {
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
             <Reveal>
-              {/* The eyebrow states the role, per the positioning lock. The
-                  availability signal rides alongside it rather than replacing
-                  it — what I am matters more than whether I am free. */}
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <span className="ds-overline">{hero.eyebrow}</span>
-                {site.available && (
-                  <span className="ds-chip ds-chip-success">
-                    <span aria-hidden className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
-                    </span>
-                    {hero.availability}
-                  </span>
-                )}
-              </div>
+              {/* The eyebrow states the role and nothing else. The availability
+                  signal used to sit beside it; it now sits below the CTAs,
+                  because a hiring-availability badge in the first line makes a
+                  client-acquisition site read as a job search. It is still
+                  here — it is true and it matters to one of the three
+                  audiences — just not ahead of the commercial message. */}
+              <span className="ds-overline">{hero.eyebrow}</span>
             </Reveal>
 
             <Reveal delay={0.04}>
-              {/* The one h1 on the page. */}
-              <h1 className="ds-display mt-7 max-w-[16ch]">{hero.headline}</h1>
+              {/* The one h1 on the page. The measure is set in characters
+                  rather than pixels so the line count holds as the clamped
+                  display size changes — this headline is longer than the one
+                  it replaced, and at 16ch it broke to four lines. */}
+              <h1 className="ds-display mt-7 max-w-[20ch]">{hero.headline}</h1>
             </Reveal>
 
             <Reveal delay={0.08}>
@@ -50,7 +45,7 @@ export function Hero() {
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
                   href={hero.primaryCta.href}
-                  data-track="cta_start_project"
+                  data-track="cta_click"
                   data-track-label="hero"
                   className="ds-btn ds-btn-primary"
                 >
@@ -74,6 +69,18 @@ export function Hero() {
                 </a>
               </div>
             </Reveal>
+
+            {site.available && (
+              <Reveal delay={0.16}>
+                <p className="mt-7 flex flex-wrap items-center gap-2.5 text-[0.875rem] text-ink-muted">
+                  <span aria-hidden className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
+                  </span>
+                  {hero.availability}
+                </p>
+              </Reveal>
+            )}
           </div>
 
           <Reveal delay={0.16} className="lg:col-span-5">

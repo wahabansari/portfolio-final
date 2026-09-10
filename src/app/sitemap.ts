@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { insights } from "@/content/insights";
 import { serviceSlugs } from "@/content/services";
 import { site } from "@/content/site";
 import { caseStudySlugs } from "@/content/work";
@@ -19,9 +20,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     path: string,
     priority: number,
     changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] = "monthly",
+    lastModified: Date = now,
   ) => ({
     url: `${site.url}${path}`,
-    lastModified: now,
+    lastModified,
     changeFrequency,
     priority,
   });
@@ -32,6 +34,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...serviceSlugs.map((slug) => entry(`/services/${slug}`, 0.9)),
     entry("/work", 0.8),
     ...caseStudySlugs.map((slug) => entry(`/work/${slug}`, 0.8)),
+    entry("/insights", 0.7),
+    /* Real per-article dates, not the build date — an insight's own
+       `updatedAt` only moves when its guidance actually changes, which is a
+       more honest freshness signal than the deploy timestamp every other
+       route uses. */
+    ...insights.map((i) => entry(`/insights/${i.slug}`, 0.6, "monthly", new Date(i.updatedAt))),
     entry("/about", 0.7),
     entry("/contact", 0.6),
   ];

@@ -9,10 +9,10 @@ import { projects } from "@/content/work";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
-  "Explore shipped React, Next.js and product engineering work, including production interfaces, performance improvements and client projects.";
+  "Selected production work across frontend engineering, performance, web applications and Next.js architecture.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Frontend & Product Engineering Work",
+  title: "React & Next.js Projects & Case Studies",
   description,
   path: "/work",
 });
@@ -26,7 +26,7 @@ export default function WorkPage() {
         <PageHeader
           trail={[{ label: "Home", href: "/" }, { label: "Work" }]}
           eyebrow="Work"
-          title="Selected production work"
+          title="Selected work"
           lede="A focused selection of web products and interfaces I have designed, built, improved or migrated."
           intro={[
             "I prioritise production constraints, maintainability, responsive behaviour and the path from requirement to shipped feature. Where a project has a case study, it covers the problem, my role and the technical decisions rather than a screenshot and a stack list.",
@@ -35,7 +35,7 @@ export default function WorkPage() {
           actions={
             <>
               <Link href="/contact" className="ds-btn ds-btn-primary">
-                Start a project
+                Discuss your project
                 <ArrowIcon />
               </Link>
               <Link href="/services" className="ds-btn ds-btn-secondary">
@@ -51,7 +51,7 @@ export default function WorkPage() {
           tone="plain"
           heading="Have something with a similar shape?"
           body="Send the product, the current site or the Figma file. I will tell you which of these is the closest comparison and what I would do differently for you."
-          primary={{ label: "Start a project", href: "/contact" }}
+          primary={{ label: "Discuss your project", href: "/contact" }}
           secondary={{ label: "View services", href: "/services" }}
         />
       </main>

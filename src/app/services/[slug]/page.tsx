@@ -23,6 +23,7 @@ import {
   SectionHeading,
   StepList,
 } from "@/components/ui";
+import { insights } from "@/content/insights";
 import { getService, services, serviceSlugs } from "@/content/services";
 import { pageMetadata } from "@/lib/seo";
 
@@ -69,11 +70,12 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
      theirs has somewhere to go other than back. */
   const index = services.findIndex((s) => s.slug === service.slug);
   const nextService = services[(index + 1) % services.length];
+  const relatedInsights = insights.filter((i) => i.relatedServiceSlug === service.slug);
 
   return (
     <>
       <ServiceJsonLd service={service} />
-      <PageEvent event="view_service" label={service.slug} />
+      <PageEvent event="service_view" label={service.slug} />
       <Nav />
       <main id="main">
         <PageHeader
@@ -89,11 +91,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <>
               <Link
                 href="/contact"
-                data-track={
-                  service.slug === "agency-frontend-development"
-                    ? "agency_cta"
-                    : "cta_start_project"
-                }
+                data-track="cta_click"
                 data-track-label={service.slug}
                 className="ds-btn ds-btn-primary"
               >
@@ -257,6 +255,36 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             </Reveal>
           </div>
         </Section>
+
+        {relatedInsights.length > 0 && (
+          <Section tone="deep">
+            <SectionHeading
+              overline="Further reading"
+              title="Related insights"
+              description="First-hand notes that go deeper on the approach behind this service."
+            />
+            <ul className="grid gap-6 md:grid-cols-2">
+              {relatedInsights.map((insight, i) => (
+                <Reveal as="li" key={insight.slug} delay={i * 0.04}>
+                  <Link
+                    href={`/insights/${insight.slug}`}
+                    className="ds-card ds-card-interactive group flex h-full flex-col p-7"
+                  >
+                    <span className="ds-chip self-start">{insight.cluster}</span>
+                    <h3 className="ds-title-sm mt-4 transition-colors group-hover:text-accent">
+                      {insight.title}
+                    </h3>
+                    <p className="ds-body-sm mt-3 flex-1">{insight.dek}</p>
+                    <span className="ds-link mt-5">
+                      Read
+                      <ArrowIcon className="h-3.5 w-3.5" />
+                    </span>
+                  </Link>
+                </Reveal>
+              ))}
+            </ul>
+          </Section>
+        )}
 
         <Principles
           id="why"

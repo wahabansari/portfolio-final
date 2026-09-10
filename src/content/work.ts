@@ -33,6 +33,12 @@ export type CaseStudy = {
   context: string;
   /** The problem, stated before any solution. */
   problem: string;
+  /**
+   * What could not be changed. A solution is only judgeable against the
+   * constraints it was built under — "why not just rewrite it" has an answer,
+   * and this is where it goes.
+   */
+  constraints: string[];
   /** What I was responsible for — the boundary matters. */
   responsibility: string[];
   /** The system or interface that came out of it. */
@@ -63,6 +69,20 @@ export type Project = {
   role: string;
   /** One line, used on cards. */
   blurb: string;
+  /**
+   * Card-level scanning triple: the problem in one line, what came of it in
+   * one line, and the engagement's shape in a phrase.
+   *
+   * These are compressions of the case-study fields below, not new claims —
+   * `outcome` never states anything the case study does not already
+   * substantiate, and on projects with no measured figure it describes what
+   * changed rather than dressing a scope note up as a result. They exist as
+   * their own fields because the case-study versions are paragraphs, and a
+   * card needs a line.
+   */
+  problem: string;
+  outcome: string;
+  scope: string;
   /** Paragraph, used on /work and the case-study intro. */
   detail: string;
   tools: string[];
@@ -89,6 +109,9 @@ export const projects: Project[] = [
     featured: true,
     plate: "platform",
     blurb: "Frontend performance and platform work on a production React marketplace.",
+    problem: "Years of feature delivery had left the platform slow to load and slow to change.",
+    outcome: "A measured 30% Core Web Vitals improvement, with the workings documented.",
+    scope: "Performance ownership + frontend delivery",
     detail:
       "Owned frontend delivery on a production React platform at Oxiliry. Removed unused assets, optimised the build pipeline and applied lazy loading, tree-shaking and image compression — a measured 30% Core Web Vitals improvement. Built responsive, cross-browser interfaces from Figma, integrated REST APIs and implemented form validation with React Hook Form.",
     tools: ["React.js", "REST APIs", "React Hook Form", "Figma", "Git"],
@@ -116,6 +139,12 @@ export const projects: Project[] = [
         "Sunhub is a production solar equipment marketplace serving buyers and sellers across the United States. By the time I joined the frontend, the application had been through several years of feature delivery: the surface area was large, the asset pipeline had accumulated things nobody was using any more, and page weight had grown quietly with every release.",
       problem:
         "The platform worked, but it had become slow to load and slow to change — the expensive kind of slow. Core Web Vitals were the visible symptom; the underlying causes were an unpruned asset pipeline, no loading boundaries, and a build process that shipped far more to the browser than any single page needed.",
+      constraints: [
+        "A live marketplace with real buyers and sellers — no maintenance window, no rewrite",
+        "Several years of accumulated feature work, much of it written before I joined",
+        "Performance had to improve without changing what any existing page did",
+        "Changes shipped into an active release cadence alongside other people's work",
+      ],
       responsibility: [
         "Frontend delivery on the production React application, not a rewrite or a prototype",
         "Performance ownership: diagnosing the causes, implementing the fixes and re-measuring",
@@ -196,6 +225,9 @@ export const projects: Project[] = [
     featured: true,
     plate: "marketing",
     blurb: "A scalable Next.js marketing site for an enterprise AI consultancy.",
+    problem: "A growing service catalogue would have needed a new layout for every new capability area.",
+    outcome: "New services and case studies extend the content model instead of needing new layouts.",
+    scope: "Information architecture → build",
     detail:
       "A Next.js site for an AI and digital-transformation consultancy working with industrial, healthcare and logistics clients. Built around the sections that do the selling — capability areas, case studies, leadership profiles and an FAQ — with a content structure that absorbs new services without needing new layouts.",
     tools: ["Next.js", "React", "Tailwind CSS", "Vercel"],
@@ -223,6 +255,12 @@ export const projects: Project[] = [
         "Cennetsol is an AI and digital-transformation consultancy working with industrial, healthcare and logistics clients. Its buyers are enterprise: they arrive sceptical, they want to see comparable work before capability claims, and they have specific integration and ROI questions that decide whether a conversation happens at all.",
       problem:
         "The consultancy's offering spans automation, analytics, custom LLMs, MLOps and computer vision — and it keeps growing. A site built as a set of hand-made pages would have needed a new layout for every new capability area and every new case study. The real requirement was not a design; it was a structure that new content could drop into.",
+      constraints: [
+        "The service catalogue was still growing, so the structure had to absorb content that did not exist yet",
+        "Enterprise buyers expect evidence before capability claims, which fixed the page order",
+        "No CMS in the initial scope — the content model had to be maintainable in the repository",
+        "A single implementer, so the component vocabulary had to stay small enough to hold in one head",
+      ],
       responsibility: [
         "Information architecture: what the page types are, and what fields each one owns",
         "Frontend implementation of the full site in Next.js and Tailwind",
@@ -272,7 +310,7 @@ export const projects: Project[] = [
       cta: {
         line: "Need a marketing site that can grow without a rebuild?",
         label: "Website Redesign & Conversion",
-        href: "/services/website-redesign-conversion",
+        href: "/services/website-redesign-rebuild",
       },
     },
   },
@@ -290,6 +328,9 @@ export const projects: Project[] = [
     featured: true,
     plate: "app",
     blurb: "A static marketing site rebuilt as a web application with protected client areas.",
+    problem: "A static site has no concept of a user, so private client material had nowhere to live.",
+    outcome: "Authenticated client areas in production, with the public marketing surface still static.",
+    scope: "Static site → authenticated application",
     detail:
       "Rebuilt a static marketing website into a scalable web application with a structured architecture. Implemented authentication and password-protected client areas, improved application performance and reorganised the codebase so it could carry future business requirements rather than being replaced again.",
     tools: ["Next.js", "Tailwind CSS", "Vercel", "Authentication"],
@@ -317,6 +358,12 @@ export const projects: Project[] = [
         "Verdira had a static marketing presence that was doing its job as a brochure, and a business that had moved past what a brochure can do. Clients needed somewhere to sign in and reach material that was not for the public — which is a different kind of software from the one they had.",
       problem:
         "A static site has no concept of a user, so there is nowhere to put anything that depends on who is asking. The rebuild had to introduce identity, protected routes and the architecture underneath both, without discarding the public marketing surface that was already working.",
+      constraints: [
+        "The public marketing surface was working and had to keep working through the rebuild",
+        "Introducing accounts could not make the indexable pages slower or less crawlable",
+        "Client material behind the login is genuinely private, so protection had to be server-enforced",
+        "The architecture had to carry features the business had not specified yet",
+      ],
       responsibility: [
         "Rebuilding the site as a Next.js application with a structured, extensible architecture",
         "Implementing authentication and password-protected client areas",
@@ -384,6 +431,9 @@ export const projects: Project[] = [
     domain: "vapeplanet.co.uk",
     plate: "commerce",
     blurb: "Production e-commerce frontend built solo, with integrated payment workflows.",
+    problem: "A production storefront needed its entire frontend built and wired to payments by one developer.",
+    outcome: "A live e-commerce frontend with integrated payment workflows and reusable components.",
+    scope: "Sole frontend developer",
     detail:
       "Independently developed the frontend of a production e-commerce platform using Next.js, Material UI and Tailwind CSS. Built responsive interfaces from concept to implementation, integrated frontend payment workflows and focused on reusable components across desktop and mobile.",
     tools: ["Next.js", "React", "Tailwind CSS", "Material UI"],
@@ -401,6 +451,9 @@ export const projects: Project[] = [
     domain: "aussiemotor.com.au",
     plate: "marketplace",
     blurb: "A large automotive marketplace migrated from WordPress onto Next.js.",
+    problem: "A large marketplace had outgrown what WordPress could maintainably support.",
+    outcome: "Migrated onto Next.js, with dashboard interfaces and a reusable component library.",
+    scope: "Migration + frontend features, as part of a team",
     detail:
       "Contributed to migrating a large automotive marketplace from WordPress to a Next.js application, improving maintainability and performance. Developed responsive, reusable UI components with Mantine and Tailwind, working with the team on dashboard interfaces and frontend features.",
     tools: ["Next.js", "Tailwind CSS", "Mantine UI", "Firebase", "MongoDB"],
@@ -418,6 +471,9 @@ export const projects: Project[] = [
     domain: "digestivecarepl.com",
     plate: "portal",
     blurb: "A healthcare site with an integrated patient portal and appointment booking.",
+    problem: "Patients needed to book and access their own records, not just read pages.",
+    outcome: "A patient portal and appointment booking integrated into the practice's site.",
+    scope: "Sole developer",
     detail:
       "Developed a healthcare website with an integrated patient portal by extensively customising WordPress themes and functionality to match the client's branding and workflow. Implemented responsive layouts, integrated appointment booking and connected the portal for patients and practitioners.",
     tools: ["WordPress", "HTML5", "CSS3", "JavaScript"],
@@ -435,6 +491,9 @@ export const projects: Project[] = [
     domain: "talhaestate.com",
     plate: "listing",
     blurb: "A real estate platform with a scalable CMS architecture for property listings.",
+    problem: "Property listings had to be managed by the client, not by a developer each time.",
+    outcome: "A CMS architecture the client manages listings and content through directly.",
+    scope: "Design → build",
     detail:
       "Designed and developed a real estate platform with a CMS architecture for managing property listings and content. Built responsive interfaces, customised WordPress functionality through custom plugins, and structured the experience to simplify property management across devices.",
     tools: ["WordPress", "Custom Plugins", "HTML5", "CSS3", "JavaScript"],

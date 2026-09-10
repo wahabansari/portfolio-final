@@ -9,7 +9,7 @@ import { track, type TrackEvent } from "@/lib/analytics";
  * The alternative — an onClick on every CTA — would turn each of those pages
  * into a client component just to attach a handler, which is exactly the
  * client-JS creep the performance budget is meant to prevent. Instead, server
- * components mark a link with `data-track="cta_start_project"` and this
+ * components mark a link with `data-track="cta_click"` and this
  * listener, mounted once in the root layout, reads it on the way up.
  *
  * `closest` means the attribute can sit on the anchor while the click lands on

@@ -22,12 +22,18 @@
 @theme {
   /* ── Surfaces ──────────────────────────────────────────────────────────
      Three steps, always in this order light→dark of contrast:
-       bg      the page itself
+       bg      the page itself — near-white, per the brand tokens
        surface the soft band that separates sections
-       card    the raised plane — always lighter than whatever it sits on   */
-  --color-bg: #ffffff;
-  --color-surface: #f8fafc; /* Slate 50 */
-  --color-surface-2: #f1f5f9; /* Slate 100 — the deeper band */
+       card    the raised plane — always lighter than whatever it sits on
+
+     The page ground is #F8FAFC rather than pure white so that a card can be
+     white and still read as raised. That is the whole reason the invariant
+     holds: with a white page, a white card is distinguished only by its
+     border, and the "restrained shadows, use mostly borders" direction would
+     have nothing left to work with. */
+  --color-bg: #f8fafc; /* Slate 50 */
+  --color-surface: #f1f5f9; /* Slate 100 — the soft band */
+  --color-surface-2: #e8eef6; /* the deeper band */
   --color-card: #ffffff;
 
   /* ── Hairlines ─────────────────────────────────────────────────────── */
@@ -50,24 +56,42 @@
 
   /* ── Semantics ──────────────────────────────────────────────────────────
      Success marks a verified, measured result and nothing else. Warning is
-     reserved for warnings — it is not a brand colour. */
-  --color-success: #15803d;
-  --color-success-soft: #f0fdf4;
+     reserved for warnings — it is not a brand colour.
+
+     Two greens, deliberately. The brand token for the proof accent is
+     #10B981, which is right for a dot, a rule or an icon but only reaches
+     about 2.5:1 on the page ground — well under the 4.5:1 the same brief
+     requires for text. So the emerald is kept for graphical marks and a
+     darker cut carries anything made of words. Where a palette and an
+     accessibility requirement disagree, the accessibility requirement is the
+     one that has users behind it. */
+  --color-success: #047857; /* text-safe — 5.1:1 on the page ground */
+  --color-success-mark: #10b981; /* graphical accents only, never text */
+  --color-success-soft: #ecfdf5;
   --color-warn: #b45309;
 
-  /* Display and body are the same family — Google Sans carries both roles.
-     The distinction between them is size, weight and tracking, not family. */
-  --font-sans: var(--font-google-sans), "Google Sans", Roboto, Arial, sans-serif;
-  --font-display: var(--font-google-sans), "Google Sans", Roboto, Arial, sans-serif;
-  --font-mono: var(--font-google-sans-code), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  /* One family, every role. Display and text both resolve to Inter; the
+     hierarchy is built from size, weight and space rather than from a second
+     typeface. `--font-display` is kept as a distinct token so that call sites
+     can express intent ("this is display type") even though both currently
+     point at the same face.
+
+     The variable already carries the fallback stack declared in the next/font
+     call, so repeating it here would emit the same families twice. */
+  --font-sans: var(--font-inter), sans-serif;
+  --font-display: var(--font-inter), sans-serif;
 }
 
 :root {
-  /* 4–8px, and 8px is the ceiling. Nothing here is a pill except the buttons
-     and chips, where the pill is doing real work. */
-  --radius-card: 8px;
-  --radius-md: 6px;
-  --radius-sm: 4px;
+  /* 8–14px, and nothing is a pill.
+     Fully-rounded buttons and chips read as consumer-app furniture; squared-
+     off radii read as tooling, which is the register this site is aiming at.
+     The button radius is a token of its own so the shape stays consistent
+     across buttons, fields and chips without any of them guessing. */
+  --radius-card: 14px;
+  --radius-md: 10px;
+  --radius-sm: 8px;
+  --radius-control: 10px;
   color-scheme: light;
 }
 
@@ -93,6 +117,7 @@
   --color-accent-line: #24395c;
 
   --color-success: #4ade80;
+  --color-success-mark: #34d399;
   --color-success-soft: #10251a;
   --color-warn: #fbbf24;
 
@@ -136,22 +161,20 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Google Sans ships its headings at 400 and it is the single most
-     identifying trait of the face — large and light, never bold. One step up
-     to 500 gives display type a little more presence without turning it into
-     a geometric slab, which is what 600 does to it. */
+  /* With one typeface carrying every role, weight is what separates a heading
+     from the paragraph under it — so headings sit at 650–700 rather than the
+     500 a two-family system could get away with. Inter's variable cut makes
+     650 a real weight rather than a rounded approximation. */
   h1,
   h2,
   h3,
   h4 {
     font-family: var(--font-display);
     color: var(--color-ink);
-    font-weight: 500;
+    font-weight: 650;
     text-wrap: balance;
   }
 
-  /* Large display type benefits most from the optical-size axis, and needs
-     its kerning pairs respected — at 68px, loose pairs are very visible. */
   h1,
   h2,
   h3,
@@ -199,109 +222,119 @@
 
 @layer components {
   /* ── Type scale ─────────────────────────────────────────────────────────
-     H1 56–72px desktop / 40–48px mobile, H2 32–44px, body 17–18px at 1.55–1.7
-     — the measurements from the brief, expressed as clamps.
+     The brand type scale, expressed as clamps:
+       Display H1  56–72px / 700–750, line-height 0.98–1.05
+       H2          36–48px / 650–700
+       H3          22–28px / 650–700
+       Body large  18–20px / 400–450
+       Body        16–18px / 400–450
+       Meta        12–14px / 550–650, uppercase, tracked
+       Buttons     14–16px / 600
 
-     Tracking is set from Google's own metrics (-0.5px at 60px, -0.25px at
-     36px) rather than the much tighter figures a compressed grotesque wants.
-     Google Sans is a wide, round face: pulled in to -0.028em its counters
-     close up and the headline turns into a dark band. Leading is a little
-     looser for the same reason — the tall x-height means 1.05 collides
-     ascenders with the descenders above them. */
+     Tracking is negative and steepens with size. Inter is drawn a little wide
+     for interface use, which is right at 16px and too loose at 72px, so
+     display type is pulled in to -0.03em and the correction tapers to zero by
+     label size — where uppercase text needs the air back instead, since
+     capitals remove the letterform variation an eye reads shapes by. */
 
+  /* The clamp floor is set from the mobile line count, not from the desktop
+     ratio: at 44px this headline broke to five lines on a 375px screen and the
+     hero alone ran past two viewports before a visitor reached any proof.
+     38px holds the same weight and authority in three fewer lines. */
   .ds-display {
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 1.35rem + 3.9vw, 4.25rem);
-    line-height: 1.1;
-    letter-spacing: -0.0083em;
-    font-weight: 500;
+    font-size: clamp(2.375rem, 1.2rem + 3.9vw, 4.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    font-weight: 720;
   }
 
   .ds-h1 {
     font-family: var(--font-display);
-    /* 40px floor, 56px ceiling — the spec's H1 range on both ends. */
-    font-size: clamp(2.5rem, 1.75rem + 2.4vw, 3.5rem);
-    line-height: 1.12;
-    letter-spacing: -0.0083em;
-    font-weight: 500;
+    font-size: clamp(2.375rem, 1.6rem + 2.6vw, 3.5rem);
+    line-height: 1.06;
+    letter-spacing: -0.028em;
+    font-weight: 700;
   }
 
   .ds-h2 {
     font-family: var(--font-display);
-    font-size: clamp(1.875rem, 1.35rem + 1.85vw, 2.75rem);
-    line-height: 1.16;
-    letter-spacing: -0.0104em;
-    font-weight: 500;
+    font-size: clamp(2rem, 1.5rem + 1.9vw, 3rem);
+    line-height: 1.12;
+    letter-spacing: -0.024em;
+    font-weight: 680;
   }
 
   .ds-h3 {
     font-family: var(--font-display);
-    font-size: clamp(1.375rem, 1.15rem + 0.85vw, 1.75rem);
-    line-height: 1.25;
-    letter-spacing: -0.007em;
-    font-weight: 500;
+    font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+    line-height: 1.24;
+    letter-spacing: -0.018em;
+    font-weight: 660;
   }
 
   .ds-title {
     font-family: var(--font-display);
-    font-size: 1.25rem;
-    line-height: 1.32;
-    letter-spacing: -0.004em;
-    font-weight: 500;
+    font-size: 1.1875rem;
+    line-height: 1.34;
+    letter-spacing: -0.014em;
+    font-weight: 650;
   }
 
   .ds-title-sm {
     font-family: var(--font-display);
     font-size: 1.0625rem;
-    line-height: 1.38;
-    letter-spacing: 0;
-    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.011em;
+    font-weight: 620;
   }
 
-  /* Body copy. The lede runs 18px, standard body 17px — both inside the
-     60–75 character measure enforced by .ds-measure. */
+  /* Body copy. Lede 18px, standard body 16.5px — both inside the 60–75
+     character measure enforced by .ds-measure. */
   .ds-lede {
     font-size: 1.125rem;
     line-height: 1.65;
+    letter-spacing: -0.008em;
+    font-weight: 420;
     color: var(--color-ink-muted);
   }
 
   .ds-body {
-    font-size: 1.0625rem;
-    line-height: 1.65;
+    font-size: 1.03125rem;
+    line-height: 1.7;
+    letter-spacing: -0.006em;
+    font-weight: 420;
     color: var(--color-ink-muted);
   }
 
   .ds-body-sm {
     font-size: 0.9375rem;
-    line-height: 1.6;
+    line-height: 1.65;
+    letter-spacing: -0.004em;
+    font-weight: 420;
     color: var(--color-ink-muted);
   }
 
   .ds-meta {
-    font-family: var(--font-mono);
     font-size: 0.75rem;
     line-height: 1.5;
-    /* Google Sans Code already sets wide; the extra tracking that an
-       uppercase label needs is smaller here than it would be in a narrow
-       mono. */
-    letter-spacing: 0.045em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    font-weight: 600;
     color: var(--color-ink-soft);
   }
 
-  /* The overline that opens a section — mono, accent, with a short rule in
-     front of it. The rule is drawn here so no markup has to carry it. */
+  /* The overline that opens a section — accent, with a short rule in front of
+     it. The rule is drawn here so no markup has to carry it. */
   .ds-overline {
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
-    font-family: var(--font-mono);
     font-size: 0.75rem;
     line-height: 1.5;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 620;
     color: var(--color-accent);
   }
   .ds-overline::before {
@@ -320,12 +353,12 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 999px;
-    padding: 0.6875rem 1.375rem;
+    border-radius: var(--radius-control);
+    padding: 0.75rem 1.375rem;
     font-size: 0.9375rem;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.5;
-    min-height: 2.875rem;
+    min-height: 3rem;
     border: 1px solid transparent;
     white-space: nowrap;
     transition:
@@ -409,10 +442,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border);
-    background-color: var(--color-bg);
-    padding: 0.3125rem 0.75rem;
+    background-color: var(--color-card);
+    padding: 0.3125rem 0.625rem;
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1.4;
@@ -435,10 +468,10 @@
   /* ── Form fields ───────────────────────────────────────────────────── */
   .ds-field {
     width: 100%;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-control);
     border: 1px solid var(--color-border-strong);
-    background-color: var(--color-bg);
-    padding: 0.6875rem 0.875rem;
+    background-color: var(--color-card);
+    padding: 0.75rem 0.9375rem;
     font-size: 0.9375rem;
     line-height: 1.5;
     color: var(--color-ink);
@@ -486,93 +519,44 @@
     }
   }
 
-  /* ── Chips ──────────────────────────────────────────────────────────── */
-  .ds-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    border-radius: 999px;
-    border: 1px solid var(--color-border);
-    background-color: var(--color-bg);
-    padding: 0.3125rem 0.75rem;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    line-height: 1.4;
-    color: var(--color-ink-muted);
-    white-space: nowrap;
-  }
+  /* ── Scroll reveal ──────────────────────────────────────────────────────
+     The entrance for the Reveal component. Two properties, one transition, no
+     animation runtime.
 
-  .ds-chip-accent {
-    border-color: var(--color-accent-line);
-    background-color: var(--color-accent-soft);
-    color: var(--color-accent);
-  }
-
-  .ds-chip-success {
-    border-color: color-mix(in srgb, var(--color-success) 35%, transparent);
-    background-color: var(--color-success-soft);
-    color: var(--color-success);
-  }
-
-  /* ── Form fields ───────────────────────────────────────────────────── */
-  .ds-field {
-    width: 100%;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border-strong);
-    background-color: var(--color-bg);
-    padding: 0.6875rem 0.875rem;
-    font-size: 0.9375rem;
-    line-height: 1.5;
-    color: var(--color-ink);
+     The `.js-motion` gate is load-bearing: the class is stamped on <html> by
+     the pre-paint script, so an element is only ever hidden when JavaScript is
+     present to reveal it again. Without the script — no JS, or a crawler that
+     does not run it — the pending rule never matches and every section renders
+     visible. */
+  .ds-reveal {
     transition:
-      border-color 0.18s ease,
-      box-shadow 0.18s ease;
-  }
-  .ds-field::placeholder {
-    color: var(--color-ink-soft);
-  }
-  .ds-field:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    /* The one ring in the system, and only on the focused field. */
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent);
+      opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+      translate 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
   }
 
-  /* Invalid state carries a colour AND the message beside the field, never
-     colour alone — the border is the hint, the text is the information. */
-  .ds-field-invalid {
-    border-color: var(--color-warn);
-  }
-  .ds-field-invalid:focus {
-    border-color: var(--color-warn);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-warn) 22%, transparent);
+  .js-motion .ds-reveal[data-reveal="pending"] {
+    opacity: 0;
+    translate: 0 0.875rem;
   }
 
-  /* ── Disclosure (FAQ accordions) ────────────────────────────────────────
-     <details> snaps open natively. ::details-content plus interpolate-size
-     animates it to its natural height with nothing measured in JS: `height:
-     auto` is only animatable because of interpolate-size, and
-     content-visibility needs allow-discrete so the answer is not hidden for
-     the duration of the transition.
-
-     Every step degrades safely. A browser without ::details-content drops
-     these rules entirely and opens natively; one that has ::details-content
-     but not interpolate-size still applies `height: auto` as a static value
-     and opens instantly. In no case can the answer end up open and clipped. */
-  .ds-disclosure::details-content {
-    height: 0;
-    overflow: hidden;
-    content-visibility: hidden;
+  /* ── Overlay backdrop ───────────────────────────────────────────────────
+     Behind the services mega-menu and the mobile drawer. The page stays
+     legible enough to keep context but is clearly de-emphasised, which is the
+     whole point of the pattern — it says "this panel is the subject now"
+     without hiding where you were. */
+  .ds-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: color-mix(in srgb, #0b1120 46%, transparent);
+    opacity: 0;
+    visibility: hidden;
     transition:
-      height 0.28s ease,
-      content-visibility 0.28s allow-discrete;
+      opacity 0.28s ease-out,
+      visibility 0.28s ease-out;
   }
-  .ds-disclosure[open]::details-content {
-    height: auto;
-    /* Must be restored explicitly: declaring content-visibility above also
-       overrides the UA sheet's open value, and without this the answer stays
-       collapsed at zero height — open, but invisible. */
-    content-visibility: visible;
+  .ds-backdrop[data-open="true"] {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -630,5 +614,19 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+
+  /* Not just a faster transition — no hidden state at all. Neutralising the
+     duration alone would still leave an element invisible until its observer
+     fired, which is a worse experience than the animation it replaced. */
+  .js-motion .ds-reveal[data-reveal="pending"] {
+    opacity: 1;
+    translate: none;
+  }
+
+  /* The overlay still needs to appear; it just appears immediately. */
+  .ds-backdrop[data-open="true"] {
+    opacity: 1;
+    visibility: visible;
   }
 }

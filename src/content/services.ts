@@ -1,6 +1,6 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- * SERVICE CATALOGUE — five sellable services, one route each.
+ * SERVICE CATALOGUE — seven sellable services, one route each.
  *
  * This replaced a sixteen-service catalogue split across three categories. The
  * problem with that structure was not the work — all of it is real — it was
@@ -18,8 +18,28 @@
  * That order is deliberate: it front-loads the answer for anyone scanning (a
  * reader or a generative-search system), states fit before pitch, and shows
  * proof before it asks for anything.
+ *
+ * WordPress → Next.js migration is its own service rather than a subsection of
+ * the redesign page. Search Console shows it is already the strongest query
+ * cluster this site has — Google associates the site with that exact problem
+ * before almost anything else — so it gets the dedicated page, full FAQ and
+ * migration-specific proof that signal warrants, instead of being folded into
+ * a broader redesign page it would otherwise dominate.
  * ─────────────────────────────────────────────────────────────────────────────
  */
+
+/**
+ * Commercial grouping, used by the services mega-menu and the homepage tier
+ * display. It is not a ranking — it says what kind of engagement each service
+ * is, so a buyer scanning seven options can discard most of them in one pass.
+ */
+export type ServiceTier = "core" | "modernize" | "partnership";
+
+export const TIER_LABEL: Record<ServiceTier, string> = {
+  core: "Build & extend",
+  modernize: "Modernize & migrate",
+  partnership: "Partnership & specialist",
+};
 
 export type Service = {
   slug: string;
@@ -27,7 +47,14 @@ export type Service = {
   title: string;
   /** Short label for tight spaces. */
   shortTitle: string;
+  /**
+   * The label above the H1. It states buyer value — what the engagement is —
+   * never internal strategy. Labels like "highest search demand" describe my
+   * keyword research to a reader who came here to solve a problem, which is
+   * both useless to them and slightly odd to publish.
+   */
   eyebrow: string;
+  tier: ServiceTier;
 
   /* ── SEO ─────────────────────────────────────────────────────────────── */
   metaTitle: string;
@@ -74,8 +101,9 @@ export const services: Service[] = [
     slug: "frontend-product-engineering",
     title: "Frontend Product Engineering",
     shortTitle: "Frontend engineering",
-    eyebrow: "Primary service",
-    metaTitle: "React & Next.js Development | Frontend Product Engineer",
+    eyebrow: "Core offering",
+    tier: "core",
+    metaTitle: "Frontend Product Engineering with React & Next.js",
     metaDescription:
       "Production React and Next.js frontend development for SaaS products, dashboards, customer portals and business-critical web applications.",
     keywords: [
@@ -237,26 +265,26 @@ export const services: Service[] = [
     },
   },
   /* ══════════════════════════════════════════════════════════════════════
-     2 · WEBSITE REDESIGN & CONVERSION
+     2 · WEBSITE REDESIGN & REBUILD
      ══════════════════════════════════════════════════════════════════════ */
 
   {
-    slug: "website-redesign-conversion",
-    title: "Website Redesign & Conversion",
-    shortTitle: "Redesign & conversion",
-    eyebrow: "High demand",
-    metaTitle: "Website Redesign & Conversion",
+    slug: "website-redesign-rebuild",
+    title: "Website Redesign & Rebuild",
+    shortTitle: "Redesign & rebuild",
+    eyebrow: "Modernization",
+    tier: "modernize",
+    metaTitle: "Website Redesign & Rebuild Services",
     metaDescription:
-      "Redesign and rebuild your website for clearer UX, stronger conversion paths, responsive performance and maintainable frontend code.",
+      "Modernize outdated websites with clearer UX, responsive implementation, faster pages and conversion-focused frontend work.",
     keywords: [
       "website redesign",
       "conversion-focused website",
       "website UX redesign",
       "frontend redesign",
       "website rebuild",
-      "WordPress to Next.js migration",
     ],
-    h1: "Website redesigns that improve clarity, speed and conversion",
+    h1: "Modernize an outdated website into a faster, clearer experience",
     subhead:
       "I redesign and rebuild websites where the problem is not more pages — it is clearer messaging, stronger UX, faster delivery and a better path from visitor to action.",
     summary:
@@ -313,7 +341,7 @@ export const services: Service[] = [
       { title: "Responsive implementation", detail: "Built mobile-first in Next.js or your existing stack, with behaviour verified across the breakpoint range." },
       { title: "Performance pass", detail: "Image strategy, script discipline, layout-shift removal and Core Web Vitals measured before and after." },
       { title: "Measurement handoff", detail: "Analytics and conversion events wired so the next decision is made from data rather than opinion." },
-      { title: "Migration where it is warranted", detail: "WordPress to Next.js when the CMS has become the constraint — including content structure and redirect mapping so existing rankings survive." },
+      { title: "CMS migration where it is warranted", detail: "When WordPress itself is the constraint rather than the design, that is a dedicated migration engagement with its own redirect and SEO-preservation process — see WordPress to Next.js Migration." },
     ],
     engagement: [
       { step: "Diagnosis", detail: "Review the current site against its goal, its analytics if available, and its technical baseline." },
@@ -365,7 +393,7 @@ export const services: Service[] = [
       },
       {
         q: "Do you work with WordPress?",
-        a: "Yes, in two ways: improving an existing WordPress site where the CMS is genuinely the right tool, and migrating off it to Next.js when it has become the thing holding the site back. I will tell you which one I think applies before you commit to either.",
+        a: "Yes, in two ways: improving an existing WordPress site where the CMS is genuinely the right tool, and migrating off it to Next.js when it has become the thing holding the site back. If it's the second one, WordPress to Next.js Migration covers that process in full — redirect mapping, content parity and SEO preservation included. I will tell you which one I think applies before you commit to either.",
       },
     ],
     cta: {
@@ -375,17 +403,380 @@ export const services: Service[] = [
     },
   },
   /* ══════════════════════════════════════════════════════════════════════
-     3 · AGENCY / WHITE-LABEL FRONTEND
+     3 · PERFORMANCE ENGINEERING
+     ══════════════════════════════════════════════════════════════════════ */
+
+  {
+    slug: "performance-engineering",
+    title: "Performance Engineering",
+    shortTitle: "Performance",
+    eyebrow: "Measured, not promised",
+    tier: "modernize",
+    metaTitle: "React & Next.js Performance Engineering",
+    metaDescription:
+      "Diagnose and fix slow React and Next.js applications — Core Web Vitals, bundle size, rendering strategy and asset delivery, measured before and after.",
+    keywords: [
+      "React performance optimization",
+      "Next.js performance",
+      "Core Web Vitals optimization",
+      "frontend performance engineering",
+      "improve LCP",
+      "reduce bundle size",
+    ],
+    h1: "Diagnose and fix slow React and Next.js experiences",
+    subhead:
+      "I find what is actually making your frontend slow, fix it in isolated changes, and measure the result against the baseline it started from.",
+    summary:
+      "Core Web Vitals diagnosis and repair on production React and Next.js applications, measured before and after.",
+    definition:
+      "Performance engineering is diagnosing why a specific application is slow — measuring a real baseline, identifying the causes in order of impact, fixing them in isolated changes and re-measuring — rather than applying a generic list of optimisations and hoping.",
+    intro: [
+      "Almost every slow frontend is slow for its own reasons. A generic optimisation checklist applied without a diagnosis fixes whichever items happen to overlap with the real causes and leaves the rest, which is why performance work so often produces a lot of activity and very little measured change.",
+      "This is the service behind the one measured figure on this site: a 30% Core Web Vitals improvement on Sunhub, a production React marketplace. The process below is the one that produced it, and the case study documents what actually changed.",
+    ],
+    idealFor: [
+      "A production React or Next.js application that has become measurably slow",
+      "Core Web Vitals failing in the field, or a Search Console warning that started it",
+      "A bundle that has grown quietly across years of feature delivery",
+      "An interface that feels fast on a developer laptop and slow on real devices",
+      "A team that needs the improvement attributable, not just asserted",
+    ],
+    notIdealFor: [
+      "Sites where the real constraint is backend or database response time",
+      "A brand-new build with no users and no measured problem yet",
+      "Work where a specific score is required as a contractual guarantee",
+    ],
+    problems: [
+      {
+        title: "Optimising without a baseline",
+        detail:
+          "If nobody recorded where the application started, nobody can say whether the work helped — and the improvement becomes a matter of opinion. Measurement first is not process theatre; it is the only thing that makes the result checkable.",
+      },
+      {
+        title: "The bottleneck is not where the team assumed",
+        detail:
+          "Most \"React is slow\" reports turn out to be network and asset problems rather than render problems. Reaching for memoisation before opening the network panel is how a week disappears into micro-optimisation that changes nothing a user can feel.",
+      },
+      {
+        title: "Five fixes shipped at once",
+        detail:
+          "Batching changes tells you the total and hides which one mattered — and if one of them regressed something else, it cannot be isolated or reversed without unpicking all five.",
+      },
+    ],
+    deliverables: [
+      {
+        title: "A measured baseline",
+        detail:
+          "Lab and, where traffic allows, field data captured before any change — so every claim afterwards has something to be measured against.",
+      },
+      {
+        title: "A ranked diagnosis",
+        detail:
+          "What is actually causing the slowness, ordered by impact rather than by how easy it is to fix. You get this in writing whether or not the work continues.",
+      },
+      {
+        title: "Bundle and dependency work",
+        detail:
+          "Dead code and unused assets removed, duplicate dependencies resolved, and import boundaries tightened so tree-shaking actually takes effect.",
+      },
+      {
+        title: "Rendering strategy corrections",
+        detail:
+          "Server, static and client rendering applied per route according to what the route needs, rather than whatever the app defaulted into early on.",
+      },
+      {
+        title: "Asset and font delivery",
+        detail:
+          "Images compressed and served at display size, loading boundaries drawn at the first meaningful render, and fonts that no longer block text from painting.",
+      },
+      {
+        title: "Third-party script audit",
+        detail:
+          "What is actually loading on the page — including the tags nobody on the engineering team added — and an honest read on what each one costs.",
+      },
+      {
+        title: "A second measurement",
+        detail:
+          "The same instrumentation, run again after the work, with the delta attributable to specific changes rather than to the engagement as a whole.",
+      },
+    ],
+    engagement: [
+      {
+        step: "Measure",
+        detail:
+          "Capture the baseline: bundle composition, request waterfall, render profile, asset weights and field data where it exists.",
+      },
+      {
+        step: "Diagnose",
+        detail:
+          "Turn the measurements into a ranked list of causes, with an estimate of what fixing each one is likely to be worth.",
+      },
+      {
+        step: "Fix in isolation",
+        detail:
+          "Changes land one at a time where that is practical, so each one's effect is attributable and individually reversible.",
+      },
+      {
+        step: "Re-measure",
+        detail:
+          "The same tests, run again, with the before and after recorded — including anything that did not move as expected.",
+      },
+      {
+        step: "Protect the result",
+        detail:
+          "Where it is wanted, a performance budget enforced in CI so the next regression fails a build instead of being discovered in production.",
+      },
+    ],
+    technical: {
+      summary:
+        "Diagnosis-led and framework-honest. Most of the work is removal rather than addition — the cheapest asset is the one that is not shipped — and the measurement either side of each change is what separates this from a list of tips.",
+      groups: [
+        { label: "Measurement", items: ["Core Web Vitals", "Lighthouse", "Chrome UX Report", "React Profiler", "Bundle analysis"] },
+        { label: "Delivery", items: ["Code splitting", "Lazy loading", "Tree-shaking", "Caching strategy", "CDN behaviour"] },
+        { label: "Rendering", items: ["Server components", "Static generation", "Streaming", "Hydration cost"] },
+        { label: "Assets", items: ["Image optimisation", "Responsive images", "Font loading", "Third-party script control"] },
+      ],
+    },
+    scope: {
+      includes: [
+        "Baseline measurement and a written, ranked diagnosis",
+        "Frontend fixes across bundle, rendering, assets and third-party scripts",
+        "A second measurement attributing the change",
+        "Optional CI performance budget to prevent regression",
+      ],
+      excludes: [
+        "Backend, database or infrastructure performance beyond frontend impact",
+        "Guaranteed Lighthouse scores — a score depends on conditions neither of us controls",
+        "Ongoing monitoring retainers, unless agreed separately",
+      ],
+    },
+    proofSlugs: ["sunhub", "verdira", "cennetsol"],
+    faqs: [
+      {
+        q: "Can you guarantee a specific Lighthouse score?",
+        a: "No, and I would treat any such guarantee with suspicion. A score varies with the device, the network and the test conditions, and part of it depends on things outside the frontend entirely. What I will commit to is a measured baseline, a ranked diagnosis and a second measurement — so the change is attributable, whatever the number ends up being.",
+      },
+      {
+        q: "What if the real problem turns out to be the backend?",
+        a: "Then that is the finding, and you get it early rather than after a frontend engagement that could not have fixed it. Slow API responses put a floor under every frontend metric; I will say so plainly and tell you what is still worth doing on the frontend, which is sometimes less than you were expecting.",
+      },
+      {
+        q: "How long before we see a result?",
+        a: "The baseline and diagnosis are quick — usually the first thing delivered. How long the fixes take depends entirely on what the diagnosis finds: removing dead weight from a bundle is fast, while correcting a rendering strategy applied inconsistently across an entire app is a structural piece of work. The diagnosis is what makes that estimate real rather than a guess.",
+      },
+      {
+        q: "Do you work on sites that are not React or Next.js?",
+        a: "The measurement and diagnosis translate to any stack, but the implementation work here is React and Next.js. If the diagnosis points at something outside that, I will tell you what it found and hand it over rather than working outside what I do well.",
+      },
+      {
+        q: "What is the 30% figure on Sunhub, precisely?",
+        a: "An aggregate improvement measured before the optimisation work began and again after it shipped, on a production React marketplace. It is not a claim about one specific Core Web Vital, and I have deliberately not published per-metric numbers I cannot show the workings for. The case study lists exactly what changed.",
+      },
+    ],
+    cta: {
+      heading: "Request a performance assessment",
+      body: "Send the site or app. I will tell you what I think is actually causing the slowness and what the measured baseline looks like, before proposing any work.",
+      primaryLabel: "Request a performance assessment",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     4 · WORDPRESS → NEXT.JS MIGRATION — flagship SEO asset
+     ══════════════════════════════════════════════════════════════════════ */
+
+  {
+    slug: "wordpress-to-nextjs-migration",
+    title: "WordPress to Next.js Migration",
+    shortTitle: "WP → Next.js migration",
+    eyebrow: "SEO-safe migration",
+    tier: "modernize",
+    metaTitle: "WordPress to Next.js Migration Services",
+    metaDescription:
+      "Migrate WordPress websites to Next.js with SEO preservation, redirects, content migration and performance-focused implementation.",
+    keywords: [
+      "WordPress to Next.js migration",
+      "WordPress to Next.js migration services",
+      "migrate WordPress to Next.js",
+      "WordPress to Next.js migration agency",
+      "headless WordPress migration",
+      "Next.js migration SEO",
+    ],
+    h1: "Migrate WordPress to Next.js without losing SEO or content",
+    subhead:
+      "I move WordPress sites onto Next.js with a URL-by-URL redirect map, content parity and indexation checks — so the rankings the site already has survive the move.",
+    summary:
+      "WordPress to Next.js migrations with SEO preservation as an explicit deliverable, not an afterthought.",
+    definition:
+      "A WordPress to Next.js migration is a rebuild of the frontend and content-delivery layer onto Next.js that preserves every URL, redirect, ranking signal and piece of indexed content the WordPress site already earned, while replacing the parts of WordPress that had become the constraint.",
+    intro: [
+      "Most migrations that lose rankings do not lose them to Next.js. They lose them to a redirect map nobody wrote, a canonical that pointed at the wrong host for three weeks, or structured data that quietly stopped rendering. The framework change is the easy part — protecting what the old site already earned is the actual engineering problem.",
+      "I have done this migration as part of a team, on a large automotive marketplace moving off WordPress onto Next.js — not a theoretical process, a shipped one. The scope below is what that kind of move actually requires, in order.",
+    ],
+    idealFor: [
+      "A WordPress site with real organic rankings you cannot afford to lose",
+      "A site that has become slow, plugin-fragile or expensive to maintain on WordPress",
+      "Content editors who need to keep publishing through the migration, not stop for months",
+      "A marketing or content team staying on WordPress as a CMS, with Next.js taking over rendering",
+      "A business that has outgrown what WordPress themes and page builders can reliably deliver",
+    ],
+    notIdealFor: [
+      "A WordPress site that is working fine, with no performance, maintainability or scaling problem",
+      "A migration wanted purely because Next.js is newer, with no underlying problem to solve",
+      "Sites with no meaningful organic traffic to protect, where a simpler rebuild fits better",
+    ],
+    problems: [
+      {
+        title: "The redirect map is treated as a checkbox, not an inventory",
+        detail:
+          "Every indexed URL on the old site needs an explicit, tested destination — not a blanket wildcard rule that happens to catch most of them. \"Most\" is where rankings go to die; the pages that fall through a wildcard are exactly the ones nobody thought to check.",
+      },
+      {
+        title: "Content and structured data quietly stop matching",
+        detail:
+          "A WordPress page templated by a theme or SEO plugin often carries schema, metadata and internal links the migration team never sees explicitly — it just exists. Rebuilding the template without auditing what it was actually emitting is how a site loses rich results it did not know it had.",
+      },
+      {
+        title: "The cutover has no rollback plan",
+        detail:
+          "A migration that goes live in one uncontrolled jump makes a mistake expensive to notice — by the time a Search Console spike shows up, a week of crawl budget is already gone. A staged, monitored cutover is what keeps a mistake cheap instead of expensive.",
+      },
+    ],
+    deliverables: [
+      {
+        title: "Full URL inventory and redirect map",
+        detail:
+          "Every indexed and internally linked URL from the WordPress site, mapped to its exact Next.js destination — not a generic pattern rule.",
+      },
+      {
+        title: "Content and media migration",
+        detail:
+          "Posts, pages, custom post types and media moved into the new structure with their content, metadata and internal links intact.",
+      },
+      {
+        title: "Structured data parity",
+        detail:
+          "Whatever schema the WordPress theme or SEO plugin was emitting — Article, Organization, breadcrumbs — reimplemented deliberately in the new templates, not dropped by omission.",
+      },
+      {
+        title: "Canonical, sitemap and robots reconfiguration",
+        detail:
+          "One preferred host, self-canonical indexable pages, an accurate sitemap and a robots.txt that allows the crawling the migration depends on.",
+      },
+      {
+        title: "Performance rebuild",
+        detail:
+          "Image optimisation, rendering strategy and script discipline — the reason to migrate in the first place, delivered alongside the SEO preservation work rather than after it.",
+      },
+      {
+        title: "Staged, monitored cutover",
+        detail:
+          "DNS and redirect activation staged so status codes, canonicals and rendered content are checked before and after go-live, not discovered afterwards.",
+      },
+      {
+        title: "Post-launch indexation monitoring",
+        detail:
+          "URL Inspection on priority pages, a check for crawl errors, and a defined response if anything needs a recrawl request.",
+      },
+    ],
+    engagement: [
+      {
+        step: "Audit",
+        detail:
+          "Full crawl and export of the existing WordPress site: URLs, content, structured data, redirects already in place and current indexation status.",
+      },
+      {
+        step: "Migration plan",
+        detail:
+          "The redirect map, the content model in Next.js, what stays on WordPress as a CMS if anything does, and the cutover sequence — written down before any code changes.",
+      },
+      {
+        step: "Build in parallel",
+        detail:
+          "The Next.js site is built and content-migrated against the live WordPress site, so the current site's uptime and rankings are unaffected while the work happens.",
+      },
+      {
+        step: "Staged cutover",
+        detail:
+          "DNS and redirects go live in a controlled sequence, with status codes, canonicals and rendered content verified at each stage rather than assumed.",
+      },
+      {
+        step: "Monitor and stabilise",
+        detail:
+          "Search Console watched closely in the weeks after launch — indexation, crawl errors and ranking movement — with fast fixes if anything needs one.",
+      },
+    ],
+    technical: {
+      summary:
+        "Next.js on Vercel is the default target. Where a content team needs to keep editing without a developer, WordPress can stay as a headless CMS behind the new frontend rather than being replaced outright — that decision gets made explicitly during the audit, not assumed.",
+      groups: [
+        { label: "Migration", items: ["URL inventory", "301 redirect mapping", "Content migration", "Media migration", "Structured data parity"] },
+        { label: "Build", items: ["Next.js", "React", "TypeScript", "Tailwind CSS"] },
+        { label: "CMS", items: ["Headless WordPress (optional)", "WP REST API / WPGraphQL", "Structured content models"] },
+        { label: "Search", items: ["Canonical URLs", "XML sitemaps", "Robots.txt", "Search Console monitoring"] },
+        { label: "Performance", items: ["Core Web Vitals", "Image optimisation", "Rendering strategy", "Third-party script control"] },
+      ],
+    },
+    scope: {
+      includes: [
+        "Full URL inventory, redirect map and cutover plan",
+        "Content, media and structured-data migration",
+        "Canonical, sitemap and robots reconfiguration",
+        "Performance rebuild alongside the migration",
+        "Post-launch indexation monitoring for an agreed period",
+      ],
+      excludes: [
+        "Copywriting or content strategy beyond migrating what already exists",
+        "Guaranteed ranking positions after migration — no honest engineer offers one",
+        "Ongoing WordPress plugin or theme maintenance after cutover, unless retained separately",
+      ],
+    },
+    proofSlugs: ["aussiemotor", "cennetsol", "sunhub"],
+    faqs: [
+      {
+        q: "Can WordPress be migrated to Next.js without losing SEO?",
+        a: "Yes, if the migration treats SEO preservation as a deliverable rather than a hope. That means every indexed URL gets an explicit redirect, canonicals and structured data are rebuilt to match what the old templates emitted, and indexation is monitored after launch rather than assumed. Rankings are lost by migrations that skip these steps, not by the framework change itself.",
+      },
+      {
+        q: "How are redirects handled?",
+        a: "Every URL from the WordPress site is inventoried — from the sitemap, from Search Console, and from a crawl — and mapped to its exact destination on the new site with a 301. Wildcard or pattern-based redirects are used only where they genuinely apply; anything that needs a specific destination gets one.",
+      },
+      {
+        q: "What actually gets migrated?",
+        a: "Content, media, structured data, redirects, canonical relationships, metadata and internal linking. If the content team needs to keep publishing on WordPress after the move, it can stay in place as a headless CMS behind the Next.js frontend — that is a scope decision made during the audit, not assumed by default.",
+      },
+      {
+        q: "How long does a migration take?",
+        a: "It depends on the size of the site and how much content and structured data needs auditing before it can be mapped — a small brochure site and a large content archive are different engagements. The audit phase produces a real estimate once the actual scope is visible, rather than a number quoted before anyone has looked at the site.",
+      },
+      {
+        q: "Do we lose the ability to edit content ourselves?",
+        a: "Not if that matters to you. Keeping WordPress as a headless CMS behind the new frontend is a legitimate option for teams who need to keep publishing without a developer — it gets discussed at the audit stage rather than decided for you.",
+      },
+      {
+        q: "What if something breaks after launch?",
+        a: "The cutover is staged and monitored, not a single uncontrolled jump — status codes, canonicals and rendered content are checked at each stage. Search Console is watched closely for a defined period after go-live specifically so a problem is caught in days, not discovered a month later in a traffic report.",
+      },
+    ],
+    cta: {
+      heading: "Request a migration assessment",
+      body: "Send the current WordPress site. I will come back with a real read of what the migration involves — the redirect map size, what structured data needs rebuilding, and a scoped estimate rather than a guess.",
+      primaryLabel: "Request a migration assessment",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     5 · AGENCY / WHITE-LABEL FRONTEND
      ══════════════════════════════════════════════════════════════════════ */
 
   {
     slug: "agency-frontend-development",
     title: "Agency / White-Label Frontend",
     shortTitle: "Agency partnership",
-    eyebrow: "Agency channel",
-    metaTitle: "White-label React & Next.js Development for Agencies",
+    eyebrow: "Under your brand",
+    tier: "partnership",
+    metaTitle: "White-Label React & Next.js Development for Agencies",
     metaDescription:
-      "Reliable white-label React and Next.js frontend development for agencies that need extra implementation capacity without hiring full-time.",
+      "Reliable white-label React and Next.js delivery for agencies that need extra frontend engineering capacity.",
     keywords: [
       "white label frontend developer",
       "agency frontend developer",
@@ -394,7 +785,7 @@ export const services: Service[] = [
       "outsourced frontend development",
       "Figma to React",
     ],
-    h1: "Your frontend engineering partner, behind the scenes",
+    h1: "Extend your agency's frontend delivery without hiring",
     subhead:
       "I help agencies deliver React and Next.js projects when the client is already sold but internal engineering capacity is full, stretched or specialised elsewhere.",
     summary:
@@ -502,17 +893,18 @@ export const services: Service[] = [
     },
   },
   /* ══════════════════════════════════════════════════════════════════════
-     4 · SAAS & MVP PRODUCT DEVELOPMENT
+     6 · SAAS & MVP PRODUCT DEVELOPMENT
      ══════════════════════════════════════════════════════════════════════ */
 
   {
     slug: "saas-product-development",
     title: "SaaS & MVP Product Development",
     shortTitle: "SaaS & MVP",
-    eyebrow: "Product builds",
-    metaTitle: "SaaS MVP Development | React & Next.js",
+    eyebrow: "Idea to production",
+    tier: "core",
+    metaTitle: "SaaS & MVP Development with React & Next.js",
     metaDescription:
-      "Build a focused, production-ready SaaS MVP with React, Next.js and a clear scope around the smallest valuable workflow.",
+      "Build customer-facing SaaS products, dashboards and MVPs with React, Next.js and production-ready frontend architecture.",
     keywords: [
       "SaaS development",
       "SaaS MVP development",
@@ -521,7 +913,7 @@ export const services: Service[] = [
       "MVP development",
       "product development",
     ],
-    h1: "Build and ship a SaaS MVP without overbuilding it",
+    h1: "Build your SaaS product from idea to production",
     subhead:
       "I turn validated product requirements into usable web applications — from the first dashboard and auth flow to API-connected features and production deployment.",
     summary:
@@ -630,17 +1022,18 @@ export const services: Service[] = [
     },
   },
   /* ══════════════════════════════════════════════════════════════════════
-     5 · AI PRODUCT INTEGRATION
+     7 · AI PRODUCT INTEGRATION
      ══════════════════════════════════════════════════════════════════════ */
 
   {
     slug: "ai-product-integration",
     title: "AI Product Integration",
     shortTitle: "AI integration",
-    eyebrow: "Supporting specialisation",
-    metaTitle: "AI Product Integration for Web Applications",
+    eyebrow: "Practical AI features",
+    tier: "partnership",
+    metaTitle: "AI Product Integration with React & Next.js",
     metaDescription:
-      "Add practical AI features to web products using reliable UI, API integration and human-review workflows where needed.",
+      "Integrate useful AI capabilities into real web products with practical frontend and product engineering.",
     keywords: [
       "AI product development",
       "AI integration",
@@ -649,7 +1042,7 @@ export const services: Service[] = [
       "retrieval augmented generation",
       "AI UX",
     ],
-    h1: "Practical AI features inside real web products",
+    h1: "Add useful AI capabilities to your existing product",
     subhead:
       "I integrate useful AI capabilities into web applications — from assistants and retrieval-based interfaces to structured workflows that connect model output to the product your users already have.",
     summary:
@@ -764,13 +1157,26 @@ export function getService(slug: string): Service | undefined {
 
 export const serviceSlugs = services.map((s) => s.slug);
 
+/**
+ * Services grouped by tier, in menu order. One source for the mega-menu
+ * columns and the homepage tier display, so the two can never disagree about
+ * which group a service belongs to.
+ */
+export const serviceGroups: { tier: ServiceTier; label: string; items: Service[] }[] = (
+  ["core", "modernize", "partnership"] as const
+).map((tier) => ({
+  tier,
+  label: TIER_LABEL[tier],
+  items: services.filter((s) => s.tier === tier),
+}));
+
 /** Hub page copy. */
 export const servicesHub = {
-  metaTitle: "Frontend Development & Product Engineering Services",
+  metaTitle: "React & Next.js Development Services",
   metaDescription:
-    "Explore frontend product engineering, website redesign, SaaS MVP development, AI product integration and agency white-label frontend services.",
-  h1: "Frontend development and product engineering services",
+    "React and Next.js product engineering for production websites, SaaS products, redesigns, migrations and existing applications.",
+  h1: "Production web engineering for real product constraints",
   intro:
     "I help SaaS teams, agencies and growing businesses design, rebuild and ship web products that need strong frontend execution.",
-  note: "Five services rather than a capability list. Pick the one that matches what you are trying to do — each page states who it is for, what it includes and where the scope ends.",
+  note: "Seven services rather than a capability list. Pick the one that matches what you are trying to do — each page states who it is for, what it includes and where the scope ends.",
 } as const;

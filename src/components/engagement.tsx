@@ -26,7 +26,7 @@ export function Engagement({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
               <p className="ds-body-sm mt-4 flex-1">{option.detail}</p>
               <Link
                 href={option.cta.href}
-                data-track={option.cta.href.includes("agency") ? "agency_cta" : undefined}
+                data-track={option.cta.href.includes("agency") ? "cta_click" : undefined}
                 className="ds-link mt-7"
               >
                 {option.cta.label}

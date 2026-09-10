@@ -4,15 +4,15 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Contact } from "@/components/contact";
 import { PageJsonLd } from "@/components/json-ld";
-import { ArrowIcon, Reveal, Section, SectionHeading } from "@/components/ui";
-import { site } from "@/content/site";
+import { ArrowIcon, CheckIcon, Reveal, Section, SectionHeading } from "@/components/ui";
+import { assurances, site } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
   "Tell Wahab what you are building, improving or redesigning. Send a project brief for frontend engineering, website, SaaS or AI product work.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Start a Web Product or Frontend Project",
+  title: "Discuss Your Project",
   description,
   path: "/contact",
 });
@@ -26,7 +26,7 @@ const paths = [
   {
     who: "Product or company buyer",
     what: "A build, a rebuild, or frontend capacity on something already live.",
-    label: "Start a project",
+    label: "Discuss your project",
     href: "#contact",
     routed: false,
   },
@@ -87,11 +87,45 @@ export default function ContactPage() {
                     <ArrowIcon className="h-3.5 w-3.5" />
                   </Link>
                 ) : (
-                  <a href={path.href} className="ds-link mt-5">
+                  <a
+                    href={path.href}
+                    data-track={
+                      path.href.startsWith("mailto:")
+                        ? "email_click"
+                        : path.href.endsWith(".pdf")
+                          ? "resume_click"
+                          : undefined
+                    }
+                    data-track-label="contact-routing"
+                    className="ds-link mt-5"
+                  >
                     {path.label}
                     <ArrowIcon className="h-3.5 w-3.5" />
                   </a>
                 )}
+              </Reveal>
+            ))}
+          </ul>
+        </Section>
+
+        {/* Risk reduction, stated where the decision is made. Each of these is
+            a question a cautious buyer asks internally before enquiring, and
+            leaving them unanswered is what makes an enquiry feel like a
+            commitment rather than a conversation. */}
+        <Section tone="plain">
+          <SectionHeading
+            overline="How the work runs"
+            title="What you are agreeing to, before you agree to it"
+            description="No engagement starts with a surprise. These four things are true of every project, whatever the service."
+          />
+          <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {assurances.map((item, i) => (
+              <Reveal as="li" key={item.title} delay={i * 0.04} className="h-full">
+                <div className="ds-card h-full p-7">
+                  <CheckIcon className="text-success" />
+                  <h3 className="ds-title-sm mt-4">{item.title}</h3>
+                  <p className="ds-body-sm mt-3">{item.detail}</p>
+                </div>
               </Reveal>
             ))}
           </ul>

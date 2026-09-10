@@ -5,8 +5,16 @@ import { useSyncExternalStore } from "react";
 type Theme = "dark" | "light";
 
 /** Runs before paint so there's no flash of the wrong palette.
-    Light is the designed default; dark is opt-in via the toggle and is remembered. */
-export const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t='light'}document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','light')}})();`;
+    Light is the designed default; dark is opt-in via the toggle and is remembered.
+
+    It also stamps `js-motion` on <html>, which is what gates the scroll-reveal
+    entrance in globals.css. Doing it here rather than in a component is the
+    whole point: the class lands before first paint, so revealed content is
+    never painted visible and then hidden. And because the class only exists
+    when this script runs, a visitor with JavaScript disabled — or a crawler
+    that does not execute it — gets every section fully visible rather than a
+    page of elements stuck at opacity 0. */
+export const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t='light'}d.setAttribute('data-theme',t)}catch(e){d.setAttribute('data-theme','light')}d.classList.add('js-motion')})();`;
 
 /* The <html data-theme> attribute is the source of truth; the toggle reads it
    from the DOM instead of keeping a second copy in React state. */

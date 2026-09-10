@@ -1,62 +1,51 @@
 import type { Metadata, Viewport } from "next";
-import { Google_Sans, Google_Sans_Code } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { metaDescription, site } from "@/content/site";
 import { themeScript } from "@/components/theme-toggle";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TrackClicks } from "@/components/analytics";
+import { Gtm } from "@/components/gtm";
 
 /*
- * One superfamily, two cuts.
+ * One typeface, every role.
  *
- *   Google Sans      — display and body both. It is a humanist geometric with
- *     a tall x-height, so it stays readable at 15px and stays open at 68px;
- *     one family across both roles is why the headings and the paragraphs
- *     under them look related rather than merely adjacent.
- *   Google Sans Code — overlines, figures and metadata. Taking the mono from
- *     the same superfamily rather than pairing in an unrelated one (JetBrains,
- *     IBM Plex) keeps the labels looking like part of the system instead of
- *     something imported for effect.
+ * Inter carries display, body, navigation, buttons, labels, figures and form
+ * fields. The hierarchy is built from size, weight and space — not from a
+ * second family, which is the discipline the brand guidelines ask for and
+ * also the cheaper option: one payload, one set of metrics, no mismatched
+ * x-heights between a heading and the paragraph under it.
  *
- * The variable cut rather than static instances: it interpolates weights
- * instead of snapping between four files, and exposes the optical-size axis
- * that `font-optical-sizing: auto` needs in order to adjust the letterforms by
- * size — the same drawing scaled to both 68px and 13px is what makes display
- * type look loose and small type look cramped. GRAD lets weight be tuned
- * without changing metrics, so nothing reflows.
+ * Inter earns being the only face because it was drawn for interfaces across
+ * the whole range this site needs: an 11px uppercase label stays legible, and
+ * the variable cut reaches 700+ for display sizes without a separate file. Its
+ * tall x-height and even rhythm are what let body copy sit comfortably at
+ * 16–17px, which is where nearly all of the words here live.
  *
- * Both are self-hosted by next/font, so there is no render-blocking request to
- * a font CDN and no layout shift from a late swap.
+ * The variable cut interpolates weight instead of snapping between static
+ * instances, so the 450 and 650 steps in the type scale are real weights
+ * rather than rounded approximations.
+ *
+ * Self-hosted by next/font, so there is no render-blocking request to a font
+ * CDN and no layout shift from a late swap.
  */
-/* Next has no metric table for either family, so it cannot synthesise a
-   metrically-matched fallback and says so at build time. Naming Roboto
-   explicitly is the next best thing: it shares this face's lineage and
-   proportions, so the reflow when the real font swaps in is small rather
-   than the jump a generic sans would cause. */
-const googleSans = Google_Sans({
-  variable: "--font-google-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  axes: ["GRAD", "opsz"],
   display: "swap",
-  fallback: ["Roboto", "Helvetica Neue", "Arial", "sans-serif"],
-});
-
-const googleSansCode = Google_Sans_Code({
-  variable: "--font-google-sans-code",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+  fallback: ["system-ui", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Frontend Product Engineer | React & Next.js | Wahab Ansari",
-    /* The short name in the suffix, not the full one. Google truncates titles
-       around 60 characters, and nine characters of brand is nine characters
-       of the actual page title that survives. */
-    template: `%s | ${site.shortName}`,
+    default: "Muhammad Wahab Ansari — React & Next.js Product Engineer",
+    /* The full legal name in the suffix. It costs a few characters against
+       Google's ~60-character truncation, but it is the string that has to
+       match LinkedIn, GitHub and the Person structured data for the entity to
+       resolve to one person — and entity consolidation is worth more here
+       than a few extra characters of page title surviving in the SERP. */
+    template: `%s | ${site.name}`,
   },
   description: metaDescription,
   applicationName: site.name,
@@ -71,12 +60,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: site.name,
-    title: "Frontend Product Engineer | React & Next.js | Wahab Ansari",
+    title: "Muhammad Wahab Ansari — React & Next.js Product Engineer",
     description: metaDescription,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Frontend Product Engineer | React & Next.js | Wahab Ansari",
+    title: "Muhammad Wahab Ansari — React & Next.js Product Engineer",
     description: metaDescription,
   },
   robots: {
@@ -98,7 +87,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
     { media: "(prefers-color-scheme: dark)", color: "#0b1120" },
   ],
 };
@@ -108,7 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       data-theme="light"
-      className={`${googleSans.variable} ${googleSansCode.variable}`}
+      className={inter.variable}
       suppressHydrationWarning
     >
       <head>
@@ -122,6 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         {children}
+        <Gtm />
         <TrackClicks />
         <SpeedInsights />
       </body>

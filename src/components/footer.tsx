@@ -26,8 +26,8 @@ export function Footer() {
               <Wordmark />
             </Link>
             <p className="ds-body-sm mt-5 max-w-xs">{positioning}</p>
-            <Link href="/contact" data-track="cta_start_project" data-track-label="footer" className="ds-link mt-5">
-              Start a project
+            <Link href="/contact" data-track="cta_click" data-track-label="footer" className="ds-link mt-5">
+              Discuss your project
               <ArrowIcon className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -45,8 +45,8 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* The five core services and nothing else — the footer is not a
-              place to reproduce the sitemap. */}
+          {/* The services and nothing else — the footer is not a place to
+              reproduce the sitemap. */}
           <nav aria-label="Services" className="md:col-span-3">
             <p className="ds-meta">Services</p>
             <ul className="mt-4">
@@ -80,6 +80,16 @@ export function Footer() {
                     href={s.href}
                     target={s.href.startsWith("http") ? "_blank" : undefined}
                     rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    /* The external profiles are the entity model's corroborating
+                       signals, so it is worth knowing which ones get followed. */
+                    data-track={
+                      s.label === "GitHub"
+                        ? "github_click"
+                        : s.label === "LinkedIn"
+                          ? "linkedin_click"
+                          : undefined
+                    }
+                    data-track-label="footer"
                     className={linkClass}
                   >
                     {s.label}

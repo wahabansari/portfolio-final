@@ -15,14 +15,24 @@ import type { NextConfig } from "next";
  * an error.
  */
 const serviceRedirects: { source: string; destination: string }[] = [
+  /* ── The redesign service's own rename ────────────────────────────────
+     "Conversion" became "Rebuild" when the service was repositioned around
+     modernization rather than conversion-rate work. The old slug was
+     indexed, so it redirects rather than 404s — and it has to sit above the
+     catch-alls, which is why it leads the list. */
+  {
+    source: "/services/website-redesign-conversion",
+    destination: "/services/website-redesign-rebuild",
+  },
+
   /* ── Frontend detail pages that now belong to the redesign service ───── */
   {
     source: "/services/frontend/email-template-development",
-    destination: "/services/website-redesign-conversion",
+    destination: "/services/website-redesign-rebuild",
   },
   {
     source: "/services/frontend/website-dashboard-redesign",
-    destination: "/services/website-redesign-conversion",
+    destination: "/services/website-redesign-rebuild",
   },
 
   /* ── Frontend detail pages absorbed into the primary service ─────────── */
@@ -61,26 +71,32 @@ const serviceRedirects: { source: string; destination: string }[] = [
     destination: "/services/ai-product-integration",
   },
 
-  /* ── WordPress category → redesign & conversion ──────────────────────── */
+  /* ── WordPress category ───────────────────────────────────────────────
+     Two of these now have an exact-intent destination that did not exist when
+     the map was first written: the old migration URL points at the dedicated
+     migration service rather than at a general redesign page, and the speed
+     URL points at performance engineering. A redirect to a merely related
+     page keeps the signal; a redirect to the page about the same problem
+     keeps the visitor too. */
   {
-    source: "/services/wordpress/custom-wordpress-theme-development",
-    destination: "/services/website-redesign-conversion",
-  },
-  {
-    source: "/services/wordpress/wordpress-plugin-development",
-    destination: "/services/website-redesign-conversion",
+    source: "/services/wordpress/wordpress-to-nextjs-migration",
+    destination: "/services/wordpress-to-nextjs-migration",
   },
   {
     source: "/services/wordpress/wordpress-speed-optimization",
-    destination: "/services/website-redesign-conversion",
+    destination: "/services/performance-engineering",
   },
   {
-    source: "/services/wordpress/wordpress-to-nextjs-migration",
-    destination: "/services/website-redesign-conversion",
+    source: "/services/wordpress/custom-wordpress-theme-development",
+    destination: "/services/website-redesign-rebuild",
+  },
+  {
+    source: "/services/wordpress/wordpress-plugin-development",
+    destination: "/services/website-redesign-rebuild",
   },
   {
     source: "/services/wordpress/landing-page-development",
-    destination: "/services/website-redesign-conversion",
+    destination: "/services/website-redesign-rebuild",
   },
 
   /* ── Category roots, then their catch-alls ───────────────────────────── */
@@ -88,8 +104,8 @@ const serviceRedirects: { source: string; destination: string }[] = [
   { source: "/services/frontend/:path*", destination: "/services/frontend-product-engineering" },
   { source: "/services/automation", destination: "/services/ai-product-integration" },
   { source: "/services/automation/:path*", destination: "/services/ai-product-integration" },
-  { source: "/services/wordpress", destination: "/services/website-redesign-conversion" },
-  { source: "/services/wordpress/:path*", destination: "/services/website-redesign-conversion" },
+  { source: "/services/wordpress", destination: "/services/wordpress-to-nextjs-migration" },
+  { source: "/services/wordpress/:path*", destination: "/services/website-redesign-rebuild" },
 ];
 
 const nextConfig: NextConfig = {

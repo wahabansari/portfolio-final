@@ -37,7 +37,7 @@ export default function ServicesPage() {
           actions={
             <>
               <Link href="/contact" className="ds-btn ds-btn-primary">
-                Start a project
+                Discuss your project
                 <ArrowIcon />
               </Link>
               <Link href="/work" className="ds-btn ds-btn-secondary">
@@ -85,7 +85,7 @@ export default function ServicesPage() {
           tone="soft"
           heading="Not sure which one applies?"
           body="Describe the problem rather than the service. I will tell you which of these fits, whether it is a smaller job than you think, and if it is something I should not be doing."
-          primary={{ label: "Start a project", href: "/contact" }}
+          primary={{ label: "Discuss your project", href: "/contact" }}
           secondary={{ label: "See the work first", href: "/work" }}
         />
       </main>

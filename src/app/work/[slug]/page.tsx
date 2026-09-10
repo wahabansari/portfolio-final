@@ -61,7 +61,7 @@ export default async function CaseStudyPage({
   return (
     <>
       <CaseStudyJsonLd project={project} study={study} />
-      <PageEvent event="view_case_study" label={project.slug} />
+      <PageEvent event="case_study_view" label={project.slug} />
       <Nav />
       <main id="main">
         <PageHeader
@@ -77,7 +77,7 @@ export default async function CaseStudyPage({
             <>
               <Link
                 href="/contact"
-                data-track="cta_start_project"
+                data-track="cta_click"
                 data-track-label={`case-study:${project.slug}`}
                 className="ds-btn ds-btn-primary"
               >
@@ -87,7 +87,7 @@ export default async function CaseStudyPage({
               {project.href && (
                 <OutboundLink
                   href={project.href}
-                  event="outbound_project_click"
+                  event="case_study_view"
                   payload={{ project: project.slug }}
                   className="ds-btn ds-btn-secondary"
                 >
@@ -142,6 +142,23 @@ export default async function CaseStudyPage({
 
               <h2 className="ds-h3 mt-11">The problem</h2>
               <p className="ds-body ds-measure mt-4">{study.problem}</p>
+
+              {/* Constraints, before the approach. A decision only looks
+                  right or wrong against what could not be changed — without
+                  them, every case study reads as though the ideal solution
+                  was simply available and chosen. */}
+              <h2 className="ds-h3 mt-11">Constraints</h2>
+              <ul className="mt-4 space-y-3">
+                {study.constraints.map((item) => (
+                  <li key={item} className="flex items-start gap-3.5">
+                    <span
+                      aria-hidden
+                      className="mt-[0.6rem] h-1.5 w-1.5 shrink-0 rounded-full bg-ink-soft"
+                    />
+                    <p className="ds-body">{item}</p>
+                  </li>
+                ))}
+              </ul>
             </Reveal>
 
             <Reveal delay={0.06} className="lg:col-span-5">

@@ -90,7 +90,7 @@ export default function NotFound() {
                     href="/contact"
                     className="flex items-center justify-between gap-4 py-3.5 text-[0.9375rem] text-ink-muted transition-colors hover:text-accent"
                   >
-                    Start a project
+                    Discuss your project
                     <ArrowIcon className="h-3.5 w-3.5 shrink-0" />
                   </Link>
                 </li>

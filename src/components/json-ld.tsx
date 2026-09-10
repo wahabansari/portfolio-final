@@ -1,3 +1,4 @@
+import type { Insight } from "@/content/insights";
 import type { Service } from "@/content/services";
 import { capabilities, experience, positioning, site, socials } from "@/content/site";
 import type { CaseStudy, Project } from "@/content/work";
@@ -320,6 +321,93 @@ export function CaseStudyJsonLd({
             { name: "Home", item: `${site.url}/` },
             { name: "Work", item: `${site.url}/work` },
             { name: project.title, item: url },
+          ]),
+          personNode,
+        ],
+      }}
+    />
+  );
+}
+
+/** The insights hub — a collection page listing the published articles. */
+export function InsightsIndexJsonLd({ insights }: { insights: Insight[] }) {
+  const url = `${site.url}/insights`;
+  return (
+    <Script
+      data={{
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "CollectionPage",
+            "@id": url,
+            url,
+            name: "Insights",
+            isPartOf: { "@id": SITE_ID },
+            mainEntity: {
+              "@type": "ItemList",
+              itemListElement: insights.map((i, idx) => ({
+                "@type": "ListItem",
+                position: idx + 1,
+                name: i.title,
+                url: `${url}/${i.slug}`,
+              })),
+            },
+          },
+          breadcrumbNode([
+            { name: "Home", item: `${site.url}/` },
+            { name: "Insights", item: url },
+          ]),
+        ],
+      }}
+    />
+  );
+}
+
+/**
+ * An insight article. Article rather than CreativeWork: these are dated,
+ * authored editorial pieces with a headline and a modification date, which is
+ * exactly what Article describes — unlike the case studies, which are project
+ * write-ups rather than editorial content.
+ */
+export function ArticleJsonLd({ insight }: { insight: Insight }) {
+  const url = `${site.url}/insights/${insight.slug}`;
+
+  return (
+    <Script
+      data={{
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Article",
+            "@id": url,
+            url,
+            headline: insight.h1,
+            description: insight.metaDescription,
+            author: { "@id": PERSON_ID },
+            publisher: { "@id": PERSON_ID },
+            datePublished: insight.publishedAt,
+            dateModified: insight.updatedAt,
+            mainEntityOfPage: { "@type": "WebPage", "@id": url },
+            isPartOf: { "@id": SITE_ID },
+            keywords: insight.keywords.join(", "),
+          },
+          ...(insight.faqs && insight.faqs.length > 0
+            ? [
+                {
+                  "@type": "FAQPage",
+                  "@id": `${url}#faq`,
+                  mainEntity: insight.faqs.map((f) => ({
+                    "@type": "Question",
+                    name: f.q,
+                    acceptedAnswer: { "@type": "Answer", text: f.a },
+                  })),
+                },
+              ]
+            : []),
+          breadcrumbNode([
+            { name: "Home", item: `${site.url}/` },
+            { name: "Insights", item: `${site.url}/insights` },
+            { name: insight.title, item: url },
           ]),
           personNode,
         ],

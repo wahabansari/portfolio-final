@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { Accordion } from "./accordion";
 import { Reveal } from "./motion";
@@ -142,7 +143,7 @@ export function Wordmark({ compact = false }: { compact?: boolean }) {
         </span>
         {!compact && (
           <span className="ds-meta mt-1 hidden text-[0.6875rem] sm:block">
-            Frontend Product Engineer
+            {site.role}
           </span>
         )}
       </span>
@@ -279,37 +280,79 @@ export function CtaBand({
   body,
   primary,
   secondary,
+  steps,
   tone = "soft",
 }: {
   heading: string;
   body: string;
   primary: { label: string; href: string };
   secondary?: { label: string; href: string };
+  /**
+   * The enquiry sequence, shown beside the action on the page where the
+   * decision is actually made. "What happens after I click this" is the last
+   * unanswered question at the point of conversion, and answering it in place
+   * costs less friction than a reassurance paragraph does.
+   */
+  steps?: readonly { step: string; detail: string }[];
   tone?: "plain" | "soft" | "deep";
 }) {
+  const hasSteps = Boolean(steps?.length);
+
   return (
     <Section tone={tone}>
       <Reveal className="ds-card overflow-hidden">
         <div className="relative px-7 py-12 md:px-14 md:py-16">
           <span aria-hidden className="ds-grid-field pointer-events-none absolute inset-0" />
-          <div className="relative max-w-2xl">
-            <h2 className="ds-h2">{heading}</h2>
-            <p className="ds-lede mt-5">{body}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link
-                href={primary.href}
-                data-track={primary.href === "/contact" ? "cta_start_project" : undefined}
-                className="ds-btn ds-btn-primary"
-              >
-                {primary.label}
-                <ArrowIcon />
-              </Link>
-              {secondary && (
-                <Link href={secondary.href} className="ds-btn ds-btn-secondary">
-                  {secondary.label}
+          <div
+            className={cn(
+              "relative",
+              hasSteps ? "grid gap-10 lg:grid-cols-12 lg:gap-16" : "max-w-2xl",
+            )}
+          >
+            <div className={hasSteps ? "lg:col-span-7" : undefined}>
+              <h2 className="ds-h2">{heading}</h2>
+              <p className="ds-lede mt-5">{body}</p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link
+                  href={primary.href}
+                  data-track={primary.href === "/contact" ? "cta_click" : undefined}
+                  data-track-label="cta-band"
+                  className="ds-btn ds-btn-primary"
+                >
+                  {primary.label}
+                  <ArrowIcon />
                 </Link>
-              )}
+                {secondary && (
+                  <Link href={secondary.href} className="ds-btn ds-btn-secondary">
+                    {secondary.label}
+                  </Link>
+                )}
+              </div>
             </div>
+
+            {steps && steps.length > 0 && (
+              <div className="lg:col-span-5">
+                <p className="ds-meta">What happens next</p>
+                <ol className="mt-5 space-y-5 border-t border-border pt-5">
+                  {steps.map((item, i) => (
+                    <li key={item.step} className="flex gap-4">
+                      <span
+                        aria-hidden
+                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.75rem] font-semibold text-accent"
+                      >
+                        {i + 1}
+                      </span>
+                      <span>
+                        <span className="block text-[0.9375rem] font-medium text-ink">
+                          {item.step}
+                        </span>
+                        <span className="ds-body-sm mt-1 block">{item.detail}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
           </div>
         </div>
       </Reveal>
