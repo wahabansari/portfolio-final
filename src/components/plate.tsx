@@ -218,7 +218,7 @@ export function Plate({
               <span key={i} className="block h-1.5 w-1.5 rounded-full bg-border-strong" />
             ))}
           </span>
-          <span className="flex-1 truncate rounded-full border border-border bg-bg px-2.5 py-0.5 font-mono text-[0.625rem] text-ink-soft">
+          <span className="flex-1 truncate rounded-[var(--radius-sm)] border border-border bg-bg px-2.5 py-0.5 text-[0.625rem] tracking-wide text-ink-soft">
             {project.domain ?? project.title.toLowerCase()}
           </span>
         </div>

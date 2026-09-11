@@ -1,7 +1,17 @@
 import type { Insight } from "@/content/insights";
 import type { Service } from "@/content/services";
-import { capabilities, experience, positioning, site, socials } from "@/content/site";
+import {
+  capabilities,
+  homeFaqs,
+  positioning,
+  problemPaths,
+  process,
+  sections,
+  site,
+  socials,
+} from "@/content/site";
 import type { CaseStudy, Project } from "@/content/work";
+import { caseStudies } from "@/content/work";
 
 /**
  * Structured data.
@@ -60,11 +70,23 @@ export const personNode = {
     "AI Product Integration",
     ...capabilities.flatMap((g) => g.lead),
   ],
-  worksFor: experience.map((e) => ({ "@type": "Organization", name: e.company })),
-  alumniOf: [{ "@type": "CollegeOrUniversity", name: "University of Punjab" }],
+  worksFor: {
+    "@type": "Organization",
+    name: "Independent",
+    description: "Self-employed frontend product engineer",
+  },
+  alumniOf: [
+    {
+      "@type": "CollegeOrUniversity",
+      name: "University of Punjab",
+      url: "https://www.pu.edu.pk/",
+    },
+  ],
 };
 
-/** Homepage: the Person plus the WebSite it belongs to. */
+/** Homepage: the Person, its WebSite, the navigation, the routing items, the
+    delivery process, and the FAQ — all the structured claims behind what the
+    homepage visibly says. */
 export function HomeJsonLd() {
   return (
     <Script
@@ -80,6 +102,52 @@ export function HomeJsonLd() {
             description: positioning,
             publisher: { "@id": PERSON_ID },
             inLanguage: "en",
+          },
+          {
+            "@type": "ItemList",
+            "@id": `${site.url}/#problems`,
+            name: "What are you trying to solve?",
+            itemListElement: problemPaths.map((p, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              name: p.problem,
+              url: `${site.url}${p.href}`,
+            })),
+          },
+          {
+            "@type": "HowTo",
+            "@id": `${site.url}/#process`,
+            name: "How the work runs",
+            description: "The five-step delivery model used for every engagement.",
+            step: process.map((s, i) => ({
+              "@type": "HowToStep",
+              position: i + 1,
+              name: s.step,
+              text: s.detail,
+            })),
+          },
+          {
+            "@type": "FAQPage",
+            "@id": `${site.url}/#faq`,
+            speakable: {
+              "@type": "SpeakableSpecification",
+              cssSelector: [".ds-faq-answer"],
+            },
+            mainEntity: homeFaqs.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "@id": `${site.url}/#navigation`,
+            name: "Main navigation",
+            hasPart: sections.map((s) => ({
+              "@type": "SiteNavigationElement",
+              name: s.label,
+              url: `${site.url}${s.href}`,
+            })),
           },
         ],
       }}
@@ -131,11 +199,13 @@ export function PageJsonLd({
   path,
   description,
   trail,
+  action,
 }: {
   name: string;
   path: string;
   description: string;
   trail?: { name: string; item: string }[];
+  action?: object;
 }) {
   const url = `${site.url}${path}`;
   return (
@@ -151,6 +221,7 @@ export function PageJsonLd({
             description,
             isPartOf: { "@id": SITE_ID },
             about: { "@id": PERSON_ID },
+            ...(action ? { potentialAction: action } : {}),
           },
           breadcrumbNode(
             trail ?? [
@@ -195,6 +266,10 @@ export function ServiceJsonLd({ service }: { service: Service }) {
           {
             "@type": "FAQPage",
             "@id": `${url}#faq`,
+            speakable: {
+              "@type": "SpeakableSpecification",
+              cssSelector: [".ds-faq-answer"],
+            },
             mainEntity: service.faqs.map((f) => ({
               "@type": "Question",
               name: f.q,
@@ -372,6 +447,10 @@ export function InsightsIndexJsonLd({ insights }: { insights: Insight[] }) {
 export function ArticleJsonLd({ insight }: { insight: Insight }) {
   const url = `${site.url}/insights/${insight.slug}`;
 
+  const citedCaseStudies = insight.relatedCaseStudySlugs
+    .map((slug) => caseStudies.find((cs) => cs.slug === slug))
+    .filter((cs): cs is (typeof caseStudies)[number] => Boolean(cs));
+
   return (
     <Script
       data={{
@@ -389,13 +468,35 @@ export function ArticleJsonLd({ insight }: { insight: Insight }) {
             dateModified: insight.updatedAt,
             mainEntityOfPage: { "@type": "WebPage", "@id": url },
             isPartOf: { "@id": SITE_ID },
+            about: { "@id": PERSON_ID },
+            image: `${site.url}/opengraph-image`,
             keywords: insight.keywords.join(", "),
+            ...(citedCaseStudies.length > 0 || (insight.references?.length ?? 0) > 0
+              ? {
+                  citation: [
+                    ...citedCaseStudies.map((cs) => ({
+                      "@type": "CreativeWork",
+                      name: cs.title,
+                      url: `${site.url}/work/${cs.slug}`,
+                    })),
+                    ...(insight.references ?? []).map((r) => ({
+                      "@type": "CreativeWork",
+                      name: r.label,
+                      url: r.url,
+                    })),
+                  ],
+                }
+              : {}),
           },
           ...(insight.faqs && insight.faqs.length > 0
             ? [
                 {
                   "@type": "FAQPage",
                   "@id": `${url}#faq`,
+                  speakable: {
+                    "@type": "SpeakableSpecification",
+                    cssSelector: [".ds-faq-answer"],
+                  },
                   mainEntity: insight.faqs.map((f) => ({
                     "@type": "Question",
                     name: f.q,

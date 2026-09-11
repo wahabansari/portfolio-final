@@ -76,7 +76,7 @@ export function Accordion({
             </h3>
 
             <div id={panelId} role="region" aria-labelledby={triggerId} hidden={!isOpen}>
-              <p className="ds-body ds-measure ds-panel pr-10 pb-6">{item.a}</p>
+              <p className="ds-body ds-measure ds-panel ds-faq-answer pr-10 pb-6">{item.a}</p>
             </div>
           </div>
         );

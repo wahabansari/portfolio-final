@@ -23,6 +23,7 @@ export function pageMetadata({
   path,
   type = "website",
   absoluteTitle = false,
+  ogImage = `${site.url}/opengraph-image`,
 }: {
   /** The <title>. The root layout appends the name via its template. */
   title: string;
@@ -36,7 +37,19 @@ export function pageMetadata({
    * the <title> reads "About Wahab Ansari | ... | Wahab Ansari".
    */
   absoluteTitle?: boolean;
+  /**
+   * Absolute URL of the social card. Every page falls back to the generated
+   * /opengraph-image card unless a route supplies its own.
+   */
+  ogImage?: string;
 }): Metadata {
+  const image = {
+    url: ogImage,
+    width: 1200,
+    height: 630,
+    alt: `${title} — ${site.name}`,
+  };
+
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
@@ -48,11 +61,13 @@ export function pageMetadata({
       description,
       siteName: site.name,
       locale: "en_US",
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [image],
     },
   };
 }

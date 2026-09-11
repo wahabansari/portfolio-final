@@ -54,7 +54,18 @@ export const metadata: Metadata = {
   publisher: site.name,
   /* Absolute, with the trailing slash, so the homepage self-canonicalises to
      exactly the URL it is served from. */
-  alternates: { canonical: `${site.url}/` },
+  alternates: {
+    canonical: `${site.url}/`,
+    /* The site is English-only, so the English and x-default alternate URLs
+       both point at the same path. This tells Google that this is a
+       single-language site for a global audience (the UK, Europe, Australia
+       and North America are the target markets) rather than a site that is
+       missing a language variant. */
+    languages: {
+      en: `${site.url}/`,
+      "x-default": `${site.url}/`,
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -62,6 +73,14 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: "Muhammad Wahab Ansari — React & Next.js Product Engineer",
     description: metaDescription,
+    images: [
+      {
+        url: `${site.url}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: `${site.name} — ${site.role}`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

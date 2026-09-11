@@ -65,6 +65,11 @@ export default function ContactPage() {
           { name: "Home", item: `${site.url}/` },
           { name: "Contact", item: `${site.url}/contact` },
         ]}
+        action={{
+          "@type": "ContactAction",
+          target: `${site.url}/contact#contact`,
+          result: { "@type": "Message", name: "Project enquiry" },
+        }}
       />
       <Nav />
       <main id="main">

@@ -10,6 +10,7 @@ import {
   ArrowIcon,
   CtaBand,
   Definition,
+  ExternalIcon,
   Faqs,
   PageHeader,
   Reveal,
@@ -146,6 +147,36 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
             <Reveal>
               <Faqs faqs={insight.faqs} className="mx-auto max-w-4xl" />
             </Reveal>
+          </Section>
+        )}
+
+        {insight.references && insight.references.length > 0 && (
+          <Section tone="soft" bordered>
+            <SectionHeading
+              overline="Sources"
+              title="Primary sources"
+              description="The authority behind the claims above. Each link goes to the primary documentation the article draws on."
+            />
+            <ul className="grid gap-4 md:grid-cols-2">
+              {insight.references.map((ref) => (
+                <li key={ref.url}>
+                  <a
+                    href={ref.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ds-card ds-card-interactive group flex h-full items-center justify-between gap-4 p-5"
+                  >
+                    <span className="text-[0.9375rem] font-medium text-ink">{ref.label}</span>
+                    <ExternalIcon className="shrink-0 text-ink-soft transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p className="ds-body-sm mt-6 text-ink-muted">
+              Where this article reports a result, the case study linked under &ldquo;Where this
+              has been done&rdquo; is the primary record for it — these sources cover the
+              under the related framework and methodology.
+            </p>
           </Section>
         )}
 

@@ -28,7 +28,7 @@ export function GET() {
     "",
     `- [Home](${u("/")}): Positioning, proof, services, selected work and contact.`,
     `- [Work](${u("/work")}): Production projects, with three written up as case studies.`,
-    `- [Services](${u("/services")}): The six services, in commercial order.`,
+    `- [Services](${u("/services")}): The seven services, in commercial order.`,
     `- [Insights](${u("/insights")}): First-hand articles on migration and performance.`,
     `- [About](${u("/about")}): Background, experience, capabilities and credentials.`,
     `- [Contact](${u("/contact")}): Project brief form and direct contact paths.`,

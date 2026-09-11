@@ -61,6 +61,13 @@ export type Insight = {
   /** Where the article should route a reader who wants the work done. */
   relatedServiceSlug: string;
   relatedCaseStudySlugs: string[];
+  /**
+   * Authoritative sources the article relies on. Rendered as a linked
+   * "Sources" section so a reader — or a generative system — can trace a
+   * claim to a primary source, and emitted into the Article structured data
+   * as `citation`.
+   */
+  references?: { label: string; url: string }[];
   cta: { heading: string; body: string; primaryLabel: string };
 };
 
@@ -84,8 +91,8 @@ export const insights: Insight[] = [
     dek: "The shape of a migration that protects rankings, end to end — not a tactic list, the actual order of operations.",
     cluster: "Migration",
     intent: "Commercial investigation",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-06-20",
+    updatedAt: "2026-06-20",
     definition:
       "Migrating WordPress to Next.js without losing SEO means treating the migration as an SEO project that happens to involve a framework change, rather than a framework change with SEO patched on at the end — the order those two things happen in is what decides whether the rankings survive.",
     intro: [
@@ -150,6 +157,11 @@ export const insights: Insight[] = [
         a: "Often there is a brief adjustment period while Google reprocesses the site — that is normal and expected, not a sign something went wrong. What a correct migration avoids is a sustained loss: the dip is temporary because the signals (redirects, canonicals, structured data, content) were preserved, so the site settles back to where it was rather than starting over.",
       },
     ],
+    references: [
+      { label: "Next.js: redirects (next.config.ts)", url: "https://nextjs.org/docs/app/api-reference/config/next-config-js/redirects" },
+      { label: "Google: sitemaps overview", url: "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" },
+    ],
+
     relatedServiceSlug: "wordpress-to-nextjs-migration",
     relatedCaseStudySlugs: ["aussiemotor"],
     cta: {
@@ -178,8 +190,8 @@ export const insights: Insight[] = [
     dek: "Not which is better — which is right for what your site actually needs to do.",
     cluster: "Migration",
     intent: "Commercial investigation",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-06-27",
+    updatedAt: "2026-06-27",
     definition:
       "WordPress fits a site whose main job is letting non-technical people publish content inside an existing theme, while Next.js fits a site whose main constraint is performance, custom interface behaviour or engineering control — and most sites that need to decide between them have outgrown WordPress on one of those second three, not stopped needing the first.",
     intro: [
@@ -230,6 +242,11 @@ export const insights: Insight[] = [
         a: "Not a single event — an accumulation. Each plugin added to solve one problem is another dependency, another maintenance surface and often another render-blocking script, until the page weight and the plugin conflicts become the actual bottleneck on every future change, not just the current one.",
       },
     ],
+    references: [
+      { label: "Next.js documentation", url: "https://nextjs.org/docs" },
+      { label: "WordPress.org", url: "https://wordpress.org/" },
+    ],
+
     relatedServiceSlug: "wordpress-to-nextjs-migration",
     relatedCaseStudySlugs: ["cennetsol"],
     cta: {
@@ -258,8 +275,8 @@ export const insights: Insight[] = [
     dek: "Every step that protects existing rankings during a WordPress to Next.js migration, in the order I run them.",
     cluster: "Migration",
     intent: "Problem solving",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-07-04",
+    updatedAt: "2026-07-04",
     definition:
       "A WordPress to Next.js migration checklist has five non-negotiable stages — URL inventory, redirect mapping, content and structured-data parity, a staged cutover, and post-launch indexation monitoring — and rankings are almost always lost by skipping one of these, not by the framework change itself.",
     intro: [
@@ -317,6 +334,11 @@ export const insights: Insight[] = [
         a: "Run the migrated pages through a rich-results or schema validator and compare the output against what the old page emitted before migration — not against what you intended to build, against what was actually there. Discrepancies show up here before they show up anywhere else.",
       },
     ],
+    references: [
+      { label: "Next.js: generateMetadata API", url: "https://nextjs.org/docs/app/api-reference/functions/generate-metadata" },
+      { label: "Next.js: redirects (next.config.ts)", url: "https://nextjs.org/docs/app/api-reference/config/next-config-js/redirects" },
+    ],
+
     relatedServiceSlug: "wordpress-to-nextjs-migration",
     relatedCaseStudySlugs: ["cennetsol", "sunhub"],
     cta: {
@@ -345,8 +367,8 @@ export const insights: Insight[] = [
     dek: "The mechanics that actually decide whether a redirect passes value or quietly breaks it.",
     cluster: "Migration",
     intent: "Problem solving",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-07-11",
+    updatedAt: "2026-07-11",
     definition:
       "Preserving URLs and redirects during a migration means giving every URL that ever earned a ranking, a backlink or an indexed status a single, direct, permanent redirect to its true replacement — not a change of host and not a chain of redirects that eventually arrives there.",
     intro: [
@@ -404,6 +426,11 @@ export const insights: Insight[] = [
         a: "Indefinitely, for anything that was meaningfully indexed or linked — old links and bookmarks do not expire on a schedule. Removing redirects prematurely is a common way sites lose value months after a migration that otherwise went well.",
       },
     ],
+    references: [
+      { label: "Google: move your site with 301 redirects", url: "https://developers.google.com/search/docs/crawling-indexing/site-structure/move-with-301-redirects" },
+      { label: "Next.js: redirects (next.config.ts)", url: "https://nextjs.org/docs/app/api-reference/config/next-config-js/redirects" },
+    ],
+
     relatedServiceSlug: "wordpress-to-nextjs-migration",
     relatedCaseStudySlugs: ["aussiemotor"],
     cta: {
@@ -432,8 +459,8 @@ export const insights: Insight[] = [
     dek: "Redesign fixes clarity. Rebuild fixes structure. Most sites asking this question have already confused the two.",
     cluster: "Redesign",
     intent: "Commercial investigation",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-07-18",
+    updatedAt: "2026-07-18",
     definition:
       "A redesign changes what a site says and how it is organised without changing the underlying technology, while a rebuild changes the underlying technology because the current stack — not the messaging or the visual design — has become the actual constraint; choosing between them means diagnosing which one is genuinely broken.",
     intro: [
@@ -491,6 +518,11 @@ export const insights: Insight[] = [
         a: "That is a normal starting position, not a sign anything is wrong — the diagnosis is usually the first deliverable of a proper engagement, not a prerequisite for starting one. Describing the actual symptoms (what's slow, what's unclear, what can't be built) is enough to start from.",
       },
     ],
+    references: [
+      { label: "Nielsen Norman Group: UX research library", url: "https://www.nngroup.com/articles/" },
+      { label: "Next.js documentation", url: "https://nextjs.org/docs" },
+    ],
+
     relatedServiceSlug: "website-redesign-rebuild",
     relatedCaseStudySlugs: ["cennetsol", "verdira"],
     cta: {
@@ -519,8 +551,8 @@ export const insights: Insight[] = [
     dek: "Measure first, remove before you optimise, change one thing at a time, measure again.",
     cluster: "Performance",
     intent: "Expertise / proof",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-07-25",
+    updatedAt: "2026-07-25",
     definition:
       "Improving Core Web Vitals in a React application means measuring a real baseline, removing what is not being used before optimising what is, and re-measuring after every isolated change — in that order, because skipping the baseline or bundling changes together is what makes performance work unreliable.",
     intro: [
@@ -571,6 +603,11 @@ export const insights: Insight[] = [
         a: "Only when I have published them. The 30% figure on Sunhub is an aggregate improvement measured before and after the work, and I have deliberately not reproduced per-metric numbers I have not shown the workings for — publishing those is on the improvement list for that case study, not something I'll fabricate here.",
       },
     ],
+    references: [
+      { label: "Google web.dev: Core Web Vitals", url: "https://web.dev/vitals/" },
+      { label: "Google web.dev: learn Core Web Vitals", url: "https://web.dev/learn-core-web-vitals/" },
+    ],
+
     relatedServiceSlug: "performance-engineering",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
@@ -599,8 +636,8 @@ export const insights: Insight[] = [
     dek: "A diagnostic order, not a list of fixes — most of the time the first thing you check tells you what actually matters.",
     cluster: "Performance",
     intent: "Problem solving",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-08-01",
+    updatedAt: "2026-08-01",
     definition:
       "Diagnosing a slow React application means checking the network request waterfall before the component profiler, bundle composition before render logic, and images and third-party scripts before either — because most React performance complaints trace back to what is being loaded, not how a component re-renders.",
     intro: [
@@ -658,6 +695,11 @@ export const insights: Insight[] = [
         a: "The browser's own network panel, before any third-party tool. It is free, it is already open, and it answers the single most important question — what is actually being loaded and in what order — faster than anything else available.",
       },
     ],
+    references: [
+      { label: "Google web.dev: learn performance", url: "https://web.dev/learn/performance/" },
+      { label: "MDN: Web performance", url: "https://developer.mozilla.org/en-US/docs/Web/Performance" },
+    ],
+
     relatedServiceSlug: "performance-engineering",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
@@ -686,8 +728,8 @@ export const insights: Insight[] = [
     dek: "Not whether the codebase is good — whether it is ready for the specific thing you're about to build.",
     cluster: "Engineering",
     intent: "Problem solving",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-08-08",
+    updatedAt: "2026-08-08",
     definition:
       "Evaluating a Next.js codebase before adding a feature means checking whether the feature fits the existing rendering strategy, whether it should follow or deliberately break existing conventions, what else in the app it touches, and what protects the rest of the app if it goes wrong — a narrower, more tactical read than a full codebase audit, scoped to one piece of work rather than the whole system.",
     intro: [
@@ -745,6 +787,11 @@ export const insights: Insight[] = [
         a: "Then that time pressure is itself part of the risk assessment — a feature added without checking rendering fit, conventions or blast radius is a feature shipped on assumptions rather than evidence, and that should factor into how conservatively it gets scoped and how closely it gets watched after launch.",
       },
     ],
+    references: [
+      { label: "Next.js documentation", url: "https://nextjs.org/docs" },
+      { label: "React documentation", url: "https://react.dev/learn" },
+    ],
+
     relatedServiceSlug: "frontend-product-engineering",
     relatedCaseStudySlugs: ["verdira"],
     cta: {
@@ -773,8 +820,8 @@ export const insights: Insight[] = [
     dek: "Yes — Next.js does not require you to adopt its own backend conventions to use it as a frontend.",
     cluster: "Engineering",
     intent: "Commercial investigation",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-08-15",
+    updatedAt: "2026-08-15",
     definition:
       "A Next.js frontend can work with any existing REST or GraphQL backend, because Next.js's own server features — Route Handlers, Server Components — are optional conveniences, not requirements, and a Next.js app can call an external API directly from the client or through a thin server-side proxy exactly as any other frontend framework would.",
     intro: [
@@ -832,6 +879,11 @@ export const insights: Insight[] = [
         a: "Yes — the frontend only needs a well-defined API contract (REST, GraphQL, or another interface) to talk to; the language the backend is written in is invisible to the frontend as long as that contract is clear and stable.",
       },
     ],
+    references: [
+      { label: "Next.js: data fetching and fetching", url: "https://nextjs.org/docs/app/building-your-application/data-fetching/fetching" },
+      { label: "Google: API design guide", url: "https://cloud.google.com/apis/design" },
+    ],
+
     relatedServiceSlug: "frontend-product-engineering",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
@@ -860,8 +912,8 @@ export const insights: Insight[] = [
     dek: "The mechanics of the arrangement, not the pitch — who owns what, and where it actually breaks.",
     cluster: "Agency",
     intent: "Commercial investigation",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-08-22",
+    updatedAt: "2026-08-22",
     definition:
       "White-label React development is an arrangement where an agency keeps the client relationship, the brand and the contract, while an external engineer delivers the implementation inside the agency's process — the agency's client typically never knows, or does not need to know, who actually wrote the code.",
     intro: [
@@ -919,6 +971,11 @@ export const insights: Insight[] = [
         a: "Yes, that is usually what a retained-capacity arrangement is for — ongoing feature delivery and maintenance on a client codebase the agency already holds, allocated as a standing capacity rather than scoped project by project.",
       },
     ],
+    references: [
+      { label: "Next.js documentation", url: "https://nextjs.org/docs" },
+      { label: "React documentation", url: "https://react.dev/learn" },
+    ],
+
     relatedServiceSlug: "agency-frontend-development",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
@@ -947,8 +1004,8 @@ export const insights: Insight[] = [
     dek: "Start from the job the feature does, not the model doing it — the model call is rarely the hard part.",
     cluster: "AI Integration",
     intent: "Problem solving",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-08-29",
+    updatedAt: "2026-08-29",
     definition:
       "Adding an AI feature to an existing web application means defining one specific, testable job it does, grounding its answers in a real source of truth rather than the model's general knowledge, and designing the interface for the case where the model is wrong — the model call itself is usually the easiest part of the work.",
     intro: [
@@ -1006,6 +1063,11 @@ export const insights: Insight[] = [
         a: "By what the job actually is. If the job is finding the right answer in existing content, a well-designed search that returns a grounded answer with sources often serves users better and is easier to keep accurate than a chat window. A chat interface earns its place when the interaction genuinely benefits from back-and-forth, not by default.",
       },
     ],
+    references: [
+      { label: "OpenAI: platform documentation", url: "https://platform.openai.com/docs" },
+      { label: "Google: API design guide", url: "https://cloud.google.com/apis/design" },
+    ],
+
     relatedServiceSlug: "ai-product-integration",
     relatedCaseStudySlugs: ["cennetsol", "verdira"],
     cta: {
@@ -1034,8 +1096,8 @@ export const insights: Insight[] = [
     dek: "A short, honest audit before any commitment — not a rewrite pitch in disguise.",
     cluster: "Engineering",
     intent: "Problem solving",
-    publishedAt: "2026-09-10",
-    updatedAt: "2026-09-10",
+    publishedAt: "2026-09-05",
+    updatedAt: "2026-09-05",
     definition:
       "Evaluating a React or Next.js codebase before taking it over means checking, in order, how state actually flows, whether the rendering strategy was chosen deliberately, where the component boundaries sit, and what the loading, empty and error states currently do — because those four areas are where inherited codebases most often hide the real cost of the next feature.",
     intro: [
@@ -1086,6 +1148,11 @@ export const insights: Insight[] = [
         a: "Then that is the finding, and it is a useful one — it means the next feature is just the next feature, not preceded by restructuring work. I am not incentivised to find problems that are not there; an honest audit sometimes ends with \"start building.\"",
       },
     ],
+    references: [
+      { label: "MDN: Web performance", url: "https://developer.mozilla.org/en-US/docs/Web/Performance" },
+      { label: "Google: sitemaps overview", url: "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" },
+    ],
+
     relatedServiceSlug: "frontend-product-engineering",
     relatedCaseStudySlugs: ["verdira", "sunhub"],
     cta: {
