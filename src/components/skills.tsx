@@ -55,7 +55,7 @@ export function Capabilities({
       {/* The honest footnote: capabilities that are real but are not what I
           lead with commercially. Kept visible so nobody has to guess. */}
       <Reveal delay={0.1} className="mt-8">
-        <div className="ds-card flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between md:p-7">
+        <div className="flex flex-col gap-4 border-t border-border pt-6 md:flex-row md:items-center md:justify-between md:gap-8">
           <div>
             <p className="ds-meta">Also available, by request</p>
             <p className="ds-body-sm mt-2">{byRequest.join(" · ")}</p>

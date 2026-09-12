@@ -1,142 +1,127 @@
 import Link from "next/link";
-import { serviceGroups, services } from "@/content/services";
-import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
+import { serviceGroups, services, TIER_LABEL } from "@/content/services";
+import { ArrowIcon, CheckIcon, Reveal, Section, SectionHeading } from "./ui";
 import { cn } from "@/lib/cn";
 
 /**
- * The services display, tiered.
+ * The services display on the homepage.
  *
- * Six services presented as six identical cards is a catalogue, and a
- * catalogue makes the buyer do the ranking. This leads with the core offering
- * at full width and groups the rest underneath by the kind of engagement they
- * are — the same three groups the mega-menu uses, so a visitor who opened the
- * menu already has the model.
- *
- * The grouping is not a quality ranking. "Specialized" is where the highest
- * intent lives (the migration page is the strongest entry point this site
- * has); it is grouped separately because it is a different shape of
- * engagement, not because it matters less.
+ * Seven equal tabs make the buyer reconcile seven promises at once. This
+ * layout states the hierarchy plainly instead: the primary offering — frontend
+ * product engineering — is presented large in its own featured panel, and the
+ * six engagement shapes that surround it are a numbered directory to its side.
+ * No interaction is hidden behind a click, the ranking is declared outright,
+ * and every service's story stays in the initial HTML.
  */
 
 const [primaryService] = services;
+const surrounding = services.slice(1);
 
-function ServiceLink({
-  slug,
-  title,
-  summary,
-  source,
-}: {
-  slug: string;
-  title: string;
-  summary: string;
-  source: string;
-}) {
-  return (
-    <Link
-      href={`/services/${slug}`}
-      data-track="cta_click"
-      data-track-label={`${source}:${slug}`}
-      className="group flex h-full flex-col rounded-[var(--radius-md)] p-5 transition-colors hover:bg-surface"
-    >
-      <span className="flex items-center gap-1.5 font-display text-[1rem] font-medium text-ink transition-colors group-hover:text-accent">
-        {title}
-        <ArrowIcon className="h-3.5 w-3.5 -translate-x-1 opacity-0 transition-[translate,opacity] duration-200 group-hover:translate-x-0 group-hover:opacity-100" />
-      </span>
-      <span className="ds-body-sm mt-1.5 block">{summary}</span>
-    </Link>
-  );
+/** The core offering — a full-width featured band: story on the left,
+ best-fit + action on the right. */
+function CoreBand() {
+ const sv = primaryService;
+
+ return (
+ <div className="rounded-2xl border border-accent/20 bg-accent-soft/40 p-7 md:p-10">
+ <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+ <div className="lg:col-span-7">
+ <div className="flex flex-wrap items-center gap-3">
+ <span className="ds-chip ds-chip-accent">{sv.eyebrow}</span>
+ <span className="ds-meta">{TIER_LABEL[sv.tier]}</span>
+ </div>
+
+ <h3 className="ds-h2 mt-5">{sv.title}</h3>
+ <p className="ds-body mt-3">{sv.definition}</p>
+ </div>
+
+ <div className="lg:col-span-5">
+ <p className="ds-meta text-ink-muted">Best for</p>
+ <ul className="mt-4 space-y-3">
+ {sv.idealFor.slice(0, 3).map((fit) => (
+ <li key={fit} className="flex items-start gap-2.5">
+ <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-success" />
+ <span className="text-[0.9375rem] leading-relaxed text-ink">{fit}</span>
+ </li>
+ ))}
+ </ul>
+
+ <Link
+ href={`/services/${sv.slug}`}
+ data-track="cta_click"
+ data-track-label={`home-services:${sv.slug}`}
+ className="ds-btn ds-btn-primary mt-7"
+ >
+ Explore {sv.title}
+ <ArrowIcon />
+ </Link>
+ </div>
+ </div>
+ </div>
+ );
 }
 
-/** The lead card — the offering everything else on the site supports. */
-function PrimaryServiceCard({ source }: { source: string }) {
-  return (
-    <Reveal>
-      <Link
-        href={`/services/${primaryService.slug}`}
-        data-track="cta_click"
-        data-track-label={`${source}:${primaryService.slug}`}
-        className="ds-card ds-card-interactive group block overflow-hidden p-7 md:p-9"
-      >
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
-          <div className="lg:col-span-7">
-            <span className="ds-chip ds-chip-accent">{primaryService.eyebrow}</span>
-            <h3 className="ds-h3 mt-5 transition-colors group-hover:text-accent">
-              {primaryService.title}
-            </h3>
-            <p className="ds-body mt-4 max-w-2xl">{primaryService.definition}</p>
-            <span className="ds-link mt-7">
-              {primaryService.cta.primaryLabel}
-              <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-            </span>
-          </div>
+/** The six engagement shapes encircling the core offer — a hairline grid of
+ equal cells so nothing outranks anything else outside the core. */
+function SurroundingGrid() {
+ return (
+ <div className="mt-8">
+ <p className="ds-meta text-ink-muted">Also covered</p>
+ <ul className="mt-5 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+ {surrounding.map((sv, i) => (
+ <Reveal as="li" key={sv.slug} delay={i * 0.04} className="h-full">
+ <Link
+ href={`/services/${sv.slug}`}
+ data-track="cta_click"
+ data-track-label={`home-services:${sv.slug}`}
+ className="group flex h-full flex-col bg-card p-6 transition-colors hover:bg-surface md:p-7"
+ >
+ <span className="flex items-center justify-between">
+ <span className="font-display text-[0.8125rem] font-semibold text-ink-soft tabular-nums">
+ {String(i + 2).padStart(2, "0")}
+ </span>
+ <span className="ds-meta">{TIER_LABEL[sv.tier]}</span>
+ </span>
 
-          <div className="lg:col-span-5">
-            <p className="ds-meta">Typically includes</p>
-            <ul className="mt-4 space-y-2.5 border-t border-border pt-4">
-              {primaryService.deliverables.slice(0, 4).map((d) => (
-                <li key={d.title} className="flex items-start gap-2.5">
-                  <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
-                  <span className="text-[0.9375rem] leading-relaxed text-ink-muted">{d.title}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Link>
-    </Reveal>
-  );
-}
+ <h4 className="ds-title mt-4 text-ink transition-colors group-hover:text-accent">
+ {sv.title}
+ </h4>
+ <p className="ds-body-sm mt-2 text-ink-muted">{sv.summary}</p>
 
-/** The remaining five, grouped by engagement type. */
-function ServiceGroups({ source }: { source: string }) {
-  return (
-    <div className="mt-6 grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border lg:grid-cols-3">
-      {serviceGroups.map((group, i) => {
-        const items = group.items.filter((s) => s.slug !== primaryService.slug);
-        if (items.length === 0) return null;
-
-        return (
-          <Reveal key={group.tier} delay={i * 0.05} className="bg-card p-6 md:p-7">
-            <p className="ds-meta">{group.label}</p>
-            <ul className="mt-3 -mx-5">
-              {items.map((sv) => (
-                <li key={sv.slug}>
-                  <ServiceLink
-                    slug={sv.slug}
-                    title={sv.title}
-                    summary={sv.summary}
-                    source={source}
-                  />
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        );
-      })}
-    </div>
-  );
+ <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-[0.875rem] font-semibold text-accent">
+ Explore
+ <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+ </span>
+ </Link>
+ </Reveal>
+ ))}
+ </ul>
+ </div>
+ );
 }
 
 /** Homepage block. */
-export function ServicesOverview({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
-  return (
-    <Section id="services" tone={tone}>
-      <SectionHeading
-        overline="What I do"
-        title="One core offering, and the work that surrounds it"
-        description="Every engagement is production frontend delivery. What changes is the shape — a new product, a rebuild, a migration, or capacity behind your brand."
-        align="between"
-        aside={
-          <Link href="/services" className="ds-btn ds-btn-secondary">
-            Compare services
-            <ArrowIcon />
-          </Link>
-        }
-      />
-      <PrimaryServiceCard source="home" />
-      <ServiceGroups source="home" />
-    </Section>
-  );
+export function ServicesOverview({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
+ return (
+ <Section id="services" tone={tone}>
+ <SectionHeading
+ overline="What I do"
+ title="One core offering, and the work that surrounds it"
+ description="Every engagement is production frontend delivery. What changes is the shape — a new product, a rebuild, a migration, or capacity behind your brand."
+ align="between"
+ aside={
+ <Link href="/services" className="ds-btn ds-btn-secondary">
+ Compare services
+ <ArrowIcon />
+ </Link>
+ }
+ />
+ <Reveal>
+ <CoreBand />
+ </Reveal>
+ <SurroundingGrid />
+ </Section>
+ );
 }
 
 /**
@@ -146,55 +131,55 @@ export function ServicesOverview({ tone = "soft" }: { tone?: "plain" | "soft" | 
  * the eye run down titles without a card boundary interrupting every line.
  */
 export function ServicesList() {
-  return (
-    <Section tone="plain">
-      <div className="space-y-14">
-        {serviceGroups.map((group) => (
-          <div key={group.tier}>
-            <div className="flex items-baseline justify-between gap-6">
-              <h2 className="ds-meta">{group.label}</h2>
-              <span className="ds-meta">
-                {group.items.length} {group.items.length === 1 ? "service" : "services"}
-              </span>
-            </div>
+ return (
+ <Section tone="plain">
+ <div className="space-y-14">
+ {serviceGroups.map((group) => (
+ <div key={group.tier}>
+ <div className="flex items-baseline justify-between gap-6">
+ <h2 className="ds-meta">{group.label}</h2>
+ <span className="ds-meta">
+ {group.items.length} {group.items.length === 1 ? "service" : "services"}
+ </span>
+ </div>
 
-            <ul className="mt-5 border-t border-border">
-              {group.items.map((service, i) => (
-                <Reveal as="li" key={service.slug} delay={i * 0.04}>
-                  <Link
-                    href={`/services/${service.slug}`}
-                    data-track="cta_click"
-                    data-track-label={`hub:${service.slug}`}
-                    className="group grid grid-cols-1 items-baseline gap-x-8 gap-y-3 border-b border-border py-7 transition-colors hover:bg-surface md:grid-cols-12 md:py-8"
-                  >
-                    <span className="md:col-span-5 md:pl-2">
-                      <span
-                        className={cn(
-                          "ds-h3 block text-ink transition-colors group-hover:text-accent",
-                        )}
-                      >
-                        {service.title}
-                      </span>
-                      <span className="ds-meta mt-2 block">{service.eyebrow}</span>
-                    </span>
+ <ul className="mt-5 border-t border-border">
+ {group.items.map((service, i) => (
+ <Reveal as="li" key={service.slug} delay={i * 0.04}>
+ <Link
+ href={`/services/${service.slug}`}
+ data-track="cta_click"
+ data-track-label={`hub:${service.slug}`}
+ className="group grid grid-cols-1 items-baseline gap-x-8 gap-y-3 border-b border-border py-7 transition-colors hover:bg-surface md:grid-cols-12 md:py-8"
+ >
+ <span className="md:col-span-5 md:pl-2">
+ <span
+ className={cn(
+ "ds-h3 block text-ink transition-colors group-hover:text-accent",
+ )}
+ >
+ {service.title}
+ </span>
+ <span className="ds-meta mt-2 block">{service.eyebrow}</span>
+ </span>
 
-                    <span className="ds-body md:col-span-6">{service.summary}</span>
+ <span className="ds-body md:col-span-6">{service.summary}</span>
 
-                    <span className="flex md:col-span-1 md:justify-end md:pr-2">
-                      <span
-                        aria-hidden
-                        className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink-soft transition-[border-color,color,translate] duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:text-accent"
-                      >
-                        <ArrowIcon />
-                      </span>
-                    </span>
-                  </Link>
-                </Reveal>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </Section>
-  );
+ <span className="flex md:col-span-1 md:justify-end md:pr-2">
+ <span
+ aria-hidden
+ className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink-soft transition-[border-color,color,translate] duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:text-accent"
+ >
+ <ArrowIcon />
+ </span>
+ </span>
+ </Link>
+ </Reveal>
+ ))}
+ </ul>
+ </div>
+ ))}
+ </div>
+ </Section>
+ );
 }

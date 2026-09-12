@@ -5,13 +5,13 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = `${site.name} — ${site.role}`;
 
-const ACCENT = "#2563eb";
-const INK = "#0f172a";
-const MUTED = "#475569";
-const SOFT = "#64748b";
-const BORDER = "#e2e8f0";
-const SURFACE = "#f8fafc";
-const SUCCESS = "#15803d";
+const ACCENT = "#0284c7";
+const INK = "#0c1729";
+const MUTED = "#44566d";
+const SOFT = "#8a9cb4";
+const BORDER = "#e2e9f4";
+const SURFACE = "#f6f9fd";
+const SUCCESS = "#047857";
 
 /**
  * Satori rasterises this card, and it needs real font data rather than a CSS
@@ -64,7 +64,6 @@ export default async function OpenGraphImage() {
           fontFamily,
         }}
       >
-        {/* The accent rule along the top edge, as on every section overline. */}
         <div
           style={{
             position: "absolute",

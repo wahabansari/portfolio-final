@@ -27,7 +27,7 @@ export function Credentials({ tone = "soft" }: { tone?: "plain" | "soft" | "deep
 
       <div className="grid gap-8 md:grid-cols-2 md:gap-10">
         <Reveal>
-          <div className="ds-card p-7">
+          <div className="border-t border-border pt-6">
             <p className="ds-meta">Education</p>
             <ul className="mt-4">
               {education.map((e) => (
@@ -37,7 +37,7 @@ export function Credentials({ tone = "soft" }: { tone?: "plain" | "soft" | "deep
           </div>
         </Reveal>
         <Reveal delay={0.05}>
-          <div className="ds-card p-7">
+          <div className="border-t border-border pt-6">
             <p className="ds-meta">Certification</p>
             <ul className="mt-4">
               {certifications.map((c) => (

@@ -38,7 +38,10 @@ export type TrackEvent =
   | "email_click"
   | "linkedin_click"
   | "github_click"
-  | "resume_click";
+  | "resume_click"
+  /* Discoverability — whether the spotlight is the route into the site's
+     content. Distinguished by `label`: header box, icon button or ⌘K. */
+  | "search_open";
 
 type Payload = Record<string, string | number | boolean | undefined>;
 

@@ -41,8 +41,10 @@ import { contactSteps, homeFaqs, process } from "@/content/site";
  *
  * Band rhythm is set here rather than left to each component's default, so the
  * whole alternation is visible in one place. No two touching bands share a
- * fill — the hero closes on a soft proof strip, so the selector opens plain
- * and it alternates from there.
+ * fill: the hero is the white head of the page (border-b closes it), the sky
+ * bands separate every section after it, and the alternation runs white →
+ * sky-50 → white the whole way down. The sky fill is what makes the homepage
+ * feel like one designed system rather than a stack of white pages.
  */
 export default function Home() {
   return (
@@ -51,16 +53,16 @@ export default function Home() {
       <Nav />
       <main id="main">
         <Hero />
-        <ProblemSelector tone="plain" />
-        <SelectedWork tone="soft" />
-        <Audiences tone="plain" />
-        <ServicesOverview tone="soft" />
-        <Principles tone="plain" />
-        <Process tone="soft" steps={process} />
-        <TrustLayer tone="plain" />
-        <InsightsTeaser tone="soft" />
+        <ProblemSelector tone="soft" />
+        <SelectedWork tone="plain" />
+        <Audiences tone="soft" />
+        <ServicesOverview tone="plain" />
+        <Principles tone="soft" />
+        <Process tone="plain" steps={process} />
+        <TrustLayer tone="soft" />
+        <InsightsTeaser tone="plain" />
 
-        <Section id="faq" tone="plain">
+        <Section id="faq" tone="soft">
           <SectionHeading
             overline="Questions"
             title="Before you get in touch"
@@ -79,7 +81,7 @@ export default function Home() {
         </Section>
 
         <CtaBand
-          tone="soft"
+          tone="plain"
           heading="Tell me what you're building, or what's getting in the way."
           body="Send your current site, a Figma file, a repository, API notes or a short description of the problem. I'll review it and tell you what I would tackle first."
           primary={{ label: "Discuss your project", href: "/contact" }}

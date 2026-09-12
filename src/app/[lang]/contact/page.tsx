@@ -123,14 +123,19 @@ export default function ContactPage() {
             title="What you are agreeing to, before you agree to it"
             description="No engagement starts with a surprise. These four things are true of every project, whatever the service."
           />
-          <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
             {assurances.map((item, i) => (
-              <Reveal as="li" key={item.title} delay={i * 0.04} className="h-full">
-                <div className="ds-card h-full p-7">
-                  <CheckIcon className="text-success" />
-                  <h3 className="ds-title-sm mt-4">{item.title}</h3>
-                  <p className="ds-body-sm mt-3">{item.detail}</p>
-                </div>
+              <Reveal
+                as="li"
+                key={item.title}
+                delay={i * 0.04}
+                className="flex flex-col bg-card p-7"
+              >
+                <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft">
+                  <CheckIcon className="text-accent" />
+                </span>
+                <h3 className="ds-title-sm mt-4">{item.title}</h3>
+                <p className="ds-body-sm mt-3 flex-1">{item.detail}</p>
               </Reveal>
             ))}
           </ul>

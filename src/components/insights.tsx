@@ -26,7 +26,7 @@ function InsightCard({ insight }: { insight: Insight }) {
   const service = getService(insight.relatedServiceSlug);
 
   return (
-    <article className="ds-card ds-card-interactive group flex h-full flex-col p-7">
+    <article className="group flex h-full flex-col border-l-2 border-border pl-6 transition-colors hover:border-accent">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <span className="ds-chip">{insight.cluster}</span>
         <time dateTime={insight.updatedAt} className="ds-meta">
@@ -34,7 +34,7 @@ function InsightCard({ insight }: { insight: Insight }) {
         </time>
       </div>
 
-      <h3 className="ds-title mt-4">
+      <h3 className="ds-title mt-3.5">
         <Link
           href={`/insights/${insight.slug}`}
           data-track="cta_click"
@@ -47,9 +47,9 @@ function InsightCard({ insight }: { insight: Insight }) {
 
       <p className="ds-body-sm mt-3 flex-1">{insight.dek}</p>
 
-      <p className="ds-meta mt-5">{site.name}</p>
+      <p className="ds-meta mt-4">{site.name}</p>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-4">
         <Link
           href={`/insights/${insight.slug}`}
           data-track="cta_click"

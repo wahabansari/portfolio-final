@@ -1,5 +1,9 @@
 import { assurances, testimonials } from "@/content/site";
-import { CheckIcon, Reveal, Section, SectionHeading } from "./ui";
+import { CodeIcon, FileCheckIcon, GaugeIcon, Reveal, Section, SectionHeading, UserIcon } from "./ui";
+
+/* Each commitment gets the icon that matches its subject: who you talk to,
+   what is agreed, what is measured, and what you are left with. */
+const ASSURANCE_ICONS = [UserIcon, FileCheckIcon, GaugeIcon, CodeIcon];
 
 /**
  * The trust layer.
@@ -32,10 +36,10 @@ export function TrustLayer({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
       />
 
       {hasTestimonials ? (
-        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t, i) => (
             <Reveal as="li" key={t.name + t.company} delay={i * 0.05} className="h-full">
-              <figure className="ds-card flex h-full flex-col p-7">
+              <figure className="flex h-full flex-col p-7">
                 <blockquote className="ds-body flex-1 text-ink">“{t.quote}”</blockquote>
                 <figcaption className="mt-6 border-t border-border pt-5">
                   <span className="block text-[0.9375rem] font-semibold text-ink">{t.name}</span>
@@ -48,14 +52,31 @@ export function TrustLayer({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
           ))}
         </ul>
       ) : (
-        <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
-          {assurances.map((item, i) => (
-            <Reveal as="li" key={item.title} delay={i * 0.04} className="flex flex-col bg-card p-7">
-              <CheckIcon className="text-success" />
-              <h3 className="ds-title-sm mt-4">{item.title}</h3>
-              <p className="ds-body-sm mt-3">{item.detail}</p>
-            </Reveal>
-          ))}
+        <ul className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
+          {assurances.map((item, i) => {
+            const Icon = ASSURANCE_ICONS[i % ASSURANCE_ICONS.length];
+            return (
+              <Reveal
+                as="li"
+                key={item.title}
+                delay={i * 0.04}
+                className="flex gap-4 bg-card p-6 md:p-8"
+              >
+                <span
+                  aria-hidden
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
+                >
+                  <Icon className="h-4.5 w-4.5" />
+                </span>
+              <div>
+                <h3 className="text-[0.9375rem] leading-snug font-semibold text-ink md:text-base">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-muted">{item.detail}</p>
+              </div>
+              </Reveal>
+            );
+          })}
         </ul>
       )}
     </Section>

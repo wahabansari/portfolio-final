@@ -1,132 +1,115 @@
 import Link from "next/link";
 import { featuredProjects, projects, type Project } from "@/content/work";
-import { Plate } from "./plate";
-import { ArrowIcon, ExternalIcon, Reveal, Section, SectionHeading } from "./ui";
 import { OutboundLink } from "./outbound";
+import { ArrowIcon, ExternalIcon, Reveal, Section, SectionHeading } from "./ui";
 import { cn } from "@/lib/cn";
 
-/* ── Featured card ──────────────────────────────────────────────────────────
-   The whole card is the link to the case study. The live-site link sits
-   outside that anchor, because nesting an <a> inside an <a> is invalid and
-   browsers resolve it in ways nobody intends. */
+/* ── Editorial project row ──────────────────────────────────────────────────
+   The work section's unit is a full-width row, not a card: one project per
+   line, numbered, divided by a hairline, with a metric column as the visual
+   anchor and an arrow circle for the interaction. The row is the anchor, so
+   the whole line is hoverable. Projects without a case study link straight to
+   the live site and say so with an external icon in the arrow. */
 
-function FeaturedCard({ project, priority = false }: { project: Project; priority?: boolean }) {
-  return (
-    <article className="ds-card ds-card-interactive group flex h-full flex-col overflow-hidden">
-      <Link href={`/work/${project.slug}`} className="block">
-        <Plate project={project} className="border-b border-border" priority={priority} />
-      </Link>
+function ProjectRow({
+  project,
+  index,
+  trackLabel,
+}: {
+  project: Project;
+  index: number;
+  trackLabel?: string;
+}) {
+  const isExternal = Boolean(project.href && !project.caseStudy);
+  const rowClass =
+    "group grid grid-cols-1 items-center gap-x-8 gap-y-3 border-b border-border py-7 transition-colors hover:bg-surface md:grid-cols-12 md:py-8";
 
-      <div className="flex flex-1 flex-col p-7">
-        <p className="ds-meta">{project.kind}</p>
+  const content = (
+    <>
+      {/* Number */}
+      <span className="md:col-span-1 md:pl-2">
+        <span className="font-display text-[0.8125rem] font-semibold text-ink-soft tabular-nums">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+      </span>
 
-        <h3 className="ds-title mt-3">
-          <Link
-            href={`/work/${project.slug}`}
-            className="transition-colors group-hover:text-accent"
-          >
+      {/* Title + kind */}
+      <span className="md:col-span-3">
+        <span className="flex items-baseline gap-2.5">
+          <span className="ds-h3 text-ink transition-colors group-hover:text-accent">
             {project.title}
-          </Link>
-        </h3>
-
-        {/* Role and scope on the card, not buried in the case study. On
-            collaborative and outsourced work, saying nothing reads as
-            claiming everything. */}
-        <p className="mt-2 text-[0.8125rem] text-ink-soft">
-          {project.role} · {project.scope}
-        </p>
-
-        {/* Problem and outcome, labelled. This is what makes a card scannable
-            against three others: a reader comparing projects is asking what
-            was wrong and what changed, not for a summary sentence. */}
-        <dl className="mt-5 flex-1 space-y-3.5">
-          <div>
-            <dt className="ds-meta">Problem</dt>
-            <dd className="ds-body-sm mt-1">{project.problem}</dd>
-          </div>
-          <div>
-            <dt className="ds-meta">Outcome</dt>
-            <dd className="ds-body-sm mt-1">{project.outcome}</dd>
-          </div>
-        </dl>
-
-        {project.metrics && (
-          <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-5">
-            {project.metrics.map((m) => (
-              <div key={m.k}>
-                <dt className="ds-meta">{m.k}</dt>
-                <dd
-                  className={cn(
-                    "mt-1 font-display text-[1.0625rem] font-medium",
-                    m.verified ? "text-success" : "text-ink",
-                  )}
-                >
-                  {m.v}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        )}
-
-        <div className="mt-6 flex items-center justify-between gap-4">
-          <Link href={`/work/${project.slug}`} className="ds-link">
-            Read case study
-            <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-          </Link>
-          {project.href && (
-            <OutboundLink
-              href={project.href}
-              event="case_study_view"
-              payload={{ project: project.slug }}
-              className="ds-body-sm inline-flex items-center gap-1.5 transition-colors hover:text-ink"
-            >
-              {project.domain}
-              <ExternalIcon className="h-3.5 w-3.5" />
-            </OutboundLink>
+          </span>
+          {project.domain && (
+            <span className="ds-meta hidden xl:inline">{project.domain}</span>
           )}
-        </div>
-      </div>
-    </article>
-  );
-}
+        </span>
+        <span className="ds-meta mt-1 block">{project.kind}</span>
+      </span>
 
-/* ── Supporting card ────────────────────────────────────────────────────────
-   No case study behind these, so the card links out to the live site and says
-   so, rather than promising a page that does not exist. */
+      {/* Outcome */}
+      <span className="ds-body-sm text-ink-muted md:col-span-4">{project.outcome}</span>
 
-function SupportingCard({ project }: { project: Project }) {
-  return (
-    <article className="ds-card ds-card-interactive group flex h-full flex-col p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="ds-meta">{project.kind}</p>
-          <h3 className="ds-title-sm mt-2.5">{project.title}</h3>
-        </div>
-        {project.href && (
-          <OutboundLink
-            href={project.href}
-            event="case_study_view"
-            payload={{ project: project.slug }}
-            ariaLabel={`Open ${project.title} in a new tab`}
-            className="mt-0.5 shrink-0 text-ink-soft transition-colors hover:text-accent"
-          >
-            <ExternalIcon />
-          </OutboundLink>
+      {/* Metric, or the tools when there is no measured figure. */}
+      <span className="md:col-span-3">
+        {project.metrics?.[0] ? (
+          <>
+            <span
+              className={cn(
+                "font-display text-[1.25rem] leading-none font-bold tracking-[-0.01em]",
+                project.metrics[0].verified ? "text-accent" : "text-ink",
+              )}
+            >
+              {project.metrics[0].v}
+            </span>
+            <span className="ds-meta mt-1.5 block">{project.metrics[0].k}</span>
+          </>
+        ) : (
+          <span className="ds-meta normal-case">
+            {project.tools.slice(0, 3).join(" · ")}
+          </span>
         )}
-      </div>
+      </span>
 
-      <p className="mt-2 text-[0.8125rem] text-ink-soft">{project.role}</p>
+      {/* Arrow. External links use the external glyph so nobody is surprised
+          to leave the site. */}
+      <span className="flex md:col-span-1 md:justify-end md:pr-2">
+        <span
+          aria-hidden
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink-soft transition-[border-color,color,background-color] duration-200 group-hover:border-accent group-hover:bg-accent group-hover:text-accent-fg"
+        >
+          {isExternal ? (
+            <ExternalIcon className="h-4 w-4" />
+          ) : (
+            <ArrowIcon className="h-4 w-4" />
+          )}
+        </span>
+      </span>
+    </>
+  );
 
-      <p className="ds-body-sm mt-3 flex-1">{project.outcome}</p>
+  if (isExternal) {
+    return (
+      <OutboundLink
+        href={project.href as string}
+        event="case_study_view"
+        payload={{ project: project.slug }}
+        className={rowClass}
+        ariaLabel={`Open ${project.title} in a new tab`}
+      >
+        {content}
+      </OutboundLink>
+    );
+  }
 
-      <ul className="mt-5 flex flex-wrap gap-1.5 border-t border-border pt-4">
-        {project.tools.slice(0, 4).map((t) => (
-          <li key={t} className="ds-chip text-[0.75rem]">
-            {t}
-          </li>
-        ))}
-      </ul>
-    </article>
+  return (
+    <Link
+      href={`/work/${project.slug}`}
+      data-track="cta_click"
+      data-track-label={trackLabel ?? `work:${project.slug}`}
+      className={rowClass}
+    >
+      {content}
+    </Link>
   );
 }
 
@@ -140,6 +123,7 @@ export function SelectedWork({ tone = "plain" }: { tone?: "plain" | "soft" | "de
         title="Proof before pitch"
         description="A few production projects that show how I approach product interfaces, performance and real-world delivery. Each case study covers what I built, the problem it addressed and the technical decisions behind it."
         align="between"
+        size="sm"
         aside={
           <Link href="/work" className="ds-btn ds-btn-secondary">
             All projects
@@ -148,10 +132,14 @@ export function SelectedWork({ tone = "plain" }: { tone?: "plain" | "soft" | "de
         }
       />
 
-      <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
+      <ul className="border-t border-border">
         {featuredProjects.map((project, i) => (
-          <Reveal as="li" key={project.slug} delay={i * 0.05} className="h-full">
-            <FeaturedCard project={project} priority={i === 0} />
+          <Reveal as="li" key={project.slug} delay={i * 0.05}>
+            <ProjectRow
+              project={project}
+              index={i}
+              trackLabel={`home-work:${project.slug}`}
+            />
           </Reveal>
         ))}
       </ul>
@@ -212,19 +200,10 @@ export function WorkIndex() {
               title={group.label}
               description={group.description}
             />
-            <ul
-              className={cn(
-                "grid gap-6 lg:gap-7",
-                items.length === 1 ? "md:grid-cols-2" : "md:grid-cols-2 lg:grid-cols-3",
-              )}
-            >
+            <ul className="border-t border-border">
               {items.map((project, i) => (
-                <Reveal as="li" key={project.slug} delay={i * 0.05} className="h-full">
-                  {project.caseStudy ? (
-                    <FeaturedCard project={project} priority={groupIndex === 0 && i === 0} />
-                  ) : (
-                    <SupportingCard project={project} />
-                  )}
+                <Reveal as="li" key={project.slug} delay={i * 0.05}>
+                  <ProjectRow project={project} index={i} />
                 </Reveal>
               ))}
             </ul>
@@ -261,14 +240,10 @@ export function RelatedWork({
   return (
     <Section id={id} tone={tone}>
       <SectionHeading overline="Proof" title={heading} description={description} />
-      <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
+      <ul className="border-t border-border">
         {related.map((project, i) => (
-          <Reveal as="li" key={project.slug} delay={i * 0.05} className="h-full">
-            {project.caseStudy ? (
-              <FeaturedCard project={project} />
-            ) : (
-              <SupportingCard project={project} />
-            )}
+          <Reveal as="li" key={project.slug} delay={i * 0.05}>
+            <ProjectRow project={project} index={i} />
           </Reveal>
         ))}
       </ul>

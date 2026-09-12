@@ -1,11 +1,13 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { Tooltip } from "@/components/ds/tooltip";
 
 type Theme = "dark" | "light";
 
 /** Runs before paint so there's no flash of the wrong palette.
-    Light is the designed default; dark is opt-in via the toggle and is remembered.
+    Light is the designed default (white with the sky accent); dark is opt-in
+    via the toggle and is remembered.
 
     It also stamps `js-motion` on <html>, which is what gates the scroll-reveal
     entrance in globals.css. Doing it here rather than in a component is the
@@ -48,14 +50,16 @@ export function ThemeToggle() {
   };
 
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink-muted transition-colors hover:border-border-strong hover:bg-surface hover:text-ink"
-    >
-      {isDark ? <SunIcon /> : <MoonIcon />}
-    </button>
+    <Tooltip label={`Switch to ${isDark ? "light" : "dark"} theme`} side="bottom" delayDuration={500}>
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink-muted transition-colors hover:border-border-strong hover:bg-surface hover:text-ink"
+      >
+        {isDark ? <SunIcon /> : <MoonIcon />}
+      </button>
+    </Tooltip>
   );
 }
 

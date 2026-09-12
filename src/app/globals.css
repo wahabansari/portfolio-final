@@ -1,125 +1,107 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM v2 — editorial product engineering.
+   DESIGN SYSTEM v5 — SKYLINE.
 
-   The brief: calm, precise, technical, evidence-led. Less "developer
-   showcase", more "senior engineer who ships business-critical interfaces".
+   The brief: light/white by default, sky blue as the single accent, no
+   gradients anywhere, a professional feel that reads as trustworthy to a
+   client, and an open design system people can adopt. This replaces v4.
 
    Rules this system holds to:
-     · One accent. Blue carries interaction and emphasis; nothing else does.
-     · Depth comes from hairlines and surface steps, never from drop shadows.
-     · Display type is large only in the hero and section openers. Body copy
-       stays compact, 60–75 characters per line.
-     · Mono is a labelling device — overlines, metadata, figures — not decor.
-     · Motion is progressive enhancement. Remove it and the page still reads.
+     · Pure Tailwind palette. Every colour alias below points at a real
+       Tailwind token (sky / slate / emerald / amber / white) — there is not a
+       single hand-picked hex in the system, so the whole theme stays on the
+       wheel and re-theming later means one short list of swatches.
+     · No gradients. Depth comes from colour rhythm, hairlines and shadow —
+       never from a gradient fill.
+     · Light is the designed default; dark is an opt-in toggle that reuses the
+       same semantic roles against slate.
+     · One accent family — sky. Sky-600 is interaction, sky-50 is the band
+       fill that separates sections, and nothing else carries emphasis.
+     · Every role maps to a Tailwind token exactly once, here. Components use
+       the role names, so changing the brand palette is a five-line edit and
+       the rest of the system follows.
 
-   Colours live in a plain @theme (NOT @theme inline) so utilities compile to
-   var(--color-*) and the dark block can re-point them. @theme inline bakes
-   literal values into the utilities and breaks theming.
+   The @theme block stays plain (NOT @theme inline): utilities compile to
+   var(--color-*) so the :root[data-theme="dark"] block can re-point every
+   role by overriding the same custom properties.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @theme {
-  /* ── Surfaces ──────────────────────────────────────────────────────────
-     Three steps, always in this order light→dark of contrast:
-       bg      the page itself — near-white, per the brand tokens
-       surface the soft band that separates sections
-       card    the raised plane — always lighter than whatever it sits on
+  /* ── Roles → Tailwind tokens (light — the designed default). ────────────
+     Semantics, not colours: components ask for `accent`, `surface`, `ink`
+     and get the right swatch no matter which theme is active. */
 
-     The page ground is #F8FAFC rather than pure white so that a card can be
-     white and still read as raised. That is the whole reason the invariant
-     holds: with a white page, a white card is distinguished only by its
-     border, and the "restrained shadows, use mostly borders" direction would
-     have nothing left to work with. */
-  --color-bg: #f8fafc; /* Slate 50 */
-  --color-surface: #f1f5f9; /* Slate 100 — the soft band */
-  --color-surface-2: #e8eef6; /* the deeper band */
-  --color-card: #ffffff;
+  --color-bg: var(--color-white);
+  --color-surface: var(--color-sky-50);
+  --color-surface-2: var(--color-sky-100);
+  --color-card: var(--color-white);
+  /* Kept for the lit-from-above crown recipe; now flat, so it equals card. */
+  --color-card-top: var(--color-white);
 
-  /* ── Hairlines ─────────────────────────────────────────────────────── */
-  --color-border: #e2e8f0; /* Slate 200 */
-  --color-border-strong: #cbd5e1; /* Slate 300 */
+  --color-border: var(--color-slate-200);
+  --color-border-strong: var(--color-slate-300);
 
-  /* ── Text ──────────────────────────────────────────────────────────── */
-  --color-ink: #0f172a; /* Slate 900 */
-  --color-ink-muted: #475569; /* Slate 600 — 8.2:1 on the soft band */
-  --color-ink-soft: #64748b; /* Slate 500 — metadata only, never body copy */
+  --color-ink: var(--color-slate-900);
+  --color-ink-muted: var(--color-slate-600);
+  --color-ink-soft: var(--color-slate-500);
 
-  /* ── Accent ─────────────────────────────────────────────────────────────
-     Blue 600 does double duty: 5.17:1 as text on white, and white on it is
-     the same ratio, so one value covers links and filled buttons alike. */
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8; /* Blue 700 */
-  --color-accent-fg: #ffffff;
-  --color-accent-soft: #eff6ff; /* Blue 50 — chips, tonal fills */
-  --color-accent-line: #bfdbfe; /* Blue 200 — hairline on tonal fills */
+  --color-accent: var(--color-sky-600);
+  --color-accent-hover: var(--color-sky-700);
+  --color-accent-fg: var(--color-white);
+  /* Retained as an alias of the accent so nothing can accidentally pull in a
+     second hue; gradients are gone, so there is no partner stop. */
+  --color-accent-2: var(--color-sky-600);
+  --color-accent-soft: var(--color-sky-50);
+  --color-accent-line: var(--color-sky-200);
 
-  /* ── Semantics ──────────────────────────────────────────────────────────
-     Success marks a verified, measured result and nothing else. Warning is
-     reserved for warnings — it is not a brand colour.
+  --color-success: var(--color-emerald-700);
+  --color-success-mark: var(--color-emerald-500);
+  --color-success-soft: var(--color-emerald-50);
+  --color-warn: var(--color-amber-600);
 
-     Two greens, deliberately. The brand token for the proof accent is
-     #10B981, which is right for a dot, a rule or an icon but only reaches
-     about 2.5:1 on the page ground — well under the 4.5:1 the same brief
-     requires for text. So the emerald is kept for graphical marks and a
-     darker cut carries anything made of words. Where a palette and an
-     accessibility requirement disagree, the accessibility requirement is the
-     one that has users behind it. */
-  --color-success: #047857; /* text-safe — 5.1:1 on the page ground */
-  --color-success-mark: #10b981; /* graphical accents only, never text */
-  --color-success-soft: #ecfdf5;
-  --color-warn: #b45309;
-
-  /* One family, every role. Display and text both resolve to Inter; the
-     hierarchy is built from size, weight and space rather than from a second
-     typeface. `--font-display` is kept as a distinct token so that call sites
-     can express intent ("this is display type") even though both currently
-     point at the same face.
-
-     The variable already carries the fallback stack declared in the next/font
-     call, so repeating it here would emit the same families twice. */
-  --font-sans: var(--font-inter), sans-serif;
-  --font-display: var(--font-inter), sans-serif;
+  /* Type: Valley Sans is the single family for every role. It is Latin-script
+     only, so Urdu copy falls through to an Arabic stack before system fonts —
+     Latin names embedded in Urdu prose still render in Valley Sans, and the
+     Urdu itself runs in a properly letter-formed Arabic face. */
+  --font-sans: var(--font-valley), "Noto Naskh Arabic", "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-valley), "Noto Naskh Arabic", "Segoe UI", system-ui, sans-serif;
 }
 
 :root {
-  /* 8–14px, and nothing is a pill.
-     Fully-rounded buttons and chips read as consumer-app furniture; squared-
-     off radii read as tooling, which is the register this site is aiming at.
-     The button radius is a token of its own so the shape stays consistent
-     across buttons, fields and chips without any of them guessing. */
   --radius-card: 14px;
   --radius-md: 10px;
-  --radius-sm: 8px;
-  --radius-control: 10px;
+  --radius-sm: 7px;
+  --radius-control: 8px;
   color-scheme: light;
 }
 
-/* Dark is a genuine second palette, not an inversion. Each surface step is
-   lighter than the one below it, so a card still reads as raised. */
+/* Dark — the opt-in toggle. The same roles, re-pointed onto slate. */
 :root[data-theme="dark"] {
-  --color-bg: #0b1120;
-  --color-surface: #0f1729;
-  --color-surface-2: #131c30;
-  --color-card: #141d31;
+  --color-bg: var(--color-slate-950);
+  --color-surface: var(--color-slate-900);
+  --color-surface-2: var(--color-slate-800);
+  --color-card: var(--color-slate-900);
+  --color-card-top: var(--color-slate-900);
 
-  --color-border: #1e293b;
-  --color-border-strong: #334155;
+  --color-border: var(--color-slate-800);
+  --color-border-strong: var(--color-slate-700);
 
-  --color-ink: #e6edf7;
-  --color-ink-muted: #94a3b8;
-  --color-ink-soft: #7e8ca3;
+  --color-ink: var(--color-slate-100);
+  --color-ink-muted: var(--color-slate-400);
+  --color-ink-soft: var(--color-slate-500);
 
-  --color-accent: #60a5fa; /* Blue 400 — 7.6:1 on the page ground */
-  --color-accent-hover: #93c5fd;
-  --color-accent-fg: #08111f;
-  --color-accent-soft: #16243d;
-  --color-accent-line: #24395c;
+  --color-accent: var(--color-sky-400);
+  --color-accent-hover: var(--color-sky-300);
+  --color-accent-fg: var(--color-slate-950);
+  --color-accent-2: var(--color-sky-400);
+  --color-accent-soft: var(--color-sky-950);
+  --color-accent-line: var(--color-sky-800);
 
-  --color-success: #4ade80;
-  --color-success-mark: #34d399;
-  --color-success-soft: #10251a;
-  --color-warn: #fbbf24;
+  --color-success: var(--color-emerald-400);
+  --color-success-mark: var(--color-emerald-500);
+  --color-success-soft: var(--color-emerald-950);
+  --color-warn: var(--color-amber-400);
 
   color-scheme: dark;
 }
@@ -133,12 +115,6 @@
 
   html {
     -webkit-text-size-adjust: 100%;
-    /* Deliberately NOT `smooth`: it hijacks the App Router's scroll-to-top on
-       navigation and leaves you part-way down the new page.
-
-       The offset clears the sticky header (4.5rem) plus the service pages'
-       sticky section bar beneath it, so following an anchor never lands with
-       the heading hidden behind them. */
     scroll-padding-top: 8.5rem;
   }
 
@@ -149,40 +125,22 @@
     font-size: 1rem;
     line-height: 1.6;
     overflow-x: clip;
-
     font-optical-sizing: auto;
     font-kerning: normal;
     text-rendering: optimizeLegibility;
-    /* Never let the browser fake a weight or a slant — synthesised faces are
-       what look smeared. Both families ship real ones. */
     font-synthesis: none;
-
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* With one typeface carrying every role, weight is what separates a heading
-     from the paragraph under it — so headings sit at 650–700 rather than the
-     500 a two-family system could get away with. Inter's variable cut makes
-     650 a real weight rather than a rounded approximation. */
-  h1,
-  h2,
-  h3,
-  h4 {
+  h1, h2, h3, h4 {
     font-family: var(--font-display);
     color: var(--color-ink);
     font-weight: 650;
     text-wrap: balance;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  .ds-display,
-  .ds-h1,
-  .ds-h2,
-  .ds-h3 {
+  h1, h2, h3, h4, .ds-display, .ds-h1, .ds-h2, .ds-h3 {
     font-optical-sizing: auto;
     font-variant-ligatures: common-ligatures contextual;
   }
@@ -191,14 +149,13 @@
     text-wrap: pretty;
   }
 
-  /* Figures line up in the proof strip and keep an even colour. */
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
 
   ::selection {
-    background-color: var(--color-accent-soft);
-    color: var(--color-accent);
+    background-color: color-mix(in srgb, var(--color-accent) 22%, transparent);
+    color: var(--color-ink);
   }
 
   :focus-visible {
@@ -208,50 +165,31 @@
   }
 
   ::-webkit-scrollbar {
-    width: 12px;
+    width: 10px;
   }
   ::-webkit-scrollbar-track {
     background: var(--color-bg);
   }
   ::-webkit-scrollbar-thumb {
     background: var(--color-border-strong);
-    border: 3px solid var(--color-bg);
+    border: 2px solid var(--color-bg);
     border-radius: 99px;
   }
 }
 
 @layer components {
-  /* ── Type scale ─────────────────────────────────────────────────────────
-     The brand type scale, expressed as clamps:
-       Display H1  56–72px / 700–750, line-height 0.98–1.05
-       H2          36–48px / 650–700
-       H3          22–28px / 650–700
-       Body large  18–20px / 400–450
-       Body        16–18px / 400–450
-       Meta        12–14px / 550–650, uppercase, tracked
-       Buttons     14–16px / 600
-
-     Tracking is negative and steepens with size. Inter is drawn a little wide
-     for interface use, which is right at 16px and too loose at 72px, so
-     display type is pulled in to -0.03em and the correction tapers to zero by
-     label size — where uppercase text needs the air back instead, since
-     capitals remove the letterform variation an eye reads shapes by. */
-
-  /* The clamp floor is set from the mobile line count, not from the desktop
-     ratio: at 44px this headline broke to five lines on a 375px screen and the
-     hero alone ran past two viewports before a visitor reached any proof.
-     38px holds the same weight and authority in three fewer lines. */
+  /* ── Type scale ────────────────────────────────────────────────────────── */
   .ds-display {
     font-family: var(--font-display);
-    font-size: clamp(2.375rem, 1.2rem + 3.9vw, 4.5rem);
-    line-height: 1.04;
-    letter-spacing: -0.03em;
-    font-weight: 720;
+    font-size: clamp(2.5rem, 1.2rem + 4vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.032em;
+    font-weight: 700;
   }
 
   .ds-h1 {
     font-family: var(--font-display);
-    font-size: clamp(2.375rem, 1.6rem + 2.6vw, 3.5rem);
+    font-size: clamp(2.25rem, 1.5rem + 2.8vw, 3.5rem);
     line-height: 1.06;
     letter-spacing: -0.028em;
     font-weight: 700;
@@ -259,7 +197,7 @@
 
   .ds-h2 {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 1.5rem + 1.9vw, 3rem);
+    font-size: clamp(1.875rem, 1.4rem + 2vw, 3rem);
     line-height: 1.12;
     letter-spacing: -0.024em;
     font-weight: 680;
@@ -267,7 +205,7 @@
 
   .ds-h3 {
     font-family: var(--font-display);
-    font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+    font-size: clamp(1.375rem, 1.1rem + 0.9vw, 1.75rem);
     line-height: 1.24;
     letter-spacing: -0.018em;
     font-weight: 660;
@@ -275,7 +213,7 @@
 
   .ds-title {
     font-family: var(--font-display);
-    font-size: 1.1875rem;
+    font-size: 1.125rem;
     line-height: 1.34;
     letter-spacing: -0.014em;
     font-weight: 650;
@@ -283,14 +221,12 @@
 
   .ds-title-sm {
     font-family: var(--font-display);
-    font-size: 1.0625rem;
+    font-size: 1rem;
     line-height: 1.4;
     letter-spacing: -0.011em;
     font-weight: 620;
   }
 
-  /* Body copy. Lede 18px, standard body 16.5px — both inside the 60–75
-     character measure enforced by .ds-measure. */
   .ds-lede {
     font-size: 1.125rem;
     line-height: 1.65;
@@ -300,7 +236,7 @@
   }
 
   .ds-body {
-    font-size: 1.03125rem;
+    font-size: 1rem;
     line-height: 1.7;
     letter-spacing: -0.006em;
     font-weight: 420;
@@ -316,81 +252,86 @@
   }
 
   .ds-meta {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     line-height: 1.5;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     font-weight: 600;
     color: var(--color-ink-soft);
   }
 
-  /* The overline that opens a section — accent, with a short rule in front of
-     it. The rule is drawn here so no markup has to carry it. */
+  /* Overline — the accent, with a short solid rule in front. */
   .ds-overline {
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     line-height: 1.5;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    font-weight: 620;
+    font-weight: 650;
     color: var(--color-accent);
   }
   .ds-overline::before {
     content: "";
-    width: 1.5rem;
-    height: 1px;
-    background-color: currentColor;
-    opacity: 0.55;
+    width: 1.25rem;
+    height: 2px;
+    background-color: var(--color-accent);
+    border-radius: 1px;
   }
 
   /* ── Buttons ────────────────────────────────────────────────────────────
-     48px tall, two styles only. A section that needs a third CTA style needs
-     fewer CTAs. */
+     Primary is a solid sky fill — no gradient, no glow. Secondary is a white
+     surface with a hairline. Ghost is the soft sky tint. */
   .ds-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     border-radius: var(--radius-control);
-    padding: 0.75rem 1.375rem;
+    padding: 0.6875rem 1.25rem;
     font-size: 0.9375rem;
     font-weight: 600;
     line-height: 1.5;
-    min-height: 3rem;
+    min-height: 2.75rem;
     border: 1px solid transparent;
     white-space: nowrap;
     transition:
       background-color 0.18s ease,
       border-color 0.18s ease,
-      color 0.18s ease;
+      color 0.18s ease,
+      box-shadow 0.18s ease,
+      transform 0.18s ease;
   }
 
   .ds-btn-primary {
     background-color: var(--color-accent);
     color: var(--color-accent-fg);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
   .ds-btn-primary:hover {
     background-color: var(--color-accent-hover);
+    box-shadow: 0 4px 12px -4px color-mix(in srgb, var(--color-accent) 45%, transparent);
+    transform: translateY(-1px);
   }
 
-  /* A disabled primary stays legible rather than fading to unreadable grey:
-     it is showing a completed state, not an unavailable one. */
   .ds-btn:disabled {
     cursor: default;
     background-color: var(--color-success);
     color: var(--color-bg);
+    transform: none;
+    box-shadow: none;
   }
 
   .ds-btn-secondary {
-    background-color: transparent;
+    background-color: var(--color-card);
     border-color: var(--color-border-strong);
     color: var(--color-ink);
   }
   .ds-btn-secondary:hover {
-    border-color: var(--color-ink-soft);
-    background-color: var(--color-surface);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: var(--color-accent-soft);
   }
 
   .ds-btn-ghost {
@@ -398,10 +339,10 @@
     color: var(--color-accent);
   }
   .ds-btn-ghost:hover {
-    background-color: color-mix(in srgb, var(--color-accent-soft) 82%, var(--color-accent));
+    background-color: color-mix(in srgb, var(--color-accent-soft) 72%, var(--color-accent));
   }
 
-  /* Inline text link with an optional arrow. */
+  /* Inline text link */
   .ds-link {
     display: inline-flex;
     align-items: center;
@@ -417,35 +358,15 @@
     text-underline-offset: 3px;
   }
 
-  /* ── Surfaces ───────────────────────────────────────────────────────────
-     One card recipe. The fill is always --color-card, which is lighter than
-     every band in both themes, so a card can never come out the same colour
-     as what it sits on. */
-  .ds-card {
-    background-color: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-  }
-
-  /* Hover firms the outline and warms the fill. Nothing lifts. */
-  .ds-card-interactive {
-    transition:
-      border-color 0.18s ease,
-      background-color 0.18s ease;
-  }
-  .ds-card-interactive:hover {
-    border-color: var(--color-border-strong);
-  }
-
-  /* ── Chips ──────────────────────────────────────────────────────────── */
+  /* ── Chips ───────────────────────────────────────────────────────────── */
   .ds-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    border-radius: var(--radius-sm);
+    border-radius: 9999px;
     border: 1px solid var(--color-border);
     background-color: var(--color-card);
-    padding: 0.3125rem 0.625rem;
+    padding: 0.25rem 0.75rem;
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1.4;
@@ -485,25 +406,25 @@
   .ds-field:focus {
     outline: none;
     border-color: var(--color-accent);
-    /* The one ring in the system, and only on the focused field. */
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
   }
 
-  /* Invalid state carries a colour AND the message beside the field, never
-     colour alone — the border is the hint, the text is the information. */
   .ds-field-invalid {
     border-color: var(--color-warn);
   }
   .ds-field-invalid:focus {
     border-color: var(--color-warn);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-warn) 22%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-warn) 18%, transparent);
   }
 
-  /* ── FAQ panel ──────────────────────────────────────────────────────────
-     The accordion is a button plus a panel toggled with the `hidden`
-     attribute, so the answer's presence never depends on CSS or on an
-     animation completing. This is only the entrance: if it does not run, the
-     answer is still open and fully readable. */
+  /* ── Accent text ─────────────────────────────────────────────────────────
+     Solid sky, kept as a named utility so emphasis is a decision, not a
+     swatch scattered through components. (v4's gradient text is gone.) */
+  .ds-grad-text {
+    color: var(--color-accent);
+  }
+
+  /* ── FAQ panel enter ─────────────────────────────────────────────────── */
   .ds-panel {
     animation: ds-panel-in 0.22s ease both;
   }
@@ -519,15 +440,42 @@
     }
   }
 
-  /* ── Scroll reveal ──────────────────────────────────────────────────────
-     The entrance for the Reveal component. Two properties, one transition, no
-     animation runtime.
+  /* Dialog entrance — the sheet lifts and settles, fog fades in. */
+  .ds-dialog-enter {
+    animation: ds-dialog-in 0.24s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
 
-     The `.js-motion` gate is load-bearing: the class is stamped on <html> by
-     the pre-paint script, so an element is only ever hidden when JavaScript is
-     present to reveal it again. Without the script — no JS, or a crawler that
-     does not run it — the pending rule never matches and every section renders
-     visible. */
+  @keyframes ds-dialog-in {
+    from {
+      opacity: 0;
+      translate: -50% 0.5rem;
+      scale: 0.97;
+    }
+    to {
+      opacity: 1;
+      translate: -50% 0;
+      scale: 1;
+    }
+  }
+
+  .ds-dialog-exit {
+    animation: ds-dialog-out 0.18s ease both;
+  }
+
+  @keyframes ds-dialog-out {
+    from {
+      opacity: 1;
+      translate: -50% 0;
+      scale: 1;
+    }
+    to {
+      opacity: 0;
+      translate: -50% 0.25rem;
+      scale: 0.98;
+    }
+  }
+
+  /* ── Scroll reveal ──────────────────────────────────────────────────── */
   .ds-reveal {
     transition:
       opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
@@ -536,24 +484,23 @@
 
   .js-motion .ds-reveal[data-reveal="pending"] {
     opacity: 0;
-    translate: 0 0.875rem;
+    translate: 0 0.75rem;
   }
 
-  /* ── Overlay backdrop ───────────────────────────────────────────────────
-     Behind the services mega-menu and the mobile drawer. The page stays
-     legible enough to keep context but is clearly de-emphasised, which is the
-     whole point of the pattern — it says "this panel is the subject now"
-     without hiding where you were. */
+  /* ── Overlay backdrop ───────────────────────────────────────────────── */
   .ds-backdrop {
     position: fixed;
     inset: 0;
-    background-color: color-mix(in srgb, #0b1120 46%, transparent);
+    z-index: 80;
+    background-color: rgb(2 6 23 / 0.5);
+    backdrop-filter: blur(4px);
     opacity: 0;
     visibility: hidden;
     transition:
       opacity 0.28s ease-out,
       visibility 0.28s ease-out;
   }
+  .ds-backdrop[data-state="open"],
   .ds-backdrop[data-open="true"] {
     opacity: 1;
     visibility: visible;
@@ -563,18 +510,17 @@
 @layer utilities {
   .ds-container {
     width: 100%;
-    max-width: 80rem; /* 1280px */
+    max-width: 90rem;
     margin-inline: auto;
     padding-inline: 1.5rem;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1280px) {
     .ds-container {
       padding-inline: 2.5rem;
     }
   }
 
-  /* 96–140px desktop, 72–96px mobile. */
   .ds-section {
     padding-block: 4.5rem;
   }
@@ -585,21 +531,51 @@
     }
   }
 
-  /* The reading measure, applied wherever prose runs more than two lines. */
-  .ds-measure {
-    max-width: 68ch;
+  /* Grid drift — the whole-page rail slides down by one cell, forever. */
+  @keyframes ds-grid-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 0 24px; }
   }
 
-  /* A precise, technical ground for the hero — a fine grid that fades out
-     before it competes with the type. Painted, so it costs no markup. */
-  .ds-grid-field {
+  /* Whole-page rail — one light, fixed grid behind all the content so every
+     white band carries the same quiet, moving texture. The negative z-index
+     keeps it above the body background and below the page. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
     background-image:
-      linear-gradient(to right, var(--color-border) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
-    background-size: 72px 72px;
+      linear-gradient(to right, color-mix(in srgb, var(--color-accent) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--color-accent) 8%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.4;
+    animation: ds-grid-drift 30s linear infinite;
+  }
+
+  /* Marquee — an infinite horizontal strip for the at-a-glance facts. The
+     track is duplicated in the markup; translating -50% is the seamless loop. */
+  .ds-marquee-track {
+    animation: ds-marquee 30s linear infinite;
+  }
+
+  .ds-marquee-paused:hover .ds-marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes ds-marquee {
+    from { translate: 0 0; }
+    to   { translate: -50% 0; }
+  }
+
+  /* Dot grid — a quiet slate texture that never competes with type. */
+  .ds-grid-field {
+    background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
+    background-size: 24px 24px;
     background-position: center top;
-    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 72%);
-    mask-image: radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 72%);
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 70%);
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 70%);
     opacity: 0.7;
   }
 }
@@ -608,23 +584,21 @@
   html {
     scroll-behavior: auto;
   }
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 
-  /* Not just a faster transition — no hidden state at all. Neutralising the
-     duration alone would still leave an element invisible until its observer
-     fired, which is a worse experience than the animation it replaced. */
   .js-motion .ds-reveal[data-reveal="pending"] {
     opacity: 1;
     translate: none;
   }
 
-  /* The overlay still needs to appear; it just appears immediately. */
+  .ds-marquee-track {
+    animation: none !important;
+  }
+
   .ds-backdrop[data-open="true"] {
     opacity: 1;
     visibility: visible;

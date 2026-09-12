@@ -23,10 +23,10 @@ export function ExperienceList({
         />
       )}
 
-      <ol className="space-y-6">
+      <ol className="border-t border-border">
         {experience.map((role, i) => (
           <Reveal as="li" key={role.company} delay={i * 0.05}>
-            <article className="ds-card p-7 md:p-9">
+            <article className="border-b border-border py-8 md:py-10">
               <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
                 <header className="lg:col-span-4">
                   <h3 className="ds-title">{role.role}</h3>

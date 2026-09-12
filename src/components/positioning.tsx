@@ -26,27 +26,43 @@ export function Audiences({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" 
         description="If none of these describes you, say so anyway — it is usually faster for me to tell you I am the wrong person than for you to work it out."
       />
 
-      <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border lg:grid-cols-3">
-        {audiences.map((audience, i) => (
-          <Reveal
-            as="li"
-            key={audience.who}
-            delay={i * 0.05}
-            className={cn("flex flex-col p-7 md:p-8", "primary" in audience ? "bg-accent-soft" : "bg-card")}
-          >
-            <div className="flex items-center gap-3">
-              <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
-              {"primary" in audience && <span className="ds-chip ds-chip-accent">Best fit</span>}
-            </div>
-            <h3 className="ds-title mt-4">{audience.who}</h3>
-            <p className="ds-body-sm mt-3.5 flex-1">{audience.detail}</p>
-            <Link href={audience.href} className="ds-link mt-6">
-              {audience.label}
-              <ArrowIcon className="h-3.5 w-3.5" />
-            </Link>
-          </Reveal>
-        ))}
-      </ul>
+      <div className="mx-auto max-w-5xl">
+        <ul className="border-t border-border">
+          {audiences.map((audience, i) => (
+            <Reveal
+              as="li"
+              key={audience.who}
+              delay={i * 0.05}
+              className={cn(
+                "group grid gap-3 border-b border-border py-7 transition-colors hover:bg-accent-soft/40 md:grid-cols-12 md:items-baseline md:gap-8 md:px-4 md:py-8",
+                "primary" in audience && "bg-accent-soft/50 hover:bg-accent-soft",
+              )}
+            >
+              <span className="flex items-center gap-4 md:col-span-2">
+                <span className="font-display text-[0.875rem] font-semibold text-accent tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {"primary" in audience && <span className="ds-chip ds-chip-accent">Best fit</span>}
+              </span>
+
+              <div className="md:col-span-6">
+                <h3 className="ds-title text-[1.0625rem] transition-colors group-hover:text-accent">
+                  {audience.who}
+                </h3>
+                <p className="ds-body-sm mt-2">{audience.detail}</p>
+              </div>
+
+              <Link
+                href={audience.href}
+                className="ds-link md:col-span-4 md:justify-end md:text-right"
+              >
+                {audience.label}
+                <ArrowIcon className="h-3.5 w-3.5" />
+              </Link>
+            </Reveal>
+          ))}
+        </ul>
+      </div>
     </Section>
   );
 }
@@ -74,16 +90,30 @@ export function Principles({
     <Section id={id} tone={tone}>
       <SectionHeading overline="Approach" title={heading} description={description} />
 
-      <ul className="grid gap-6 md:grid-cols-2 lg:gap-7">
-        {principles.map((principle, i) => (
-          <Reveal as="li" key={principle.title} delay={i * 0.04} className="h-full">
-            <div className="ds-card h-full p-7 md:p-8">
-              <h3 className="ds-title-sm">{principle.title}</h3>
-              <p className="ds-body-sm mt-3">{principle.detail}</p>
-            </div>
-          </Reveal>
-        ))}
-      </ul>
+      <div className="mx-auto max-w-5xl">
+        <ol className="border-t border-border">
+          {principles.map((principle, i) => (
+            <Reveal as="li" key={principle.title} delay={i * 0.04}>
+              <div className="group grid gap-4 border-b border-border py-7 transition-colors hover:bg-accent-soft/40 md:grid-cols-12 md:items-baseline md:gap-8 md:px-4 md:py-8">
+                <span className="flex items-baseline gap-4 md:col-span-1">
+                  <span
+                    aria-hidden
+                    className="font-display text-[0.875rem] font-semibold text-ink-soft tabular-nums transition-colors group-hover:text-accent"
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </span>
+                <div className="md:col-span-11">
+                  <h3 className="ds-title text-[1.0625rem] transition-colors group-hover:text-accent">
+                    {principle.title}
+                  </h3>
+                  <p className="ds-body-sm mt-2 max-w-3xl">{principle.detail}</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </ol>
+      </div>
     </Section>
   );
 }

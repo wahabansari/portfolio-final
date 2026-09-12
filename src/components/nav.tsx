@@ -2,25 +2,42 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { serviceGroups } from "@/content/services";
-import { sections } from "@/content/site";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { ThemeToggle } from "./theme-toggle";
-import { ArrowIcon, Wordmark } from "./ui";
+import { ArrowIcon, CheckIcon, SearchIcon, Wordmark } from "./ui";
+import { Spotlight } from "./spotlight";
+import { useContent, useLocaleHref } from "./locale-provider";
 import { cn } from "@/lib/cn";
 
 /**
- * Site header, with a services mega-menu.
+ * Site header, with a services mega-menu built on a completely different idea
+ * to a catalogue grid: a LIST → INSPECTOR.
  *
- * Two interactions, deliberately built to different accessibility contracts,
- * because they are different things:
+ * The old menu spread all seven services across columns, which made every item
+ * small and forced the reader to build the mental model of "which one is mine"
+ * by scanning. The new menu inverts that: the left rail is a compact index of
+ * the seven services; the right side is a live preview that shows the details
+ * of the item currently *in the reading position* — the tier, the fit chips,
+ * and the route into the full spec. The menu becomes a lens for comparing one
+ * service at a time instead of a poster for all of them at once. Choosing the
+ * service is the job; the grid was decoration, the preview is a decision aid.
+ *
+ * Selection state makes that possible. The rail is keyboard navigable — ↑/↓
+ * moves the index, Enter opens the focused service — and the pointer updates
+ * the same selection, so the preview and the keyboard always agree on what is
+ * being inspected. This is also why the data is locale-aware: on /ur the rail
+ * lists the Urdu service set with its own slugs, so every link inside the
+ * panel lands on a real page instead of a dead English URL.
+ *
+ * Two interaction contracts, kept deliberately different.
  *
  *   Desktop panel — a NON-modal disclosure. It dims the page behind it so the
  *     panel reads as the subject, but it does not block the page: no focus
  *     trap, no role="dialog", no scroll lock. Tab moves through the panel and
- *     then out of it, which closes the menu. Trapping focus in a dropdown a
- *     user can simply tab past is a common and irritating mistake.
+ *     then out of it, which closes the menu. Focus is the honest contract for
+ *     "you can leave", and the preview follows the focused rail item too — the
+ *     panel stays coherent for a keyboard user who never hovers.
  *
  *   Mobile drawer — genuinely modal. It covers the page, so it gets
  *     role="dialog", aria-modal, a focus trap, a scroll lock and Escape. The
@@ -64,15 +81,33 @@ function CloseIcon({ className }: { className?: string }) {
 
 export function Nav() {
   const pathname = usePathname();
+  const { site, services } = useContent();
+  const localeHref = useLocaleHref();
+
+  /* The locale-aware content drive every label and every href inside the
+     panel, so the panel renders the locale's own services on its own URLs. */
+  const sections = site.sections;
+  const serviceGroups = services.serviceGroups;
+  const allServices = useMemo(
+    () => serviceGroups.flatMap((g) => g.items),
+    [serviceGroups],
+  );
+
   const [servicesOpen, setServicesOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerServicesOpen, setDrawerServicesOpen] = useState(false);
+  const [spotlightOpen, setSpotlightOpen] = useState(false);
+
+  /* List → inspector: which service is in the reading position right now. */
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const servicesRef = useRef<HTMLDivElement>(null);
   const servicesBtnRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const drawerBtnRef = useRef<HTMLButtonElement>(null);
+  const searchBoxRef = useRef<HTMLButtonElement>(null);
+  const searchIconRef = useRef<HTMLButtonElement>(null);
   const closeTimer = useRef<number | null>(null);
   /**
    * How the panel was opened, which decides what a click on the trigger does.
@@ -229,7 +264,38 @@ export function Nav() {
     setServicesOpen(false);
     setDrawerOpen(false);
     setDrawerServicesOpen(false);
+    setSpotlightOpen(false);
   }
+
+  /* ⌘K / Ctrl+K opens the spotlight from anywhere on the page; the box and
+     icon buttons are the pointer routes in. The listener lives here because
+     the Nav owns the palette's open state. */
+  useEffect(() => {
+    const onShortcut = (e: KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "k") return;
+      e.preventDefault();
+      if (spotlightOpen) {
+        setSpotlightOpen(false);
+      } else {
+        setSpotlightOpen(true);
+        track("search_open", { label: "shortcut" });
+      }
+    };
+    window.addEventListener("keydown", onShortcut);
+    return () => window.removeEventListener("keydown", onShortcut);
+  }, [spotlightOpen]);
+
+  const openSpotlight = () => {
+    setSpotlightOpen(true);
+    track("search_open", { label: "header" });
+  };
+
+  /* Restore focus to the control that opened the palette — the desktop box on
+     a wide viewport, the icon button on narrow. Whichever is mounted wins. */
+  const closeSpotlight = () => {
+    setSpotlightOpen(false);
+    (searchBoxRef.current ?? searchIconRef.current)?.focus();
+  };
 
   /* The open-source flag is a ref, so it is cleared in an effect rather than
      in the render-time reset above — writing a ref during render is what the
@@ -241,8 +307,24 @@ export function Nav() {
     openedBy.current = null;
   }, [pathname]);
 
+  /* The pathname carries the locale prefix (`/en`, `/ur`); the links in the
+     menu are locale-prefixed too. Matching against the unprefixed path keeps
+     the active states honest without depending on which locale is on screen. */
+  const barePath = pathname.replace(/^\/(en|ur)(?=\/|$)/, "") || "/";
+
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+    href === "/" ? barePath === "/" : barePath === href || barePath.startsWith(`${href}/`);
+
+  const focusIndex = (index: number) => {
+    /* The preview follows the reading position; focus follows too when
+       navigating by keyboard, so Enter after ↓ lands on the focused item. */
+    const idx = (index + allServices.length) % allServices.length;
+    setSelectedIndex(idx);
+    const links = panelRef.current?.querySelectorAll<HTMLElement>("[data-menu-index]");
+    links?.[idx]?.focus({ preventScroll: true });
+  };
+
+  const selected = allServices[selectedIndex];
 
   const itemClass = (active: boolean) =>
     cn(
@@ -252,14 +334,14 @@ export function Nav() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-border bg-bg/90 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-border bg-bg/75 backdrop-blur-xl">
         <div className="ds-container flex h-[4.5rem] items-center justify-between gap-6">
           <Link
-            href="/"
+            href={localeHref("/")}
             aria-label="Wahab Ansari — home"
-            className="-mx-2 flex min-h-11 items-center rounded-lg px-2"
+            className="-mx-2 flex min-h-11 shrink-0 items-center rounded-lg px-2"
           >
-            <Wordmark />
+            <Wordmark role={site.role} />
           </Link>
 
           <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
@@ -292,7 +374,7 @@ export function Nav() {
                       /* Move into the panel on the next frame, once it is no
                          longer inert and its links can take focus. */
                       requestAnimationFrame(() =>
-                        panelRef.current?.querySelector<HTMLElement>("a[href]")?.focus(),
+                        panelRef.current?.querySelector<HTMLElement>("[data-menu-index]")?.focus(),
                       );
                     }}
                     aria-expanded={servicesOpen}
@@ -308,7 +390,7 @@ export function Nav() {
               ) : (
                 <Link
                   key={s.id}
-                  href={s.href}
+                  href={localeHref(s.href)}
                   data-track={s.href === "/work" ? "case_study_view" : undefined}
                   data-track-label={s.href === "/work" ? "header" : undefined}
                   aria-current={isActive(s.href) ? "page" : undefined}
@@ -321,15 +403,40 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Link
-              href="/contact"
-              data-track="cta_click"
+            {/* Desktop search box — small by design. It is a button styled
+                like an input: click always opens the full spotlight. The
+                box stays quiet in the header; everything it is for happens
+                inside the palette. */}
+            <button
+              ref={searchBoxRef}
+              type="button"
+              onClick={openSpotlight}
+              data-track="search_open"
               data-track-label="header"
-              className="ds-btn ds-btn-primary hidden h-10 min-h-10 px-5 text-[0.875rem] sm:inline-flex"
+              className="hidden h-10 w-36 items-center gap-2 rounded-full border border-border bg-surface/60 pr-2 pl-4 text-[0.875rem] text-ink-soft transition-colors hover:border-border-strong hover:text-ink-muted lg:inline-flex xl:w-56 2xl:w-64"
             >
-              Discuss your project
-            </Link>
+              <SearchIcon className="h-4 w-4 shrink-0" />
+              <span className="truncate select-none">Search</span>
+              <span aria-hidden className="ml-auto hidden items-center md:flex">
+                <kbd className="inline-flex h-6 min-w-7 items-center justify-center rounded border border-border bg-card px-1.5 font-mono text-[0.6875rem] leading-none text-ink-muted">
+                  ⌘K
+                </kbd>
+              </span>
+            </button>
+
+            {/* Mobile search icon */}
+            <button
+              ref={searchIconRef}
+              type="button"
+              onClick={openSpotlight}
+              aria-label="Search"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink-muted transition-colors hover:bg-surface hover:text-ink lg:hidden"
+            >
+              <SearchIcon className="h-[1.125rem] w-[1.125rem]" />
+            </button>
+
+            <ThemeToggle />
+
             <button
               ref={drawerBtnRef}
               type="button"
@@ -363,6 +470,16 @@ export function Nav() {
             if (servicesRef.current?.contains(e.relatedTarget as Node | null)) return;
             closeServices();
           }}
+          /* ↑/↓ walk the rail; the preview follows. */
+          onKeyDown={(e) => {
+            if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+              e.preventDefault();
+              focusIndex(selectedIndex + 1);
+            } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+              e.preventDefault();
+              focusIndex(selectedIndex - 1);
+            }
+          }}
           /* Interactivity is governed by `inert`, not by `visibility`. An
              inert subtree is already unfocusable, unreachable by assistive
              technology and transparent to hit-testing, so adding `invisible`
@@ -377,109 +494,188 @@ export function Nav() {
           )}
           style={{ top: HEADER_H }}
         >
-          <div className="border-b border-border bg-bg shadow-[0_18px_40px_-32px_rgb(15_23_42_/_0.45)]">
-            <div className="ds-container py-9">
-              <div className="grid grid-cols-12 gap-x-8 gap-y-8">
-                {serviceGroups.map((group) => (
-                  <div key={group.tier} className="col-span-3">
-                    <p className="ds-meta pb-3">{group.label}</p>
-                    <ul className="border-t border-border pt-2">
-                      {group.items.map((sv) => {
-                        const href = `/services/${sv.slug}`;
-                        const active = pathname === href;
-                        return (
-                          <li key={sv.slug}>
-                            <Link
-                              href={href}
-                              data-track="cta_click"
-                              data-track-label={sv.slug}
-                              aria-current={active ? "page" : undefined}
-                              className={cn(
-                                "group block rounded-[var(--radius-md)] px-3.5 py-3 transition-colors",
-                                active ? "bg-accent-soft" : "hover:bg-surface",
-                              )}
-                            >
-                              <span
-                                className={cn(
-                                  "flex items-center gap-1.5 font-display text-[0.9375rem] font-semibold",
-                                  active ? "text-accent" : "text-ink",
-                                )}
-                              >
-                                {sv.title}
-                                <ArrowIcon className="h-3.5 w-3.5 -translate-x-1 opacity-0 transition-[translate,opacity] duration-200 group-hover:translate-x-0 group-hover:opacity-100" />
-                              </span>
-                              <span className="ds-body-sm mt-1 block">{sv.summary}</span>
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ))}
+          <div className="border-b border-border bg-card/90 shadow-[0_24px_60px_-24px_rgb(2_6_23_/_0.35)] backdrop-blur-xl">
+            <div className="ds-container pt-7 pb-6">
+              {/* Menu header — the reading-position model in two lines, with
+                  the route to the whole set on the right. */}
+              <div className="flex items-end justify-between gap-6 border-b border-border pb-5">
+                <div>
+                  <p className="ds-meta">Services</p>
+                  <p className="mt-1.5 font-display text-[1.25rem] leading-tight font-semibold text-ink">
+                    Compare them one at a time — move down the list, watch the
+                    preview.
+                  </p>
+                </div>
+                <Link href={localeHref("/services")} className="ds-link text-[0.875rem]">
+                  All services
+                  <ArrowIcon className="h-3.5 w-3.5" />
+                </Link>
+              </div>
 
-                {/* Proof column. A catalogue overlay that only lists what is
-                    for sale asks for trust it has not earned yet; the evidence
-                    belongs at the moment of choosing, not three scrolls into
-                    whichever page gets picked. Both figures are the ones the
-                    rest of the site substantiates — nothing new is claimed
-                    here. */}
-                <div className="col-span-3">
-                  <p className="ds-meta pb-3">Proof</p>
-                  <div className="ds-card border-t border-border p-6">
-                    <dl className="space-y-5">
-                      <div>
-                        <dt className="font-display text-[1.5rem] leading-none font-bold text-ink">
-                          7
-                        </dt>
-                        <dd className="ds-body-sm mt-1.5">
-                          production projects, every one live and linked
-                        </dd>
-                      </div>
-                      <div className="border-t border-border pt-5">
-                        <dt className="font-display text-[1.5rem] leading-none font-bold text-success">
-                          30%
-                        </dt>
-                        <dd className="ds-body-sm mt-1.5">
-                          measured Core Web Vitals improvement on Sunhub
-                        </dd>
-                      </div>
-                    </dl>
-                    <Link
-                      href="/work"
-                      data-track="cta_click"
-                      data-track-label="services-menu-proof"
-                      className="ds-link mt-6"
-                    >
-                      See the proof
-                      <ArrowIcon className="h-3.5 w-3.5" />
-                    </Link>
+              <div className="grid grid-cols-12 gap-x-10 pt-5">
+                {/* ── The rail: one compact index, grouped, scannable. ────── */}
+                <div className="col-span-7">
+                  <ul className="divide-y divide-border/70">
+                    {serviceGroups.map((group, gi) => (
+                      <li key={group.tier}>
+                        <p className="ds-meta pt-4 pb-2 text-[0.6875rem] first:pt-0">
+                          {group.label}
+                        </p>
+                        <ul>
+                          {group.items.map((sv) => {
+                            const svIndex =
+                              serviceGroups
+                                .slice(0, gi)
+                                .reduce((n, g) => n + g.items.length, 0) +
+                              group.items.indexOf(sv);
+                            const href = localeHref(`/services/${sv.slug}`);
+                            const active = isActive(`/services/${sv.slug}`);
+                            const focusSelected = selectedIndex === svIndex;
+                            return (
+                              <li key={sv.slug}>
+                                <Link
+                                  href={href}
+                                  data-menu-index={svIndex}
+                                  data-track="cta_click"
+                                  data-track-label={sv.slug}
+                                  aria-current={active ? "page" : undefined}
+                                  onMouseEnter={() => setSelectedIndex(svIndex)}
+                                  onFocus={() => setSelectedIndex(svIndex)}
+                                  className={cn(
+                                    "flex items-center gap-4 rounded-[var(--radius-sm)] px-2 py-3 transition-colors",
+                                    focusSelected ? "bg-accent-soft/50" : "hover:bg-surface",
+                                  )}
+                                >
+                                  <span
+                                    className={cn(
+                                      "w-5 shrink-0 text-center font-display text-[0.8125rem] leading-none font-bold tabular-nums",
+                                      focusSelected ? "text-accent" : "text-ink-soft",
+                                    )}
+                                  >
+                                    {svIndex + 1}
+                                  </span>
+                                  <span className="min-w-0 flex-1">
+                                    <span
+                                      className={cn(
+                                        "block truncate text-[0.9375rem] font-medium transition-colors",
+                                        focusSelected ? "text-accent" : "text-ink",
+                                      )}
+                                    >
+                                      {sv.title}
+                                    </span>
+                                    {!!sv.summary && (
+                                      <span className="mt-0.5 block truncate text-[0.8125rem] text-ink-muted">
+                                        {sv.summary}
+                                      </span>
+                                    )}
+                                  </span>
+                                  <CheckIcon
+                                    className={cn(
+                                      "h-4 w-4 shrink-0 text-accent transition-opacity",
+                                      focusSelected ? "opacity-100" : "opacity-0",
+                                    )}
+                                  />
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* ── The inspector: the service in the reading position. ── */}
+                <div className="col-span-5">
+                  <div className="sticky top-[5.5rem] rounded-2xl border border-border bg-surface/80 p-5 backdrop-blur">
+                    {selected ? (
+                      <>
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="ds-chip text-[0.6875rem] uppercase tracking-wide">
+                            {selectedIndex + 1} / {allServices.length}
+                          </span>
+                          <span className="ds-chip ds-chip-accent text-[0.6875rem]">
+                            {serviceGroups.find((g) => g.items.includes(selected))?.label ?? "Service"}
+                          </span>
+                        </div>
+
+                        <p className="ds-title mt-4 text-[1.15rem] leading-tight text-ink">
+                          {selected.title}
+                        </p>
+                        {!!selected.summary && (
+                          <p className="ds-body-sm mt-2 leading-relaxed text-ink-muted">
+                            {selected.summary}
+                          </p>
+                        )}
+
+                        {selected.idealFor.length > 0 && (
+                          <ul className="mt-4 flex flex-wrap gap-1.5">
+                            {selected.idealFor.slice(0, 3).map((fit) => (
+                              <li
+                                key={fit}
+                                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-[0.75rem] text-ink"
+                              >
+                                <CheckIcon className="h-3 w-3 text-accent" />
+                                {fit}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        <Link
+                          href={localeHref(`/services/${selected.slug}`)}
+                          data-track="cta_click"
+                          data-track-label={`menu-inspector:${selected.slug}`}
+                          className="ds-btn ds-btn-primary mt-5 w-full"
+                        >
+                          Open the full spec
+                          <ArrowIcon />
+                        </Link>
+
+                        <div className="mt-4 border-t border-border pt-4 text-[0.75rem] text-ink-muted">
+                          Use the list, Arrow keys or Tab to switch service.
+                        </div>
+                      </>
+                    ) : (
+                      <p className="ds-body-sm text-ink-muted">
+                        Nothing to preview yet.
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* Bottom strip: quick routes out of the menu, dismiss on the end. */}
             <div className="border-t border-border bg-surface">
               <div className="ds-container flex items-center justify-between gap-6 py-3">
                 <div className="flex items-center gap-8">
-                  <Link href="/services" className="ds-link">
-                    Compare all services
-                    <ArrowIcon className="h-3.5 w-3.5" />
-                  </Link>
                   <Link
-                    href="/insights"
+                    href={localeHref("/work")}
                     data-track="cta_click"
                     data-track-label="services-menu"
-                    className="ds-body-sm transition-colors hover:text-ink"
+                    className="text-[0.875rem] font-medium text-ink-muted transition-colors hover:text-ink"
+                  >
+                    See the proof →
+                  </Link>
+                  <Link
+                    href={localeHref("/insights")}
+                    data-track="cta_click"
+                    data-track-label="services-menu"
+                    className="text-[0.875rem] font-medium text-ink-muted transition-colors hover:text-ink"
                   >
                     Read the insights →
                   </Link>
+                  <Link
+                    href={localeHref("/contact")}
+                    data-track="cta_click"
+                    data-track-label="services-menu"
+                    className="text-[0.875rem] font-medium text-ink-muted transition-colors hover:text-ink"
+                  >
+                    Discuss your project →
+                  </Link>
                 </div>
 
-                {/* An explicit dismiss. Escape and click-outside already close
-                    the panel, but both are learned behaviours — a visible
-                    control is the one route out that needs no prior knowledge,
-                    and it is the only one a touch user on a hybrid device can
-                    see. */}
                 <button
                   type="button"
                   onClick={() => {
@@ -534,7 +730,7 @@ export function Nav() {
         )}
       >
         <div className="flex h-[4.5rem] shrink-0 items-center justify-between border-b border-border px-6">
-          <Wordmark compact />
+          <Wordmark compact role={site.role} />
           <button
             type="button"
             onClick={() => {
@@ -582,8 +778,8 @@ export function Nav() {
                             <p className="ds-meta px-3">{group.label}</p>
                             <ul className="mt-1">
                               {group.items.map((sv) => {
-                                const href = `/services/${sv.slug}`;
-                                const active = pathname === href;
+                                const href = localeHref(`/services/${sv.slug}`);
+                                const active = isActive(`/services/${sv.slug}`);
                                 return (
                                   <li key={sv.slug}>
                                     <Link
@@ -605,7 +801,7 @@ export function Nav() {
                           </div>
                         ))}
                         <Link
-                          href="/services"
+                          href={localeHref("/services")}
                           className="mt-4 block min-h-12 rounded-[var(--radius-sm)] px-3 py-2.5 text-[0.9375rem] font-medium text-ink"
                         >
                           All services
@@ -617,7 +813,7 @@ export function Nav() {
               ) : (
                 <Link
                   key={s.id}
-                  href={s.href}
+                  href={localeHref(s.href)}
                   data-track={s.href === "/work" ? "case_study_view" : undefined}
                   data-track-label={s.href === "/work" ? "drawer" : undefined}
                   aria-current={isActive(s.href) ? "page" : undefined}
@@ -632,7 +828,7 @@ export function Nav() {
             )}
 
             <Link
-              href="/insights"
+              href={localeHref("/insights")}
               data-track="cta_click"
               data-track-label="drawer"
               aria-current={isActive("/insights") ? "page" : undefined}
@@ -648,7 +844,7 @@ export function Nav() {
 
         <div className="shrink-0 border-t border-border px-6 py-5">
           <Link
-            href="/contact"
+            href={localeHref("/contact")}
             data-track="cta_click"
             data-track-label="drawer"
             className="ds-btn ds-btn-primary w-full"
@@ -658,6 +854,9 @@ export function Nav() {
           </Link>
         </div>
       </div>
+
+      {/* ── Spotlight search ────────────────────────────────────────────── */}
+      <Spotlight open={spotlightOpen} onClose={closeSpotlight} />
     </>
   );
 }
