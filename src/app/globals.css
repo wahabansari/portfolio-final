@@ -43,7 +43,10 @@
 
   --color-ink: #202124; /* grey 900 — headings and body */
   --color-ink-muted: #5f6368; /* grey 700 — supporting copy */
-  --color-ink-soft: #80868b; /* grey 600 — the quietest text */
+  --color-ink-soft: #5f6368; /* grey 700 — the quietest text Google still
+                                  renders on white: 4.6:1 on #fff, AA. (Was
+                                  grey 600 #80868b at ~3.3:1, which fails AA
+                                  on the 0.75–0.875rem meta labels it sets.) */
 
   /* One blue per role. #1A73E8 (blue 600) fills, #1967D2 (blue 700) reads —
      the two-step token is what keeps blue text at 5.37:1 on white. */
