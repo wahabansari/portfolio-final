@@ -11,11 +11,9 @@ import { cn } from "@/lib/cn";
  * own situation in one pass instead of inferring it from a services list —
  * and it is what stops the copy drifting into "I work with everyone".
  *
- * Each card routes. Naming an audience without giving it somewhere to go just
+ * Each row routes. Naming an audience without giving it somewhere to go just
  * defers the decision to whenever they next find a link, and the best-fit
- * buyer is marked rather than presented at equal weight with the other two —
- * three audiences at identical weight tells a visitor nothing about where the
- * depth actually is.
+ * buyer is marked rather than presented at equal weight with the other two.
  */
 export function Audiences({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
@@ -26,49 +24,62 @@ export function Audiences({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" 
         description="If none of these describes you, say so anyway — it is usually faster for me to tell you I am the wrong person than for you to work it out."
       />
 
-<ul className="grid gap-5 lg:grid-cols-3">
+      <ul className="border-t border-border">
         {audiences.map((audience, i) => {
           const primary = "primary" in audience;
           return (
-            <Reveal as="li" key={audience.who} delay={i * 0.06} className="h-full">
+            <Reveal as="li" key={audience.who} delay={i * 0.06}>
               <Link
                 href={audience.href}
                 data-track="cta_click"
                 data-track-label={`audience:${audience.href.replace("/services/", "")}`}
-                className={cn(
-                  "group flex h-full flex-col rounded-[1.75rem] p-7 transition-[background-color] duration-200 md:p-9",
-                  primary ? "bg-surface-blue" : "bg-card hover:bg-surface-2",
-                )}
+                className="group grid grid-cols-1 items-baseline gap-x-8 gap-y-3 border-b border-border py-8 transition-colors hover:bg-surface md:grid-cols-12 md:py-10"
               >
-                <span className="flex items-center justify-between">
+                <span className="md:col-span-1 md:pl-2">
                   <span
                     aria-hidden
                     className={cn(
-                      "font-display text-[0.9375rem] font-medium tabular-nums",
+                      "font-display text-[1.25rem] font-medium tabular-nums transition-colors group-hover:text-accent",
                       primary ? "text-accent" : "text-ink-soft",
                     )}
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  {primary && (
-                    <span className="rounded-full bg-bg px-3 py-1 text-[0.75rem] font-medium text-accent">
-                      Best fit
-                    </span>
-                  )}
                 </span>
 
-                <h3 className="ds-h3 mt-6">{audience.who}</h3>
-                <p className="ds-body-sm mt-3">{audience.detail}</p>
+                <span className="md:col-span-4">
+                  <span className="flex flex-wrap items-center gap-3">
+                    <span
+                      className={cn(
+                        "font-display text-[1.375rem] leading-snug font-medium tracking-[-0.014em] md:text-[1.5rem]",
+                        primary ? "text-accent" : "text-ink",
+                      )}
+                    >
+                      {audience.who}
+                    </span>
+                    {primary && (
+                      <span className="rounded-full border border-accent bg-accent-soft px-3 py-1 font-mono text-[0.625rem] font-medium uppercase tracking-[0.12em] text-accent">
+                        Best fit
+                      </span>
+                    )}
+                  </span>
+                  <span className="ds-meta mt-1 block">{audience.label}</span>
+                </span>
 
-                <span className="mt-auto inline-flex items-center gap-2 pt-8 text-[0.9375rem] font-medium text-accent transition-colors group-hover:text-accent-hover">
-                  {audience.label}
-                  <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                <span className="ds-body-sm text-ink-muted md:col-span-6">
+                  {audience.detail}
+                </span>
+
+                <span aria-hidden className="md:col-span-1 md:justify-end md:pr-2">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent transition-transform duration-200 group-hover:translate-x-0.5">
+                    <ArrowIcon className="h-4 w-4" />
+                  </span>
                 </span>
               </Link>
             </Reveal>
           );
         })}
-        </ul>
+      </ul>
     </Section>
   );
 }
@@ -100,17 +111,17 @@ export function Principles({
         <ol className="border-t border-border">
           {principles.map((principle, i) => (
             <Reveal as="li" key={principle.title} delay={i * 0.04}>
-              <div className="group grid gap-4 border-b border-border py-7 transition-colors hover:bg-accent-soft/40 md:grid-cols-12 md:items-baseline md:gap-8 md:px-4 md:py-8">
-                <span className="flex items-baseline gap-4 md:col-span-1">
+              <div className="group grid grid-cols-1 gap-x-8 gap-y-3 border-b border-border py-7 transition-colors hover:bg-accent-soft/40 md:grid-cols-12 md:items-baseline md:py-8">
+                <span className="md:col-span-1 md:pl-2">
                   <span
                     aria-hidden
-                    className="font-display text-[0.875rem] font-medium text-ink-soft tabular-nums transition-colors group-hover:text-accent"
+                    className="font-display text-[1.125rem] font-medium text-ink-soft tabular-nums transition-colors group-hover:text-accent"
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </span>
                 <div className="md:col-span-11">
-                  <h3 className="ds-title text-[1.0625rem] transition-colors group-hover:text-accent">
+                  <h3 className="font-display text-[1.25rem] leading-snug font-medium tracking-[-0.014em] text-ink transition-colors group-hover:text-accent">
                     {principle.title}
                   </h3>
                   <p className="ds-body-sm mt-2 max-w-3xl">{principle.detail}</p>

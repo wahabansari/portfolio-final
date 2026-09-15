@@ -5,14 +5,14 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = `${site.name} — ${site.role}`;
 
-const ACCENT = "#1a73e8"; /* blue 600 — fills */
-const ACCENT_TEXT = "#1967d2"; /* blue 700 — reads at 5.37:1 */
-const INK = "#202124";
-const MUTED = "#5f6368";
-const CARDS = "#f8f9fa";
-/* The four Google brand colours, as a graphic stripe — the only place all
-   four appear together; they never carry text. */
-const BRAND_RULE = "linear-gradient(90deg, #1a73e8, #ea4335, #fbbc04, #34a853)";
+const ACCENT = "#e04a1c"; /* vermilion 600 — fills */
+const ACCENT_TEXT = "#b63b0f"; /* vermilion 700 — reads at 5.37:1 */
+const INK = "#221e1a";
+const MUTED = "#6f6961";
+const CARDS = "#faf8f5";
+/* The editorial palette, as a graphic stripe — vermilion draining into warm
+   ink; the only place the range appears as a pure colour sweep. */
+const BRAND_RULE = "linear-gradient(90deg, #e04a1c, #b63b0f, #f4f0e8, #221e1a)";
 
 /**
  * Satori rasterises this card, and it needs real font data rather than a CSS

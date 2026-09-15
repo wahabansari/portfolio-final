@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Google_Sans } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { en, enInsights } from "@/content";
 import * as siteEn from "@/content/en/site";
@@ -10,31 +10,26 @@ import { TrackClicks } from "@/components/analytics";
 import { Gtm } from "@/components/gtm";
 
 /*
- * One typeface, every role.
+ * One voice, one system. DM Sans only.
  *
- * Google Sans — the house typeface, listed on Google Fonts and self-hosted
- * through next/font — carries display, body, navigation, buttons, labels,
- * figures and form fields. The hierarchy is built from size, weight and space
- * (headings 500, sitting light), which is Google's measured approach and also
- * the cheap option: one payload, one set of metrics, no mismatched x-heights
- * between a heading and the paragraph under it.
+ * Weight contrast (500 display, 400 body) carries all hierarchy —
+ * no display serif, no mono. Tight tracking (-0.035em), dark theme.
  *
- * Downloaded once at build and self-hosted by next/font, so there is no
- * render-blocking request to a font CDN and no layout shift from a late swap.
- * (Satori breaks on Google Sans, so the OG card deliberately rasterises with
- * Roboto instead.)
+ * Self-hosted through next/font — downloaded once at build, no CDN
+ * render-block, no layout shift from a late swap.
  */
-const googleSans = Google_Sans({
-  variable: "--font-google-sans",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
+  style: ["normal"],
   display: "swap",
 });
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#202124" },
+    { media: "(prefers-color-scheme: light)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
   ],
 };
 
@@ -87,9 +82,6 @@ export async function generateMetadata(): Promise<Metadata> {
         "max-video-preview": -1,
       },
     },
-    /* Google Search Console ownership. Next emits this as
-       <meta name="google-site-verification">. Leave it in place after
-       verification — removing the tag un-verifies the property. */
     verification: { google: "T8_DkVEVl9u0RlU-zH6YWRQpyfT1GSUxbDXRxtI-lHQ" },
   };
 }
@@ -99,8 +91,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       dir="ltr"
-      data-theme="light"
-      className={googleSans.variable}
+      data-theme="dark"
+      className={dmSans.variable}
       suppressHydrationWarning
     >
       <head>
@@ -118,7 +110,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         >
           <a
             href="#main"
-            className="sr-only rounded-full focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-accent focus:px-5 focus:py-3 focus:text-accent-fg"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-accent focus:px-5 focus:py-3 focus:text-white"
           >
             Skip to content
           </a>

@@ -29,7 +29,7 @@ export function ProblemSelector({ tone = "plain" }: { tone?: "plain" | "soft" | 
  <Section id="start" tone={tone}>
  <Reveal className="mb-10 md:mb-14">
  <div className="mx-auto max-w-3xl text-center">
- <span className="ds-overline">Start here</span>
+ <span className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent">Start here</span>
  <h2 className="ds-h2 mt-5">What are you trying to solve?</h2>
  <p className="ds-lede mt-5 mx-auto">
  Pick the closest one. Each goes to a page that states who it is

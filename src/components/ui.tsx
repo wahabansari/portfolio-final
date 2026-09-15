@@ -6,6 +6,7 @@ import { Accordion } from "./ds";
 import { Reveal } from "./motion";
 
 export { Reveal } from "./motion";
+export { cn } from "@/lib/cn";
 
 /* ── Layout ─────────────────────────────────────────────────────────────── */
 

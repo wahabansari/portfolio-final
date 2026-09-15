@@ -3,13 +3,13 @@ import { about, positioning } from "@/content/site";
 import { ArrowIcon, Reveal, Section } from "./ui";
 
 /**
- * The positioning band — the page's second voice.
+ * The positioning band — a monumental editorial statement.
  *
- * The routing sections and the work index do the selling; this band is where
- * the site puts its point of view on the table in display type. The two-beat
- * statement sets the tone, the positioning line says what that means in
- * practice, and the record sheet pinned beside it is the supporting data --
- * profile facts, not adjectives.
+ * The design moves from a side-by-side statement + ledger to a full editorial
+ * spread: the two-beat proposition stands alone at display scale, the plain
+ * argument runs beneath it as two ragged reading columns (studio voice on the
+ * left, the practical line on the right), and the record sheet — profile
+ * facts, not adjectives — closes the band as a full-width horizontal ledger.
  */
 
 export function Manifesto() {
@@ -19,47 +19,55 @@ export function Manifesto() {
   return (
     <Section tone="deep">
       <Reveal>
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-8">
-            <span className="ds-overline">Positioning</span>
-            <p className="ds-display mt-6 text-ink">
-              {lead}
-              {tail && (
-                <>
-                  . <span className="text-accent">{tail}</span>
-                </>
-              )}
-            </p>
-            <p className="ds-lede mt-6 max-w-3xl">{positioning}</p>
-            <Link href="/about" className="ds-link mt-8">
-              Read the full story
-              <ArrowIcon />
-            </Link>
-          </div>
-
-          <div className="lg:col-span-4">
-            <div className="border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-              <p className="ds-meta">On the record</p>
-              <dl className="mt-4">
-                {about.facts.map((f) => (
-                  <div
-                    key={f.k}
-                    className="flex items-baseline justify-between gap-6 border-b border-border py-4 last:border-b-0"
-                  >
-                    <dt className="ds-meta">{f.k}</dt>
-                    <dd className="text-right text-[0.9375rem] leading-snug font-medium text-ink">
-                      {f.v}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <Link href="/contact" className="ds-btn ds-btn-ghost mt-7 w-full">
-                Discuss your project
-                <ArrowIcon />
-              </Link>
-            </div>
-          </div>
+        <div className="mx-auto max-w-4xl text-center">
+          <span className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-accent">
+            The position
+          </span>
+          <p className="mt-8 font-display text-[2.5rem] leading-[1.05] font-medium tracking-[-0.02em] text-ink sm:text-[3rem] md:text-[3.75rem] lg:text-[4.25rem]">
+            {lead}
+            {tail && (
+              <>
+                . <span className="text-accent">{tail}</span>
+              </>
+            )}
+          </p>
         </div>
+
+        <div className="mx-auto mt-14 max-w-4xl columns-1 gap-10 md:columns-2 lg:gap-16">
+          <p className="text-lg leading-relaxed text-ink-muted">
+            {about.intro}
+          </p>
+          <p className="mt-6 break-inside-avoid text-lg leading-relaxed text-ink-muted md:mt-0">
+            {positioning}
+          </p>
+        </div>
+
+        <div className="mx-auto mt-12 flex max-w-4xl justify-center">
+          <Link
+            href="/about"
+            data-track="cta_click"
+            data-track-label="manifesto:about"
+            className="group inline-flex items-center gap-2 font-mono text-[0.8125rem] font-medium uppercase tracking-[0.06em] text-accent hover:underline"
+          >
+            Read the full story
+            <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+
+        <dl className="mt-16 grid grid-cols-2 gap-px border-t border-border bg-border lg:grid-cols-4">
+          {about.facts.map((f, i) => (
+            <Reveal key={f.k} delay={i * 0.04}>
+              <div className="bg-bg p-6 md:p-8">
+                <dt className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-ink-soft">
+                  {f.k}
+                </dt>
+                <dd className="mt-3 font-display text-[1.375rem] leading-tight font-medium text-ink">
+                  {f.v}
+                </dd>
+              </div>
+            </Reveal>
+          ))}
+        </dl>
       </Reveal>
     </Section>
   );

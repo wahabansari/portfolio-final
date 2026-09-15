@@ -1,553 +1,353 @@
 @import "tailwindcss";
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM v7 — GOOGLE (Material palette).
-
-   Built from Google's own measured language: white page, #F8F9FA band fills,
-   #E8F0FE tonal blue, #DADCE0 hairlines, #202124 ink. One blue for every
-   action (#1A73E8 fills, #1967D2 text); the four Google brand colours are
-   graphics only and never carry text. Headings are light (weight 500, never
-   past 600), buttons are full pills and nothing has a shadow — depth comes
-   from band and card fills, and cards carry no outline.
-
-   Rules this system holds to:
-     · Pure Google palette. Every alias below resolves to a measured Google
-       token (light and dark), so re-theming later is one short list.
-     · No shadows. None anywhere. Depth is fill, separation is hairline.
-     · No card outlines. A card is the inverse fill of the band behind it:
-       raised (white) on a grey/blue band, soft (#F8F9FA) on a white band.
-     · Light is the designed default; dark is an opt-in toggle that reuses
-       the same roles on Google's own dark palette (#202124 / #292A2D / #3C4043).
-     · Blue is reserved for actions and links. Ink is grey-900; body copy is
-       grey-700; nothing else carries emphasis.
-     · Band rhythm: white / #F8F9FA / #F1F3F4, ending on the tonal blue CTA.
-
-   The @theme block stays plain (NOT @theme inline): utilities compile to
-   var(--color-*) so the :root[data-theme="dark"] block can re-point every
-   role by overriding the same custom properties.
-   ═══════════════════════════════════════════════════════════════════════════ */
+/*
+ * Design System — Premium Dark / DM Sans
+ *
+ * Research-backed: Linear, Vercel, Stripe design language.
+ * Monochrome base + one accent. DM Sans only (weight contrast = hierarchy).
+ * No gradients, no shadows, no cards. Generosity of space = premium.
+ */
 
 @theme {
-  /* ── Roles → Google tokens (light — the designed default) ────────────── */
+  /* ── Typography — DM Sans only ─────────────────────────────────────── */
+  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
-  --color-bg: #ffffff; /* page */
-  --color-surface: #f8f9fa; /* grey 50 — the band fill */
-  --color-surface-2: #f1f3f4; /* grey 100 — the third band */
-  --color-surface-blue: #e8f0fe; /* blue 50 — tonal buttons, chips, active nav */
-  --color-card: #ffffff; /* raised card on a grey band */
-  --color-card-raised: #ffffff; /* always lighter than the band, in both themes */
-  --color-card-top: #ffffff;
+  --text-display-size: 4.5rem;
+  --text-h1-size: 3.5rem;
+  --text-h2-size: 2.5rem;
+  --text-h3-size: 1.75rem;
 
-  --color-border: #dadce0; /* grey 300 — hairlines */
-  --color-border-strong: #bdc1c6; /* grey 400 */
+  /* ── Colors — dark premium theme ───────────────────────────────────── */
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-surface-hover: #1a1a1a;
+  --color-border: #1f1f1f;
+  --color-border-subtle: #171717;
+  --color-fg: #f5f5f5;
+  --color-fg-muted: #a3a3a3;
+  --color-fg-subtle: #666666;
+  --color-accent: #635bff;
+  --color-accent-hover: #7a73ff;
+  --color-accent-soft: #635bff1a;
+  --color-success: #22c55e;
+  --color-white: #ffffff;
 
-  --color-ink: #202124; /* grey 900 — headings and body */
-  --color-ink-muted: #5f6368; /* grey 700 — supporting copy */
-  --color-ink-soft: #5f6368; /* grey 700 — the quietest text Google still
-                                  renders on white: 4.6:1 on #fff, AA. (Was
-                                  grey 600 #80868b at ~3.3:1, which fails AA
-                                  on the 0.75–0.875rem meta labels it sets.) */
+  /* Semantic aliases (kept for component compatibility) */
+  --color-ink: var(--color-fg);
+  --color-ink-muted: var(--color-fg-muted);
+  --color-ink-soft: var(--color-fg-subtle);
+  --color-ink-softest: #4d4d4d;
+  --color-paper: var(--color-bg);
+  --color-paper-bright: var(--color-surface);
+  --color-hairline: var(--color-border);
+  --color-accent-fg: var(--color-white);
+  --color-surface-2: var(--color-surface);
 
-  /* One blue per role. #1A73E8 (blue 600) fills, #1967D2 (blue 700) reads —
-     the two-step token is what keeps blue text at 5.37:1 on white. */
-  --color-accent: #1967d2; /* blue 700 — links, overlines, blue text */
-  --color-accent-hover: #174ea6; /* blue 800 */
-  --color-accent-fg: #ffffff; /* on blue 600 */
-  --color-accent-2: #1a73e8; /* blue 600 — the action fill */
-  --color-accent-soft: #e8f0fe; /* blue 50 — tonal surfaces */
-  --color-accent-line: #aecbfa; /* blue 200 — light-blue hairlines */
-  --color-on-tonal: #1967d2; /* text on blue 50 */
+  /* ── Spacing — 8px base ────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-30: 120px;
+  --spacing-section: 120px;
+  --spacing-section-mobile: 80px;
 
-  --color-success: #188038; /* green 700 — measurable-reads-default */
-  --color-success-mark: #34a853; /* the Google green, as a graphic */
-  --color-success-soft: #e6f4ea; /* green 50 */
-  --color-warn: #b3261e; /* Material error, AA on white */
-
-  /* The four Google brand colours — graphics only, never text. */
-  --color-g-blue: #1a73e8;
-  --color-g-red: #ea4335;
-  --color-g-yellow: #fbbc04;
-  --color-g-green: #34a853;
-
-  /* Type: Google Sans is the house face, listed on Google Fonts and
-     self-hosted through next/font (variable set in layout.tsx). Satori breaks
-     on it, so the OG card rasterises with Roboto — same designer, same
-     metrics — and every other surface uses Sans. */
-  --font-sans: var(--font-google-sans), Roboto, Arial, sans-serif;
-  --font-display: var(--font-google-sans), Roboto, Arial, sans-serif;
+  /* ── Radius — sharp, professional ──────────────────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 8px;
+  --radius-card: 8px;
 }
 
-:root {
-  --radius-card: 16px;
-  --radius-lg: 24px;
-  --radius-sm: 8px;
-  --radius-control: 8px;
-  color-scheme: light;
+/* ── Base ────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* Dark — the opt-in toggle. Google's own dark palette (Search / Material). */
-:root[data-theme="dark"] {
-  --color-bg: #202124;
-  --color-surface: #292a2d;
-  --color-surface-2: #303134;
-  --color-surface-blue: #1f3047;
-  --color-card: #35363a; /* raised — lighter than the band, as Material does */
-  --color-card-raised: #35363a;
-  --color-card-top: #35363a;
-
-  --color-border: #3c4043;
-  --color-border-strong: #5f6368;
-
-  --color-ink: #e8eaed;
-  --color-ink-muted: #9aa0a6;
-  --color-ink-soft: #80868b;
-
-  --color-accent: #8ab4f8;
-  --color-accent-hover: #aecbfa;
-  --color-accent-fg: #202124;
-  --color-accent-2: #8ab4f8;
-  --color-accent-soft: #1f3047;
-  --color-accent-line: #3c4043;
-  --color-on-tonal: #8ab4f8;
-
-  --color-success: #81c995;
-  --color-success-mark: #81c995;
-  --color-success-soft: #22352d;
-  --color-warn: #f2b8b5;
-
-  --color-g-blue: #8ab4f8;
-  --color-g-red: #f28b82;
-  --color-g-yellow: #fdd663;
-  --color-g-green: #81c995;
-
-  color-scheme: dark;
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Base ────────────────────────────────────────────────────────────────── */
-@layer base {
-  * {
-    border-color: var(--color-border);
-    min-width: 0;
-  }
-
-  html {
-    -webkit-text-size-adjust: 100%;
-    scroll-padding-top: 5rem;
-  }
-
-  body {
-    background-color: var(--color-bg);
-    color: var(--color-ink);
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    overflow-x: clip;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    color: var(--color-ink);
-    font-weight: 500;
-    text-wrap: balance;
-  }
-
-  p {
-    text-wrap: pretty;
-  }
-
-  .tabular-nums {
-    font-variant-numeric: tabular-nums;
-  }
-
-  ::selection {
-    background-color: var(--color-surface-blue);
-    color: var(--color-on-tonal);
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar {
-    width: 12px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--color-bg);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-border-strong);
-    border: 3px solid var(--color-bg);
-    border-radius: 99px;
-  }
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-optical-sizing: auto;
+  color: var(--color-fg);
+  background-color: var(--color-bg);
 }
 
-@layer components {
-  /* ── Type scale — Google's exact measurements ────────────────────────────
-     Light by design: 500 for headings, 400 body, 500 for labels and buttons.
-     In Google Sans, the metrics hold exactly as Google ships them. */
-
-  /* 60px / -0.5px / 72px */
-  .ds-display {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 1.4rem + 3.6vw, 3.75rem);
-    line-height: 1.2;
-    letter-spacing: -0.0083em;
-    font-weight: 500;
-  }
-
-  /* 48px / -0.5px / 56px */
-  .ds-h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem);
-    line-height: 1.167;
-    letter-spacing: -0.0104em;
-    font-weight: 500;
-  }
-
-  /* 36px / -0.25px / 44px */
-  .ds-h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 1rem + 1vw, 2.25rem);
-    line-height: 1.22;
-    letter-spacing: -0.007em;
-    font-weight: 500;
-  }
-
-  /* Card and panel titles, 22px */
-  .ds-h3 {
-    font-family: var(--font-display);
-    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.375rem);
-    line-height: 1.3;
-    letter-spacing: 0;
-    font-weight: 500;
-  }
-
-  /* Small title, 18px */
-  .ds-title {
-    font-family: var(--font-display);
-    font-size: 1.125rem;
-    line-height: 1.35;
-    font-weight: 500;
-  }
-
-  .ds-title-sm {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    line-height: 1.4;
-    font-weight: 500;
-  }
-
-  /* 18px / 400 — the support line under a heading */
-  .ds-lede {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    font-weight: 400;
-    color: var(--color-ink-muted);
-  }
-
-  .ds-body {
-    font-size: 1rem;
-    line-height: 1.5;
-    font-weight: 400;
-    color: var(--color-ink-muted);
-  }
-
-  .ds-body-sm {
-    font-size: 0.875rem;
-    line-height: 1.43;
-    font-weight: 400;
-    color: var(--color-ink-muted);
-  }
-
-  /* Label — 14px / 500, sentence case, grey */
-  .ds-meta {
-    font-size: 0.875rem;
-    line-height: 1.43;
-    letter-spacing: 0;
-    text-transform: none;
-    font-weight: 500;
-    color: var(--color-ink-muted);
-  }
-
-  /* Overline — blue, plain, no rule */
-  .ds-overline {
-    font-size: 0.875rem;
-    line-height: 1.43;
-    font-weight: 500;
-    color: var(--color-accent);
-  }
-
-  /* ── Buttons — full pills, exactly as Google builds them ─────────────── */
-  .ds-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 999px;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.5;
-    min-height: 3rem;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
-  }
-
-  .ds-btn-primary {
-    background-color: var(--color-accent-2);
-    color: var(--color-accent-fg);
-  }
-  .ds-btn-primary:hover {
-    background-color: var(--color-accent-hover);
-  }
-
-  .ds-btn-secondary {
-    background-color: transparent;
-    border-color: var(--color-border);
-    color: var(--color-accent);
-  }
-  .ds-btn-secondary:hover {
-    background-color: var(--color-surface-blue);
-    border-color: transparent;
-  }
-
-  .ds-btn-ghost {
-    background-color: var(--color-surface-blue);
-    color: var(--color-on-tonal);
-  }
-  .ds-btn-ghost:hover {
-    background-color: color-mix(in srgb, var(--color-surface-blue) 85%, var(--color-accent-2));
-  }
-
-  .ds-btn:disabled {
-    cursor: default;
-    background-color: var(--color-surface-2);
-    color: var(--color-ink-soft);
-  }
-
-  /* Inline text link — blue, 500 */
-  .ds-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    color: var(--color-accent);
-    font-size: 1rem;
-    font-weight: 500;
-    transition: color 0.15s ease;
-  }
-  .ds-link:hover {
-    color: var(--color-accent-hover);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  /* ── Cards — no outlines, separation is the fill ─────────────────────────
-     Cards never draw an outline. Pick the variant by band: raised (white)
-     on a grey or blue band, soft (#F8F9FA) on a white band. Hover deepens
-     the fill a touch — it never reveals a line. */
-  .ds-card-plain {
-    background-color: var(--color-card);
-    border-radius: var(--radius-card);
-  }
-
-  .ds-card-soft {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-  }
-
-  .ds-card-interactive {
-    transition: background-color 0.2s ease;
-  }
-  .ds-card-plain.ds-card-interactive:hover {
-    background-color: color-mix(in srgb, var(--color-card) 94%, var(--color-ink));
-  }
-  .ds-card-soft.ds-card-interactive:hover {
-    background-color: color-mix(in srgb, var(--color-surface) 94%, var(--color-ink));
-  }
-
-  /* ── Chips ───────────────────────────────────────────────────────────── */
-  .ds-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    border-radius: 999px;
-    border: 1px solid var(--color-border);
-    background-color: transparent;
-    padding: 0.375rem 0.875rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.43;
-    color: var(--color-ink);
-    white-space: nowrap;
-  }
-
-  .ds-chip-accent {
-    border-color: transparent;
-    background-color: var(--color-surface-blue);
-    color: var(--color-on-tonal);
-  }
-
-  .ds-chip-success {
-    border-color: transparent;
-    background-color: var(--color-success-soft);
-    color: var(--color-success);
-  }
-
-  /* ── Form fields ───────────────────────────────────────────────────── */
-  .ds-field {
-    width: 100%;
-    border-radius: var(--radius-control);
-    border: 1px solid var(--color-border-strong);
-    background-color: var(--color-bg);
-    padding: 0.75rem 0.9375rem;
-    font-size: 0.9375rem;
-    line-height: 1.5;
-    color: var(--color-ink);
-    transition:
-      border-color 0.18s ease,
-      box-shadow 0.18s ease;
-  }
-  .ds-field::placeholder {
-    color: var(--color-ink-soft);
-  }
-  .ds-field:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
-  }
-
-  .ds-field-invalid {
-    border-color: var(--color-warn);
-  }
-  .ds-field-invalid:focus {
-    border-color: var(--color-warn);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-warn) 18%, transparent);
-  }
-
-  /* ── Accent text ────────────────────────────────────────────────────────
-     Solid blue, kept as a named utility so emphasis is a decision, not a
-     swatch scattered through components. */
-  .ds-grad-text {
-    color: var(--color-accent);
-  }
-
-  /* ── FAQ panel enter ─────────────────────────────────────────────────── */
-  .ds-panel {
-    animation: ds-panel-in 0.22s ease both;
-  }
-
-  @keyframes ds-panel-in {
-    from {
-      opacity: 0;
-      translate: 0 -0.25rem;
-    }
-    to {
-      opacity: 1;
-      translate: 0 0;
-    }
-  }
-
-  /* ── Scroll reveal ──────────────────────────────────────────────────── */
-  .ds-reveal {
-    transition:
-      opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
-      translate 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
-  }
-
-  .js-motion .ds-reveal[data-reveal="pending"] {
-    opacity: 0;
-    translate: 0 0.75rem;
-  }
-
-  /* ── Overlay backdrop ───────────────────────────────────────────────── */
-  .ds-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 80;
-    background-color: rgb(32 33 36 / 0.5);
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity 0.28s ease-out,
-      visibility 0.28s ease-out;
-  }
-  .ds-backdrop[data-state="open"],
-  .ds-backdrop[data-open="true"] {
-    opacity: 1;
-    visibility: visible;
-  }
+/* ── Typography scale ────────────────────────────────────────────────── */
+.display {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.0;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  color: var(--color-fg);
 }
 
-@layer utilities {
-  .ds-container {
-    width: 100%;
-    max-width: 81rem;
-    margin-inline: auto;
-    padding-inline: 1.5rem;
-  }
+.ds-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  color: var(--color-fg);
+}
 
-  @media (min-width: 768px) {
-    .ds-container {
-      padding-inline: 2.5rem;
-    }
-  }
+.ds-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 3vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+  color: var(--color-fg);
+}
 
+.ds-h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  color: var(--color-fg);
+}
+
+/* Body */
+.body-large {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-fg-muted);
+}
+.ds-body-lg { font-size: 1.125rem; line-height: 1.6; color: var(--color-fg-muted); }
+.ds-body { font-size: 1rem; line-height: 1.5; color: var(--color-fg-muted); }
+.ds-body-sm { font-size: 0.875rem; line-height: 1.5; color: var(--color-fg-muted); }
+
+/* Caption / meta */
+.ds-meta {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--color-fg-subtle);
+}
+
+/* Overline — the only decorative typographic move */
+.ds-overline {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-fg-subtle);
+}
+
+/* ── Links ───────────────────────────────────────────────────────────── */
+.ds-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-fg);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease-out;
+}
+.ds-link:hover {
+  color: var(--color-accent);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: all 0.15s ease-out;
+  cursor: pointer;
+}
+.ds-btn:active {
+  transform: scale(0.98);
+}
+.ds-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ds-btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+.ds-btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  transform: scale(1.02);
+}
+
+.ds-btn-secondary {
+  background-color: transparent;
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+}
+.ds-btn-secondary:hover {
+  border-color: var(--color-fg-subtle);
+}
+
+.ds-btn-ghost {
+  background-color: transparent;
+  color: var(--color-fg-muted);
+}
+.ds-btn-ghost:hover {
+  color: var(--color-fg);
+}
+
+/* ── Chips ───────────────────────────────────────────────────────────── */
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-fg-muted);
+  white-space: nowrap;
+}
+.ds-chip-accent {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent-hover);
+}
+.ds-chip-success {
+  border-color: #1f3d2e;
+  background-color: #0a1f16;
+  color: var(--color-success);
+}
+
+/* ── Container ───────────────────────────────────────────────────────── */
+.ds-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+@media (min-width: 768px) {
+  .ds-container { padding-left: 48px; padding-right: 48px; }
+}
+@media (min-width: 1280px) {
+  .ds-container { padding-left: 80px; padding-right: 80px; }
+}
+
+/* ── Section ─────────────────────────────────────────────────────────── */
+.ds-section {
+  padding-top: var(--spacing-section);
+  padding-bottom: var(--spacing-section);
+}
+@media (max-width: 767px) {
   .ds-section {
-    padding-block: 4.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .ds-section {
-      padding-block: 7rem;
-    }
-  }
-
-  /* Marquee — an infinite horizontal strip for the at-a-glance facts. The
-     track is duplicated in the markup; translating -50% is the seamless loop. */
-  .ds-marquee-track {
-    animation: ds-marquee 30s linear infinite;
-  }
-
-  .ds-marquee-paused:hover .ds-marquee-track {
-    animation-play-state: paused;
-  }
-
-  @keyframes ds-marquee {
-    from { translate: 0 0; }
-    to   { translate: -50% 0; }
+    padding-top: var(--spacing-section-mobile);
+    padding-bottom: var(--spacing-section-mobile);
   }
 }
 
+/* ── Section tones ───────────────────────────────────────────────────── */
+.tone-plain { background-color: var(--color-bg); }
+.tone-soft { background-color: var(--color-surface); }
+.tone-deep { background-color: var(--color-bg); }
+
+/* ── Hairline ────────────────────────────────────────────────────────── */
+.ds-hairline {
+  height: 1px;
+  background-color: var(--color-border);
+  border: none;
+  margin: 0;
+}
+
+/* ── Tabular numbers ─────────────────────────────────────────────────── */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Field ───────────────────────────────────────────────────────────── */
+.ds-field {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-fg);
+  background-color: var(--color-surface);
+  transition: border-color 0.15s ease-out;
+}
+.ds-field:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-soft);
+}
+.ds-field::placeholder {
+  color: var(--color-fg-subtle);
+}
+.ds-field-invalid {
+  border-color: #c62828;
+}
+
+/* ── Scroll reveal ───────────────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal-in {
+  animation: fade-up 0.6s ease-out both;
+}
+
+/* ── Focus rings ─────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   *, *::before, *::after {
-    animation-duration: 0.001ms !important;
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-duration: 0.01ms !important;
   }
+  html { scroll-behavior: auto; }
+}
 
-  .js-motion .ds-reveal[data-reveal="pending"] {
-    opacity: 1;
-    translate: none;
-  }
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-fg-subtle); }
 
-  .ds-marquee-track {
-    animation: none !important;
-  }
-
-  .ds-backdrop[data-open="true"] {
-    opacity: 1;
-    visibility: visible;
-  }
+/* ── Selection ───────────────────────────────────────────────────────── */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-white);
 }

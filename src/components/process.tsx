@@ -10,13 +10,13 @@ type ProcessStep = { step: string; detail: string; benefit?: string };
  * The five-step process, now a working stepper.
  *
  * The numbered badges double as a progress indicator: as the section scrolls
- * through the viewport centre, the active step lights in sequence (accent fill)
- * so the timeline visibly "advances" instead of sitting static. One scroll
- * value drives all five badges, so it reads correctly whether the steps are a
+ * through the viewport centre, the active step lights in sequence (accent) so
+ * the timeline visibly "advances" instead of sitting static. One scroll value
+ * drives all five badges, so it reads correctly whether the steps are a
  * single horizontal row (desktop) or stacked vertically (mobile).
  *
- * Progressive enhancement: without JavaScript the badges render in their
- * resting state and the block remains a plain numbered timeline.
+ * Each step is an index cell rather than a card: the numeral stands alone at
+ * display scale above a hairline, then the name and detail run beneath it.
  */
 export function ProcessSteps({ steps }: { steps: readonly ProcessStep[] }) {
   const olRef = useRef<HTMLOListElement>(null);
@@ -66,29 +66,27 @@ export function ProcessSteps({ steps }: { steps: readonly ProcessStep[] }) {
             as="li"
             key={s.step}
             delay={i * 0.04}
-            className="relative flex gap-4 pb-8 md:flex-col md:gap-0 md:pb-0"
+            className="relative pb-8 md:pb-0"
           >
-            {/* Horizontal connector between steps on desktop. */}
-            {i < steps.length - 1 && (
-              <span
-                aria-hidden
-                className="absolute top-4 left-8 hidden h-px w-full bg-border md:block md:top-3 md:left-12"
-              />
-            )}
-
             <span
               aria-hidden
               className={cn(
-                "rounded-full px-3.5 py-2 font-display text-[0.8125rem] font-medium tabular-nums transition-colors duration-300 md:relative md:z-10 md:inline-flex md:w-fit",
-                isActive
-                  ? "bg-accent text-accent-fg"
-                  : "bg-accent-soft text-accent",
+                "font-display text-[2.5rem] leading-none font-medium tracking-[-0.02em] transition-colors duration-300",
+                isActive ? "text-accent" : "text-border",
               )}
             >
               {String(i + 1).padStart(2, "0")}
             </span>
 
-            <div className="min-w-0 md:mt-8 md:min-w-full">
+            <span
+              aria-hidden
+              className={cn(
+                "mt-3 block h-px w-10 transition-colors duration-300",
+                isActive ? "bg-accent" : "bg-border",
+              )}
+            />
+
+            <div className="mt-4">
               <h3 className="ds-title-sm">{s.step}</h3>
               <p className="ds-body-sm mt-2">{s.detail}</p>
               {s.benefit && (

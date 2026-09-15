@@ -1,84 +1,70 @@
 import { assurances, testimonials } from "@/content/site";
-import { CodeIcon, FileCheckIcon, GaugeIcon, Reveal, Section, SectionHeading, UserIcon } from "./ui";
+import { CodeIcon, FileCheckIcon, GaugeIcon, Reveal, Section, UserIcon } from "./ui";
 
-/* Each commitment gets the icon that matches its subject: who you talk to,
-   what is agreed, what is measured, and what you are left with. */
 const ASSURANCE_ICONS = [UserIcon, FileCheckIcon, GaugeIcon, CodeIcon];
 
 /**
- * The trust layer.
+ * Trust — premium commitment strip.
  *
- * Two states, one slot. When real testimonials exist they lead, because a
- * client's words outrank mine on every claim they overlap with. Until then the
- * slot carries the four commitments that can be verified against how the
- * engagement actually runs — which is a weaker signal than a testimonial and a
- * far stronger one than a fabricated quote.
- *
- * The empty state is deliberate rather than unfinished. A testimonials section
- * populated with invented praise would undo the credibility every other page
- * here is built to earn, and there is no version of "three plausible quotes"
- * that is worth that risk. Add real ones to `testimonials` in content/site.ts
- * and this section changes shape on its own.
+ * Four commitments in a single quiet list: icon, title, one-line detail.
+ * No cards, no grid, no shadow. When real testimonials exist they render
+ * as oversized quotes instead.
  */
 export function TrustLayer({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
   const hasTestimonials = testimonials.length > 0;
 
   return (
     <Section id="trust" tone={tone}>
-      <SectionHeading
-        overline="What you can rely on"
-        title={hasTestimonials ? "What clients say" : "How this works, every time"}
-        description={
-          hasTestimonials
-            ? "From people who have shipped something with me."
-            : "Four commitments that hold on every engagement, whichever service it is. Each one is checkable against how the work actually runs — not an adjective."
-        }
-      />
+      <div className="ds-container">
+        <div className="grid gap-16 lg:grid-cols-[1fr_1.4fr] lg:gap-24">
+          <div>
+            <span className="ds-overline mb-4 block">What you can rely on</span>
+            <h2 className="ds-h2">
+              {hasTestimonials ? "What clients say" : "How this works, every time"}
+            </h2>
+          </div>
 
-      {hasTestimonials ? (
-        <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <Reveal as="li" key={t.name + t.company} delay={i * 0.05} className="h-full">
-              <figure className="flex h-full flex-col rounded-[var(--radius-card)] bg-card p-7">
-                <blockquote className="ds-body flex-1 text-ink">“{t.quote}”</blockquote>
-                <figcaption className="mt-6 border-t border-border pt-5">
-                  <span className="block text-[0.9375rem] font-medium text-ink">{t.name}</span>
-                  <span className="ds-body-sm block">
-                    {t.role}, {t.company}
-                  </span>
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
-        </ul>
-      ) : (
-        <ul className="grid gap-4 sm:grid-cols-2">
-          {assurances.map((item, i) => {
-            const Icon = ASSURANCE_ICONS[i % ASSURANCE_ICONS.length];
-            return (
-              <Reveal
-                as="li"
-                key={item.title}
-                delay={i * 0.04}
-                className="flex gap-4 rounded-2xl bg-card p-6 md:p-8"
-              >
-                <span
-                  aria-hidden
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent"
-                >
-                  <Icon className="h-4.5 w-4.5" />
-                </span>
-              <div>
-                <h3 className="text-[0.9375rem] leading-snug font-medium text-ink md:text-base">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-muted">{item.detail}</p>
+          <div>
+            {hasTestimonials ? (
+              <div className="space-y-14">
+                {testimonials.map((t, i) => (
+                  <Reveal key={t.name + t.company} delay={i * 0.05}>
+                    <figure>
+                      <blockquote className="text-[1.5rem] font-medium leading-[1.3] tracking-[-0.02em] text-fg md:text-[1.75rem]">
+                        &ldquo;{t.quote}&rdquo;
+                      </blockquote>
+                      <figcaption className="ds-meta mt-5">
+                        {t.name} · {t.role}, {t.company}
+                      </figcaption>
+                    </figure>
+                  </Reveal>
+                ))}
               </div>
-              </Reveal>
-            );
-          })}
-        </ul>
-      )}
+            ) : (
+              <ul className="space-y-10">
+                {assurances.map((a, i) => {
+                  const Icon = ASSURANCE_ICONS[i];
+                  return (
+                    <Reveal as="li" key={a.title} delay={i * 0.04}>
+                      <div className="flex items-start gap-4">
+                        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border text-fg-muted">
+                          {Icon && <Icon className="h-4 w-4" />}
+                        </span>
+                        <div>
+                          <h3 className="text-[1.125rem] font-medium tracking-[-0.01em] text-fg">
+                            {a.title}
+                          </h3>
+                          <p className="ds-body mt-2 max-w-xl">{a.detail}</p>
+                        </div>
+                      </div>
+                    </Reveal>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
     </Section>
   );
 }

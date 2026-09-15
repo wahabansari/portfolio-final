@@ -31,7 +31,7 @@ export const site = {
  * get reworded per surface.
  */
 export const positioning =
-  "I am a Frontend Product Engineer specialising in React and Next.js, with 5+ years of production experience building web products, customer-facing interfaces and performance-focused frontend systems.";
+  "I am a Frontend Product Engineer specializing in React and Next.js, with 5+ years of production experience building web products, customer-facing interfaces and performance-focused frontend systems.";
 
 /**
  * The commercial promise — the one sentence a buyer could repeat to a

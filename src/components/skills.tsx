@@ -3,16 +3,12 @@ import { byRequest, capabilities } from "@/content/site";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
 /**
- * Capabilities, grouped and ranked — depth before breadth.
+ * Capabilities as a full-width ledger.
  *
- * This replaced a flat 46-item technology wall. The inventory is all still
- * here; what changed is the hierarchy. Each group leads with what I would want
- * to be judged on, and keeps the rest as a secondary line, so a reader can
- * tell in one pass what is central and what is supporting.
- *
- * There is deliberately no /skills route. A page whose only purpose is to list
- * technologies is thin by construction — this is a section on the homepage and
- * on /about instead.
+ * Each group is a hairline row: mono index on the left, the category at
+ * display scale, the plain description, and the ranked inventory — lead items
+ * as mono labels, the supporting stack as a secondary line — on the right.
+ * The hierarchy is visible in one pass: what I lead with, and what supports it.
  */
 export function Capabilities({
   tone = "plain",
@@ -31,23 +27,40 @@ export function Capabilities({
         />
       )}
 
-      <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <ul className="border-t border-border">
         {capabilities.map((group, i) => (
-          <Reveal as="li" key={group.title} delay={i * 0.04} className="flex flex-col rounded-[var(--radius-card)] bg-card p-7">
-            <h3 className="ds-title-sm">{group.title}</h3>
-            <p className="ds-body-sm mt-2">{group.summary}</p>
+          <Reveal as="li" key={group.title} delay={i * 0.04}>
+            <div className="grid items-start gap-x-8 gap-y-4 border-b border-border py-8 md:grid-cols-12 md:py-10">
+              <span className="md:col-span-1 md:pl-2">
+                <span className="font-display text-[1.25rem] font-medium text-ink-soft tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </span>
 
-            <ul className="mt-5 flex flex-wrap gap-1.5">
-              {group.lead.map((item) => (
-                <li key={item} className="ds-chip ds-chip-accent text-[0.75rem]">
-                  {item}
-                </li>
-              ))}
-            </ul>
+              <h3 className="font-display text-[1.375rem] leading-snug font-medium tracking-[-0.014em] text-ink md:col-span-3 md:text-[1.5rem]">
+                {group.title}
+              </h3>
 
-            <p className="ds-body-sm mt-4 flex-1 text-[0.8125rem] text-ink-soft">
-              {group.support.join(" · ")}
-            </p>
+              <p className="text-[0.875rem] leading-relaxed text-ink-muted md:col-span-3">
+                {group.summary}
+              </p>
+
+              <div className="md:col-span-5">
+                <ul className="flex flex-wrap gap-x-3 gap-y-2">
+                  {group.lead.map((item) => (
+                    <li
+                      key={item}
+                      className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-accent"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-[0.8125rem] leading-relaxed text-ink-soft">
+                  {group.support.join(" · ")}
+                </p>
+              </div>
+            </div>
           </Reveal>
         ))}
       </ul>

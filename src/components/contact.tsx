@@ -700,11 +700,54 @@ export function Contact({
  <dt className="ds-meta">Timezone</dt>
  <dd className="mt-1.5 text-[0.9375rem] font-medium text-ink">{site.timezone}</dd>
  </div>
- </dl>
- </div>
- </div>
- </Reveal>
- </div>
- </Section>
- );
+</dl>
+  </div>
+  </div>
+  </Reveal>
+  </div>
+  </Section>
+  );
+}
+
+/**
+ * ContactCTA — the homepage contact section.
+ *
+ * Centered-frontend (but left-aligned within container) statement,
+ * a large email link, and a quiet availability chip. One conversion path.
+ */
+export function ContactCTA({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
+  return (
+    <Section id="contact" tone={tone}>
+      <div className="ds-container">
+        <div className="max-w-3xl">
+          <span className="ds-overline mb-4 block">Contact</span>
+          <h2 className="display">Tell me what you&apos;re building, or what&apos;s getting in the way.</h2>
+          <p className="body-large mt-8 max-w-xl">
+            I&apos;ll review it and tell you what I would tackle first — including
+            telling you if I am not the right person for it.
+          </p>
+        </div>
+
+        <div className="mt-12 flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-10">
+          <a
+            href={`mailto:${site.email}`}
+            data-track="email_click"
+            data-track-label="home-contact"
+            className="text-[1.5rem] font-medium tracking-[-0.02em] text-fg underline-offset-8 transition-colors duration-150 hover:text-accent hover:underline md:text-[2rem]"
+          >
+            {site.email}
+          </a>
+          {site.available && (
+            <span className="ds-chip ds-chip-success self-start sm:self-auto">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-70" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-400" />
+              </span>
+              {site.availabilityNote}
+            </span>
+          )}
+        </div>
+      </div>
+    </Section>
+  );
 }
