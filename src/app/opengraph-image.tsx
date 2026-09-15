@@ -5,21 +5,19 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = `${site.name} — ${site.role}`;
 
-const ACCENT = "#e04a1c"; /* vermilion 600 — fills */
-const ACCENT_TEXT = "#b63b0f"; /* vermilion 700 — reads at 5.37:1 */
-const INK = "#221e1a";
-const MUTED = "#6f6961";
-const CARDS = "#faf8f5";
-/* The editorial palette, as a graphic stripe — vermilion draining into warm
-   ink; the only place the range appears as a pure colour sweep. */
-const BRAND_RULE = "linear-gradient(90deg, #e04a1c, #b63b0f, #f4f0e8, #221e1a)";
+const ACCENT = "#7b74ff"; /* indigo — fills + focus line */
+const BG = "#0b0d12"; /* deep charcoal-navy, same as the site */
+const FG = "#edeff2";
+const MUTED = "#a2a8b5";
+const PANEL = "#11141b";
+const HAIR = "#20242e";
 
 /**
  * Satori rasterises this card, and it needs real font data rather than a CSS
- * family name. Roboto is the typeface the site renders in (and the stand-in
- * the Google system prescribes for OG rasterisation — Google Sans breaks
- * Satori). Wrapped so a build without network access still succeeds on the
- * system sans rather than failing the whole build over a social image.
+ * family name. Roboto is the stand-in the Google system prescribes for OG
+ * rasterisation (Google Sans breaks Satori). Wrapped so a build without
+ * network access still succeeds on the system sans rather than failing the
+ * whole build over a social image.
  */
 async function loadRoboto(weight: number): Promise<ArrayBuffer | null> {
   try {
@@ -35,7 +33,7 @@ async function loadRoboto(weight: number): Promise<ArrayBuffer | null> {
   }
 }
 
-/** Social card in the same light, measured Google language as the site. */
+/** Social card in the same dark, premium language as the site. */
 export default async function OpenGraphImage() {
   const [regular, medium] = await Promise.all([loadRoboto(400), loadRoboto(500)]);
   const fonts = [
@@ -61,7 +59,7 @@ export default async function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#ffffff",
+          background: BG,
           padding: 72,
           fontFamily,
         }}
@@ -69,11 +67,13 @@ export default async function OpenGraphImage() {
         <div
           style={{
             position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: 8,
-            background: BRAND_RULE,
+            top: -160,
+            right: -120,
+            width: 520,
+            height: 520,
+            borderRadius: 999,
+            background:
+              "radial-gradient(circle, rgba(123,116,255,0.35) 0%, transparent 70%)",
           }}
         />
 
@@ -85,7 +85,7 @@ export default async function OpenGraphImage() {
               justifyContent: "center",
               width: 56,
               height: 56,
-              borderRadius: 16,
+              borderRadius: 12,
               background: ACCENT,
               color: "#fff",
               fontSize: 28,
@@ -95,7 +95,7 @@ export default async function OpenGraphImage() {
             W
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <span style={{ fontSize: 24, fontWeight: 500, color: INK }}>{site.name}</span>
+            <span style={{ fontSize: 24, fontWeight: 500, color: FG }}>{site.name}</span>
             <span style={{ fontSize: 18, fontWeight: 400, color: MUTED }}>{site.role}</span>
           </div>
         </div>
@@ -105,8 +105,8 @@ export default async function OpenGraphImage() {
             style={{
               fontSize: 60,
               fontWeight: 500,
-              color: INK,
-              letterSpacing: -1.2,
+              color: FG,
+              letterSpacing: -1.8,
               lineHeight: 1.1,
             }}
           >
@@ -116,15 +116,15 @@ export default async function OpenGraphImage() {
             style={{
               fontSize: 60,
               fontWeight: 500,
-              color: INK,
-              letterSpacing: -1.2,
+              color: FG,
+              letterSpacing: -1.8,
               lineHeight: 1.1,
             }}
           >
             products that are fast, clear
           </span>
           <span
-            style={{ fontSize: 60, fontWeight: 500, color: ACCENT_TEXT, letterSpacing: -1.2, lineHeight: 1.1 }}
+            style={{ fontSize: 60, fontWeight: 500, color: ACCENT, letterSpacing: -1.8, lineHeight: 1.1 }}
           >
             and built to ship.
           </span>
@@ -142,12 +142,13 @@ export default async function OpenGraphImage() {
                 flexDirection: "column",
                 gap: 4,
                 padding: "18px 28px",
-                background: CARDS,
+                background: PANEL,
+                border: `1px solid ${HAIR}`,
                 borderRadius: 12,
               }}
             >
               <span
-                style={{ fontSize: 32, fontWeight: 500, color: s.accent ? ACCENT_TEXT : INK }}
+                style={{ fontSize: 32, fontWeight: 500, color: s.accent ? ACCENT : FG }}
               >
                 {s.v}
               </span>

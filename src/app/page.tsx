@@ -24,7 +24,7 @@ export default function Home() {
         <SelectedWork tone="plain" />
         <ServicesOverview tone="soft" />
         <TrustLayer tone="plain" />
-        <ContactCTA tone="soft" />
+        <ContactCTA tone="deep" />
       </main>
       <Footer />
     </>

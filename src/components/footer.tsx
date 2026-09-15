@@ -17,7 +17,7 @@ export function Footer() {
   const { site } = useContent();
 
   return (
-    <footer className="border-t border-border bg-bg">
+    <footer className="border-t border-border bg-surface">
       <div className="ds-container flex h-20 items-center justify-between">
         <span className="text-[0.9375rem] font-medium text-fg">
           {site.shortName}

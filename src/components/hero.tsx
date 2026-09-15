@@ -3,18 +3,35 @@ import { hero, site } from "@/content/site";
 import { ArrowIcon, Reveal } from "./ui";
 
 /**
- * Hero — 100vh, left-aligned, DM Sans display.
+ * Hero — 100svh, left-aligned, ambient glow.
  *
- * The whole pitch in one headline. 500 weight, tight tracking,
- * near-black background, single accent somewhere down the page.
- * Left-aligned within the container reads as editorial, not template.
+ * Deep charcoal-navy base with a soft accent glow bleeding in behind the
+ * headline — enough depth that it is clearly designed, not template-dark.
+ * Accent overline, display headline, two CTAs, quiet availability dot.
  */
 export function Hero() {
   return (
-    <section className="flex min-h-[100svh] items-center border-b border-border bg-bg">
-      <div className="ds-container w-full">
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden border-b border-border bg-bg">
+      {/* Ambient accent glow behind the content */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 -right-40 h-[36rem] w-[36rem] rounded-full blur-[120px]"
+        style={{ background: "var(--color-glow)" }}
+      />
+      {/* Background watermark */}
+      <span
+        aria-hidden
+        className="ds-watermark absolute -bottom-8 right-0 text-[clamp(8rem,26vw,24rem)] md:right-8"
+      >
+        {site.shortName}
+      </span>
+
+      <div className="ds-container relative w-full">
         <Reveal>
-          <span className="ds-overline mb-8 block">{hero.eyebrow}</span>
+          <span className="ds-overline-accent mb-8 flex items-center gap-3">
+            <span className="ds-dot" aria-hidden />
+            {hero.eyebrow}
+          </span>
         </Reveal>
 
         <Reveal delay={0.05}>
@@ -26,7 +43,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={0.15}>
-          <div className="mt-12 flex items-center gap-6">
+          <div className="mt-12 flex flex-wrap items-center gap-4">
             <Link
               href={hero.primaryCta.href}
               data-track="cta_click"
@@ -48,16 +65,18 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={0.2}>
-          <div className="mt-20 flex flex-wrap items-center gap-x-8 gap-y-3">
-            <span className="ds-overline tabular-nums">
-              {site.locationShort}
-            </span>
-            <span className="ds-overline tabular-nums">
-              {site.timezone.split(" ")[0]}
-            </span>
-            <span className="ds-overline tabular-nums">
-              5+ years production
-            </span>
+          <div className="mt-20 flex flex-wrap items-center gap-x-10 gap-y-4">
+            <span className="ds-meta tabular-nums">{site.locationShort}</span>
+            <span className="h-3 w-px bg-border" aria-hidden />
+            <span className="ds-meta tabular-nums">{site.timezone.split(" ")[0]}</span>
+            <span className="h-3 w-px bg-border" aria-hidden />
+            <span className="ds-meta tabular-nums">5+ years production</span>
+            {site.available && (
+              <>
+                <span className="h-3 w-px bg-border" aria-hidden />
+                <span className="ds-meta text-success">{site.availabilityNote}</span>
+              </>
+            )}
           </div>
         </Reveal>
       </div>

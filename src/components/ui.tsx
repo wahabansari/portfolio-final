@@ -25,20 +25,21 @@ export function Section({
  /** A hairline above the section, for when two plain bands have to meet. */
  bordered?: boolean;
 }) {
- return (
- <section
- id={id}
- className={cn(
- "ds-section scroll-mt-20",
- tone === "soft" && "bg-surface",
- tone === "deep" && "bg-surface-2",
- bordered && "border-t border-border",
- className,
- )}
- >
- <div className="ds-container">{children}</div>
- </section>
- );
+return (
+    <section
+      id={id}
+      className={cn(
+        "ds-section scroll-mt-20",
+        tone === "plain" && "tone-plain",
+        tone === "soft" && "tone-soft",
+        tone === "deep" && "tone-deep",
+        bordered && "border-t border-border",
+        className,
+      )}
+    >
+      <div className="ds-container">{children}</div>
+    </section>
+  );
 }
 
 /**

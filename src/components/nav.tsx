@@ -11,8 +11,7 @@ import { ArrowIcon } from "./ui";
  * Minimal fixed nav.
  *
  * Name left. Three links center-right. One CTA right.
- * No dropdowns, no dialogs, no hamburger on desktop.
- * Active link gets the accent; everything else stays quiet.
+ * Active link gets the accent. Scrolled state gains a blurred surface.
  */
 export function Nav() {
   const pathname = usePathname();
@@ -52,9 +51,10 @@ export function Nav() {
           href={localeHref("/")}
           data-track="nav_logo"
           aria-label="Home"
-          className="text-[1.0625rem] font-semibold tracking-[-0.02em] text-fg transition-colors duration-150 hover:text-fg"
+          className="relative text-[1.0625rem] font-semibold tracking-[-0.02em] text-fg"
         >
           {site.shortName}
+          <span className="absolute -right-2 -top-1 h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
@@ -65,13 +65,20 @@ export function Nav() {
               data-track="nav_link"
               data-track-label={link.label.toLowerCase()}
               className={cn(
-                "text-[0.9375rem] font-medium transition-colors duration-150",
+                "relative text-[0.9375rem] font-medium transition-colors duration-150",
                 isActive(link.href)
                   ? "text-fg"
                   : "text-fg-muted hover:text-fg"
               )}
             >
               {link.label}
+              <span
+                aria-hidden
+                className={cn(
+                  "absolute -bottom-1.5 left-0 h-px bg-accent transition-all duration-200",
+                  isActive(link.href) ? "w-full" : "w-0"
+                )}
+              />
             </Link>
           ))}
         </nav>
@@ -79,10 +86,10 @@ export function Nav() {
         <Link
           href={localeHref("/contact")}
           data-track="nav_cta"
-          className="group inline-flex items-center gap-2 text-[0.9375rem] font-medium text-fg transition-colors duration-150 hover:text-accent"
+          className="ds-btn ds-btn-primary !px-5 !py-2.5 !text-[0.875rem]"
         >
           Let&apos;s talk
-          <ArrowIcon className="h-3.5 w-3.5 -translate-x-0.5 transition-all duration-150 group-hover:translate-x-0" />
+          <ArrowIcon className="h-3.5 w-3.5" />
         </Link>
       </div>
     </header>

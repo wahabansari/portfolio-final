@@ -16,7 +16,7 @@ type Theme = "dark" | "light";
     when this script runs, a visitor with JavaScript disabled — or a crawler
     that does not execute it — gets every section fully visible rather than a
     page of elements stuck at opacity 0. */
-export const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t='light'}d.setAttribute('data-theme',t)}catch(e){d.setAttribute('data-theme','light')}d.classList.add('js-motion')})();`;
+export const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t!=='dark'){t='dark'}d.setAttribute('data-theme',t)}catch(e){d.setAttribute('data-theme','dark')}d.classList.add('js-motion')})();`;
 
 /* The <html data-theme> attribute is the source of truth; the toggle reads it
    from the DOM instead of keeping a second copy in React state. */

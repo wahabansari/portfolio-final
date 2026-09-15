@@ -20,26 +20,28 @@
   --text-h2-size: 2.5rem;
   --text-h3-size: 1.75rem;
 
-  /* ── Colors — dark premium theme ───────────────────────────────────── */
-  --color-bg: #0a0a0a;
-  --color-surface: #111111;
-  --color-surface-hover: #1a1a1a;
-  --color-border: #1f1f1f;
-  --color-border-subtle: #171717;
-  --color-fg: #f5f5f5;
-  --color-fg-muted: #a3a3a3;
-  --color-fg-subtle: #666666;
-  --color-accent: #635bff;
-  --color-accent-hover: #7a73ff;
-  --color-accent-soft: #635bff1a;
-  --color-success: #22c55e;
+  /* ── Colors — deep charcoal-navy, not flat black ───────────────────── */
+  --color-bg: #0b0d12;
+  --color-surface: #11141b;
+  --color-surface-hover: #171b24;
+  --color-border: #20242e;
+  --color-border-subtle: #161a22;
+  --color-fg: #edeff2;
+  --color-fg-muted: #a2a8b5;
+  --color-fg-subtle: #6a7080;
+  --color-accent: #7b74ff;
+  --color-accent-hover: #9a94ff;
+  --color-accent-deep: #4c45cc;
+  --color-accent-soft: rgba(123, 116, 255, 0.12);
+  --color-glow: rgba(123, 116, 255, 0.14);
+  --color-success: #4ade80;
   --color-white: #ffffff;
 
   /* Semantic aliases (kept for component compatibility) */
   --color-ink: var(--color-fg);
   --color-ink-muted: var(--color-fg-muted);
   --color-ink-soft: var(--color-fg-subtle);
-  --color-ink-softest: #4d4d4d;
+  --color-ink-softest: #4d5360;
   --color-paper: var(--color-bg);
   --color-paper-bright: var(--color-surface);
   --color-hairline: var(--color-border);
@@ -89,6 +91,12 @@ body {
   font-optical-sizing: auto;
   color: var(--color-fg);
   background-color: var(--color-bg);
+  background-image: radial-gradient(
+    60rem 40rem at 85% -10rem,
+    var(--color-glow) 0%,
+    transparent 70%
+  );
+  background-repeat: no-repeat;
 }
 
 /* ── Typography scale ────────────────────────────────────────────────── */
@@ -153,6 +161,16 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-fg-subtle);
+}
+
+/* Accent overline — the "designed" flag. Used sparingly on one label
+   per viewport (hero + each section head), so color stays an accent. */
+.ds-overline-accent {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
 }
 
 /* ── Links ───────────────────────────────────────────────────────────── */
@@ -274,7 +292,16 @@ body {
 /* ── Section tones ───────────────────────────────────────────────────── */
 .tone-plain { background-color: var(--color-bg); }
 .tone-soft { background-color: var(--color-surface); }
-.tone-deep { background-color: var(--color-bg); }
+/* Deep = the inverted accent band. A deep indigo-tinted surface with a
+   soft radial glow — the visual anchor at the bottom of the page. */
+.tone-deep {
+  background-color: #0e1022;
+  background-image: radial-gradient(
+    55rem 28rem at 50% 115%,
+    var(--color-glow) 0%,
+    transparent 70%
+  );
+}
 
 /* ── Hairline ────────────────────────────────────────────────────────── */
 .ds-hairline {
@@ -287,6 +314,28 @@ body {
 /* ── Tabular numbers ─────────────────────────────────────────────────── */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* ── Watermark — oversized background word, quiet by opacity ─────────── */
+.ds-watermark {
+  pointer-events: none;
+  user-select: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  color: var(--color-fg);
+  opacity: 0.035;
+}
+
+/* ── Accent dot (availability/status) ────────────────────────────────── */
+.ds-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--color-success);
+  box-shadow: 0 0 12px var(--color-success);
 }
 
 /* ── Field ───────────────────────────────────────────────────────────── */

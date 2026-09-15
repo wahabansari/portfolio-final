@@ -8,7 +8,7 @@ import { ArrowIcon, ExternalIcon, Reveal, Section } from "./ui";
  *
  * Project name at 500 weight. Role/category and year in quiet meta.
  * Full-width hairline-separated row; hover shifts the row to the surface
- * color and the title to the accent. The list IS the proof — no images.
+ * color, number to the accent, title to the accent.
  */
 function ProjectRow({
   project,
@@ -23,7 +23,9 @@ function ProjectRow({
 
   const content = (
     <>
-      <span className="ds-meta tabular-nums">{String(index + 1).padStart(2, "0")}</span>
+      <span className="ds-meta tabular-nums transition-colors duration-150 group-hover:text-accent">
+        {String(index + 1).padStart(2, "0")}
+      </span>
 
       <span className="text-[1.5rem] font-medium leading-tight tracking-[-0.02em] text-fg transition-colors duration-150 group-hover:text-accent md:text-[1.75rem]">
         {project.title}
@@ -35,8 +37,9 @@ function ProjectRow({
         {project.year ?? "—"}
       </span>
 
-      <span className="flex items-center justify-end gap-2 text-[0.875rem] text-fg-muted group-hover:text-fg md:hidden">
-        {project.role} · {project.year ?? "—"}
+      <span className="flex items-center justify-between gap-2 text-[0.875rem] text-fg-muted group-hover:text-fg md:hidden">
+        <span>{project.role}</span>
+        <span className="font-mono text-fg-subtle">{project.year ?? "—"}</span>
       </span>
     </>
   );
@@ -68,41 +71,117 @@ function ProjectRow({
 }
 
 /**
+ * Featured spotlight — the first project, given real presence.
+ *
+ * A large two-column block: oversized title + blurb left, scope/years right,
+ * whole surface lifts on hover. The one "hero project" on the page.
+ */
+function Spotlight({ project }: { project: Project }) {
+  const isExternal = Boolean(project.href && !project.caseStudy);
+  const href = isExternal ? project.href : `/work/${project.slug}`;
+
+  const inner = (
+    <>
+      <div className="flex items-center justify-between gap-6">
+        <span className="ds-overline-accent">{project.kind}</span>
+        <span className="font-mono text-[0.8125rem] tabular-nums text-fg-subtle">
+          {project.year ?? "—"}
+        </span>
+      </div>
+
+      <span className="mt-10 block max-w-3xl text-[clamp(2.25rem,5vw,4rem)] font-medium leading-[1.02] tracking-[-0.035em] text-fg">
+        {project.title}
+      </span>
+
+      <span className="mt-6 block max-w-xl text-[1.0625rem] leading-relaxed text-fg-muted">
+        {project.blurb}
+      </span>
+
+      <span className="mt-12 flex items-center gap-3 text-[1rem] font-medium text-fg">
+        {isExternal ? "View live project" : "Read case study"}
+        <span className="flex h-11 w-11 rotate-[-45deg] items-center justify-center rounded-full border border-accent/40 bg-accent/10 text-accent transition-all duration-200 group-hover:rotate-0">
+          {isExternal ? <ExternalIcon className="h-4 w-4" /> : <ArrowIcon className="h-4 w-4" />}
+        </span>
+      </span>
+    </>
+  );
+
+  const wrapClass =
+    "group relative overflow-hidden rounded-lg border border-border bg-surface p-8 transition-colors duration-200 hover:border-accent/40 md:p-12";
+
+  return (
+    <Reveal>
+      {isExternal ? (
+        <OutboundLink
+          href={project.href as string}
+          event="case_study_view"
+          payload={{ project: project.slug }}
+          className={wrapClass}
+          ariaLabel={`Open ${project.title} in a new tab`}
+        >
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-glow blur-[80px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          />
+          {inner}
+        </OutboundLink>
+      ) : (
+        <Link href={`/work/${project.slug}`} className={wrapClass}>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-glow blur-[80px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          />
+          {inner}
+        </Link>
+      )}
+    </Reveal>
+  );
+}
+
+/**
  * Selected Work — the homepage centerpiece.
  *
- * A single-column curated list of projects. Hairline-separated rows,
- * hover-state color shift, quiet meta. No cards.
+ * One featured spotlight, then the rest as quiet rows. The list IS the
+ * proof — no mockups needed.
  */
 export function SelectedWork({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
+  const [spot, ...rest] = featuredProjects;
+
   return (
     <Section id="work" tone={tone}>
-      <div className="ds-container">
-        <div className="mb-16 flex items-end justify-between gap-8">
+      <div className="mb-12 flex items-end justify-between gap-8">
           <div>
-            <span className="ds-overline mb-4 block">Selected work</span>
-            <h2 className="ds-h2">Selected work</h2>
+            <span className="ds-overline-accent mb-4 block">Selected work</span>
+            <h2 className="ds-h2">Proof before pitch</h2>
           </div>
-          <Link href="/work" className="hidden items-center gap-2 text-[1rem] font-medium text-fg underline-offset-4 transition-colors duration-150 hover:text-accent hover:underline md:inline-flex">
+          <Link
+            href="/work"
+            className="hidden items-center gap-2 text-[1rem] font-medium text-fg underline-offset-4 transition-colors duration-150 hover:text-accent hover:underline md:inline-flex"
+          >
             View all
             <ArrowIcon className="h-4 w-4" />
           </Link>
         </div>
 
-        <ul className="border-t border-border">
-          {featuredProjects.map((project, i) => (
+        {spot && <Spotlight project={spot} />}
+
+        <ul className="mt-4 border-t border-border">
+          {rest.map((project, i) => (
             <Reveal as="li" key={project.slug} delay={i * 0.05}>
-              <ProjectRow project={project} index={i} />
+              <ProjectRow project={project} index={i + 1} />
             </Reveal>
           ))}
         </ul>
 
         <div className="mt-8 md:hidden">
-          <Link href="/work" className="inline-flex items-center gap-2 text-[1rem] font-medium text-fg underline-offset-4 transition-colors duration-150 hover:text-accent hover:underline">
+          <Link
+            href="/work"
+            className="inline-flex items-center gap-2 text-[1rem] font-medium text-fg underline-offset-4 transition-colors duration-150 hover:text-accent hover:underline"
+          >
             View all projects
             <ArrowIcon className="h-4 w-4" />
           </Link>
         </div>
-      </div>
     </Section>
   );
 }
@@ -139,8 +218,7 @@ export function RelatedWork({
 
   return (
     <Section id={id} tone={tone}>
-      <div className="ds-container">
-        <span className="ds-overline mb-4 block">Proof</span>
+        <span className="ds-overline-accent mb-4 block">Proof</span>
         <h2 className="ds-h2 mb-12">{heading}</h2>
         <ul className="border-t border-border">
           {related.map((project: Project, i: number) => (
@@ -149,7 +227,6 @@ export function RelatedWork({
             </Reveal>
           ))}
         </ul>
-      </div>
-    </Section>
+      </Section>
   );
 }
