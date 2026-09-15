@@ -41,9 +41,9 @@ export function Section({
 }
 
 /**
- * Section opener. The overline carries its own rule (drawn in CSS), so the
- * markup here stays a heading and a paragraph — which is also what a crawler
- * and a screen reader get.
+ * Section opener. The overline is a plain blue label, so the markup here stays
+ * a heading and a paragraph — which is also what a crawler and a screen reader
+ * get.
  */
 export function SectionHeading({
  overline,
@@ -319,7 +319,7 @@ export function Faqs({
 /* ── Fit lists ──────────────────────────────────────────────────────────────
  "Who this is for" beside "who it is not for". The second column is the one
  that earns trust: a service page that cannot name anyone it is wrong for is
- a sales page. */
+ a sales page. Side-by-side soft cards — no outlines. */
 
 export function FitLists({
  idealFor,
@@ -329,8 +329,8 @@ export function FitLists({
  notIdealFor: readonly string[];
 }) {
  return (
- <div className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2">
- <div className="bg-card p-7">
+ <div className="grid gap-4 md:grid-cols-2">
+ <div className="rounded-[var(--radius-card)] bg-surface p-7">
  <p className="ds-meta text-success">A good fit</p>
  <ul className="mt-5 space-y-3.5">
  {idealFor.map((item) => (
@@ -341,7 +341,7 @@ export function FitLists({
  ))}
  </ul>
  </div>
- <div className="bg-card p-7">
+ <div className="rounded-[var(--radius-card)] bg-surface p-7">
  <p className="ds-meta">Not a fit</p>
  <ul className="mt-5 space-y-3.5">
  {notIdealFor.map((item) => (
@@ -357,129 +357,198 @@ export function FitLists({
 }
 
 /* ── Numbered steps ─────────────────────────────────────────────────────────
- A hairline grid rather than separate cards: the 1px gap over a border-
- coloured background draws every divider at once, and the steps read as one
- sequence instead of four unrelated boxes. */
+ A grid of soft cards rather than a hairline table: each step is a #F8F9FA
+ fill on the white band, with a plain blue index number — no boxes inside
+ boxes. */
 
 export function StepList({
- steps,
- columns = 4,
+  steps,
+  columns = 4,
 }: {
- steps: readonly { step: string; detail: string }[];
- columns?: 4 | 5;
+  steps: readonly { step: string; detail: string }[];
+  columns?: 4 | 5;
 }) {
- return (
- <ol
- className={cn(
- "grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border sm:grid-cols-2",
- columns === 4 ? "lg:grid-cols-4" : "lg:grid-cols-5",
- )}
- >
- {steps.map((s, i) => (
- <li key={s.step} className="flex flex-col bg-card p-6">
- <span
- aria-hidden
- className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-accent-soft font-display text-[0.8125rem] font-semibold text-accent"
- >
- {String(i + 1).padStart(2, "0")}
- </span>
- <h3 className="ds-title-sm mt-4">{s.step}</h3>
- <p className="ds-body-sm mt-2.5">{s.detail}</p>
- </li>
- ))}
- </ol>
- );
+  return (
+    <ol
+      className={cn(
+        "grid gap-4 sm:grid-cols-2",
+        columns === 4 ? "lg:grid-cols-4" : "lg:grid-cols-5",
+      )}
+    >
+      {steps.map((s, i) => (
+        <li key={s.step} className="flex flex-col rounded-[var(--radius-card)] bg-surface p-6">
+          <span
+            aria-hidden
+            className="font-display text-[0.8125rem] font-medium text-accent tabular-nums"
+          >
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <h3 className="ds-title mt-4">{s.step}</h3>
+          <p className="ds-body-sm mt-2.5">{s.detail}</p>
+        </li>
+      ))}
+    </ol>
+  );
 }
 
 /* ── CTA band ───────────────────────────────────────────────────────────────
  One dominant action, wherever this appears. */
 
 export function CtaBand({
- heading,
- body,
- primary,
- secondary,
- steps,
- tone = "soft",
+  heading,
+  body,
+  primary,
+  secondary,
+  steps,
+  tone = "soft",
+  navy = false,
 }: {
- heading: string;
- body: string;
- primary: { label: string; href: string };
- secondary?: { label: string; href: string };
- /**
- * The enquiry sequence, shown beside the action on the page where the
- * decision is actually made. "What happens after I click this" is the last
- * unanswered question at the point of conversion, and answering it in place
- * costs less friction than a reassurance paragraph does.
- */
- steps?: readonly { step: string; detail: string }[];
- tone?: "plain" | "soft" | "deep";
+  heading: string;
+  body: string;
+  primary: { label: string; href: string };
+  secondary?: { label: string; href: string };
+  /**
+   * The enquiry sequence, shown beside the action on the page where the
+   * decision is actually made. "What happens after I click this" is the last
+   * unanswered question at the point of conversion, and answering it in place
+   * costs less friction than a reassurance paragraph does.
+   */
+  steps?: readonly { step: string; detail: string }[];
+  tone?: "plain" | "soft" | "deep";
+  /**
+   * Renders the band as the closing bookend: a full-bleed tonal-blue panel
+   * (#E8F0FE) with ink type and the filled blue action. When off, the band
+   * stays on the section tone with the accent hairline.
+   */
+  navy?: boolean;
 }) {
- const hasSteps = Boolean(steps?.length);
+  const hasSteps = Boolean(steps?.length);
 
- return (
- <Section tone={tone}>
- <Reveal>
- <div className="relative border-t border-border pt-8 md:pt-10">
- <span
- aria-hidden
- className="absolute inset-x-0 top-0 h-px bg-accent-line"
- />
- <div
- className={cn(
- "relative",
- hasSteps ? "grid gap-10 lg:grid-cols-12 lg:gap-16" : "max-w-2xl",
- )}
- >
- <div className={hasSteps ? "lg:col-span-7" : undefined}>
- <h2 className="ds-h2">{heading}</h2>
- <p className="ds-lede mt-5">{body}</p>
- <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
- <Link
- href={primary.href}
- data-track={primary.href === "/contact" ? "cta_click" : undefined}
- data-track-label="cta-band"
- className="ds-btn ds-btn-primary"
- >
- {primary.label}
- <ArrowIcon />
- </Link>
- {secondary && (
- <Link href={secondary.href} className="ds-btn ds-btn-secondary">
- {secondary.label}
- </Link>
- )}
- </div>
- </div>
+  if (navy) {
+    return (
+      <Section tone={tone}>
+        <Reveal>
+          <div className="rounded-[1.75rem] bg-surface-blue px-6 py-12 sm:px-10 md:px-14 md:py-16">
+            <div
+              className={cn(
+                "relative",
+                hasSteps ? "grid gap-10 lg:grid-cols-12 lg:gap-16" : "max-w-3xl",
+              )}
+            >
+              <div className={hasSteps ? "lg:col-span-7" : undefined}>
+                <h2 className="ds-h2">{heading}</h2>
+                <p className="ds-lede mt-5">{body}</p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <Link
+                    href={primary.href}
+                    data-track={primary.href === "/contact" ? "cta_click" : undefined}
+                    data-track-label="cta-band"
+                    className="ds-btn ds-btn-primary"
+                  >
+                    {primary.label}
+                    <ArrowIcon />
+                  </Link>
+                  {secondary && (
+                    <Link href={secondary.href} className="ds-btn ds-btn-secondary">
+                      {secondary.label}
+                    </Link>
+                  )}
+                </div>
+              </div>
 
- {steps && steps.length > 0 && (
- <div className="lg:col-span-5">
- <p className="ds-meta">What happens next</p>
- <ol className="mt-5 space-y-5 border-t border-border pt-5">
- {steps.map((item, i) => (
- <li key={item.step} className="flex gap-4">
- <span
- aria-hidden
- className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.75rem] font-semibold text-accent"
- >
- {i + 1}
- </span>
- <span>
- <span className="block text-[0.9375rem] font-medium text-ink">
- {item.step}
- </span>
- <span className="ds-body-sm mt-1 block">{item.detail}</span>
- </span>
- </li>
- ))}
- </ol>
- </div>
- )}
- </div>
- </div>
- </Reveal>
- </Section>
- );
+              {steps && steps.length > 0 && (
+                <div className="lg:col-span-5">
+                  <p className="ds-meta">What happens next</p>
+                  <ol className="mt-5 space-y-5 border-t border-accent-line pt-5">
+                    {steps.map((item, i) => (
+                      <li key={item.step} className="flex gap-4">
+                        <span
+                          aria-hidden
+                          className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-card text-[0.75rem] font-semibold text-accent"
+                        >
+                          {i + 1}
+                        </span>
+                        <span>
+                          <span className="block text-[0.9375rem] font-medium text-ink">
+                            {item.step}
+                          </span>
+                          <span className="ds-body-sm mt-1 block">{item.detail}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            </div>
+          </div>
+        </Reveal>
+      </Section>
+    );
+  }
+
+  return (
+    <Section tone={tone}>
+      <Reveal>
+        <div className="relative border-t border-border pt-8 md:pt-10">
+          <span
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-px bg-accent-line"
+          />
+          <div
+            className={cn(
+              "relative",
+              hasSteps ? "grid gap-10 lg:grid-cols-12 lg:gap-16" : "max-w-2xl",
+            )}
+          >
+            <div className={hasSteps ? "lg:col-span-7" : undefined}>
+              <h2 className="ds-h2">{heading}</h2>
+              <p className="ds-lede mt-5">{body}</p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link
+                  href={primary.href}
+                  data-track={primary.href === "/contact" ? "cta_click" : undefined}
+                  data-track-label="cta-band"
+                  className="ds-btn ds-btn-primary"
+                >
+                  {primary.label}
+                  <ArrowIcon />
+                </Link>
+                {secondary && (
+                  <Link href={secondary.href} className="ds-btn ds-btn-secondary">
+                    {secondary.label}
+                  </Link>
+                )}
+              </div>
+            </div>
+
+            {steps && steps.length > 0 && (
+              <div className="lg:col-span-5">
+                <p className="ds-meta">What happens next</p>
+                <ol className="mt-5 space-y-5 border-t border-border pt-5">
+                  {steps.map((item, i) => (
+                    <li key={item.step} className="flex gap-4">
+                      <span
+                        aria-hidden
+                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.75rem] font-semibold text-accent"
+                      >
+                        {i + 1}
+                      </span>
+                      <span>
+                        <span className="block text-[0.9375rem] font-medium text-ink">
+                          {item.step}
+                        </span>
+                        <span className="ds-body-sm mt-1 block">{item.detail}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </div>
+        </div>
+      </Reveal>
+    </Section>
+  );
 }
 
 /* ── Breadcrumbs ────────────────────────────────────────────────────────────
@@ -548,7 +617,6 @@ export function PageHeader({
 }) {
  return (
  <section className="relative overflow-hidden border-b border-border bg-surface pt-6 pb-14 md:pt-8 md:pb-20">
- <span aria-hidden className="ds-grid-field pointer-events-none absolute inset-0" />
  <div className="ds-container relative">
  {trail && <Breadcrumbs trail={trail} />}
 

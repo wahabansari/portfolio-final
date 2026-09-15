@@ -87,7 +87,7 @@ export function useLocaleHref(): (href: string) => string {
   return useMemo(() => (href: string) => prefix(locale, href), [locale]);
 }
 
-/** RTL flag for the active locale. */
+/** RTL flag for the active locale. English is LTR, so this is always false. */
 export function useIsRtl(): boolean {
-  return isRtl(useContent().locale);
+  return isRtl();
 }

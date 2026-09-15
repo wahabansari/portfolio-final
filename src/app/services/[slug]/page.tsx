@@ -151,13 +151,13 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  overline="The problem"
  title="What this service is actually solving"
  />
- <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border lg:grid-cols-3">
+ <ul className="grid gap-4 lg:grid-cols-3">
  {service.problems.map((problem, i) => (
  <Reveal
  as="li"
  key={problem.title}
  delay={i * 0.05}
- className="flex flex-col bg-card p-7"
+ className="flex flex-col rounded-[var(--radius-card)] bg-surface p-7"
  >
  <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
  <h3 className="ds-title-sm mt-4">{problem.title}</h3>
@@ -173,9 +173,9 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  title="What you get"
  description="Concrete outputs, not activities. Everything here is something that exists at the end of the engagement."
  />
- <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2">
+ <ul className="grid gap-4 md:grid-cols-2">
  {service.deliverables.map((d, i) => (
- <Reveal as="li" key={d.title} delay={i * 0.03} className="bg-card p-7">
+ <Reveal as="li" key={d.title} delay={i * 0.03} className="rounded-[var(--radius-card)] bg-card p-7">
  <div className="flex items-start gap-3.5">
  <CheckIcon className="mt-1 shrink-0 text-accent" />
  <div>
@@ -201,9 +201,9 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  title="What it is built with, and why that matters to you"
  description={service.technical.summary}
  />
- <div className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
+ <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
  {service.technical.groups.map((group, i) => (
- <Reveal key={group.label} delay={i * 0.04} className="bg-card p-6">
+ <Reveal key={group.label} delay={i * 0.04} className="rounded-[var(--radius-card)] bg-card p-6">
  <p className="ds-meta">{group.label}</p>
  <ChipList items={group.items} className="mt-4" />
  </Reveal>
@@ -225,8 +225,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  title="Where the scope starts and stops"
  description="Stated up front so it is a shared understanding rather than a negotiation halfway through."
  />
- <div className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2">
- <Reveal className="bg-card p-7">
+ <div className="grid gap-4 md:grid-cols-2">
+ <Reveal className="rounded-[var(--radius-card)] bg-card p-7">
  <p className="ds-meta text-success">Included</p>
  <ul className="mt-5 space-y-3.5">
  {service.scope.includes.map((item) => (

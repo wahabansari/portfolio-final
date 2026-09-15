@@ -79,10 +79,10 @@ export function ProcessSteps({ steps }: { steps: readonly ProcessStep[] }) {
             <span
               aria-hidden
               className={cn(
-                "rounded-full px-3.5 py-2 font-display text-[0.8125rem] font-semibold tabular-nums transition-colors duration-300 md:relative md:z-10 md:inline-flex md:w-fit",
+                "rounded-full px-3.5 py-2 font-display text-[0.8125rem] font-medium tabular-nums transition-colors duration-300 md:relative md:z-10 md:inline-flex md:w-fit",
                 isActive
                   ? "bg-accent text-accent-fg"
-                  : "border-2 border-accent/25 bg-card text-accent",
+                  : "bg-accent-soft text-accent",
               )}
             >
               {String(i + 1).padStart(2, "0")}
@@ -93,7 +93,7 @@ export function ProcessSteps({ steps }: { steps: readonly ProcessStep[] }) {
               <p className="ds-body-sm mt-2">{s.detail}</p>
               {s.benefit && (
                 <p className="mt-3 text-[0.8125rem] leading-relaxed text-ink">
-                  <span className="font-semibold text-accent">You get&nbsp;</span>
+                  <span className="font-medium text-accent">You get&nbsp;</span>
                   <span className="text-ink-muted">{s.benefit}</span>
                 </p>
               )}

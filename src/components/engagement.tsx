@@ -17,13 +17,13 @@ export function Engagement({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
         description="Three arrangements, each with a different shape. Whichever fits, the first step is the same conversation."
       />
 
-      <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border lg:grid-cols-3">
+      <ul className="grid gap-4 lg:grid-cols-3">
         {engagements.map((option, i) => (
           <Reveal
             as="li"
             key={option.title}
             delay={i * 0.05}
-            className="group flex flex-col bg-card p-7 md:p-8"
+            className="group flex flex-col rounded-[var(--radius-card)] bg-card p-7 md:p-8"
           >
             <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
             <h3 className="ds-title mt-4">{option.title}</h3>

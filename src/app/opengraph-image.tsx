@@ -5,24 +5,26 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = `${site.name} — ${site.role}`;
 
-const ACCENT = "#0284c7";
-const INK = "#0c1729";
-const MUTED = "#44566d";
-const SOFT = "#8a9cb4";
-const BORDER = "#e2e9f4";
-const SURFACE = "#f6f9fd";
-const SUCCESS = "#047857";
+const ACCENT = "#1a73e8"; /* blue 600 — fills */
+const ACCENT_TEXT = "#1967d2"; /* blue 700 — reads at 5.37:1 */
+const INK = "#202124";
+const MUTED = "#5f6368";
+const CARDS = "#f8f9fa";
+/* The four Google brand colours, as a graphic stripe — the only place all
+   four appear together; they never carry text. */
+const BRAND_RULE = "linear-gradient(90deg, #1a73e8, #ea4335, #fbbc04, #34a853)";
 
 /**
  * Satori rasterises this card, and it needs real font data rather than a CSS
- * family name. Inter is what the site sets its body copy in and it parses
- * cleanly here. Wrapped so a build without network access still succeeds on
- * the system sans rather than failing the whole build over a social image.
+ * family name. Roboto is the typeface the site renders in (and the stand-in
+ * the Google system prescribes for OG rasterisation — Google Sans breaks
+ * Satori). Wrapped so a build without network access still succeeds on the
+ * system sans rather than failing the whole build over a social image.
  */
-async function loadInter(weight: number): Promise<ArrayBuffer | null> {
+async function loadRoboto(weight: number): Promise<ArrayBuffer | null> {
   try {
     const css = await fetch(
-      `https://fonts.googleapis.com/css2?family=Inter:wght@${weight}`,
+      `https://fonts.googleapis.com/css2?family=Roboto:wght@${weight}`,
       { headers: { "User-Agent": "Mozilla/5.0" } },
     ).then((r) => r.text());
     const url = /src:\s*url\((https:[^)]+)\)/.exec(css)?.[1];
@@ -33,14 +35,14 @@ async function loadInter(weight: number): Promise<ArrayBuffer | null> {
   }
 }
 
-/** Social card in the same ruled, evidence-led language as the site. */
+/** Social card in the same light, measured Google language as the site. */
 export default async function OpenGraphImage() {
-  const [regular, semibold] = await Promise.all([loadInter(400), loadInter(600)]);
+  const [regular, medium] = await Promise.all([loadRoboto(400), loadRoboto(500)]);
   const fonts = [
-    regular && { name: "Inter", data: regular, weight: 400 as const, style: "normal" as const },
-    semibold && { name: "Inter", data: semibold, weight: 600 as const, style: "normal" as const },
-  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 400 | 600; style: "normal" }[];
-  const fontFamily = fonts.length ? "Inter" : "sans-serif";
+    regular && { name: "Roboto", data: regular, weight: 400 as const, style: "normal" as const },
+    medium && { name: "Roboto", data: medium, weight: 500 as const, style: "normal" as const },
+  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 400 | 500; style: "normal" }[];
+  const fontFamily = fonts.length ? "Roboto" : "sans-serif";
 
   /* The same proof strip the homepage carries — and the same numbers, so the
      card cannot make a claim the page does not support. */
@@ -71,7 +73,7 @@ export default async function OpenGraphImage() {
             left: 0,
             width: "100%",
             height: 8,
-            background: ACCENT,
+            background: BRAND_RULE,
           }}
         />
 
@@ -87,16 +89,14 @@ export default async function OpenGraphImage() {
               background: ACCENT,
               color: "#fff",
               fontSize: 28,
-              fontWeight: 600,
+              fontWeight: 500,
             }}
           >
             W
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <span style={{ fontSize: 24, fontWeight: 600, color: INK }}>{site.name}</span>
-            <span style={{ fontSize: 18, color: SOFT, letterSpacing: 1.2 }}>
-              {site.role.toUpperCase()}
-            </span>
+            <span style={{ fontSize: 24, fontWeight: 500, color: INK }}>{site.name}</span>
+            <span style={{ fontSize: 18, fontWeight: 400, color: MUTED }}>{site.role}</span>
           </div>
         </div>
 
@@ -104,10 +104,10 @@ export default async function OpenGraphImage() {
           <span
             style={{
               fontSize: 60,
-              fontWeight: 600,
+              fontWeight: 500,
               color: INK,
-              letterSpacing: -1.8,
-              lineHeight: 1.08,
+              letterSpacing: -1.2,
+              lineHeight: 1.1,
             }}
           >
             I build production-grade web
@@ -115,26 +115,20 @@ export default async function OpenGraphImage() {
           <span
             style={{
               fontSize: 60,
-              fontWeight: 600,
+              fontWeight: 500,
               color: INK,
-              letterSpacing: -1.8,
-              lineHeight: 1.08,
+              letterSpacing: -1.2,
+              lineHeight: 1.1,
             }}
           >
             products that are fast, clear
           </span>
           <span
-            style={{
-              fontSize: 60,
-              fontWeight: 600,
-              color: ACCENT,
-              letterSpacing: -1.8,
-              lineHeight: 1.08,
-            }}
+            style={{ fontSize: 60, fontWeight: 500, color: ACCENT_TEXT, letterSpacing: -1.2, lineHeight: 1.1 }}
           >
             and built to ship.
           </span>
-          <span style={{ marginTop: 22, fontSize: 24, color: MUTED }}>
+          <span style={{ marginTop: 22, fontSize: 24, fontWeight: 400, color: MUTED }}>
             React · Next.js · TypeScript — {site.location}
           </span>
         </div>
@@ -148,17 +142,16 @@ export default async function OpenGraphImage() {
                 flexDirection: "column",
                 gap: 4,
                 padding: "18px 28px",
-                background: SURFACE,
-                border: `1px solid ${BORDER}`,
+                background: CARDS,
                 borderRadius: 12,
               }}
             >
               <span
-                style={{ fontSize: 32, fontWeight: 600, color: s.accent ? SUCCESS : INK }}
+                style={{ fontSize: 32, fontWeight: 500, color: s.accent ? ACCENT_TEXT : INK }}
               >
                 {s.v}
               </span>
-              <span style={{ fontSize: 18, color: MUTED }}>{s.l}</span>
+              <span style={{ fontSize: 18, fontWeight: 400, color: MUTED }}>{s.l}</span>
             </div>
           ))}
         </div>

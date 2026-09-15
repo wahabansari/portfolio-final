@@ -99,7 +99,7 @@ export default async function CaseStudyPage({
  }
  aside={
  <>
- <div className="overflow-hidden rounded-[var(--radius-card)] border border-border">
+ <div className="overflow-hidden rounded-[var(--radius-card)]">
  <Plate project={project} className="border-b border-border" priority />
  </div>
  <div className="mt-6">
@@ -181,9 +181,9 @@ export default async function CaseStudyPage({
 
  <Section tone="soft">
  <SectionHeading overline="The work" title="What was built" />
- <div className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2">
+ <div className="grid gap-4 md:grid-cols-2">
  {study.build.map((block, i) => (
- <Reveal key={block.heading} delay={i * 0.04} className="bg-card p-7 md:p-8">
+ <Reveal key={block.heading} delay={i * 0.04} className="rounded-[var(--radius-card)] bg-card p-7 md:p-8">
  <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
  <h3 className="ds-title mt-4">{block.heading}</h3>
  <p className="ds-body-sm mt-3">{block.body}</p>
@@ -218,13 +218,13 @@ export default async function CaseStudyPage({
  title="What actually came out of it"
  description="Measured results are marked as such. Where there is no measured figure, the outcome is stated as what changed rather than dressed up as a statistic."
  />
- <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-3">
+ <ul className="grid gap-4 md:grid-cols-3">
  {study.outcome.map((o, i) => (
  <Reveal
  as="li"
  key={o.statement}
  delay={i * 0.05}
- className="flex flex-col bg-card p-7"
+ className="flex flex-col rounded-[var(--radius-card)] bg-card p-7"
  >
  <span
  className={
@@ -288,9 +288,10 @@ export default async function CaseStudyPage({
  heading="Other case studies"
  />
 
- <CtaBand
- tone="plain"
- heading={study.cta.line}
+<CtaBand
+  navy
+  tone="plain"
+  heading={study.cta.line}
  body="Send what you have — a product, a repository, a Figma file or a description of the problem. I will reply with what I would do first and what I would need to estimate it."
  primary={{ label: "Discuss a similar project", href: "/contact" }}
  secondary={{ label: study.cta.label, href: study.cta.href }}

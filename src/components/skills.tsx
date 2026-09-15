@@ -31,9 +31,9 @@ export function Capabilities({
         />
       )}
 
-      <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {capabilities.map((group, i) => (
-          <Reveal as="li" key={group.title} delay={i * 0.04} className="flex flex-col bg-card p-7">
+          <Reveal as="li" key={group.title} delay={i * 0.04} className="flex flex-col rounded-[var(--radius-card)] bg-card p-7">
             <h3 className="ds-title-sm">{group.title}</h3>
             <p className="ds-body-sm mt-2">{group.summary}</p>
 

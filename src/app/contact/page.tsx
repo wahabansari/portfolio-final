@@ -12,9 +12,10 @@ const description =
   "Tell Wahab what you are building, improving or redesigning. Send a project brief for frontend engineering, website, SaaS or AI product work.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Discuss Your Project",
+  title: "Contact | Hire a React & Next.js Developer",
   description,
   path: "/contact",
+  absoluteTitle: true,
 });
 
 /**
@@ -81,9 +82,9 @@ export default function ContactPage() {
             title="Whichever of these you are"
             description="Four reasons people land here. Each one has a different first step."
           />
-          <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2">
+          <ul className="grid gap-4 md:grid-cols-2">
             {paths.map((path, i) => (
-              <Reveal as="li" key={path.who} delay={i * 0.04} className="flex flex-col bg-card p-7">
+              <Reveal as="li" key={path.who} delay={i * 0.04} className="flex flex-col rounded-[var(--radius-card)] bg-card p-7">
                 <p className="ds-meta">{path.who}</p>
                 <p className="ds-body-sm mt-3 flex-1">{path.what}</p>
                 {path.routed ? (
@@ -123,13 +124,13 @@ export default function ContactPage() {
             title="What you are agreeing to, before you agree to it"
             description="No engagement starts with a surprise. These four things are true of every project, whatever the service."
           />
-          <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {assurances.map((item, i) => (
               <Reveal
                 as="li"
                 key={item.title}
                 delay={i * 0.04}
-                className="flex flex-col bg-card p-7"
+                className="flex flex-col rounded-[var(--radius-card)] bg-surface p-7"
               >
                 <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft">
                   <CheckIcon className="text-accent" />

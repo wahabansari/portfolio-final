@@ -5,39 +5,32 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { ThemeToggle } from "./theme-toggle";
-import { ArrowIcon, CheckIcon, SearchIcon, Wordmark } from "./ui";
+import { ArrowIcon, SearchIcon, Wordmark } from "./ui";
 import { Spotlight } from "./spotlight";
 import { useContent, useLocaleHref } from "./locale-provider";
 import { cn } from "@/lib/cn";
 
 /**
- * Site header, with a services mega-menu built on a completely different idea
- * to a catalogue grid: a LIST → INSPECTOR.
+ * Site header.
  *
- * The old menu spread all seven services across columns, which made every item
- * small and forced the reader to build the mental model of "which one is mine"
- * by scanning. The new menu inverts that: the left rail is a compact index of
- * the seven services; the right side is a live preview that shows the details
- * of the item currently *in the reading position* — the tier, the fit chips,
- * and the route into the full spec. The menu becomes a lens for comparing one
- * service at a time instead of a poster for all of them at once. Choosing the
- * service is the job; the grid was decoration, the preview is a decision aid.
+ * A Google header: a 64px white bar sitting over the page with a single
+ * hairline under it, not a floating dark band. Links are grey text that hover
+ * to a grey pill; the active route is a tonal blue pill; every action —
+ * search, the CTA, the theme toggle — is a filled or outlined Google control.
  *
- * Selection state makes that possible. The rail is keyboard navigable — ↑/↓
- * moves the index, Enter opens the focused service — and the pointer updates
- * the same selection, so the preview and the keyboard always agree on what is
- * being inspected. This is also why the data is locale-aware: on /ur the rail
- * lists the Urdu service set with its own slugs, so every link inside the
- * panel lands on a real page instead of a dead English URL.
+ * Services dropdown — a LIST, not a cabinet of cards. The previous menu spread
+ * every service across a preview rail with summaries and fit chips; the job of
+ * a navigation menu is to get out of the way, so this one is a plain list of
+ * links anchored under the Services button — it opens beneath the link, never
+ * off to one side — with a single route to the whole set at the end. No
+ * content, no boxes, no previews, no dimming.
  *
  * Two interaction contracts, kept deliberately different.
  *
- *   Desktop panel — a NON-modal disclosure. It dims the page behind it so the
- *     panel reads as the subject, but it does not block the page: no focus
- *     trap, no role="dialog", no scroll lock. Tab moves through the panel and
- *     then out of it, which closes the menu. Focus is the honest contract for
- *     "you can leave", and the preview follows the focused rail item too — the
- *     panel stays coherent for a keyboard user who never hovers.
+ *   Desktop dropdown — a NON-modal disclosure. A small panel that tucks under
+ *     its trigger and does not dim or block the page: no focus trap, no
+ *     role="dialog", no scroll lock. Tab moves through the menu and then out
+ *     of it, which closes it.
  *
  *   Mobile drawer — genuinely modal. It covers the page, so it gets
  *     role="dialog", aria-modal, a focus trap, a scroll lock and Escape. The
@@ -49,12 +42,10 @@ import { cn } from "@/lib/cn";
  * translate and an opacity — so `prefers-reduced-motion` is handled globally
  * in globals.css and no JavaScript is involved in the animation at all.
  *
- * Hover opens the desktop panel as an enhancement, never as the only way in:
- * the trigger is a real button that responds to click, Enter, Space and
- * ArrowDown, so pointer-less and touch users are not locked out of the menu.
+ * Hover opens the desktop dropdown as an enhancement, never as the only way
+ * in: the trigger is a real button that responds to click, Enter, Space and
+ * ArrowDown, so pointer-less and touch users are not locked out.
  */
-
-const HEADER_H = "4.5rem";
 
 function Chevron({ open }: { open: boolean }) {
   return (
@@ -84,8 +75,6 @@ export function Nav() {
   const { site, services } = useContent();
   const localeHref = useLocaleHref();
 
-  /* The locale-aware content drive every label and every href inside the
-     panel, so the panel renders the locale's own services on its own URLs. */
   const sections = site.sections;
   const serviceGroups = services.serviceGroups;
   const allServices = useMemo(
@@ -98,9 +87,6 @@ export function Nav() {
   const [drawerServicesOpen, setDrawerServicesOpen] = useState(false);
   const [spotlightOpen, setSpotlightOpen] = useState(false);
 
-  /* List → inspector: which service is in the reading position right now. */
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
   const servicesRef = useRef<HTMLDivElement>(null);
   const servicesBtnRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -110,14 +96,13 @@ export function Nav() {
   const searchIconRef = useRef<HTMLButtonElement>(null);
   const closeTimer = useRef<number | null>(null);
   /**
-   * How the panel was opened, which decides what a click on the trigger does.
-   *
-   * Without this, hover and click fight each other: moving the pointer onto
-   * the trigger opens the panel, and the click that naturally follows toggles
-   * it straight back shut — so to a user who clicks rather than hovers, the
-   * menu appears not to open at all. Tracking the source means a click on a
-   * hover-opened panel adopts it (keeps it open) rather than closing it, and
-   * only a second, deliberate click dismisses it.
+   * How the dropdown was opened, which decides what a click on the trigger
+   * does. Without this, hover and click fight each other: moving the pointer
+   * onto the trigger opens the menu, and the click that naturally follows
+   * toggles it straight back shut — so to a user who clicks rather than
+   * hovers, the menu appears not to open at all. Tracking the source means a
+   * click on a hover-opened menu adopts it (keeps it open) rather than
+   * closing it, and only a second, deliberate click dismisses it.
    */
   const openedBy = useRef<"hover" | "click" | null>(null);
 
@@ -132,7 +117,7 @@ export function Nav() {
 
   const openServices = (source: "hover" | "click") => {
     cancelClose();
-    /* Hover never downgrades a click-opened panel, so moving the pointer over
+    /* Hover never downgrades a click-opened menu, so moving the pointer over
        an already-pinned menu cannot make it dismissible by hovering away. */
     if (!(openedBy.current === "click" && source === "hover")) {
       openedBy.current = source;
@@ -150,8 +135,8 @@ export function Nav() {
   }, [cancelClose]);
 
   /* Leaving starts a short grace period rather than closing on the spot, so
-     clipping a corner on the way to an item doesn't dismiss the panel from
-     under the cursor. A panel the user opened by clicking stays put — having
+     clipping a corner on the way to an item doesn't dismiss the dropdown from
+     under the cursor. A menu the user opened by clicking stays put — having
      it evaporate because the pointer drifted would undo a deliberate act. */
   const closeServicesSoon = () => {
     if (openedBy.current === "click") return;
@@ -188,9 +173,9 @@ export function Nav() {
     return () => window.removeEventListener("keydown", onKey);
   }, [servicesOpen, drawerOpen, closeServices]);
 
-  /* The desktop panel is dismissed by any pointer press outside it. The
-     backdrop covers the page below the header, but the header itself is not
-     dimmed, so a click on the logo or the CTA also has to close the panel. */
+  /* The desktop dropdown is dismissed by any pointer press outside it. The
+     panel lives inside the Services button's wrapper, but the rest of the
+     header is not covered, so a click on the logo or the CTA also closes it. */
   useEffect(() => {
     if (!servicesOpen) return;
 
@@ -300,42 +285,32 @@ export function Nav() {
   /* The open-source flag is a ref, so it is cleared in an effect rather than
      in the render-time reset above — writing a ref during render is what the
      rule about refs not being render state exists to prevent. Without this
-     reset, a panel that was click-opened before a navigation would still be
+     reset, a menu that was click-opened before a navigation would still be
      marked "click" afterwards, and the next hover-open would refuse to close
      itself on mouse-leave. */
   useEffect(() => {
     openedBy.current = null;
   }, [pathname]);
 
-  /* The pathname carries the locale prefix (`/en`, `/ur`); the links in the
-     menu are locale-prefixed too. Matching against the unprefixed path keeps
-     the active states honest without depending on which locale is on screen. */
-  const barePath = pathname.replace(/^\/(en|ur)(?=\/|$)/, "") || "/";
+  /* The pathname has no locale prefix any more (English-only, routes at the
+     root), so the bare path is the pathname itself. */
+  const barePath = pathname || "/";
 
   const isActive = (href: string) =>
     href === "/" ? barePath === "/" : barePath === href || barePath.startsWith(`${href}/`);
 
-  const focusIndex = (index: number) => {
-    /* The preview follows the reading position; focus follows too when
-       navigating by keyboard, so Enter after ↓ lands on the focused item. */
-    const idx = (index + allServices.length) % allServices.length;
-    setSelectedIndex(idx);
-    const links = panelRef.current?.querySelectorAll<HTMLElement>("[data-menu-index]");
-    links?.[idx]?.focus({ preventScroll: true });
-  };
-
-  const selected = allServices[selectedIndex];
-
   const itemClass = (active: boolean) =>
     cn(
-      "relative rounded-full px-3.5 py-2 text-[0.9375rem] font-medium transition-colors",
-      active ? "text-ink" : "text-ink-muted hover:text-ink",
+      "relative rounded-full px-4 py-2 text-[0.9375rem] font-medium transition-colors",
+      active
+        ? "bg-surface-blue text-accent"
+        : "text-ink-muted hover:bg-surface hover:text-ink",
     );
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-border bg-bg/75 backdrop-blur-xl">
-        <div className="ds-container flex h-[4.5rem] items-center justify-between gap-6">
+      <header className="sticky top-0 z-50 border-b border-border bg-bg">
+        <div className="ds-container flex h-16 items-center justify-between gap-6">
           <Link
             href={localeHref("/")}
             aria-label="Wahab Ansari — home"
@@ -347,15 +322,15 @@ export function Nav() {
           <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
             {sections.map((s) =>
               s.href === "/services" ? (
-                /* h-[4.5rem] is load-bearing: it stretches the hover target to
-                   the full header height so its bottom edge meets the panel's
+                /* h-16 is load-bearing: it stretches the hover target to
+                   the full header height so its bottom edge meets the menu's
                    top edge exactly. Sized to the button instead, the strip of
                    header below it belongs to no one, and moving the pointer
                    down towards the menu fires mouseleave and closes it. */
                 <div
                   key={s.id}
                   ref={servicesRef}
-                  className="relative flex h-[4.5rem] items-center"
+                  className="relative flex h-16 items-center"
                   onMouseEnter={() => openServices("hover")}
                   onMouseLeave={closeServicesSoon}
                 >
@@ -371,10 +346,10 @@ export function Nav() {
                       if (e.key !== "ArrowDown") return;
                       e.preventDefault();
                       openServices("click");
-                      /* Move into the panel on the next frame, once it is no
+                      /* Move into the menu on the next frame, once it is no
                          longer inert and its links can take focus. */
                       requestAnimationFrame(() =>
-                        panelRef.current?.querySelector<HTMLElement>("[data-menu-index]")?.focus(),
+                        panelRef.current?.querySelector<HTMLElement>("a")?.focus(),
                       );
                     }}
                     aria-expanded={servicesOpen}
@@ -386,6 +361,69 @@ export function Nav() {
                     {s.label}
                     <Chevron open={servicesOpen} />
                   </button>
+
+                  {/* ── Desktop services dropdown ──────────────────────────
+                      A plain link list, anchored under this button (absolute
+                      inside the relative wrapper, so it opens beneath the
+                      link, never off to one side). Kept deliberately free of
+                      previews and cards: the job of a menu is to route, not
+                      to sell. Hover and click both open it; Escape, an outside
+                      press or navigating all close it — and tabbing out of a
+                      hover-opened menu dismisses it too. */}
+                  <div
+                    id="services-menu"
+                    ref={panelRef}
+                    inert={!servicesOpen}
+                    /* Non-modal: tabbing out of the dropdown closes it rather
+                       than being trapped inside. */
+                    onBlur={(e) => {
+                      if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+                      if (servicesRef.current?.contains(e.relatedTarget as Node | null)) return;
+                      closeServices();
+                    }}
+                    className={cn(
+                      "absolute top-full left-0 z-50 mt-2 hidden w-max max-w-[19rem] lg:block",
+                      "rounded-2xl border border-border bg-bg p-2",
+                      "transition-[opacity,translate] duration-[220ms] ease-out",
+                      servicesOpen
+                        ? "translate-y-0 opacity-100"
+                        : "pointer-events-none -translate-y-2 opacity-0",
+                    )}
+                  >
+                    <p className="ds-meta px-3 pt-2 pb-1">Services</p>
+                    <ul className="pb-1">
+                      {allServices.map((sv) => {
+                        const active = isActive(`/services/${sv.slug}`);
+                        return (
+                          <li key={sv.slug}>
+                            <Link
+                              href={localeHref(`/services/${sv.slug}`)}
+                              data-track="cta_click"
+                              data-track-label={sv.slug}
+                              aria-current={active ? "page" : undefined}
+                              className={cn(
+                                "block rounded-lg px-3 py-2 text-[0.9375rem] font-medium transition-colors",
+                                active
+                                  ? "bg-surface-blue text-accent"
+                                  : "text-ink-muted hover:bg-surface hover:text-ink",
+                              )}
+                            >
+                              {sv.title}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    <Link
+                      href={localeHref("/services")}
+                      data-track="cta_click"
+                      data-track-label="services-menu-all"
+                      className="ds-link mt-1 flex items-center gap-3 rounded-lg border-t border-border px-3 pt-2.5 pb-2"
+                    >
+                      All services
+                      <ArrowIcon className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 <Link
@@ -437,6 +475,19 @@ export function Nav() {
 
             <ThemeToggle />
 
+            {/* Desktop CTA — the header carries the same filled blue action
+                the hero does, so the conversion point is never more than a
+                click (and a scroll) away. */}
+            <Link
+              href={localeHref("/contact")}
+              data-track="cta_click"
+              data-track-label="header"
+              className="ds-btn ds-btn-primary hidden h-10 min-h-10 px-5 text-sm xl:inline-flex"
+            >
+              Discuss your project
+              <ArrowIcon />
+            </Link>
+
             <button
               ref={drawerBtnRef}
               type="button"
@@ -452,260 +503,12 @@ export function Nav() {
             </button>
           </div>
         </div>
-
-        {/* ── Desktop mega-menu panel ────────────────────────────────────────
-            Fixed, not absolute, so it spans the viewport regardless of where
-            the trigger sits. It is a sibling of the header row rather than a
-            child of the trigger, so its width is the page, not the button. */}
-        <div
-          id="services-menu"
-          ref={panelRef}
-          inert={!servicesOpen}
-          onMouseEnter={cancelClose}
-          onMouseLeave={closeServicesSoon}
-          /* Non-modal: tabbing out of the panel closes it rather than being
-             trapped inside. */
-          onBlur={(e) => {
-            if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
-            if (servicesRef.current?.contains(e.relatedTarget as Node | null)) return;
-            closeServices();
-          }}
-          /* ↑/↓ walk the rail; the preview follows. */
-          onKeyDown={(e) => {
-            if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-              e.preventDefault();
-              focusIndex(selectedIndex + 1);
-            } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-              e.preventDefault();
-              focusIndex(selectedIndex - 1);
-            }
-          }}
-          /* Interactivity is governed by `inert`, not by `visibility`. An
-             inert subtree is already unfocusable, unreachable by assistive
-             technology and transparent to hit-testing, so adding `invisible`
-             would be redundant — and transitioning visibility makes focus
-             timing-dependent, because a control cannot take focus until the
-             property has actually flipped. Opacity and translate carry the
-             animation; `inert` carries the semantics. */
-          className={cn(
-            "fixed inset-x-0 z-50 hidden lg:block",
-            "transition-[opacity,translate] duration-[220ms] ease-out",
-            servicesOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0",
-          )}
-          style={{ top: HEADER_H }}
-        >
-          <div className="border-b border-border bg-card/90 shadow-[0_24px_60px_-24px_rgb(2_6_23_/_0.35)] backdrop-blur-xl">
-            <div className="ds-container pt-7 pb-6">
-              {/* Menu header — the reading-position model in two lines, with
-                  the route to the whole set on the right. */}
-              <div className="flex items-end justify-between gap-6 border-b border-border pb-5">
-                <div>
-                  <p className="ds-meta">Services</p>
-                  <p className="mt-1.5 font-display text-[1.25rem] leading-tight font-semibold text-ink">
-                    Compare them one at a time — move down the list, watch the
-                    preview.
-                  </p>
-                </div>
-                <Link href={localeHref("/services")} className="ds-link text-[0.875rem]">
-                  All services
-                  <ArrowIcon className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-12 gap-x-10 pt-5">
-                {/* ── The rail: one compact index, grouped, scannable. ────── */}
-                <div className="col-span-7">
-                  <ul className="divide-y divide-border/70">
-                    {serviceGroups.map((group, gi) => (
-                      <li key={group.tier}>
-                        <p className="ds-meta pt-4 pb-2 text-[0.6875rem] first:pt-0">
-                          {group.label}
-                        </p>
-                        <ul>
-                          {group.items.map((sv) => {
-                            const svIndex =
-                              serviceGroups
-                                .slice(0, gi)
-                                .reduce((n, g) => n + g.items.length, 0) +
-                              group.items.indexOf(sv);
-                            const href = localeHref(`/services/${sv.slug}`);
-                            const active = isActive(`/services/${sv.slug}`);
-                            const focusSelected = selectedIndex === svIndex;
-                            return (
-                              <li key={sv.slug}>
-                                <Link
-                                  href={href}
-                                  data-menu-index={svIndex}
-                                  data-track="cta_click"
-                                  data-track-label={sv.slug}
-                                  aria-current={active ? "page" : undefined}
-                                  onMouseEnter={() => setSelectedIndex(svIndex)}
-                                  onFocus={() => setSelectedIndex(svIndex)}
-                                  className={cn(
-                                    "flex items-center gap-4 rounded-[var(--radius-sm)] px-2 py-3 transition-colors",
-                                    focusSelected ? "bg-accent-soft/50" : "hover:bg-surface",
-                                  )}
-                                >
-                                  <span
-                                    className={cn(
-                                      "w-5 shrink-0 text-center font-display text-[0.8125rem] leading-none font-bold tabular-nums",
-                                      focusSelected ? "text-accent" : "text-ink-soft",
-                                    )}
-                                  >
-                                    {svIndex + 1}
-                                  </span>
-                                  <span className="min-w-0 flex-1">
-                                    <span
-                                      className={cn(
-                                        "block truncate text-[0.9375rem] font-medium transition-colors",
-                                        focusSelected ? "text-accent" : "text-ink",
-                                      )}
-                                    >
-                                      {sv.title}
-                                    </span>
-                                    {!!sv.summary && (
-                                      <span className="mt-0.5 block truncate text-[0.8125rem] text-ink-muted">
-                                        {sv.summary}
-                                      </span>
-                                    )}
-                                  </span>
-                                  <CheckIcon
-                                    className={cn(
-                                      "h-4 w-4 shrink-0 text-accent transition-opacity",
-                                      focusSelected ? "opacity-100" : "opacity-0",
-                                    )}
-                                  />
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* ── The inspector: the service in the reading position. ── */}
-                <div className="col-span-5">
-                  <div className="sticky top-[5.5rem] rounded-2xl border border-border bg-surface/80 p-5 backdrop-blur">
-                    {selected ? (
-                      <>
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="ds-chip text-[0.6875rem] uppercase tracking-wide">
-                            {selectedIndex + 1} / {allServices.length}
-                          </span>
-                          <span className="ds-chip ds-chip-accent text-[0.6875rem]">
-                            {serviceGroups.find((g) => g.items.includes(selected))?.label ?? "Service"}
-                          </span>
-                        </div>
-
-                        <p className="ds-title mt-4 text-[1.15rem] leading-tight text-ink">
-                          {selected.title}
-                        </p>
-                        {!!selected.summary && (
-                          <p className="ds-body-sm mt-2 leading-relaxed text-ink-muted">
-                            {selected.summary}
-                          </p>
-                        )}
-
-                        {selected.idealFor.length > 0 && (
-                          <ul className="mt-4 flex flex-wrap gap-1.5">
-                            {selected.idealFor.slice(0, 3).map((fit) => (
-                              <li
-                                key={fit}
-                                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-[0.75rem] text-ink"
-                              >
-                                <CheckIcon className="h-3 w-3 text-accent" />
-                                {fit}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-
-                        <Link
-                          href={localeHref(`/services/${selected.slug}`)}
-                          data-track="cta_click"
-                          data-track-label={`menu-inspector:${selected.slug}`}
-                          className="ds-btn ds-btn-primary mt-5 w-full"
-                        >
-                          Open the full spec
-                          <ArrowIcon />
-                        </Link>
-
-                        <div className="mt-4 border-t border-border pt-4 text-[0.75rem] text-ink-muted">
-                          Use the list, Arrow keys or Tab to switch service.
-                        </div>
-                      </>
-                    ) : (
-                      <p className="ds-body-sm text-ink-muted">
-                        Nothing to preview yet.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom strip: quick routes out of the menu, dismiss on the end. */}
-            <div className="border-t border-border bg-surface">
-              <div className="ds-container flex items-center justify-between gap-6 py-3">
-                <div className="flex items-center gap-8">
-                  <Link
-                    href={localeHref("/work")}
-                    data-track="cta_click"
-                    data-track-label="services-menu"
-                    className="text-[0.875rem] font-medium text-ink-muted transition-colors hover:text-ink"
-                  >
-                    See the proof →
-                  </Link>
-                  <Link
-                    href={localeHref("/insights")}
-                    data-track="cta_click"
-                    data-track-label="services-menu"
-                    className="text-[0.875rem] font-medium text-ink-muted transition-colors hover:text-ink"
-                  >
-                    Read the insights →
-                  </Link>
-                  <Link
-                    href={localeHref("/contact")}
-                    data-track="cta_click"
-                    data-track-label="services-menu"
-                    className="text-[0.875rem] font-medium text-ink-muted transition-colors hover:text-ink"
-                  >
-                    Discuss your project →
-                  </Link>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeServices();
-                    servicesBtnRef.current?.focus();
-                  }}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-[var(--radius-control)] px-3 text-[0.875rem] font-medium text-ink-muted transition-colors hover:bg-card hover:text-ink"
-                >
-                  Close
-                  <CloseIcon className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       </header>
-
-      {/* Backdrop for the desktop panel. Starts below the header so the header
-          itself stays undimmed and the panel reads as attached to it. */}
-      <div
-        aria-hidden
-        data-open={servicesOpen}
-        onClick={closeServices}
-        className="ds-backdrop z-40 hidden lg:block"
-        style={{ top: HEADER_H }}
-      />
 
       {/* ── Mobile drawer ──────────────────────────────────────────────────
           Modal, so it gets the full dialog contract: labelled, focus-trapped,
-          scroll-locked, Escape-closable, focus restored on close. */}
+          scroll-locked, Escape-closable, focus restored on close. Carries the
+          same white surface as the header above it. */}
       <div
         aria-hidden
         data-open={drawerOpen}
@@ -729,7 +532,7 @@ export function Nav() {
           drawerOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <div className="flex h-[4.5rem] shrink-0 items-center justify-between border-b border-border px-6">
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6">
           <Wordmark compact role={site.role} />
           <button
             type="button"

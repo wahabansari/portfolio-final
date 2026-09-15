@@ -141,17 +141,17 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  </div>
  </Section>
 
- {insight.faqs && insight.faqs.length > 0 && (
- <Section id="faq" tone="plain">
- <SectionHeading overline="Questions" title="Common questions" />
- <Reveal>
- <Faqs faqs={insight.faqs} className="mx-auto max-w-4xl" />
- </Reveal>
- </Section>
- )}
+{insight.faqs && insight.faqs.length > 0 && (
+  <Section id="faq" tone="soft">
+  <SectionHeading overline="Questions" title="Common questions" />
+  <Reveal>
+  <Faqs faqs={insight.faqs} className="mx-auto max-w-4xl" />
+  </Reveal>
+  </Section>
+  )}
 
  {insight.references && insight.references.length > 0 && (
- <Section tone="soft" bordered>
+  <Section tone="plain">
  <SectionHeading
  overline="Sources"
  title="Primary sources"
@@ -189,9 +189,10 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  />
  )}
 
- <CtaBand
- tone="plain"
- heading={insight.cta.heading}
+<CtaBand
+  navy
+  tone="plain"
+  heading={insight.cta.heading}
  body={insight.cta.body}
  primary={{ label: insight.cta.primaryLabel, href: "/contact" }}
  secondary={service ? { label: service.title, href: `/services/${service.slug}` } : undefined}

@@ -1,31 +1,21 @@
 /**
- * Content registry — the single source of truth for both locales.
+ * Content registry — the English content set.
  *
- * Every content module keeps its original shape (site / services / work /
- * insights); this file maps each locale to its set of modules and provides
- * `contentFor(locale)` plus the `useContent()`-friendly `flattenSite` helper.
- * Everything in this file is client-safe (data only). The server accessor that
- * resolves the locale from the route lives in `./root.ts` and is imported as
- * `import { getContent } from "@/content/root"` — never re-exported from here,
- * because `next/root-params` has no client runtime and would sink the bundle.
+ * The site is English-only now. Every content module keeps its original shape
+ * (site / services / work / insights); this file assembles them into the
+ * serialisable `en` set plus `enInsights`, and provides the
+ * `useContent()`-friendly `flattenSite` helper. Everything in this file is
+ * client-safe (data only).
  *
- * `site`, `services`, `work` are type-checked against `en` so a translation
- * that drops a field or changes its shape fails the typecheck — English and
- * Urdu can never drift apart structurally. `insights` is checked by direct
- * import below and is allowed to be a leaner, locale-specific editorial set.
+ * `site`, `services`, `work` are type-checked against the modules exported
+ * under `./en`, which is also what `@/content/site` / `@/content/services` /
+ * `@/content/work` re-export verbatim for server pages.
  */
-
-import type { Locale } from "@/lib/i18n";
 
 import * as siteEn from "./en/site";
 import * as servicesEn from "./en/services";
 import * as workEn from "./en/work";
 import * as insightsEn from "./en/insights";
-
-import * as siteUr from "./ur/site";
-import * as servicesUr from "./ur/services";
-import * as workUr from "./ur/work";
-import * as insightsUr from "./ur/insights";
 
 type Widen<T> = T extends (...args: never[]) => unknown
   ? T
@@ -115,27 +105,9 @@ export const en: Content = {
   work: plain(workEn),
 };
 
-export const ur: Content = {
-  site: plain(siteUr) as Content["site"],
-  services: plain(servicesUr) as Content["services"],
-  work: plain(workUr) as Content["work"],
-};
-
 export const enInsights: InsightsContent = {
   insights: insightsEn.insights,
   getInsight: insightsEn.getInsight,
   insightSlugs: insightsEn.insightSlugs,
   insightsHub: insightsEn.insightsHub,
 };
-
-export const urInsights: InsightsContent = {
-  insights: insightsUr.insights,
-  getInsight: insightsUr.getInsight,
-  insightSlugs: insightsUr.insightSlugs,
-  insightsHub: insightsUr.insightsHub,
-};
-
-/** Client-safe synchronous selector. Default locale falls back to English. */
-export function contentFor(locale: Locale): Content {
-  return locale === "ur" ? ur : en;
-}

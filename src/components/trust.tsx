@@ -39,10 +39,10 @@ export function TrustLayer({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
         <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t, i) => (
             <Reveal as="li" key={t.name + t.company} delay={i * 0.05} className="h-full">
-              <figure className="flex h-full flex-col p-7">
+              <figure className="flex h-full flex-col rounded-[var(--radius-card)] bg-card p-7">
                 <blockquote className="ds-body flex-1 text-ink">“{t.quote}”</blockquote>
                 <figcaption className="mt-6 border-t border-border pt-5">
-                  <span className="block text-[0.9375rem] font-semibold text-ink">{t.name}</span>
+                  <span className="block text-[0.9375rem] font-medium text-ink">{t.name}</span>
                   <span className="ds-body-sm block">
                     {t.role}, {t.company}
                   </span>
@@ -52,7 +52,7 @@ export function TrustLayer({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
           ))}
         </ul>
       ) : (
-        <ul className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2">
+        <ul className="grid gap-4 sm:grid-cols-2">
           {assurances.map((item, i) => {
             const Icon = ASSURANCE_ICONS[i % ASSURANCE_ICONS.length];
             return (
@@ -60,7 +60,7 @@ export function TrustLayer({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
                 as="li"
                 key={item.title}
                 delay={i * 0.04}
-                className="flex gap-4 bg-card p-6 md:p-8"
+                className="flex gap-4 rounded-2xl bg-card p-6 md:p-8"
               >
                 <span
                   aria-hidden
@@ -69,7 +69,7 @@ export function TrustLayer({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
                   <Icon className="h-4.5 w-4.5" />
                 </span>
               <div>
-                <h3 className="text-[0.9375rem] leading-snug font-semibold text-ink md:text-base">
+                <h3 className="text-[0.9375rem] leading-snug font-medium text-ink md:text-base">
                   {item.title}
                 </h3>
                 <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-muted">{item.detail}</p>

@@ -276,7 +276,7 @@ export const services: Service[] = [
     tier: "modernize",
     metaTitle: "Website Redesign & Rebuild Services",
     metaDescription:
-      "Modernize outdated websites with clearer UX, responsive implementation, faster pages and conversion-focused frontend work.",
+      "Modernize outdated websites with website redesign and rebuild services — clearer UX, responsive implementation, faster pages and conversion-focused frontend work.",
     keywords: [
       "website redesign",
       "conversion-focused website",
@@ -904,7 +904,7 @@ export const services: Service[] = [
     tier: "core",
     metaTitle: "SaaS & MVP Development with React & Next.js",
     metaDescription:
-      "Build customer-facing SaaS products, dashboards and MVPs with React, Next.js and production-ready frontend architecture.",
+      "Build customer-facing SaaS products, dashboards and MVPs with React and Next.js frontend development services.",
     keywords: [
       "SaaS development",
       "SaaS MVP development",
@@ -1033,7 +1033,7 @@ export const services: Service[] = [
     tier: "partnership",
     metaTitle: "AI Product Integration with React & Next.js",
     metaDescription:
-      "Integrate useful AI capabilities into real web products with practical frontend and product engineering.",
+      "Add practical AI features and LLM-powered capabilities to real web products with React and Next.js frontend engineering.",
     keywords: [
       "AI product development",
       "AI integration",
@@ -1174,7 +1174,7 @@ export const serviceGroups: { tier: ServiceTier; label: string; items: Service[]
 export const servicesHub = {
   metaTitle: "React & Next.js Development Services",
   metaDescription:
-    "React and Next.js product engineering for production websites, SaaS products, redesigns, migrations and existing applications.",
+    "React and Next.js development services for production websites, SaaS products, redesigns, migrations and existing applications.",
   h1: "Production web engineering for real product constraints",
   intro:
     "I help SaaS teams, agencies and growing businesses design, rebuild and ship web products that need strong frontend execution.",

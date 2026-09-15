@@ -27,8 +27,11 @@ function ProjectRow({
   const content = (
     <>
       {/* Number */}
-      <span className="md:col-span-1 md:pl-2">
-        <span className="font-display text-[0.8125rem] font-semibold text-ink-soft tabular-nums">
+      <span className="md:col-span-2 md:pl-2">
+        <span
+          aria-hidden
+          className="font-display text-[0.875rem] font-medium text-ink-soft tabular-nums transition-colors group-hover:text-accent"
+        >
           {String(index + 1).padStart(2, "0")}
         </span>
       </span>
@@ -36,7 +39,7 @@ function ProjectRow({
       {/* Title + kind */}
       <span className="md:col-span-3">
         <span className="flex items-baseline gap-2.5">
-          <span className="ds-h3 text-ink transition-colors group-hover:text-accent">
+          <span className="font-display text-2xl leading-tight font-medium tracking-[-0.012em] text-ink transition-colors group-hover:text-accent md:text-[1.625rem]">
             {project.title}
           </span>
           {project.domain && (
@@ -47,7 +50,7 @@ function ProjectRow({
       </span>
 
       {/* Outcome */}
-      <span className="ds-body-sm text-ink-muted md:col-span-4">{project.outcome}</span>
+      <span className="ds-body-sm text-ink-muted md:col-span-3">{project.outcome}</span>
 
       {/* Metric, or the tools when there is no measured figure. */}
       <span className="md:col-span-3">
@@ -55,7 +58,7 @@ function ProjectRow({
           <>
             <span
               className={cn(
-                "font-display text-[1.25rem] leading-none font-bold tracking-[-0.01em]",
+                "font-display text-[1.375rem] leading-none font-medium tracking-[-0.012em]",
                 project.metrics[0].verified ? "text-accent" : "text-ink",
               )}
             >
@@ -75,7 +78,7 @@ function ProjectRow({
       <span className="flex md:col-span-1 md:justify-end md:pr-2">
         <span
           aria-hidden
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink-soft transition-[border-color,color,background-color] duration-200 group-hover:border-accent group-hover:bg-accent group-hover:text-accent-fg"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-surface text-ink-soft transition-[background-color,color] duration-200 group-hover:bg-surface-blue group-hover:text-accent"
         >
           {isExternal ? (
             <ExternalIcon className="h-4 w-4" />

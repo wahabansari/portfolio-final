@@ -40,50 +40,57 @@ export function ProblemSelector({ tone = "plain" }: { tone?: "plain" | "soft" | 
  </Reveal>
 
  <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
- <div className="lg:col-span-4">
- <div className="lg:sticky lg:top-24">
- <div className="space-y-2 border-l border-accent-line pl-5">
- <p className="ds-meta">Six roads in, one door</p>
- <p className="ds-body-sm ">
- Every problem below routes to a single service page, so the
- summary you read is the page it links to — nothing is overloaded
- between here and there.
- </p>
- </div>
- </div>
- </div>
+<div className="lg:col-span-4">
+  <div className="lg:sticky lg:top-24">
+  <div className="space-y-2 border-l-2 border-accent pl-5">
+  <p className="ds-meta">Six roads in, one door</p>
+  <p className="ds-body-sm">
+  Every problem below routes to a single service page, so the
+  summary you read is the page it links to — nothing is overloaded
+  between here and there.
+  </p>
+  </div>
+  </div>
+  </div>
 
- <ul className="lg:col-span-8">
- {problemPaths.map((path, i) => (
- <Reveal as="li" key={path.href + path.problem} delay={i * 0.03}>
- <Link
- href={path.href}
- data-track="cta_click"
- data-track-label={`problem:${path.href.replace("/services/", "")}`}
- className="group grid gap-2 border-b border-border py-5 transition-colors hover:bg-accent-soft/60 md:grid-cols-12 md:items-baseline md:gap-6 md:px-4 md:py-6"
- >
- <span className="md:col-span-1">
- <span
- aria-hidden
- className="font-display text-[0.8125rem] font-semibold text-ink-soft tabular-nums transition-colors group-hover:text-accent"
- >
- {String(i + 1).padStart(2, "0")}
- </span>
- </span>
- <span className="md:col-span-7">
- <span className="ds-title block text-ink transition-colors group-hover:text-accent">
- {path.problem}
- </span>
- <span className="ds-body-sm mt-1.5 block">{path.detail}</span>
- </span>
- <span className="flex items-center justify-between gap-3 md:col-span-4 md:justify-end">
- <span className="ds-link text-[0.875rem]">{path.label}</span>
- <ArrowIcon className="h-4 w-4 shrink-0 text-ink-soft transition-[color,translate] duration-200 group-hover:translate-x-0.5 group-hover:text-accent" />
- </span>
- </Link>
- </Reveal>
- ))}
- </ul>
+<ul className="lg:col-span-8">
+        {problemPaths.map((path, i) => (
+          <Reveal as="li" key={path.href + path.problem} delay={i * 0.03}>
+            <Link
+              href={path.href}
+              data-track="cta_click"
+              data-track-label={`problem:${path.href.replace("/services/", "")}`}
+              className="group grid gap-3 border-b border-border py-7 transition-colors hover:bg-accent-soft/40 md:grid-cols-12 md:items-center md:gap-6 md:px-4 md:py-8"
+            >
+              <span className="md:col-span-2 lg:col-span-1">
+                <span
+                  aria-hidden
+                  className="font-display text-[0.875rem] font-medium text-ink-soft tabular-nums transition-colors group-hover:text-accent"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </span>
+              <span className="md:col-span-7 lg:col-span-8">
+                <span className="ds-h3 block text-ink transition-colors group-hover:text-accent">
+                  {path.problem}
+                </span>
+                <span className="ds-body-sm mt-2 block max-w-2xl">{path.detail}</span>
+              </span>
+              <span className="flex items-center justify-between gap-3 md:col-span-3 md:justify-end">
+                <span className="hidden text-[0.875rem] font-medium text-ink-soft transition-colors group-hover:text-accent md:inline">
+                  {path.label}
+                </span>
+                <span
+                  aria-hidden
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-surface text-ink-soft transition-[background-color,color] duration-200 group-hover:bg-surface-blue group-hover:text-accent"
+                >
+                  <ArrowIcon className="h-[1.125rem] w-[1.125rem]" />
+                </span>
+              </span>
+            </Link>
+          </Reveal>
+        ))}
+        </ul>
  </div>
  </Section>
  );

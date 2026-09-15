@@ -16,9 +16,8 @@ import { cn } from "@/lib/cn";
  *   · Multiple panels may be open at once. Auto-closing the previous panel is
  *     a common default and a bad one — it destroys the comparison a reader is
  *     usually making between two answers.
- *   · Each item is its own card: white fill, hairline, a sky tint that fades
- *     in on the open state. Rows of hairline-only dividers read as a list the
- *     eye has to parse; cards make the open/closed state unmistakable.
+ *   · Each item is a fill card: raised white on the band, tinted to blue-50 on
+ *     the open state. No outline, no shadow — the fill does the work.
  *   · Content is force-mounted and collapsed with grid rows, so every answer
  *     stays in the initial HTML for crawlers and in-page search while looking
  *     like a smooth open/close to the eye.
@@ -54,16 +53,16 @@ export function Accordion({
         <AccordionPrimitive.Item
           key={entry.value}
           value={entry.value}
-          className="group border-b border-border transition-colors duration-200 last:border-b-0"
+          className="group rounded-2xl bg-card px-5 transition-colors duration-200 data-[state=open]:bg-surface-blue sm:px-6"
         >
           <AccordionPrimitive.Header className="flex">
             <AccordionPrimitive.Trigger className="flex w-full cursor-pointer items-start justify-between gap-6 py-4 text-left transition-colors hover:text-accent md:py-5">
-              <span className="text-[0.9375rem] font-semibold leading-snug text-ink transition-colors group-data-[state=open]:text-accent md:text-base">
+              <span className="text-[0.9375rem] font-medium leading-snug text-ink transition-colors group-data-[state=open]:text-accent md:text-base">
                 {entry.title}
               </span>
               <span
                 aria-hidden
-                className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-ink-muted transition-colors group-data-[state=open]:border-accent group-data-[state=open]:bg-accent group-data-[state=open]:text-accent-fg"
+                className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface text-ink-muted transition-colors group-data-[state=open]:bg-bg group-data-[state=open]:text-accent"
               >
                 {icon === "plus" ? <Plus /> : <Chevron />}
               </span>

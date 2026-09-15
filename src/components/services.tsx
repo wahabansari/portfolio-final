@@ -18,85 +18,89 @@ const [primaryService] = services;
 const surrounding = services.slice(1);
 
 /** The core offering — a full-width featured band: story on the left,
- best-fit + action on the right. */
+ best-fit + action on the right. Sits a step deeper (#F1F3F4) than the
+ surrounding cards (#F8F9FA) so the ranking reads from the fill. */
 function CoreBand() {
  const sv = primaryService;
 
  return (
- <div className="rounded-2xl border border-accent/20 bg-accent-soft/40 p-7 md:p-10">
- <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
- <div className="lg:col-span-7">
- <div className="flex flex-wrap items-center gap-3">
- <span className="ds-chip ds-chip-accent">{sv.eyebrow}</span>
- <span className="ds-meta">{TIER_LABEL[sv.tier]}</span>
- </div>
+<div className="rounded-[1.75rem] bg-surface-2 p-7 md:p-12">
+  <div className="relative grid items-center gap-8 lg:grid-cols-12 lg:gap-12">
+  <div className="lg:col-span-7">
+  <div className="flex flex-wrap items-center gap-3">
+  <span className="ds-chip ds-chip-accent">{sv.eyebrow}</span>
+  <span className="ds-meta">{TIER_LABEL[sv.tier]}</span>
+  </div>
 
- <h3 className="ds-h2 mt-5">{sv.title}</h3>
- <p className="ds-body mt-3">{sv.definition}</p>
- </div>
+  <h3 className="ds-h2 mt-5">{sv.title}</h3>
+  <p className="ds-body mt-3">{sv.definition}</p>
+  </div>
 
- <div className="lg:col-span-5">
- <p className="ds-meta text-ink-muted">Best for</p>
- <ul className="mt-4 space-y-3">
- {sv.idealFor.slice(0, 3).map((fit) => (
- <li key={fit} className="flex items-start gap-2.5">
- <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-success" />
- <span className="text-[0.9375rem] leading-relaxed text-ink">{fit}</span>
- </li>
- ))}
- </ul>
+  <div className="lg:col-span-5">
+  <p className="ds-meta">Best for</p>
+  <ul className="mt-4 space-y-3">
+  {sv.idealFor.slice(0, 3).map((fit) => (
+  <li key={fit} className="flex items-start gap-2.5">
+  <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-success" />
+  <span className="text-[0.9375rem] leading-relaxed text-ink">{fit}</span>
+  </li>
+  ))}
+  </ul>
 
- <Link
- href={`/services/${sv.slug}`}
- data-track="cta_click"
- data-track-label={`home-services:${sv.slug}`}
- className="ds-btn ds-btn-primary mt-7"
- >
- Explore {sv.title}
- <ArrowIcon />
- </Link>
- </div>
- </div>
- </div>
+  <Link
+  href={`/services/${sv.slug}`}
+  data-track="cta_click"
+  data-track-label={`home-services:${sv.slug}`}
+  className="ds-btn ds-btn-primary mt-7"
+  >
+  Explore {sv.title}
+  <ArrowIcon />
+  </Link>
+  </div>
+  </div>
+  </div>
  );
 }
 
-/** The six engagement shapes encircling the core offer — a hairline grid of
- equal cells so nothing outranks anything else outside the core. */
+/** The six engagement shapes encircling the core offer — a grid of soft cards
+ so nothing outranks anything else outside the core. */
 function SurroundingGrid() {
  return (
- <div className="mt-8">
- <p className="ds-meta text-ink-muted">Also covered</p>
- <ul className="mt-5 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
- {surrounding.map((sv, i) => (
- <Reveal as="li" key={sv.slug} delay={i * 0.04} className="h-full">
- <Link
- href={`/services/${sv.slug}`}
- data-track="cta_click"
- data-track-label={`home-services:${sv.slug}`}
- className="group flex h-full flex-col bg-card p-6 transition-colors hover:bg-surface md:p-7"
- >
- <span className="flex items-center justify-between">
- <span className="font-display text-[0.8125rem] font-semibold text-ink-soft tabular-nums">
- {String(i + 2).padStart(2, "0")}
- </span>
- <span className="ds-meta">{TIER_LABEL[sv.tier]}</span>
- </span>
+  <div className="mt-8">
+  <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
+  <p className="ds-meta text-ink-muted">The wider index</p>
+  <p className="ds-meta">{surrounding.length} services</p>
+  </div>
+  <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {surrounding.map((sv, i) => (
+  <Reveal as="li" key={sv.slug} delay={i * 0.04} className="h-full">
+  <Link
+  href={`/services/${sv.slug}`}
+  data-track="cta_click"
+  data-track-label={`home-services:${sv.slug}`}
+  className="group flex h-full flex-col rounded-2xl bg-surface p-6 transition-colors hover:bg-surface-2 md:p-7"
+  >
+  <span className="flex items-center justify-between">
+  <span className="font-display text-[0.8125rem] font-medium text-ink-soft tabular-nums">
+  {String(i + 2).padStart(2, "0")}
+  </span>
+  <span className="ds-meta">{TIER_LABEL[sv.tier]}</span>
+  </span>
 
- <h4 className="ds-title mt-4 text-ink transition-colors group-hover:text-accent">
- {sv.title}
- </h4>
- <p className="ds-body-sm mt-2 text-ink-muted">{sv.summary}</p>
+  <h4 className="font-display mt-4 text-[1.375rem] leading-snug font-medium tracking-[-0.014em] text-ink">
+  {sv.title}
+  </h4>
+  <p className="ds-body-sm mt-2">{sv.summary}</p>
 
- <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-[0.875rem] font-semibold text-accent">
- Explore
- <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
- </span>
- </Link>
- </Reveal>
- ))}
- </ul>
- </div>
+  <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-[0.875rem] font-medium text-accent">
+  Explore
+  <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+  </span>
+  </Link>
+  </Reveal>
+  ))}
+  </ul>
+  </div>
  );
 }
 
@@ -165,14 +169,14 @@ export function ServicesList() {
 
  <span className="ds-body md:col-span-6">{service.summary}</span>
 
- <span className="flex md:col-span-1 md:justify-end md:pr-2">
- <span
- aria-hidden
- className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink-soft transition-[border-color,color,translate] duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:text-accent"
- >
- <ArrowIcon />
- </span>
- </span>
+<span className="flex md:col-span-1 md:justify-end md:pr-2">
+  <span
+  aria-hidden
+  className="flex h-9 w-9 items-center justify-center rounded-full bg-surface text-ink-soft transition-[background-color,color,translate] duration-200 group-hover:translate-x-0.5 group-hover:bg-surface-blue group-hover:text-accent"
+  >
+  <ArrowIcon />
+  </span>
+  </span>
  </Link>
  </Reveal>
  ))}

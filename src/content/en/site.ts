@@ -52,7 +52,7 @@ export const agencySentence =
 
 /** Homepage <meta description>. Kept under 160 characters so it isn't truncated. */
 export const metaDescription =
-  "I build and improve production web products with React and Next.js for SaaS teams, businesses and agencies.";
+  "Independent React & Next.js developer for hire — building and improving production web products for SaaS teams, businesses and agencies.";
 
 export const socials = [
   { label: "GitHub", handle: "github.com/wahabansari", href: "https://github.com/wahabansari" },

@@ -9,7 +9,7 @@ import { projects } from "@/content/work";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
-  "Selected production work across frontend engineering, performance, web applications and Next.js architecture.";
+  "Selected React & Next.js production work and case studies across frontend engineering, performance optimization, web applications and Next.js architecture.";
 
 export const metadata: Metadata = pageMetadata({
   title: "React & Next.js Projects & Case Studies",
@@ -48,6 +48,7 @@ export default function WorkPage() {
         <WorkIndex />
 
         <CtaBand
+          navy
           tone="plain"
           heading="Have something with a similar shape?"
           body="Send the product, the current site or the Figma file. I will tell you which of these is the closest comparison and what I would do differently for you."

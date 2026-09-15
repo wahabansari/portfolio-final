@@ -56,9 +56,9 @@ export default function ServicesPage() {
             description="If two of these look right, it is usually the first one — the others are shaped around a specific situation."
           />
 
-          <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-border bg-border md:grid-cols-2">
+          <ul className="grid gap-4 md:grid-cols-2">
             {services.map((service) => (
-              <Reveal as="li" key={service.slug} className="flex flex-col bg-card p-7">
+              <Reveal as="li" key={service.slug} className="flex flex-col rounded-[var(--radius-card)] bg-card p-7">
                 <h3 className="ds-title-sm">{service.title}</h3>
                 <p className="ds-body-sm mt-3 flex-1">
                   <span className="font-medium text-ink">Pick this if: </span>
@@ -82,6 +82,7 @@ export default function ServicesPage() {
         />
 
         <CtaBand
+          navy
           tone="soft"
           heading="Not sure which one applies?"
           body="Describe the problem rather than the service. I will tell you which of these fits, whether it is a smaller job than you think, and if it is something I should not be doing."

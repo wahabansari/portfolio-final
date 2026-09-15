@@ -1,44 +1,36 @@
 /**
- * i18n foundation.
+ * i18n foundation — English only.
  *
- * Two locales, English (default, LTR) and Urdu (RTL). The site follows the
- * documented Next.js pattern: every special file lives under `app/[lang]`,
- * the root layout lives at `app/[lang]/layout.tsx` and sets `lang`/`dir` per
- * locale, and `proxy.ts` redirects locale-less requests to the negotiated
- * locale. `next/root-params` (`lang()`) resolves the current locale in Server
- * Components without prop drilling; Client Components receive `locale` as a
- * prop (the only client-aware components that render content are the nav,
- * footer, spotlight and the contact form).
+ * The site shipped bilingual (en/ur); after dropping the second locale the
+ * helpers collapse to a single language so the client chrome (nav, footer)
+ * keeps one stable code path. `localeHref` is the identity, `isRtl` is always
+ * false, and `Locale` is literally `"en"` wherever a component reads it —
+ * nothing about the routing or the content tree varies with locale any more.
  */
 
-export const locales = ["en", "ur"] as const;
+export const locales = ["en"] as const;
 
-/** `Locale` is used everywhere; `Lang` is what the route segment is called. */
+/** `Locale` is the type all consumers read; `Lang` was the route segment name. */
 export type Locale = (typeof locales)[number];
 
 export type Lang = Locale;
 
 export const defaultLocale: Locale = "en";
 
-export const RTL: Record<Locale, boolean> = { en: false, ur: true };
+export const RTL: Record<Locale, boolean> = { en: false };
 
-export function isRtl(locale: Locale): boolean {
-  return RTL[locale];
+export function isRtl(): boolean {
+  return false;
 }
 
-/** BCP 47 tag used on <html lang="…"> and in metadata. */
-export function langTag(locale: Locale): string {
-  return locale === "ur" ? "ur-PK" : "en";
+/** BCP 47 tag used on <html lang="…">. */
+export function langTag(): string {
+  return "en";
 }
 
-export const isLocale = (value: string): value is Locale =>
-  (["en", "ur"] as const).includes(value as Locale);
+export const isLocale = (value: string): value is Locale => value === "en";
 
-/**
- * Prefix a path with the locale, correctly handling root ("/").
- * Client navigation only needs this for the non-default locale.
- */
-export function localeHref(locale: Locale, href: string): string {
-  if (locale === defaultLocale) return href === "/" ? "/" : href;
-  return href === "/" ? `/${locale}` : `/${locale}${href}`;
+/** Prefix a path with the locale. English stays unprefixed, so this is the identity. */
+export function localeHref(_locale: Locale, href: string): string {
+  return href;
 }

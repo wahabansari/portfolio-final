@@ -26,43 +26,49 @@ export function Audiences({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" 
         description="If none of these describes you, say so anyway — it is usually faster for me to tell you I am the wrong person than for you to work it out."
       />
 
-      <div className="mx-auto max-w-5xl">
-        <ul className="border-t border-border">
-          {audiences.map((audience, i) => (
-            <Reveal
-              as="li"
-              key={audience.who}
-              delay={i * 0.05}
-              className={cn(
-                "group grid gap-3 border-b border-border py-7 transition-colors hover:bg-accent-soft/40 md:grid-cols-12 md:items-baseline md:gap-8 md:px-4 md:py-8",
-                "primary" in audience && "bg-accent-soft/50 hover:bg-accent-soft",
-              )}
-            >
-              <span className="flex items-center gap-4 md:col-span-2">
-                <span className="font-display text-[0.875rem] font-semibold text-accent tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {"primary" in audience && <span className="ds-chip ds-chip-accent">Best fit</span>}
-              </span>
-
-              <div className="md:col-span-6">
-                <h3 className="ds-title text-[1.0625rem] transition-colors group-hover:text-accent">
-                  {audience.who}
-                </h3>
-                <p className="ds-body-sm mt-2">{audience.detail}</p>
-              </div>
-
+<ul className="grid gap-5 lg:grid-cols-3">
+        {audiences.map((audience, i) => {
+          const primary = "primary" in audience;
+          return (
+            <Reveal as="li" key={audience.who} delay={i * 0.06} className="h-full">
               <Link
                 href={audience.href}
-                className="ds-link md:col-span-4 md:justify-end md:text-right"
+                data-track="cta_click"
+                data-track-label={`audience:${audience.href.replace("/services/", "")}`}
+                className={cn(
+                  "group flex h-full flex-col rounded-[1.75rem] p-7 transition-[background-color] duration-200 md:p-9",
+                  primary ? "bg-surface-blue" : "bg-card hover:bg-surface-2",
+                )}
               >
-                {audience.label}
-                <ArrowIcon className="h-3.5 w-3.5" />
+                <span className="flex items-center justify-between">
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "font-display text-[0.9375rem] font-medium tabular-nums",
+                      primary ? "text-accent" : "text-ink-soft",
+                    )}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {primary && (
+                    <span className="rounded-full bg-bg px-3 py-1 text-[0.75rem] font-medium text-accent">
+                      Best fit
+                    </span>
+                  )}
+                </span>
+
+                <h3 className="ds-h3 mt-6">{audience.who}</h3>
+                <p className="ds-body-sm mt-3">{audience.detail}</p>
+
+                <span className="mt-auto inline-flex items-center gap-2 pt-8 text-[0.9375rem] font-medium text-accent transition-colors group-hover:text-accent-hover">
+                  {audience.label}
+                  <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                </span>
               </Link>
             </Reveal>
-          ))}
+          );
+        })}
         </ul>
-      </div>
     </Section>
   );
 }
@@ -98,7 +104,7 @@ export function Principles({
                 <span className="flex items-baseline gap-4 md:col-span-1">
                   <span
                     aria-hidden
-                    className="font-display text-[0.875rem] font-semibold text-ink-soft tabular-nums transition-colors group-hover:text-accent"
+                    className="font-display text-[0.875rem] font-medium text-ink-soft tabular-nums transition-colors group-hover:text-accent"
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>

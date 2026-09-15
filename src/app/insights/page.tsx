@@ -35,6 +35,7 @@ export default function InsightsPage() {
         <InsightsList />
 
         <CtaBand
+          navy
           tone="soft"
           heading="Have the situation one of these describes?"
           body="Send the site, the repo or a description of the problem. I will tell you honestly what I would do first."
