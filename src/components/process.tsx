@@ -7,20 +7,20 @@ import { Reveal } from "./ui";
 type ProcessStep = { step: string; detail: string; benefit?: string };
 
 /**
- * The five-step process, now a working stepper.
+ * The five-step process — scroll-driven stepper with a progress track.
  *
- * The numbered badges double as a progress indicator: as the section scrolls
- * through the viewport centre, the active step lights in sequence (accent) so
- * the timeline visibly "advances" instead of sitting static. One scroll value
- * drives all five badges, so it reads correctly whether the steps are a
- * single horizontal row (desktop) or stacked vertically (mobile).
+ * Desktop: five columns with a horizontal progress line behind them.
+ * Active step gets a subtle accent fill and the progress line advances.
+ * Mobile: stacked cards with a vertical progress track on the left edge.
  *
- * Each step is an index cell rather than a card: the numeral stands alone at
- * display scale above a hairline, then the name and detail run beneath it.
+ * Each step shows the benefit in an accent-bordered callout — the buyer
+ * reads "what I do" first (the heading), and "what you get" immediately
+ * after without scanning separate sections.
  */
 export function ProcessSteps({ steps }: { steps: readonly ProcessStep[] }) {
   const olRef = useRef<HTMLOListElement>(null);
   const [active, setActive] = useState(-1);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const root = olRef.current;
@@ -32,13 +32,13 @@ export function ProcessSteps({ steps }: { steps: readonly ProcessStep[] }) {
       const rect = root.getBoundingClientRect();
       const vh = window.innerHeight || 1;
       const total = rect.height + vh;
-      /* 0 → 1 across the whole pass: the section entering at the bottom of the
-         viewport through to leaving at the top. */
-      const progress = Math.min(1, Math.max(0, (vh - rect.top) / total));
+      const p = Math.min(1, Math.max(0, (vh - rect.top) / total));
+      setProgress(p);
+
       const next =
-        progress >= 1
+        p >= 1
           ? steps.length - 1
-          : Math.min(steps.length - 1, Math.floor(progress * steps.length));
+          : Math.min(steps.length - 1, Math.floor(p * steps.length));
       setActive((prev) => (prev === next ? prev : next));
     };
 
@@ -58,47 +58,71 @@ export function ProcessSteps({ steps }: { steps: readonly ProcessStep[] }) {
   }, [steps.length]);
 
   return (
-    <ol ref={olRef} className="md:grid md:grid-cols-5 md:gap-8">
-      {steps.map((s, i) => {
-        const isActive = active === i;
-        return (
-          <Reveal
-            as="li"
-            key={s.step}
-            delay={i * 0.04}
-            className="relative pb-8 md:pb-0"
-          >
-            <span
-              aria-hidden
-              className={cn(
-                "font-display text-[2.5rem] leading-none font-medium tracking-[-0.02em] transition-colors duration-300",
-                isActive ? "text-accent" : "text-border",
-              )}
+    <div className="relative">
+      {/* Desktop: horizontal track */}
+      <div className="absolute top-[26px] left-0 right-0 hidden h-px bg-border md:block" />
+      <div
+        className="absolute top-[26px] left-0 hidden h-px bg-accent transition-all duration-300 md:block"
+        style={{ width: `${(progress * 100)}%` }}
+      />
+
+      {/* Mobile: vertical track */}
+      <div className="absolute top-0 bottom-0 left-[19px] w-px bg-border md:hidden" />
+      <div
+        className="absolute top-0 left-[19px] w-px bg-accent transition-all duration-300 md:hidden"
+        style={{ height: `${(progress * 100)}%` }}
+      />
+
+      <ol ref={olRef} className="md:grid md:grid-cols-5 md:gap-8">
+        {steps.map((s, i) => {
+          const isActive = active === i;
+          return (
+            <Reveal
+              as="li"
+              key={s.step}
+              delay={i * 0.04}
+              className="relative pb-10 md:pb-0"
             >
-              {String(i + 1).padStart(2, "0")}
-            </span>
+              {/* Step number badge */}
+              <div
+                className={cn(
+                  "relative z-10 mb-4 flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 md:h-13 md:w-13",
+                  isActive
+                    ? "border-accent bg-accent text-accent-fg shadow-[0_0_0_4px_var(--color-accent-soft)]"
+                    : "border-border bg-surface text-fg-subtle",
+                )}
+              >
+                <span
+                  className={cn(
+                    "font-display text-[1.125rem] font-semibold tabular-nums transition-colors",
+                    isActive ? "text-accent-fg" : "",
+                  )}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
 
-            <span
-              aria-hidden
-              className={cn(
-                "mt-3 block h-px w-10 transition-colors duration-300",
-                isActive ? "bg-accent" : "bg-border",
-              )}
-            />
+              {/* Step content */}
+              <div
+                className={cn(
+                  "rounded-xl px-5 py-4 transition-colors duration-300",
+                  isActive ? "bg-accent-soft/40" : "",
+                )}
+              >
+                <h3 className="ds-title-sm">{s.step}</h3>
+                <p className="ds-body-sm mt-2">{s.detail}</p>
 
-            <div className="mt-4">
-              <h3 className="ds-title-sm">{s.step}</h3>
-              <p className="ds-body-sm mt-2">{s.detail}</p>
-              {s.benefit && (
-                <p className="mt-3 text-[0.8125rem] leading-relaxed text-ink">
-                  <span className="font-medium text-accent">You get&nbsp;</span>
-                  <span className="text-ink-muted">{s.benefit}</span>
-                </p>
-              )}
-            </div>
-          </Reveal>
-        );
-      })}
-    </ol>
+                {s.benefit && (
+                  <p className="ds-body-sm mt-3 border-l-2 border-accent pl-4">
+                    <span className="font-semibold text-accent">You get </span>
+                    <span className="text-fg-muted">{s.benefit}</span>
+                  </p>
+                )}
+              </div>
+            </Reveal>
+          );
+        })}
+      </ol>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { hero, site } from "@/content/site";
 import { ArrowIcon, Reveal } from "./ui";
+import { GridOverlay } from "./grid-overlay";
 
 /**
  * Hero — compact first screen, no longer 100svh.
@@ -12,7 +13,9 @@ import { ArrowIcon, Reveal } from "./ui";
  */
 export function Hero() {
   return (
-    <section className="ds-grid-lines relative overflow-hidden border-b border-border bg-bg pt-32 pb-16 md:pt-40 md:pb-20 lg:pb-24">
+    <section className="relative overflow-hidden border-b border-border bg-bg pt-32 pb-16 md:pt-40 md:pb-20 lg:pb-24">
+      {/* Animated grid + cursor glow background */}
+      <GridOverlay />
       {/* Ambient accent glow */}
       <div
         aria-hidden

@@ -4,6 +4,7 @@ import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { Accordion } from "./ds/accordion";
 import { Reveal } from "./motion";
+import { GridOverlay } from "./grid-overlay";
 
 export { Reveal } from "./motion";
 export { cn } from "@/lib/cn";
@@ -220,17 +221,21 @@ export function BrandMark({ className }: { className?: string }) {
   return (
     <span aria-hidden className={cn("relative block shrink-0", className)}>
       <svg viewBox="0 0 40 40" className="h-full w-full">
-        <rect width="40" height="40" rx="10" className="fill-accent" />
+        <rect width="40" height="40" rx="9" className="fill-accent" />
         <g
           stroke="var(--color-accent-fg)"
-          strokeWidth="2.4"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
         >
-          <path d="M8.5 12.5 12.5 26.5 16.5 17.5 20.5 26.5 24.5 12.5" />
-          <path d="M13.6 10.6 16.5 8 19.4 10.6" />
+          <path d="M8 13v13l4.2-11.5 4.3 9 4.3-9 4.2 11.5V13" />
         </g>
+        <path
+          d="M13.1 9.4 16.5 13.6 19.9 9.4z"
+          fill="var(--color-accent-fg)"
+          stroke="none"
+        />
       </svg>
     </span>
   );
@@ -250,14 +255,14 @@ export function Wordmark({
   role?: string;
 }) {
   return (
-    <span className="flex items-center gap-3">
+    <span className="flex items-center gap-2.5">
       <BrandMark className="h-9 w-9" />
       <span className="flex flex-col leading-none">
-        <span className="font-display text-[0.9375rem] font-semibold tracking-[-0.005em] text-ink">
+        <span className="font-display text-[1rem] font-semibold tracking-[-0.01em] text-fg">
           Wahab Ansari
         </span>
         {!compact && (
-          <span className="ds-meta mt-1.5 hidden text-[0.6875rem] sm:block">
+          <span className="ds-meta mt-1 hidden text-[0.6875rem] sm:block">
             {role ?? site.role}
           </span>
         )}
@@ -622,7 +627,8 @@ export function PageHeader({
   aside?: ReactNode;
 }) {
   return (
-  <section className="ds-grid-lines relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
+  <section className="relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
+  <GridOverlay />
   <div className="ds-container relative">
   {trail && <Breadcrumbs trail={trail} />}
 

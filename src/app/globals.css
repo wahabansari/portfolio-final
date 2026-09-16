@@ -467,7 +467,7 @@ html[data-theme="dark"] {
 /* ── Container ───────────────────────────────────────────────────────── */
 .ds-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1320px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 24px;
@@ -531,16 +531,24 @@ html[data-theme="dark"] {
   color: var(--color-deep-text);
 }
 
-/* Grid lines — hero bands and inner page headers. 40px cadence, nearly
-   invisible. Applied as a plain background so it NEVER masks child content:
-   the earlier version masked the whole section with a radial fade, which
-   dimmed CTA buttons sitting on the band. Lines stay put behind the
-   content; no layout or painting side effects. */
+/* Grid lines — hero bands and inner page headers. 24px cadence, nearly
+   invisible, with a slow "breathing" opacity cycle so the bands feel alive
+   without moving content. Applied as a plain background so it NEVER masks
+   child content (the earlier masked version dimmed CTA buttons). Cursor
+   glow is layered on top by <GridOverlay>, not by this class. */
 .ds-grid-lines {
   background-image:
     linear-gradient(to right, var(--color-grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--color-grid-line) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-size: 24px 24px;
+  animation: grid-breathe 8s ease-in-out infinite;
+}
+@keyframes grid-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.72; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-grid-lines { animation: none; }
 }
 
 /* ── Hairline ────────────────────────────────────────────────────────── */

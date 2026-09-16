@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { ArrowIcon } from "@/components/ui";
 import { services } from "@/content/services";
 import { caseStudies } from "@/content/work";
+import { GridOverlay } from "@/components/grid-overlay";
 
 /**
  * A real 404.
@@ -28,7 +29,8 @@ export default function NotFound() {
  <>
  <Nav />
  <main id="main">
-<section className="ds-grid-lines relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
+<section className="relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
+<GridOverlay />
 <span aria-hidden className="ds-grid-field pointer-events-none absolute inset-0" />
 <div className="ds-container relative">
  <span className="ds-overline">404</span>

@@ -3,12 +3,12 @@ import { byRequest, capabilities } from "@/content/site";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
 /**
- * Capabilities as a full-width ledger.
+ * Capabilities as a card grid.
  *
- * Each group is a hairline row: mono index on the left, the category at
- * display scale, the plain description, and the ranked inventory — lead items
- * as mono labels, the supporting stack as a secondary line — on the right.
- * The hierarchy is visible in one pass: what I lead with, and what supports it.
+ * Each group is a real card: three-beat hierarchy instead of a flat ledger.
+ * Title → summary → lead items as accent chips → supporting inventory as a
+ * quiet "Also" footnote. The numbered corner keeps the scanning cue of the
+ * old index without the table feel.
  */
 export function Capabilities({
   tone = "plain",
@@ -23,43 +23,37 @@ export function Capabilities({
         <SectionHeading
           overline="Capabilities"
           title="What I am actually deep in"
-          description="Grouped by what it does rather than listed alphabetically. The first line of each group is the part I would want to be judged on; the second is the supporting inventory."
+          description="Grouped by what it does rather than listed alphabetically. The chips are what I would want to be judged on; the line below them is the supporting inventory."
         />
       )}
 
-      <ul className="border-t border-border">
+      <ul className="grid gap-5 md:grid-cols-2">
         {capabilities.map((group, i) => (
-          <Reveal as="li" key={group.title} delay={i * 0.04}>
-            <div className="grid items-start gap-x-8 gap-y-4 border-b border-border py-8 md:grid-cols-12 md:py-10">
-              <span className="md:col-span-1 md:pl-2">
-                <span className="font-display text-[1.25rem] font-medium text-ink-soft tabular-nums">
+          <Reveal as="li" key={group.title} delay={i * 0.04} className="h-full">
+            <div className="ds-card flex h-full flex-col p-6 md:p-7">
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="ds-h3">{group.title}</h3>
+                <span className="ds-meta tabular-nums">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-              </span>
-
-              <h3 className="font-display text-[1.375rem] leading-snug font-medium tracking-[-0.014em] text-ink md:col-span-3 md:text-[1.5rem]">
-                {group.title}
-              </h3>
-
-              <p className="text-[0.875rem] leading-relaxed text-ink-muted md:col-span-3">
-                {group.summary}
-              </p>
-
-              <div className="md:col-span-5">
-                <ul className="flex flex-wrap gap-x-3 gap-y-2">
-                  {group.lead.map((item) => (
-                    <li
-                      key={item}
-                      className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-accent"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-3 text-[0.8125rem] leading-relaxed text-ink-soft">
-                  {group.support.join(" · ")}
-                </p>
               </div>
+
+              <p className="ds-body-sm mt-2">{group.summary}</p>
+
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {group.lead.map((item) => (
+                  <li key={item} className="ds-chip ds-chip-accent">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <p className="ds-meta mt-auto pt-5 border-t border-border">
+                <span className="inline-block text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-fg-subtle">
+                  Also&nbsp;
+                </span>
+                {group.support.join(" · ")}
+              </p>
             </div>
           </Reveal>
         ))}
@@ -68,7 +62,7 @@ export function Capabilities({
       {/* The honest footnote: capabilities that are real but are not what I
           lead with commercially. Kept visible so nobody has to guess. */}
       <Reveal delay={0.1} className="mt-8">
-        <div className="flex flex-col gap-4 border-t border-border pt-6 md:flex-row md:items-center md:justify-between md:gap-8">
+        <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface px-6 py-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="ds-meta">Also available, by request</p>
             <p className="ds-body-sm mt-2">{byRequest.join(" · ")}</p>
