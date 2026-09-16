@@ -21,11 +21,21 @@
   --c-border-subtle: #f0f1f3;
   --c-fg: #111827;
   --c-fg-muted: #4b5563;
-  --c-fg-subtle: #9ca3af;
+  /* Was #9ca3af — 2.43:1 on this background, badly failing WCAG AA (4.5:1)
+     for what is genuinely-read metadata text (location, timezone, labels),
+     not decoration. Lighthouse only surfaces the dark-theme half of this;
+     this half is the one most visitors actually see. */
+  --c-fg-subtle: #606876;
   --c-fg-softest: #d1d5db;
   --c-accent: #5b50d8;
   --c-accent-hover: #4a41c7;
   --c-accent-deep: #4338ca;
+  /* Hover state for accent-deep specifically (the filled-button background),
+     kept separate from --c-accent-hover: that token is also used as a hover
+     *text* colour elsewhere (contact.tsx), where a lighter shift reads as an
+     emphasis effect against a dark band — the opposite direction a button
+     fill needs to stay readable under white text. */
+  --c-accent-deep-hover: #3b31b8;
   --c-accent-soft: rgba(91, 80, 216, 0.1);
   --c-accent-fg: #ffffff;
   --c-accent-hairline: #dbd6ff;
@@ -46,11 +56,14 @@ html[data-theme="dark"] {
   --c-border-subtle: #161a22;
   --c-fg: #edeff2;
   --c-fg-muted: #a2a8b5;
-  --c-fg-subtle: #6a7080;
+  /* Was #6a7080 — 3.93:1 on --c-bg, failing AA. This is what Lighthouse's
+     headless run (defaults to dark) actually caught. */
+  --c-fg-subtle: #818797;
   --c-fg-softest: #4d5360;
   --c-accent: #7b74ff;
   --c-accent-hover: #9a94ff;
   --c-accent-deep: #4c45cc;
+  --c-accent-deep-hover: #3d35c2;
   --c-accent-soft: rgba(123, 116, 255, 0.12);
   --c-accent-fg: #ffffff;
   --c-accent-hairline: rgba(123, 116, 255, 0.4);
@@ -82,6 +95,7 @@ html[data-theme="dark"] {
   --color-accent: var(--c-accent);
   --color-accent-hover: var(--c-accent-hover);
   --color-accent-deep: var(--c-accent-deep);
+  --color-accent-deep-hover: var(--c-accent-deep-hover);
   --color-accent-soft: var(--c-accent-soft);
   --color-accent-fg: var(--c-accent-fg);
   --color-accent-hairline: var(--c-accent-hairline);
@@ -267,11 +281,17 @@ body {
 }
 
 .ds-btn-primary {
-  background-color: var(--color-accent);
+  /* accent-deep, not accent: the dark-theme accent (#7b74ff) is tuned to read
+     well as text/links on a near-black page, which makes it too light to
+     carry white text at 4.5:1 as a fill (measured 3.63:1 — Lighthouse
+     caught this). accent-deep already exists with per-theme values suited
+     to exactly this job (white text on a filled accent): 7.9:1 light,
+     6.93:1 dark. */
+  background-color: var(--color-accent-deep);
   color: var(--color-accent-fg);
 }
 .ds-btn-primary:hover {
-  background-color: var(--color-accent-hover);
+  background-color: var(--color-accent-deep-hover);
   transform: scale(1.02);
 }
 

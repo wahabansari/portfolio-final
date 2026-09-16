@@ -59,7 +59,6 @@ export function Nav() {
         <Link
           href={localeHref("/")}
           data-track="nav_logo"
-          aria-label="Home"
           className="relative text-[1.0625rem] font-semibold tracking-[-0.02em] text-fg"
         >
           {site.shortName}
