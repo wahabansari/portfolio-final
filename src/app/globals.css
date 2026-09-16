@@ -226,7 +226,17 @@ html[data-theme="dark"] {
   }
 
   html {
-    scroll-behavior: smooth;
+    /* Deliberately NOT smooth. Next.js's App Router does a scrollTo(0, 0) on
+       every navigation; with smooth scrolling that becomes an interruptible
+       animation rather than an instant jump, and if the incoming page's
+       height is still settling (PageTransition remounts {children} on a
+       short delay) the animation can end anywhere, including not moving at
+       all. Verified live: clicking the logo from scrollY 4000 landed the
+       visitor back at scrollY 4000 on the homepage — mid page, not the
+       hero. Anchor offset for in-page navigation is handled per-section via
+       scroll-mt-20 on .ds-section, so nothing here needs to compensate for
+       removing this. */
+    scroll-behavior: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -681,27 +691,9 @@ html.js-motion [data-reveal="shown"] {
   }
 }
 
-/* ── Header entrance ──────────────────────────────────────────────────────
-   A slide-down reveal on mount/navigation, put directly on <header> itself
-   rather than on a wrapping ancestor. This is the safe version of the
-   transform that used to live on .page-enter: a transform on the fixed
-   element's own box doesn't touch its containing block the way a transform
-   on one of its ANCESTORS does — that ancestor case is exactly what broke
-   position: fixed in the previous bug. Header remains genuinely fixed to
-   the viewport throughout; only its own box slides. */
-.header-enter {
-  animation: header-slide-down 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes header-slide-down {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
+/* Header motion lives entirely as a Tailwind transition on .translate-y-0 /
+   .-translate-y-1.5 in nav.tsx now, driven by the `scrolled` boolean rather
+   than a mount keyframe — see the comment there for why. */
 
 /* ── Spotlight open animation ─────────────────────────────────────────────
    Backdrop fades in; the panel settles from a slightly smaller, lower

@@ -101,13 +101,18 @@ export function Nav() {
   return (
     <header
       className={cn(
-        "header-enter fixed inset-x-0 top-0 z-50 transition-all duration-200",
+        /* The slide is tied to the `scrolled` state change, not to mount —
+           a CSS transition only ever plays in response to a property
+           actually changing, never on first render, so there's nothing to
+           see at the top of a freshly loaded page. Scrolling past the
+           threshold is the only thing that moves it. */
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-out",
         scrolled
-          ? "bg-surface backdrop-blur-md shadow-[0_6px_20px_-12px_rgba(28,23,18,0.25)] border-b border-border"
-          : "bg-transparent shadow-none border-b border-transparent",
+          ? "translate-y-0 bg-surface backdrop-blur-md shadow-[0_6px_20px_-12px_rgba(28,23,18,0.25)] border-b border-border"
+          : "-translate-y-1.5 bg-transparent shadow-none border-b border-transparent",
       )}
     >
-      <div className="ds-container flex h-[4.25rem] items-center justify-between gap-4 md:gap-6">
+      <div className="ds-container flex h-17 items-center justify-between gap-4 md:gap-6">
         {/* Wordmark */}
         <Link
           href={localeHref("/")}
@@ -157,7 +162,7 @@ export function Nav() {
                   </button>
                   <div
                     className={cn(
-                      "absolute left-0 top-full z-50 mt-0.5 min-w-[280px] rounded-xl border border-border bg-bg/95 backdrop-blur-md shadow-[0_12px_32px_-12px_rgba(28,23,18,0.25)] py-2 transition-all duration-200 ease-out",
+                      "absolute left-0 top-full z-50 mt-0.5 min-w-70 rounded-xl border border-border bg-bg/95 backdrop-blur-md shadow-[0_12px_32px_-12px_rgba(28,23,18,0.25)] py-2 transition-all duration-200 ease-out",
                       servicesOpen
                         ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
                         : "opacity-0 scale-y-95 translate-y-1 pointer-events-none",
