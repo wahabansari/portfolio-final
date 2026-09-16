@@ -681,6 +681,28 @@ html.js-motion [data-reveal="shown"] {
   }
 }
 
+/* ── Header entrance ──────────────────────────────────────────────────────
+   A slide-down reveal on mount/navigation, put directly on <header> itself
+   rather than on a wrapping ancestor. This is the safe version of the
+   transform that used to live on .page-enter: a transform on the fixed
+   element's own box doesn't touch its containing block the way a transform
+   on one of its ANCESTORS does — that ancestor case is exactly what broke
+   position: fixed in the previous bug. Header remains genuinely fixed to
+   the viewport throughout; only its own box slides. */
+.header-enter {
+  animation: header-slide-down 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes header-slide-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* ── Spotlight open animation ─────────────────────────────────────────────
    Backdrop fades in; the panel settles from a slightly smaller, lower
    position — a command-palette feel rather than a static pop. */
