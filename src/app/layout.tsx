@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Inter } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { en } from "@/content";
 import * as siteEn from "@/content/en/site";
@@ -10,6 +10,7 @@ import { TrackClicks } from "@/components/analytics";
 import { Gtm } from "@/components/gtm";
 import { Spotlight } from "@/components/spotlight";
 import { buildSearchIndex } from "@/lib/search-index";
+import { PageTransition } from "@/components/page-transition";
 
 /*
  * Two voices, one hierarchy. Bricolage Grotesque display, Inter body.
@@ -28,12 +29,6 @@ const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
   subsets: ["latin"],
   axes: ["opsz"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
   display: "swap",
 });
 
@@ -102,24 +97,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       dir="ltr"
-      className={`${bricolage.variable} ${inter.variable}`}
+      className={`${bricolage.variable}`}
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="antialiased">
-        <LocaleProvider
+<LocaleProvider
           locale="en"
           content={{ site: en.site }}
         >
+          <PageTransition>
+            {children}
+          </PageTransition>
           <a
             href="#main"
             className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-accent focus:px-5 focus:py-3 focus:text-white"
           >
             Skip to content
           </a>
-          {children}
           <Gtm />
           <TrackClicks />
           <SpeedInsights />

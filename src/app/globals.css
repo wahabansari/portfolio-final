@@ -114,13 +114,11 @@ html[data-theme="dark"] {
 }
 
 @theme inline {
-  /* ── Typography — Bricolage Grotesque display, Inter body/UI ──────── */
-  /* The brief's pairing rule: Bricolage reserved for display hierarchy,
-     a neutral readable sans (Inter) for everything that is read at length
-     or clicked. Bricolage still carries the overlines/labels where they
-     sit at display scale; Inter owns paragraphs, buttons and fields. */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* ── Typography — Bricolage Grotesque everywhere (display + body) ───── */
+  /* Single font family throughout. Variable opsz axis redraws letterforms
+     by size; wght 200-800 carries all hierarchy. No Inter fallback. */
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
@@ -531,11 +529,12 @@ html[data-theme="dark"] {
   color: var(--color-deep-text);
 }
 
-/* Grid lines — hero bands and inner page headers. 24px cadence, nearly
-   invisible, with a slow "breathing" opacity cycle so the bands feel alive
-   without moving content. Applied as a plain background so it NEVER masks
-   child content (the earlier masked version dimmed CTA buttons). Cursor
-   glow is layered on top by <GridOverlay>, not by this class. */
+/* Grid lines — the hero band only (inner page headers are grid-free).
+   24px cadence, nearly invisible, with a slow "breathing" opacity cycle so
+   the band feels alive without moving content. Applied as a plain background
+   so it NEVER masks child content (the earlier masked version dimmed CTA
+   buttons). Cursor glow is layered on top by <GridOverlay>, not by this
+   class. */
 .ds-grid-lines {
   background-image:
     linear-gradient(to right, var(--color-grid-line) 1px, transparent 1px),
@@ -637,6 +636,53 @@ html.js-motion [data-reveal="shown"] {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* ── Page entrance ────────────────────────────────────────────────────────
+   A short fade + rise whenever the route changes. Applied by the
+   <PageTransition> wrapper (keyed on pathname) so it replays once per page
+   open without any JS beyond the remount. The global reduced-motion rule
+   below clamps it to an instant. */
+.page-enter {
+  animation: page-enter 0.36s ease-out both;
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Spotlight open animation ─────────────────────────────────────────────
+   Backdrop fades in; the panel settles from a slightly smaller, lower
+   position — a command-palette feel rather than a static pop. */
+.spotlight-backdrop {
+  animation: fade-in 0.18s ease-out both;
+}
+.spotlight-panel {
+  animation: dialog-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.965) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 

@@ -99,8 +99,8 @@ export const services: Service[] = [
 
   {
     slug: "frontend-product-engineering",
-    title: "Frontend Product Engineering",
-    shortTitle: "Frontend engineering",
+    title: "React & Next.js Development",
+    shortTitle: "React / Next.js",
     eyebrow: "Core offering",
     tier: "core",
     metaTitle: "Hire a React & Next.js Developer",
@@ -408,7 +408,7 @@ export const services: Service[] = [
 
   {
     slug: "performance-engineering",
-    title: "Performance Engineering",
+    title: "Web Performance & Core Web Vitals",
     shortTitle: "Performance",
     eyebrow: "Measured, not promised",
     tier: "modernize",
@@ -770,8 +770,8 @@ export const services: Service[] = [
 
   {
     slug: "agency-frontend-development",
-    title: "Agency / White-Label Frontend",
-    shortTitle: "Agency partnership",
+    title: "White-Label & Agency Development",
+    shortTitle: "For agencies",
     eyebrow: "Under your brand",
     tier: "partnership",
     metaTitle: "White-Label React & Next.js for Agencies",
@@ -898,7 +898,7 @@ export const services: Service[] = [
 
   {
     slug: "saas-product-development",
-    title: "SaaS & MVP Product Development",
+    title: "SaaS & MVP Development",
     shortTitle: "SaaS & MVP",
     eyebrow: "Idea to production",
     tier: "core",
@@ -1027,7 +1027,7 @@ export const services: Service[] = [
 
   {
     slug: "ai-product-integration",
-    title: "AI Product Integration",
+    title: "AI Integration for Web Products",
     shortTitle: "AI integration",
     eyebrow: "Practical AI features",
     tier: "partnership",

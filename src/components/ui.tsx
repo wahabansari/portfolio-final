@@ -4,7 +4,6 @@ import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { Accordion } from "./ds/accordion";
 import { Reveal } from "./motion";
-import { GridOverlay } from "./grid-overlay";
 
 export { Reveal } from "./motion";
 export { cn } from "@/lib/cn";
@@ -124,12 +123,20 @@ export function DownloadIcon({ className }: { className?: string }) {
 }
 
 export function SearchIcon({ className }: { className?: string }) {
- return (
- <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
- <circle cx="11" cy="11" r="7" />
- <path d="m20 20-3.5-3.5" />
- </svg>
- );
+  return (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+  <circle cx="11" cy="11" r="7" />
+  <path d="m20 20-3.5-3.5" />
+  </svg>
+  );
+}
+
+export function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+  <path d="M6 9l6 6 6-6" />
+  </svg>
+  );
 }
 
 export function CheckIcon({ className }: { className?: string }) {
@@ -204,11 +211,103 @@ export function GithubIcon({ className }: { className?: string }) {
 }
 
 export function LinkedinIcon({ className }: { className?: string }) {
- return (
- <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
- <path d="M4.98 3.5A2.5 2.5 0 0 0 2.5 6a2.5 2.5 0 0 0 2.48 2.5A2.5 2.5 0 0 0 7.5 6a2.5 2.5 0 0 0-2.52-2.5zM3 9h4v12H3V9zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21H9V9z" />
- </svg>
- );
+  return (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+  <path d="M4.98 3.5A2.5 2.5 0 0 0 2.5 6a2.5 2.5 0 0 0 2.48 2.5A2.5 2.5 0 0 0 7.5 6a2.5 2.5 0 0 0-2.52-2.5zM3 9h4v12H3V9zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.4c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21H9V9z" />
+  </svg>
+  );
+}
+
+/* ── Content icons ─────────────────────────────────────────────────────────
+   16px stroke icons used across section cards (capabilities, services,
+   process, engagement). Feather-family geometry: round caps, 2 stroke, thin
+   open forms that sit quietly inside accent-soft tiles. */
+
+export function LayersIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="m12 3 9 5-9 5-9-5 9-5z" />
+      <path d="m3.5 13.5 8.5 4.7 8.5-4.7" />
+      <path d="m3.5 17.5 8.5 4.7 8.5-4.7" />
+    </svg>
+  );
+}
+
+export function LayoutIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 9h18M9 9v11" />
+    </svg>
+  );
+}
+
+export function RefreshIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M21 12a9 9 0 1 1-2.6-6.4" />
+      <path d="M21 3v6h-6" />
+    </svg>
+  );
+}
+
+export function SparklesIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z" />
+      <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z" />
+    </svg>
+  );
+}
+
+export function ServerIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <rect x="3" y="4" width="18" height="7" rx="2" />
+      <rect x="3" y="13" width="18" height="7" rx="2" />
+      <path d="M7 7.5h.01M7 16.5h.01" />
+    </svg>
+  );
+}
+
+export function RocketIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+      <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+    </svg>
+  );
+}
+
+export function BriefcaseIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <rect x="2" y="7" width="20" height="14" rx="2" />
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+    </svg>
+  );
+}
+
+export function UsersIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+export function CompassIcon({ className }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m15.5 8.5-2 5-5 2 2-5 5-2z" />
+    </svg>
+  );
 }
 
 /* ── Brand mark ─────────────────────────────────────────────────────────────
@@ -608,9 +707,12 @@ export function Breadcrumbs({ trail }: { trail: Crumb[] }) {
 }
 
 /**
- * The header band every inner page opens with. Breadcrumbs, eyebrow, the one
- * h1, its value proposition, and the page's dominant action — on the soft
+ * The header band every inner page opens with. Breadcrumbs, an eyebrow, the
+ * one h1, its value proposition, and the page's dominant action — on the soft
  * band, so the page has a distinct head and body.
+ *
+ * Visual parity with the homepage hero: subtle grid cadence, accent bloom,
+ * and a quiet watermark so inner pages don't feel flat.
  */
 export function PageHeader({
   trail,
@@ -630,37 +732,67 @@ export function PageHeader({
   aside?: ReactNode;
 }) {
   return (
-  <section className="relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
-  <GridOverlay />
-  <div className="ds-container relative">
-  {trail && <Breadcrumbs trail={trail} />}
+    <section className="relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
+      {/* Subtle grid cadence — static, no breathing animation on inner pages */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 ds-grid-lines opacity-50" style={{ animation: "none" }} />
+      {/* Accent wash raining off the top edge */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-accent-line/50 to-transparent"
+      />
+      {/* Soft corner bloom (like hero) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-32 -right-20 h-80 w-80 rounded-full blur-[110px]"
+        style={{ background: "var(--color-glow)" }}
+      />
+      {/* Quiet watermark — site short name */}
+      <span
+        aria-hidden
+        className="ds-watermark absolute -bottom-8 right-0 text-[clamp(6rem,20vw,18rem)] md:right-8"
+      >
+        W.A.
+      </span>
 
- <div className={cn("grid gap-10 lg:grid-cols-12 lg:gap-16", trail && "mt-8")}>
- <div className={aside ? "lg:col-span-7" : "lg:col-span-9"}>
- {eyebrow && <span className="ds-overline">{eyebrow}</span>}
- <h1 className={cn("ds-h1", eyebrow && "mt-5")}>{title}</h1>
- {lede && <p className="ds-lede mt-6">{lede}</p>}
+      <div className="ds-container relative">
+        {trail && (
+          <div className="flex items-center gap-3">
+            <span aria-hidden className="h-2 w-2 shrink-0 rounded-[3px] bg-accent" />
+            <Breadcrumbs trail={trail} />
+          </div>
+        )}
 
- {intro && (
- <div className=" mt-6 space-y-4">
- {intro.map((p) => (
- <p key={p} className="ds-body">
- {p}
- </p>
- ))}
- </div>
- )}
+        <div className={cn("grid gap-10 lg:grid-cols-12 lg:gap-16", trail && "mt-9")}>
+          <div className={cn("max-w-3xl", aside ? "lg:col-span-7" : "lg:col-span-9")}>
+            {eyebrow && (
+              <span className="mb-6 flex items-center gap-3">
+                <span aria-hidden className="h-px w-9 shrink-0 bg-accent" />
+                <span className="ds-overline-accent">{eyebrow}</span>
+              </span>
+            )}
+            <h1 className={cn("ds-h1", !eyebrow && "max-w-2xl")}>{title}</h1>
+            {lede && <p className="ds-lede mt-6 max-w-2xl">{lede}</p>}
 
- {actions && (
- <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">{actions}</div>
- )}
- </div>
+            {intro && (
+              <div className="mt-6 space-y-4">
+                {intro.map((p) => (
+                  <p key={p} className="ds-body">
+                    {p}
+                  </p>
+                ))}
+              </div>
+            )}
 
- {aside && <div className="lg:col-span-5">{aside}</div>}
- </div>
- </div>
- </section>
- );
+            {actions && (
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">{actions}</div>
+            )}
+          </div>
+
+          {aside && <div className="lg:col-span-5">{aside}</div>}
+        </div>
+      </div>
+    </section>
+  );
 }
 
 /**

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { useContent, useLocaleHref } from "./locale-provider";
 import { ThemeToggle } from "./theme-toggle";
-import { ArrowIcon, BrandMark } from "./ui";
+import { ArrowIcon, BrandMark, ChevronDownIcon } from "./ui";
 
 function subscribeToScroll(callback: () => void) {
   window.addEventListener("scroll", callback, { passive: true });
@@ -20,6 +20,17 @@ function getScrollSnapshot() {
 function useScrolled() {
   return useSyncExternalStore(subscribeToScroll, getScrollSnapshot, () => false);
 }
+
+// Services for dropdown — keep in sync with src/content/en/services.ts
+const SERVICE_ITEMS = [
+  { slug: "frontend-product-engineering", label: "React & Next.js Development" },
+  { slug: "website-redesign-rebuild", label: "Website Redesign & Rebuild" },
+  { slug: "performance-engineering", label: "Web Performance & Core Web Vitals" },
+  { slug: "wordpress-to-nextjs-migration", label: "WordPress to Next.js Migration" },
+  { slug: "agency-frontend-development", label: "White-Label & Agency Development" },
+  { slug: "saas-product-development", label: "SaaS & MVP Development" },
+  { slug: "ai-product-integration", label: "AI Integration for Web Products" },
+] as const;
 
 /**
  * Header — 68px fixed bar.
@@ -38,28 +49,47 @@ export function Nav() {
   const { site } = useContent();
   const scrolled = useScrolled();
   const [open, setOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const servicesRef = useRef<HTMLDivElement>(null);
 
-  // Close the mobile panel whenever the route changes (React's recommended
-  // "adjusting state on prop change" pattern — no effect needed).
+  // Close all panels when route changes
   const [prevPathname, setPrevPathname] = useState(pathname);
   if (prevPathname !== pathname) {
     setPrevPathname(pathname);
     setOpen(false);
+    setServicesOpen(false);
+    setMobileServicesOpen(false);
   }
 
+  // Close mobile panel on Escape
   useEffect(() => {
     if (!open) return;
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
         e.preventDefault();
         setOpen(false);
+        setServicesOpen(false);
+        setMobileServicesOpen(false);
         triggerRef.current?.focus();
       }
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
+
+  // Close services dropdown on outside click
+  useEffect(() => {
+    if (!servicesOpen) return;
+    function onPointerDown(e: MouseEvent) {
+      if (servicesRef.current && !servicesRef.current.contains(e.target as Node)) {
+        setServicesOpen(false);
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [servicesOpen]);
 
   const links = [
     { label: "Work", href: localeHref("/work") },
@@ -95,6 +125,64 @@ export function Nav() {
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
           {links.map((link) => {
             const active = isActive(link.href);
+            if (link.label === "Services") {
+              return (
+                <div key={link.href} className="relative" ref={servicesRef}>
+                  <button
+                    type="button"
+                    onClick={() => setServicesOpen((v) => !v)}
+                    aria-expanded={servicesOpen}
+                    aria-haspopup="true"
+                    data-track="nav_services_toggle"
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-md px-3 py-2 text-[0.875rem] font-medium tracking-wide transition-colors duration-150",
+                      active || servicesOpen ? "text-fg" : "text-fg-muted hover:text-fg",
+                    )}
+                  >
+                    {link.label}
+                    <ChevronDownIcon className={cn("h-3.5 w-3.5 transition-transform", servicesOpen && "rotate-180")} />
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "absolute bottom-0.5 left-3 right-3 h-px bg-accent transition-all duration-200",
+                        active ? "scale-x-100" : "scale-x-0 origin-left",
+                      )}
+                    />
+                  </button>
+                  {servicesOpen && (
+                    <div
+                      className="absolute left-0 top-full z-50 mt-2 min-w-[220px] rounded-xl border border-border bg-bg/95 backdrop-blur-md shadow-[0_12px_32px_-12px_rgba(28,23,18,0.25)] py-2"
+                      role="menu"
+                      aria-label="Services"
+                    >
+                      {SERVICE_ITEMS.map((svc) => (
+                        <Link
+                          key={svc.slug}
+                          href={localeHref(`/services/${svc.slug}`)}
+                          data-track="nav_service"
+                          data-track-label={svc.slug}
+                          role="menuitem"
+                          className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-fg-muted hover:text-fg hover:bg-accent-soft/50 transition-colors"
+                        >
+                          {svc.label}
+                        </Link>
+                      ))}
+                      <hr className="my-2 border-border" />
+                      <Link
+                        href={localeHref("/services")}
+                        data-track="nav_service"
+                        data-track-label="all"
+                        role="menuitem"
+                        className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-accent hover:text-accent-hover"
+                      >
+                        View all services
+                        <ArrowIcon className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              );
+            }
             return (
               <Link
                 key={link.href}
@@ -187,6 +275,49 @@ export function Nav() {
           <nav className="ds-container flex flex-col py-2" aria-label="Mobile">
             {links.map((link) => {
               const active = isActive(link.href);
+              if (link.label === "Services") {
+                return (
+                  <div key={link.href}>
+                    <button
+                      type="button"
+                      onClick={() => setMobileServicesOpen((v) => !v)}
+                      aria-expanded={mobileServicesOpen}
+                      className={cn(
+                        "flex items-center justify-between w-full rounded-lg border-l-2 px-4 py-4 text-[1rem] font-medium transition-colors",
+                        active || mobileServicesOpen
+                          ? "border-l-accent text-fg bg-accent-soft"
+                          : "border-l-transparent text-fg-muted",
+                      )}
+                    >
+                      <span>{link.label}</span>
+                      <ChevronDownIcon className={cn("h-4 w-4 text-fg-subtle transition-transform", mobileServicesOpen && "rotate-180")} />
+                    </button>
+                    {mobileServicesOpen && (
+                      <div className="pl-6 pb-2 space-y-1 border-l-2 border-accent-soft ml-2">
+                        {SERVICE_ITEMS.map((svc) => (
+                          <Link
+                            key={svc.slug}
+                            href={localeHref(`/services/${svc.slug}`)}
+                            data-track="nav_service"
+                            data-track-label={svc.slug}
+                            className="block px-2 py-2 text-[0.9375rem] font-medium text-fg-muted hover:text-fg transition-colors"
+                          >
+                            {svc.label}
+                          </Link>
+                        ))}
+                        <Link
+                          href={localeHref("/services")}
+                          data-track="nav_service"
+                          data-track-label="all"
+                          className="block px-2 py-2 text-[0.9375rem] font-medium text-accent hover:text-accent-hover"
+                        >
+                          View all services
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
               return (
                 <Link
                   key={link.href}
