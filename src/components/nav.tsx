@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
@@ -8,17 +8,15 @@ import { useContent, useLocaleHref } from "./locale-provider";
 import { ThemeToggle } from "./theme-toggle";
 import { ArrowIcon, BrandMark, ChevronDownIcon } from "./ui";
 
-function subscribeToScroll(callback: () => void) {
-  window.addEventListener("scroll", callback, { passive: true });
-  return () => window.removeEventListener("scroll", callback);
-}
-
-function getScrollSnapshot() {
-  return window.scrollY > 4;
-}
-
-function useScrolled() {
-  return useSyncExternalStore(subscribeToScroll, getScrollSnapshot, () => false);
+function useScrolled(threshold = 4) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > threshold);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [threshold]);
+  return scrolled;
 }
 
 // Services for dropdown — keep in sync with src/content/en/services.ts
