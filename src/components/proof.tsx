@@ -23,10 +23,15 @@ export function ProofStrip({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
         {proof.map((item, i) => {
           const stat = (
             <>
+              {/* Coral, not the primary indigo, for the one verified figure —
+                  the brief's "optional second accent, data-visualization
+                  only" allowance. At 28px+ this clears WCAG's large-text
+                  3:1 threshold in both themes (3.66:1 light, 7.73:1 dark);
+                  it isn't used as body-sized text anywhere. */}
               <span
                 className={cn(
                   "block font-display text-[1.75rem] leading-none font-semibold tracking-[-0.02em] md:text-[2rem]",
-                  item.verified ? "text-accent" : "text-fg",
+                  item.verified ? "text-coral" : "text-fg",
                 )}
               >
                 {item.display}

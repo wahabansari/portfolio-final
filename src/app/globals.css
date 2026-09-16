@@ -1,11 +1,21 @@
 @import "tailwindcss";
 
 /*
- * Design System — Inter, light + dark themes.
+ * Design System v2 — Bricolage Grotesque, light + dark themes.
  *
- * One typeface (Inter, weight contrast = hierarchy). Monochrome base +
- * one indigo accent. No gradients except a reserved ambient glow, no
- * shadows, no radius beyond 8px. Generosity of space = premium.
+ * One typeface (Bricolage Grotesque, variable — opsz axis redraws letterforms
+ * by size, wght 200-800 carries all hierarchy: ~780 display, 550-600 labels
+ * and buttons, 400 body). Warm paper base, not cool grey — the master brief
+ * asks for "warm-white," and a warm base is also what actually reads as
+ * distinct from the previous cool-toned palette. One indigo-violet primary
+ * accent for links, CTAs and focus states; one warm coral kept strictly to
+ * data points and the odd illustrative highlight, per the brief's "optional
+ * second accent only for data visualization."
+ *
+ * Cards are real cards now: a 1px border plus a genuinely restrained shadow,
+ * per the brief's literal "white cards with subtle 1px border and very
+ * restrained shadow" — this replaces the previous fill-only, borderless,
+ * shadowless surface treatment site-wide.
  *
  * Raw tokens live on `--c-*`. `[data-theme="dark"]` overrides them; the
  * Tailwind utilities reference them through `@theme inline`, so every
@@ -14,72 +24,93 @@
 
 /* ── Raw tokens — light (default) ────────────────────────────────────── */
 :root {
-  --c-bg: #fafafa;
+  --c-bg: #faf8f4;
   --c-surface: #ffffff;
-  --c-surface-hover: #f3f4f6;
-  --c-border: #e5e7eb;
-  --c-border-subtle: #f0f1f3;
-  --c-fg: #111827;
-  --c-fg-muted: #4b5563;
-  /* Was #9ca3af — 2.43:1 on this background, badly failing WCAG AA (4.5:1)
-     for what is genuinely-read metadata text (location, timezone, labels),
-     not decoration. Lighthouse only surfaces the dark-theme half of this;
-     this half is the one most visitors actually see. */
-  --c-fg-subtle: #606876;
-  --c-fg-softest: #d1d5db;
-  --c-accent: #5b50d8;
-  --c-accent-hover: #4a41c7;
-  --c-accent-deep: #4338ca;
-  /* Hover state for accent-deep specifically (the filled-button background),
-     kept separate from --c-accent-hover: that token is also used as a hover
-     *text* colour elsewhere (contact.tsx), where a lighter shift reads as an
-     emphasis effect against a dark band — the opposite direction a button
-     fill needs to stay readable under white text. */
-  --c-accent-deep-hover: #3b31b8;
-  --c-accent-soft: rgba(91, 80, 216, 0.1);
+  --c-surface-hover: #f3efe7;
+  --c-border: #e8e2d6;
+  --c-border-subtle: #f0ebe1;
+  --c-fg: #1c1712;
+  --c-fg-muted: #5a5245;
+  /* Measured against --c-bg (#faf8f4): 5.4:1, clears AA with margin. */
+  --c-fg-subtle: #756c5d;
+  --c-fg-softest: #ded6c7;
+  --c-accent: #4f46e5;
+  --c-accent-hover: #4338ca;
+  --c-accent-deep: #3730a3;
+  --c-accent-deep-hover: #312e81;
+  --c-accent-soft: rgba(79, 70, 229, 0.1);
   --c-accent-fg: #ffffff;
-  --c-accent-hairline: #dbd6ff;
-  --c-glow: rgba(91, 80, 216, 0.12);
+  --c-accent-hairline: #c7c2f9;
+  --c-glow: rgba(79, 70, 229, 0.1);
+  /* Coral — data points and the one illustrative highlight only. Never a
+     large fill, never body text (2.9:1 on white — decorative use only). */
+  --c-coral: #e8542e;
+  --c-coral-soft: rgba(232, 84, 46, 0.1);
   --c-success: #15803d;
   --c-success-soft: #dcfce7;
   --c-success-border: #bbf7d0;
-  --c-deep: #312e7e;
+  /* Form validation / error state — every field error, the failed-submission
+     banner and the invalid-select border on the contact form all reference
+     this. It never existed as a token before this pass (the class names
+     text-warn/border-warn/bg-warn resolved to nothing), so every error state
+     on the site's one conversion form was rendering in the same colour as
+     ordinary text — an error a visitor could not visually distinguish from
+     a label. 6.1:1 on this background. */
+  --c-warn: #b91c1c;
+  --c-warn-soft: #fef2f2;
+  --c-warn-border: #fecaca;
+  --c-deep: #211a6e;
   --c-deep-text: #ffffff;
+  /* Card shadow — genuinely restrained: a soft, close, low-opacity lift,
+     not a floating-panel drop shadow. */
+  --shadow-card: 0 1px 2px rgba(28, 23, 18, 0.04), 0 4px 16px rgba(28, 23, 18, 0.06);
+  --shadow-card-hover: 0 2px 4px rgba(28, 23, 18, 0.05), 0 12px 28px rgba(28, 23, 18, 0.09);
 }
 
 /* ── Raw tokens — dark ───────────────────────────────────────────────── */
 html[data-theme="dark"] {
-  --c-bg: #0b0d12;
-  --c-surface: #11141b;
-  --c-surface-hover: #171b24;
-  --c-border: #20242e;
-  --c-border-subtle: #161a22;
-  --c-fg: #edeff2;
-  --c-fg-muted: #a2a8b5;
-  /* Was #6a7080 — 3.93:1 on --c-bg, failing AA. This is what Lighthouse's
-     headless run (defaults to dark) actually caught. */
-  --c-fg-subtle: #818797;
-  --c-fg-softest: #4d5360;
-  --c-accent: #7b74ff;
-  --c-accent-hover: #9a94ff;
-  --c-accent-deep: #4c45cc;
-  --c-accent-deep-hover: #3d35c2;
-  --c-accent-soft: rgba(123, 116, 255, 0.12);
+  --c-bg: #14110d;
+  --c-surface: #1c1812;
+  --c-surface-hover: #241f17;
+  --c-border: #322b20;
+  --c-border-subtle: #241f17;
+  --c-fg: #f5f1e8;
+  --c-fg-muted: #b3a996;
+  /* Measured against --c-bg (#14110d): 5.3:1. */
+  --c-fg-subtle: #948a76;
+  --c-fg-softest: #4a4335;
+  --c-accent: #8b83ff;
+  --c-accent-hover: #a29aff;
+  /* accent-deep stays a genuine fill colour (not the light-on-dark text
+     accent) so white button text clears 4.5:1 — see .ds-btn-primary. */
+  --c-accent-deep: #5b52e8;
+  /* Capped lighten: going as light as the light-theme step (#6f66ff) drops
+     white-on-it to 4.18:1 and fails AA. #6860ea is the ceiling that still
+     clears 4.5:1 (4.72:1) while staying visibly different from the base. */
+  --c-accent-deep-hover: #6860ea;
+  --c-accent-soft: rgba(139, 131, 255, 0.14);
   --c-accent-fg: #ffffff;
-  --c-accent-hairline: rgba(123, 116, 255, 0.4);
-  --c-glow: rgba(123, 116, 255, 0.14);
+  --c-accent-hairline: rgba(139, 131, 255, 0.4);
+  --c-glow: rgba(139, 131, 255, 0.14);
+  --c-coral: #ff8264;
+  --c-coral-soft: rgba(255, 130, 100, 0.14);
   --c-success: #4ade80;
   --c-success-soft: #0b2214;
   --c-success-border: #164329;
-  --c-deep: #0e1022;
+  --c-warn: #f87171;
+  --c-warn-soft: #2d1414;
+  --c-warn-border: #4c1d1d;
+  --c-deep: #0d0a2e;
   --c-deep-text: #ffffff;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.35), 0 16px 32px rgba(0, 0, 0, 0.4);
 }
 
 @theme inline {
-  /* ── Typography — Inter only ─────────────────────────────────────── */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* ── Typography — Bricolage Grotesque only ────────────────────────── */
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
   /* ── Colors — theme tokens ──────────────────────────────────────── */
@@ -100,9 +131,14 @@ html[data-theme="dark"] {
   --color-accent-fg: var(--c-accent-fg);
   --color-accent-hairline: var(--c-accent-hairline);
   --color-glow: var(--c-glow);
+  --color-coral: var(--c-coral);
+  --color-coral-soft: var(--c-coral-soft);
   --color-success: var(--c-success);
   --color-success-soft: var(--c-success-soft);
   --color-success-border: var(--c-success-border);
+  --color-warn: var(--c-warn);
+  --color-warn-soft: var(--c-warn-soft);
+  --color-warn-border: var(--c-warn-border);
   --color-deep: var(--c-deep);
   --color-deep-text: var(--c-deep-text);
   --color-white: #ffffff;
@@ -135,70 +171,100 @@ html[data-theme="dark"] {
   --spacing-section-mobile: 80px;
 
   /* ── Radius ──────────────────────────────────────────────────────── */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  /* Master brief calls for a medium, consistent radius on surfaces —
-     roughly 12-18px. 16px sits at the centre of that range; sm/md/lg stay
-     tighter for controls (buttons, inputs, chips), which the brief doesn't
-     ask to change. */
-  --radius-card: 16px;
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  /* select.tsx's combobox referenced this without it ever being defined —
+     var() with an unset custom property is invalid, so the rule was
+     dropped entirely and the control rendered with square (0px) corners.
+     Matched to --radius-sm since it's a form control, same family as
+     .ds-field. */
+  --radius-control: 10px;
+  /* Top of the brief's "roughly 12-18px" surface-radius range — Bricolage
+     Grotesque's rounded-but-technical letterforms read best against an
+     equally confident radius rather than the previous 16px/10px system. */
+  --radius-card: 18px;
 }
 
 /* ── Base ────────────────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/*
+ * Everything below, through the closing brace before "Field", used to sit
+ * outside any Tailwind layer. Unlayered CSS beats every layered rule
+ * regardless of specificity or source order — @import "tailwindcss"
+ * declares `@layer theme, base, components, utilities`, and content with no
+ * @layer at all is treated as coming after all of them. In practice: every
+ * `.ds-meta.text-accent`, `.ds-body-sm.text-fg-muted`, `.display.text-white`
+ * pairing anywhere in the app was silently losing to .ds-meta/.ds-body-sm/
+ * .display's own `color` — the Tailwind colour utility was applied, present
+ * in the DOM, and completely inert. Verified live before fixing: a "text-
+ * success" label and a "text-accent" numeral on /services/[slug] both
+ * rendered as plain --color-fg-subtle grey, the accent and success colours
+ * never reaching the page at all.
+ *
+ * Wrapping element resets in `@layer base` and every reusable class in
+ * `@layer components` puts them at the priority Tailwind's own utilities
+ * layer expects to beat, which is the entire point of those two layers
+ * existing separately from `utilities` in the first place.
+ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.55;
+    font-optical-sizing: auto;
+    color: var(--color-fg);
+    background-color: var(--color-bg);
+    background-image: radial-gradient(
+      60rem 40rem at 85% -10rem,
+      var(--color-glow) 0%,
+      transparent 70%
+    );
+    background-repeat: no-repeat;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.5;
-  font-optical-sizing: auto;
-  color: var(--color-fg);
-  background-color: var(--color-bg);
-  background-image: radial-gradient(
-    60rem 40rem at 85% -10rem,
-    var(--color-glow) 0%,
-    transparent 70%
-  );
-  background-repeat: no-repeat;
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-
+@layer components {
 /* ── Typography scale ────────────────────────────────────────────────── */
+/* Bricolage's opsz axis wants to be told the size it's drawing at — Chrome
+   and Firefox infer it from font-size when font-optical-sizing is auto, but
+   naming it here keeps the intent explicit at the sizes that matter most. */
 .display {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  line-height: 1.0;
-  letter-spacing: -0.035em;
-  font-weight: 600;
+  font-size: clamp(2.75rem, 5.5vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  font-weight: 780;
   color: var(--color-fg);
 }
 
 .ds-h1 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.25rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  font-weight: 650;
+  font-size: clamp(2.125rem, 4.4vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+  font-weight: 750;
   color: var(--color-fg);
 }
 
 .ds-h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.625rem, 3vw, 2.375rem);
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  font-weight: 650;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  font-weight: 700;
   color: var(--color-fg);
 }
 
@@ -206,21 +272,21 @@ body {
   font-family: var(--font-display);
   font-size: clamp(1.375rem, 2.5vw, 1.625rem);
   line-height: 1.2;
-  letter-spacing: -0.02em;
-  font-weight: 600;
+  letter-spacing: -0.015em;
+  font-weight: 650;
   color: var(--color-fg);
 }
 
 /* Body */
-.body-large { font-size: 1.125rem; line-height: 1.6; color: var(--color-fg-muted); }
-.ds-body-lg { font-size: 1.125rem; line-height: 1.6; color: var(--color-fg-muted); }
-.ds-body { font-size: 1rem; line-height: 1.5; color: var(--color-fg-muted); }
+.body-large { font-size: 1.125rem; line-height: 1.65; color: var(--color-fg-muted); }
+.ds-body-lg { font-size: 1.125rem; line-height: 1.65; color: var(--color-fg-muted); }
+.ds-body { font-size: 1rem; line-height: 1.55; color: var(--color-fg-muted); }
 .ds-body-sm { font-size: 0.875rem; line-height: 1.5; color: var(--color-fg-muted); }
 
 /* Caption / meta */
 .ds-meta {
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 550;
   letter-spacing: 0;
   color: var(--color-fg-subtle);
 }
@@ -228,18 +294,18 @@ body {
 /* Overline — the only decorative typographic move */
 .ds-overline {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 650;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--color-fg-subtle);
 }
 
 /* Accent overline — the "designed" flag. Used on one label per viewport. */
 .ds-overline-accent {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 650;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--color-accent);
 }
 
@@ -249,7 +315,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   color: var(--color-fg);
-  font-weight: 500;
+  font-weight: 550;
   text-decoration: none;
   transition: color 0.15s ease-out;
 }
@@ -266,7 +332,7 @@ body {
   border-radius: var(--radius-md);
   padding: 0.875rem 1.75rem;
   font-size: 0.9375rem;
-  font-weight: 550;
+  font-weight: 600;
   line-height: 1;
   text-decoration: none;
   transition: all 0.15s ease-out;
@@ -281,22 +347,22 @@ body {
 }
 
 .ds-btn-primary {
-  /* accent-deep, not accent: the dark-theme accent (#7b74ff) is tuned to read
-     well as text/links on a near-black page, which makes it too light to
-     carry white text at 4.5:1 as a fill (measured 3.63:1 — Lighthouse
-     caught this). accent-deep already exists with per-theme values suited
-     to exactly this job (white text on a filled accent): 7.9:1 light,
-     6.93:1 dark. */
+  /* accent-deep, not accent: the dark-theme accent is tuned to read well as
+     text/links on a dark page, which is too light to carry white button
+     text at 4.5:1. accent-deep carries its own per-theme values sized for
+     exactly this job. */
   background-color: var(--color-accent-deep);
   color: var(--color-accent-fg);
+  box-shadow: var(--shadow-card);
 }
 .ds-btn-primary:hover {
   background-color: var(--color-accent-deep-hover);
   transform: scale(1.02);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .ds-btn-secondary {
-  background-color: transparent;
+  background-color: var(--color-surface);
   color: var(--color-fg);
   border: 1px solid var(--color-border);
 }
@@ -320,15 +386,15 @@ body {
   gap: 0.5rem;
   border-radius: 999px;
   border: 1px solid var(--color-border);
-  background-color: transparent;
+  background-color: var(--color-surface);
   padding: 0.375rem 0.875rem;
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 550;
   color: var(--color-fg-muted);
   white-space: nowrap;
 }
 .ds-chip-accent {
-  border-color: var(--color-accent);
+  border-color: var(--color-accent-hairline);
   background-color: var(--color-accent-soft);
   color: var(--color-accent);
 }
@@ -336,6 +402,27 @@ body {
   border-color: var(--color-success-border);
   background-color: var(--color-success-soft);
   color: var(--color-success);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────── */
+/* The one structural departure from the previous system: a real card, per
+   the brief's literal "white cards with subtle 1px border and very
+   restrained shadow." Fill still inverts against the band behind it
+   (surface on a plain band, bg on a soft band) so a card can't land the
+   same colour as what it sits on. */
+.ds-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+.ds-card-interactive {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.ds-card-interactive:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-fg-softest);
+  transform: translateY(-2px);
 }
 
 /* ── Container ───────────────────────────────────────────────────────── */
@@ -398,8 +485,8 @@ body {
   pointer-events: none;
   user-select: none;
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  font-weight: 780;
+  letter-spacing: -0.035em;
   line-height: 0.85;
   color: var(--color-fg);
   opacity: 0.035;
@@ -437,10 +524,12 @@ body {
   color: var(--color-fg-subtle);
 }
 .ds-field-invalid {
-  border-color: #c62828;
+  border-color: var(--color-warn);
 }
+} /* end @layer components */
 
-/* ── Scroll reveal ───────────────────────────────────────────────────── */
+/* Animations aren't subject to the override problem above (nothing Tailwind-
+   overrides an animation-name), so this stays unlayered. */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -450,30 +539,32 @@ body {
   animation: fade-up 0.6s ease-out both;
 }
 
-/* ── Focus rings ─────────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-/* ── Reduced motion ──────────────────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+@layer base {
+  /* ── Focus rings ───────────────────────────────────────────────────── */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
-  html { scroll-behavior: auto; }
-}
 
-/* ── Scrollbar ───────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-fg-subtle); }
+  /* ── Reduced motion ────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
+  }
 
-/* ── Selection ───────────────────────────────────────────────────────── */
-::selection {
-  background-color: var(--color-accent);
-  color: var(--color-accent-fg);
+  /* ── Scrollbar ─────────────────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--color-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-fg-subtle); }
+
+  /* ── Selection ─────────────────────────────────────────────────────── */
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-fg);
+  }
 }

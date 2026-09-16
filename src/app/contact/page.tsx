@@ -84,7 +84,7 @@ export default function ContactPage() {
           />
           <ul className="grid gap-4 md:grid-cols-2">
             {paths.map((path, i) => (
-              <Reveal as="li" key={path.who} delay={i * 0.04} className="flex flex-col rounded-[var(--radius-card)] bg-card p-7">
+              <Reveal as="li" key={path.who} delay={i * 0.04} className="flex flex-col ds-card p-7">
                 <p className="ds-meta">{path.who}</p>
                 <p className="ds-body-sm mt-3 flex-1">{path.what}</p>
                 {path.routed ? (
@@ -130,7 +130,7 @@ export default function ContactPage() {
                 as="li"
                 key={item.title}
                 delay={i * 0.04}
-                className="flex flex-col rounded-[var(--radius-card)] bg-surface p-7"
+                className="flex flex-col ds-card p-7"
               >
                 <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft">
                   <CheckIcon className="text-accent" />

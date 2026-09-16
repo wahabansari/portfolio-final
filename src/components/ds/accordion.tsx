@@ -53,7 +53,7 @@ export function Accordion({
         <AccordionPrimitive.Item
           key={entry.value}
           value={entry.value}
-          className="group rounded-2xl bg-card px-5 transition-colors duration-200 data-[state=open]:bg-surface-blue sm:px-6"
+          className="group rounded-2xl bg-surface px-5 transition-colors duration-200 data-[state=open]:bg-surface-blue sm:px-6"
         >
           <AccordionPrimitive.Header className="flex">
             <AccordionPrimitive.Trigger className="flex w-full cursor-pointer items-start justify-between gap-6 py-4 text-left transition-colors hover:text-accent md:py-5">

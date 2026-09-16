@@ -332,7 +332,7 @@ export function FitLists({
 }) {
  return (
  <div className="grid gap-4 md:grid-cols-2">
- <div className="rounded-[var(--radius-card)] bg-surface p-7">
+ <div className="ds-card p-7">
  <p className="ds-meta text-success">A good fit</p>
  <ul className="mt-5 space-y-3.5">
  {idealFor.map((item) => (
@@ -343,7 +343,7 @@ export function FitLists({
  ))}
  </ul>
  </div>
- <div className="rounded-[var(--radius-card)] bg-surface p-7">
+ <div className="ds-card p-7">
  <p className="ds-meta">Not a fit</p>
  <ul className="mt-5 space-y-3.5">
  {notIdealFor.map((item) => (
@@ -378,7 +378,7 @@ export function StepList({
       )}
     >
       {steps.map((s, i) => (
-        <li key={s.step} className="flex flex-col rounded-[var(--radius-card)] bg-surface p-6">
+        <li key={s.step} className="flex flex-col ds-card p-6">
           <span
             aria-hidden
             className="font-display text-[0.8125rem] font-medium text-accent tabular-nums"
@@ -466,7 +466,7 @@ export function CtaBand({
                       <li key={item.step} className="flex gap-4">
                         <span
                           aria-hidden
-                          className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-card text-[0.75rem] font-semibold text-accent"
+                          className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface text-[0.75rem] font-semibold text-accent"
                         >
                           {i + 1}
                         </span>

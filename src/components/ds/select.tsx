@@ -59,7 +59,7 @@ export function SelectField({
         data-field={name}
         aria-invalid={invalid ? true : undefined}
         className={cn(
-          "flex w-full items-center justify-between gap-3 rounded-[var(--radius-control)] border bg-card px-[0.9375rem] py-3 text-left text-[0.9375rem] transition-[border-color,box-shadow] data-[placeholder]:text-ink-soft",
+          "flex w-full items-center justify-between gap-3 rounded-[var(--radius-control)] border bg-surface px-[0.9375rem] py-3 text-left text-[0.9375rem] transition-[border-color,box-shadow] data-[placeholder]:text-ink-soft",
           invalid ? "border-warn" : "border-border-strong",
           "focus:outline-none focus:border-accent focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent)_18%,transparent)]",
           invalid &&
@@ -92,7 +92,7 @@ export function SelectField({
           sideOffset={6}
           className={cn(
             "z-[90] max-h-[min(20rem,var(--viewport-height))] min-w-[var(--radix-select-trigger-width)]",
-            "overflow-y-auto rounded-xl border border-border bg-card shadow-[0_20px_50px_-20px_rgb(2_6_23_/0.35)]",
+            "overflow-y-auto rounded-xl border border-border bg-surface shadow-[0_20px_50px_-20px_rgb(2_6_23_/0.35)]",
             "ds-panel",
           )}
         >

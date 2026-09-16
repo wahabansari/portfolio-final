@@ -157,7 +157,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  as="li"
  key={problem.title}
  delay={i * 0.05}
- className="flex flex-col rounded-[var(--radius-card)] bg-surface p-7"
+ className="flex flex-col ds-card p-7"
  >
  <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
  <h3 className="ds-title-sm mt-4">{problem.title}</h3>
@@ -175,7 +175,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  />
  <ul className="grid gap-4 md:grid-cols-2">
  {service.deliverables.map((d, i) => (
- <Reveal as="li" key={d.title} delay={i * 0.03} className="rounded-[var(--radius-card)] bg-card p-7">
+ <Reveal as="li" key={d.title} delay={i * 0.03} className="ds-card p-7">
  <div className="flex items-start gap-3.5">
  <CheckIcon className="mt-1 shrink-0 text-accent" />
  <div>
@@ -203,7 +203,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  />
  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
  {service.technical.groups.map((group, i) => (
- <Reveal key={group.label} delay={i * 0.04} className="rounded-[var(--radius-card)] bg-card p-6">
+ <Reveal key={group.label} delay={i * 0.04} className="ds-card p-6">
  <p className="ds-meta">{group.label}</p>
  <ChipList items={group.items} className="mt-4" />
  </Reveal>
@@ -226,7 +226,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  description="Stated up front so it is a shared understanding rather than a negotiation halfway through."
  />
  <div className="grid gap-4 md:grid-cols-2">
- <Reveal className="rounded-[var(--radius-card)] bg-card p-7">
+ <Reveal className="ds-card p-7">
  <p className="ds-meta text-success">Included</p>
  <ul className="mt-5 space-y-3.5">
  {service.scope.includes.map((item) => (
@@ -237,7 +237,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  ))}
  </ul>
  </Reveal>
- <Reveal delay={0.05} className="bg-card p-7">
+ <Reveal delay={0.05} className="bg-surface p-7">
  <p className="ds-meta">Not included</p>
  <ul className="mt-5 space-y-3.5">
  {service.scope.excludes.map((item) => (

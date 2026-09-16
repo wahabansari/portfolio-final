@@ -80,7 +80,7 @@ function Spotlight({
   );
 
   const wrapClass =
-    "group relative block overflow-hidden rounded-lg border border-border bg-surface p-7 transition-colors duration-200 hover:border-accent/40 md:p-12";
+    "group ds-card ds-card-interactive relative block overflow-hidden p-7 md:p-12";
 
   return (
     <Reveal>

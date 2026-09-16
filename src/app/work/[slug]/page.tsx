@@ -99,7 +99,7 @@ export default async function CaseStudyPage({
  }
  aside={
  <>
- <div className="overflow-hidden rounded-[var(--radius-card)]">
+ <div className="ds-card overflow-hidden">
  <Plate project={project} className="border-b border-border" priority />
  </div>
  <div className="mt-6">
@@ -183,7 +183,7 @@ export default async function CaseStudyPage({
  <SectionHeading overline="The work" title="What was built" />
  <div className="grid gap-4 md:grid-cols-2">
  {study.build.map((block, i) => (
- <Reveal key={block.heading} delay={i * 0.04} className="rounded-[var(--radius-card)] bg-card p-7 md:p-8">
+ <Reveal key={block.heading} delay={i * 0.04} className="ds-card p-7 md:p-8">
  <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
  <h3 className="ds-title mt-4">{block.heading}</h3>
  <p className="ds-body-sm mt-3">{block.body}</p>
@@ -224,7 +224,7 @@ export default async function CaseStudyPage({
  as="li"
  key={o.statement}
  delay={i * 0.05}
- className="flex flex-col rounded-[var(--radius-card)] bg-card p-7"
+ className="flex flex-col ds-card p-7"
  >
  <span
  className={

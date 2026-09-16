@@ -58,7 +58,7 @@ export default function ServicesPage() {
 
           <ul className="grid gap-4 md:grid-cols-2">
             {services.map((service) => (
-              <Reveal as="li" key={service.slug} className="flex flex-col rounded-[var(--radius-card)] bg-card p-7">
+              <Reveal as="li" key={service.slug} className="flex flex-col ds-card p-7">
                 <h3 className="ds-title-sm">{service.title}</h3>
                 <p className="ds-body-sm mt-3 flex-1">
                   <span className="font-medium text-ink">Pick this if: </span>

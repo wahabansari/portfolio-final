@@ -35,7 +35,7 @@ export function Tooltip({
           <TooltipPrimitive.Content
             side={side}
             sideOffset={6}
-            className="z-[90] rounded-full border border-border bg-card px-3 py-1.5 text-[0.75rem] font-medium text-ink shadow-[0_2px_10px_rgb(2_6_23_/_0.12)] ds-panel"
+            className="z-[90] rounded-full border border-border bg-surface px-3 py-1.5 text-[0.75rem] font-medium text-ink shadow-[0_2px_10px_rgb(2_6_23_/_0.12)] ds-panel"
           >
             {label}
           </TooltipPrimitive.Content>

@@ -721,14 +721,24 @@ return (
  *
  * Rendered on the deep accent-tinted band: display statement, large
  * email link, availability chip. One conversion path, one color focus.
+ *
+ * The deep band is dark in both themes, but .ds-overline-accent/.display/
+ * .body-large resolve to each theme's own ink colour — correct everywhere
+ * else, wrong here, since light mode's ink is near-black. --color-deep-text
+ * exists for exactly this (always white, in both themes); text-white/80
+ * for the subhead keeps a hierarchy step under the fully-white heading
+ * while staying well clear of AA at this size (contrast computed against
+ * both themes' --color-deep, not assumed).
  */
 export function ContactCTA({ tone = "deep" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
     <Section id="contact" tone={tone}>
       <div className="max-w-3xl">
-          <span className="ds-overline-accent mb-4 block">Contact</span>
-          <h2 className="display">Tell me what you&apos;re building, or what&apos;s getting in the way.</h2>
-          <p className="body-large mt-8 max-w-xl">
+          <span className="ds-overline mb-4 block text-deep-text">Contact</span>
+          <h2 className="display text-deep-text">
+            Tell me what you&apos;re building, or what&apos;s getting in the way.
+          </h2>
+          <p className="body-large mt-8 max-w-xl text-white/80">
             I&apos;ll review it and tell you what I would tackle first — including
             telling you if I am not the right person for it.
           </p>

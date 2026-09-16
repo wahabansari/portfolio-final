@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { en, enInsights } from "@/content";
 import * as siteEn from "@/content/en/site";
@@ -10,20 +10,19 @@ import { TrackClicks } from "@/components/analytics";
 import { Gtm } from "@/components/gtm";
 
 /*
- * One voice, one system. Inter only.
+ * One voice, one system. Bricolage Grotesque only.
  *
- * Weight contrast (600/650 display, 400 body) carries all hierarchy.
- * Monochrome base + one indigo accent. Light and dark themes share the
- * same tokens through CSS variables — no component changes needed.
- *
- * Self-hosted through next/font — downloaded once at build, no CDN
- * render-block, no layout shift from a late swap.
+ * The variable cut, not a fixed weight list: it carries an optical-size
+ * axis (opsz 12-96) that redraws the letterforms for their size rather than
+ * scaling one drawing, plus a continuous weight range (200-800) that does
+ * all the hierarchy work — a heavy 750-800 display, 550-600 for labels and
+ * buttons, 400 for body. One font file, not four, still lands under the
+ * brief's "avoid 6-8 weights" performance guidance.
  */
-const inter = Inter({
-  variable: "--font-inter",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal"],
+  axes: ["opsz"],
   display: "swap",
 });
 
@@ -92,7 +91,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       dir="ltr"
-      className={inter.variable}
+      className={bricolage.variable}
       suppressHydrationWarning
     >
       <head>
