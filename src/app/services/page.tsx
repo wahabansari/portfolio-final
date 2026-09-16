@@ -18,9 +18,10 @@ export const metadata: Metadata = pageMetadata({
 
 /**
  * The services hub is a routing page, not a catalogue. Its job is to get a
- * buyer into the right detail page in one decision — which is why the primary
- * content is five rows in commercial order rather than a grid of equal-weight
- * cards, and why the block below states the fit for each one in a sentence.
+ * buyer into the right detail page in one decision — which is why the headline
+ * copy leads with the four commercial offers, the faceted list groups served
+ * engagements by kind, and the block below states the fit for each one in a
+ * sentence.
  */
 export default function ServicesPage() {
   return (
@@ -59,7 +60,9 @@ export default function ServicesPage() {
           <ul className="grid gap-4 md:grid-cols-2">
             {services.map((service) => (
               <Reveal as="li" key={service.slug} className="flex flex-col ds-card p-7">
-                <h3 className="ds-title-sm">{service.title}</h3>
+                <h3 className="font-display text-[1.0625rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg">
+                  {service.title}
+                </h3>
                 <p className="ds-body-sm mt-3 flex-1">
                   <span className="font-medium text-ink">Pick this if: </span>
                   {service.idealFor[0].charAt(0).toLowerCase() + service.idealFor[0].slice(1)}.

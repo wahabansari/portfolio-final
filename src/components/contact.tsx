@@ -736,30 +736,35 @@ export function ContactCTA({ tone = "deep" }: { tone?: "plain" | "soft" | "deep"
       <div className="max-w-3xl">
           <span className="ds-overline mb-4 block text-deep-text">Contact</span>
           <h2 className="display text-deep-text">
-            Tell me what you&apos;re building, or what&apos;s getting in the way.
+            Have a product that needs a stronger frontend?
           </h2>
           <p className="body-large mt-8 max-w-xl text-white/80">
-            I&apos;ll review it and tell you what I would tackle first — including
-            telling you if I am not the right person for it.
+            Tell me what you&apos;re building, what needs to change, and where you
+            need help.
           </p>
         </div>
 
-        <div className="mt-12 flex flex-col gap-8 sm:flex-row sm:items-center sm:gap-10">
+        <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+          <a href="/contact" className="ds-btn ds-btn-primary">
+            Start a project
+            <span aria-hidden>→</span>
+          </a>
           <a
             href={`mailto:${site.email}`}
             data-track="email_click"
             data-track-label="home-contact"
-            className="text-[1.5rem] font-medium tracking-[-0.02em] text-white underline-offset-8 transition-colors duration-150 hover:text-accent-hover hover:underline md:text-[2rem]"
+            className="ds-btn inline-flex items-center justify-center rounded-[var(--radius-md)] bg-white px-7 py-3.5 text-[0.9375rem] font-semibold text-[#211a6e] transition-all duration-150 hover:scale-[1.02] hover:bg-white/90"
           >
-            {site.email}
+            Email me
           </a>
-          {site.available && (
-            <span className="ds-chip ds-chip-success self-start sm:self-auto">
-              <span className="ds-dot" aria-hidden />
-              {site.availabilityNote}
-            </span>
-          )}
         </div>
+
+        {site.available && (
+          <span className="ds-chip ds-chip-success mt-8 self-start">
+            <span className="ds-dot" aria-hidden />
+            {site.availabilityNote}
+          </span>
+        )}
     </Section>
   );
 }

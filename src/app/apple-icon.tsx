@@ -21,14 +21,15 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#7b74ff",
+          background: "#4f46e5",
           color: "#ffffff",
-          fontSize: 104,
+          fontSize: 92,
           fontWeight: 500,
           fontFamily: "sans-serif",
+          letterSpacing: 3,
         }}
       >
-        W
+        WA
       </div>
     ),
     size,

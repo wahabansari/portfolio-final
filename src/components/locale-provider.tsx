@@ -16,28 +16,20 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { Locale } from "@/lib/i18n";
 import { isRtl, localeHref as prefix } from "@/lib/i18n";
-import type { Content, FlatSite, InsightsContent } from "@/content";
+import type { Content, FlatSite } from "@/content";
 import { flattenSite } from "@/content";
 
 /*
- * Only serializable data crosses the server→client boundary. Functions are
- * rebuilt on the client (see `getInsight` below), so nothing here can trip the
- * "Functions cannot be passed directly to Client Components" check.
+ * Only site-level content crosses the server→client boundary here.
+ *
+ * Services/work/insights are consumed server-side through their own content
+ * modules and never through this provider — passing the full tree into the
+ * root provider pushed ~240 KB of duplicated JSON into every HTML document.
+ * Nav and footer (the only client consumers) need `site` and nothing else.
  */
-type InsightsData = Pick<
-  InsightsContent,
-  "insights" | "insightSlugs" | "insightsHub"
->;
-
 type Localized = {
   locale: Locale;
   site: FlatSite;
-  services: Content["services"];
-  work: Content["work"];
-  insights: InsightsData["insights"];
-  insightSlugs: InsightsData["insightSlugs"];
-  insightsHub: InsightsData["insightsHub"];
-  getInsight: InsightsContent["getInsight"];
 };
 
 const LocaleContext = createContext<Localized | null>(null);
@@ -45,26 +37,18 @@ const LocaleContext = createContext<Localized | null>(null);
 export function LocaleProvider({
   locale,
   content,
-  insights,
   children,
 }: {
   locale: Locale;
-  content: Content;
-  insights: InsightsData;
+  content: { site: Content["site"] };
   children: ReactNode;
 }) {
   const value = useMemo<Localized>(
     () => ({
       locale,
       site: flattenSite(content.site),
-      services: content.services,
-      work: content.work,
-      insights: insights.insights,
-      insightSlugs: insights.insightSlugs,
-      insightsHub: insights.insightsHub,
-      getInsight: (slug) => insights.insights.find((i) => i.slug === slug),
     }),
-    [locale, content, insights],
+    [locale, content],
   );
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }

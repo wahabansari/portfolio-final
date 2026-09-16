@@ -35,10 +35,10 @@ export async function generateMetadata({
  if (!insight) return {};
 
  return pageMetadata({
- title: insight.metaTitle,
- description: insight.metaDescription,
- path: `/insights/${insight.slug}`,
- type: "article",
+   title: insight.metaTitle,
+   description: insight.metaDescription,
+   path: `/insights/${insight.slug}`,
+   type: "article",
  });
 }
 
@@ -48,6 +48,17 @@ function formatDate(iso: string) {
  month: "long",
  day: "numeric",
  });
+}
+
+function readingTime(insight: { definition: string; intro: string[]; sections: { body: string[] }[] }): number {
+ const words =
+   insight.definition.split(/\s+/).length +
+   insight.intro.reduce((n, p) => n + p.split(/\s+/).length, 0) +
+   insight.sections.reduce(
+     (n, s) => n + s.body.reduce((m, p) => m + p.split(/\s+/).length, 0),
+     0,
+   );
+ return Math.max(1, Math.round(words / 250));
 }
 
 export default async function InsightPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -97,6 +108,8 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  <p className="ds-meta">Published</p>
  <p className="ds-body-sm mt-3">
  <time dateTime={insight.publishedAt}>{formatDate(insight.publishedAt)}</time>
+ <span className="ds-meta mx-2">&middot;</span>
+ <span className="ds-meta">{readingTime(insight)} min read</span>
  </p>
  {insight.updatedAt !== insight.publishedAt && (
  <div className="mt-5 border-t border-border pt-5">
@@ -113,25 +126,29 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  {/* Answer-first. One quotable sentence before any explanation. */}
  <Section tone="plain">
  <Reveal>
+ <div className="mx-auto max-w-[70ch]">
  <Definition term="In one sentence">{insight.definition}</Definition>
+ </div>
  </Reveal>
- <Reveal delay={0.05} className=" mt-10 space-y-5">
+ <Reveal delay={0.05} className="mt-10">
+ <div className="mx-auto max-w-[70ch] space-y-5">
  {insight.intro.map((p) => (
- <p key={p} className="ds-body">
+ <p key={p} className="ds-body-lg">
  {p}
  </p>
  ))}
+ </div>
  </Reveal>
  </Section>
 
  <Section tone="soft">
- <div className=" space-y-12">
+ <div className="mx-auto max-w-[70ch] space-y-12">
  {insight.sections.map((section, i) => (
  <Reveal key={section.heading} delay={i * 0.03}>
- <h2 className="ds-h3">{section.heading}</h2>
- <div className="mt-4 space-y-4">
+ <h2 className="ds-h2">{section.heading}</h2>
+ <div className="mt-5 space-y-5">
  {section.body.map((p) => (
- <p key={p} className="ds-body">
+ <p key={p} className="ds-body-lg">
  {p}
  </p>
  ))}
@@ -166,7 +183,7 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  rel="noopener noreferrer"
  className="group flex items-center justify-between gap-4 border-b border-border py-4 transition-colors hover:bg-surface"
  >
- <span className="text-[0.9375rem] font-medium text-ink">{ref.label}</span>
+ <span className="ds-body font-medium text-ink">{ref.label}</span>
  <ExternalIcon className="shrink-0 text-ink-soft transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
  </a>
  </li>

@@ -260,30 +260,31 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  title="Related insights"
  description="First-hand notes that go deeper on the approach behind this service."
  />
- <ul className="border-t border-border">
- {relatedInsights.map((insight, i) => (
- <Reveal as="li" key={insight.slug} delay={i * 0.04}>
- <Link
- href={`/insights/${insight.slug}`}
- className="group flex flex-col gap-2.5 border-b border-border py-6 transition-colors hover:bg-surface md:flex-row md:items-baseline md:justify-between"
- >
- <span>
- <span className="flex items-center gap-2.5">
- <span className="ds-title-sm text-ink transition-colors group-hover:text-accent">
- {insight.title}
- </span>
- <span className="ds-chip text-[0.75rem]">{insight.cluster}</span>
- </span>
- <span className="ds-body-sm mt-1.5 block max-w-2xl">{insight.dek}</span>
- </span>
- <span className="ds-link shrink-0">
- Read
- <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
- </span>
- </Link>
- </Reveal>
- ))}
- </ul>
+<ul className="border-t border-white/15">
+{relatedInsights.map((insight, i) => (
+<Reveal as="li" key={insight.slug} delay={i * 0.04}>
+<Link
+href={`/insights/${insight.slug}`}
+className="group flex flex-col gap-2.5 border-b border-white/15 py-6 transition-colors hover:bg-white/10 md:flex-row md:items-baseline md:justify-between"
+>
+<span>
+<span className="flex items-center gap-2.5">
+<span className="ds-title-sm text-deep-text transition-colors group-hover:text-white">
+{insight.title}
+</span>
+<span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3 py-0.5 text-[0.75rem] font-medium text-deep-text/90">
+{insight.cluster}</span>
+</span>
+<span className="ds-body-sm mt-1.5 block max-w-2xl text-deep-text/70">{insight.dek}</span>
+</span>
+<span className="ds-link text-deep-text">
+Read
+<ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+</span>
+</Link>
+</Reveal>
+))}
+</ul>
  </Section>
  )}
 

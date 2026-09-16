@@ -63,18 +63,14 @@ export const socials = [
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 
 export const hero = {
-  /* "Independent" is load-bearing: it says one accountable person rather than
-     an agency or a marketplace listing, which is the distinction the whole
-     commercial proposition rests on. */
-  eyebrow: "Independent React & Next.js Product Engineer",
-  headline: "I build and improve production web products with React & Next.js.",
-  /* Buyer context, not a CV summary. Who it is for comes before what the
-     stack is, because a visitor deciding whether to keep reading is looking
-     for themselves in the sentence, not for a technology list. */
+  /* The role, plain. "Senior Frontend Engineer" gives a recruiter the
+     box to tick and a founder the rank to measure against immediately. */
+  eyebrow: "Senior Frontend Engineer · React & Next.js",
+  headline: "I build fast, scalable web products with React & Next.js.",
   support:
-    "I help startups, SaaS teams, businesses and agencies ship new interfaces, modernize existing products and solve frontend problems that affect delivery, performance and user experience.",
-  primaryCta: { label: "Discuss your project", href: "/contact" },
-  secondaryCta: { label: "View selected work", href: "/work" },
+    "5+ years building production web experiences — with a focus on performance, architecture and polished UI.",
+  primaryCta: { label: "Start a project", href: "/contact" },
+  secondaryCta: { label: "View my work", href: "/work" },
   /* Availability is stated commercially rather than as job-seeking. Remote
      employment is real and stays visible — on /about and the résumé, which is
      where someone hiring for a role actually looks — but it does not compete
@@ -235,25 +231,26 @@ export type ProofItem = {
 export const proof: ProofItem[] = [
   {
     display: "5+",
-    label: "Years production experience",
-    note: "Shipping since 2020",
-  },
-  {
-    display: "7",
-    label: "Live projects",
-    note: "All publicly linked",
+    label: "Years of experience",
+    note: "Production React & Next.js since 2020",
   },
   {
     display: "30%",
-    label: "Measured performance improvement",
-    note: "Core Web Vitals, on Sunhub",
+    label: "Core Web Vitals improvement",
+    note: "Measured on Sunhub",
     verified: true,
     href: "/work/sunhub",
   },
   {
-    display: "React · Next.js · TS",
-    label: "Core stack",
-    note: "Typed, in production",
+    display: "React / Next.js",
+    label: "Primary stack",
+    note: "TypeScript, shipped to production",
+    wide: true,
+  },
+  {
+    display: "Production",
+    label: "Focus",
+    note: "Scalable, maintainable, measurable delivery",
     wide: true,
   },
 ];
@@ -264,32 +261,32 @@ export const process = [
   {
     step: "Understand",
     detail:
-      "Clarify the user, the business goal and the constraints before anything is designed.",
-    benefit: "You find out early whether the thing you asked for is the thing you need.",
+      "Requirements, users, constraints and success criteria — before anything is designed.",
+    benefit: "The right problem gets defined before anything is built.",
   },
   {
-    step: "Structure",
+    step: "Shape",
     detail:
-      "Define the UX, the technical approach and the delivery scope in writing.",
-    benefit: "Scope is agreed before code exists, so change is a decision rather than a surprise.",
+      "Architecture, UX alignment and the key product and system decisions, in writing.",
+    benefit: "A plan you can approve before a line of code exists.",
   },
   {
     step: "Build",
     detail:
-      "Implement the interface with reusable components and clean integration points against your API.",
-    benefit: "You see working software in reviewable slices instead of one drop at the end.",
+      "Implementation, integrations and responsive behavior, in reviewable slices.",
+    benefit: "Working software you can see progress on, not one big drop at the end.",
+  },
+  {
+    step: "Refine",
+    detail:
+      "QA, accessibility, performance and cross-browser checks before launch.",
+    benefit: "What you ship has been checked on real devices, not only on my screen.",
   },
   {
     step: "Ship",
     detail:
-      "Verify responsive behaviour, performance and production readiness, then deploy.",
-    benefit: "What goes live has been checked on real devices, not only on my screen.",
-  },
-  {
-    step: "Improve",
-    detail:
-      "Iterate from real usage, feedback and measurable issues rather than assumptions.",
-    benefit: "The next round of work is chosen from evidence, so budget goes where it moves something.",
+      "Handoff, deployment, documentation and the next round of work.",
+    benefit: "What goes live is stable, documented and passable to anyone.",
   },
 ] as const;
 

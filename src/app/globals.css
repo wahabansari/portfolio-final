@@ -41,6 +41,9 @@
   --c-accent-soft: rgba(79, 70, 229, 0.1);
   --c-accent-fg: #ffffff;
   --c-accent-hairline: #c7c2f9;
+  /* Faint indigo tint — open accordion panel fill and one navy-band CTA fill. */
+  --c-surface-blue: #eef0fe;
+  --c-accent-line: #c7c2f9;
   --c-glow: rgba(79, 70, 229, 0.1);
   /* Coral — data points and the one illustrative highlight only. Never a
      large fill, never body text (2.9:1 on white — decorative use only). */
@@ -91,6 +94,8 @@ html[data-theme="dark"] {
   --c-accent-soft: rgba(139, 131, 255, 0.14);
   --c-accent-fg: #ffffff;
   --c-accent-hairline: rgba(139, 131, 255, 0.4);
+  --c-surface-blue: #1d2135;
+  --c-accent-line: rgba(139, 131, 255, 0.4);
   --c-glow: rgba(139, 131, 255, 0.14);
   --c-coral: #ff8264;
   --c-coral-soft: rgba(255, 130, 100, 0.14);
@@ -107,9 +112,13 @@ html[data-theme="dark"] {
 }
 
 @theme inline {
-  /* ── Typography — Bricolage Grotesque only ────────────────────────── */
-  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  /* ── Typography — Bricolage Grotesque display, Inter body/UI ──────── */
+  /* The brief's pairing rule: Bricolage reserved for display hierarchy,
+     a neutral readable sans (Inter) for everything that is read at length
+     or clicked. Bricolage still carries the overlines/labels where they
+     sit at display scale; Inter owns paragraphs, buttons and fields. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
@@ -130,6 +139,8 @@ html[data-theme="dark"] {
   --color-accent-soft: var(--c-accent-soft);
   --color-accent-fg: var(--c-accent-fg);
   --color-accent-hairline: var(--c-accent-hairline);
+  --color-surface-blue: var(--c-surface-blue);
+  --color-accent-line: var(--c-accent-line);
   --color-glow: var(--c-glow);
   --color-coral: var(--c-coral);
   --color-coral-soft: var(--c-coral-soft);
@@ -275,6 +286,31 @@ html[data-theme="dark"] {
   letter-spacing: -0.015em;
   font-weight: 650;
   color: var(--color-fg);
+}
+
+/* Display small — Bricolage labels inside cards and ledgers */
+.ds-title {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+}
+.ds-title-sm {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: var(--color-fg);
+}
+
+/* Lede — the "what this section is" paragraph under a heading */
+.ds-lede {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--color-fg-muted);
 }
 
 /* Body */
@@ -467,6 +503,31 @@ html[data-theme="dark"] {
   );
 }
 
+/* Deep bands invert every headless type class so any section that hands us
+   a SectionHeading (or bare .ds-*) inside .tone-deep stays readable without
+   per-call-site surgery. Components that already spell their own deep-text
+   classes keep them: utilities beat these in the cascade. */
+.tone-deep .ds-h1,
+.tone-deep .ds-h2,
+.tone-deep .ds-h3,
+.tone-deep .ds-title,
+.tone-deep .ds-title-sm,
+.tone-deep .ds-overline,
+.tone-deep .ds-overline-accent,
+.tone-deep .ds-link {
+  color: var(--color-deep-text);
+}
+.tone-deep .ds-lede,
+.tone-deep .ds-body-lg,
+.tone-deep .ds-body,
+.tone-deep .ds-body-sm,
+.tone-deep .ds-meta {
+  color: color-mix(in srgb, var(--color-deep-text) 78%, transparent);
+}
+.tone-deep .ds-link:hover {
+  color: var(--color-deep-text);
+}
+
 /* ── Hairline ────────────────────────────────────────────────────────── */
 .ds-hairline {
   height: 1px;
@@ -505,7 +566,7 @@ html[data-theme="dark"] {
 /* ── Field ───────────────────────────────────────────────────────────── */
 .ds-field {
   width: 100%;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
   font-family: var(--font-body);
@@ -529,14 +590,31 @@ html[data-theme="dark"] {
 } /* end @layer components */
 
 /* Animations aren't subject to the override problem above (nothing Tailwind-
-   overrides an animation-name), so this stays unlayered. */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+   overrides an animation-name), so this stays unlayered.
 
-.reveal-in {
-  animation: fade-up 0.6s ease-out both;
+   Reveal-on-scroll gating. `motion.tsx` drops `js-motion` on <html> and tags
+   elements with data-reveal="pending" → "shown" via IntersectionObserver.
+   Without the class nothing starts hidden (no-JS and SEO-safe); with it,
+   elements below the fold start 14px down + transparent and settle on
+   intersection. The transition lives on the "shown" rule so delayed items
+   (motion.tsx sets inline transition-delay) still work, and reduced-motion
+   force-reveals whatever is still pending. */
+html.js-motion [data-reveal="pending"] {
+  opacity: 0;
+  transform: translateY(14px);
+}
+html.js-motion [data-reveal="shown"] {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js-motion [data-reveal="pending"],
+  html.js-motion [data-reveal="shown"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 @layer base {
@@ -544,6 +622,11 @@ html[data-theme="dark"] {
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+  }
+  /* Indigo-on-indigo focus rings vanish on the deep band (≈2.3:1); a white
+     ring is the only thing that stays visible against both deep fills. */
+  .tone-deep :focus-visible {
+    outline-color: var(--color-deep-text);
   }
 
   /* ── Reduced motion ────────────────────────────────────────────────── */

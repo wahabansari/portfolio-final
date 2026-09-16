@@ -18,12 +18,15 @@ import { cn } from "@/lib/cn";
  *     usually making between two answers.
  *   · Each item is a fill card: raised white on the band, tinted to blue-50 on
  *     the open state. No outline, no shadow — the fill does the work.
- *   · Content is force-mounted and collapsed with grid rows, so every answer
- *     stays in the initial HTML for crawlers and in-page search while looking
- *     like a smooth open/close to the eye.
- *   · The reveal uses `data-[state=open]` on the trigger: no JavaScript state
- *     is involved, so reduced-motion and no-JS degrade cleanly.
- */
+*  · Content is force-mounted and collapsed with grid rows, so every answer
+   *    stays in the initial HTML for crawlers and in-page search while looking
+   *    like a smooth open/close to the eye. Closed panels are hidden with
+   *    `visibility: hidden`, which also takes them out of the a11y tree and
+   *    keyboard tab order — force-mount alone leaves the collapsed answers
+   *    (and any links inside them) reachable by screen readers.
+   *  · The reveal uses `data-[state=open]` on the trigger: no JavaScript state
+   *    is involved, so reduced-motion and no-JS degrade cleanly.
+   */
 
 export type AccordionEntry = {
   value: string;
@@ -71,10 +74,10 @@ export function Accordion({
 
           {/* forceMount keeps answers in the server HTML while closed (SEO),
               the grid-rows swap is the whole animation — no animated height. */}
-          <AccordionPrimitive.Content
-            forceMount
-            className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out data-[state=open]:grid-rows-[1fr]"
-          >
+<AccordionPrimitive.Content
+          forceMount
+          className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out data-[state=closed]:invisible data-[state=open]:grid-rows-[1fr] data-[state=open]:visible"
+        >
             <div className="min-h-0 overflow-hidden">
               <div className="pb-5">{entry.panel}</div>
             </div>

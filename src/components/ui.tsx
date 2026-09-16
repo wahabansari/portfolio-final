@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
-import { Accordion } from "./ds";
+import { Accordion } from "./ds/accordion";
 import { Reveal } from "./motion";
 
 export { Reveal } from "./motion";

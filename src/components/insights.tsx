@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { insights, type Insight } from "@/content/insights";
-import { getService } from "@/content/services";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
-/** Human-readable date, stable between server and client (no relative time). */
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
     year: "numeric",
@@ -12,61 +10,50 @@ function formatDate(iso: string) {
   });
 }
 
-/**
- * An insight rendered as a magazine contents row.
- *
- * Date on the left, the title at display scale, the cluster as a mono label,
- * and the read arrow on the right — authorship and freshness stay visible so
- * the card carries the same two facts the Article structured data asserts.
- */
+function readingTime(insight: Insight): number {
+  const words =
+    insight.definition.split(/\s+/).length +
+    insight.intro.reduce((n, p) => n + p.split(/\s+/).length, 0) +
+    insight.sections.reduce(
+      (n, s) => n + s.body.reduce((m, p) => m + p.split(/\s+/).length, 0),
+      0,
+    );
+  return Math.max(1, Math.round(words / 250));
+}
+
 function InsightCard({ insight }: { insight: Insight }) {
-  const service = getService(insight.relatedServiceSlug);
-
   return (
-    <article className="group grid items-baseline gap-x-8 gap-y-3 border-b border-border py-8 transition-colors hover:bg-surface md:grid-cols-12 md:py-9">
-      <time
-        dateTime={insight.updatedAt}
-        className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-ink-soft md:col-span-2 md:pl-2"
-      >
-        {formatDate(insight.updatedAt)}
-      </time>
-
-      <h3 className="font-display text-[1.25rem] leading-snug font-medium tracking-[-0.014em] text-ink transition-colors group-hover:text-accent md:col-span-5 md:text-[1.5rem]">
-        <Link
-          href={`/insights/${insight.slug}`}
-          data-track="cta_click"
-          data-track-label={insight.slug}
-        >
-          {insight.title}
-        </Link>
+    <Link
+      href={`/insights/${insight.slug}`}
+      data-track="cta_click"
+      data-track-label={insight.slug}
+      className="group ds-card ds-card-interactive flex flex-col p-7"
+    >
+      <span className="ds-chip ds-chip-accent mb-5 w-fit">{insight.cluster}</span>
+      <h3 className="ds-h3 text-fg transition-colors group-hover:text-accent">
+        {insight.title}
       </h3>
-
-      <p className="text-[0.875rem] leading-relaxed text-ink-muted md:col-span-3">
+      <p className="ds-body-sm mt-3 flex-1">
         {insight.dek}
       </p>
-
-      <div className="flex items-center gap-3 md:col-span-2 md:justify-end md:pr-2">
-        <span className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-ink-soft">
-          {service ? service.shortTitle : insight.cluster}
+      <div className="mt-6 flex items-center gap-3 border-t border-border pt-5">
+        <time dateTime={insight.updatedAt} className="ds-meta">
+          {formatDate(insight.updatedAt)}
+        </time>
+        <span className="ds-meta" aria-hidden="true">&middot;</span>
+        <span className="ds-meta">{readingTime(insight)} min read</span>
+        <span className="ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent transition-transform duration-200 group-hover:translate-x-0.5">
+          <ArrowIcon className="h-3.5 w-3.5" />
         </span>
-        <Link
-          href={`/insights/${insight.slug}`}
-          data-track="cta_click"
-          data-track-label={insight.slug}
-          aria-label={`Read ${insight.title}`}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent transition-transform duration-200 group-hover:translate-x-0.5"
-        >
-          <ArrowIcon className="h-4 w-4" />
-        </Link>
       </div>
-    </article>
+    </Link>
   );
 }
 
 /**
- * /insights hub — every published article, grouped by cluster as a magazine
- * table of contents. The clusters come from the content itself, so publishing
- * into a new topic creates its own group without maintaining a second list.
+ * /insights hub — every published article, grouped by cluster as a responsive
+ * card grid. The clusters come from the content itself, so publishing into a
+ * new topic creates its own group without maintaining a second list.
  */
 export function InsightsList() {
   const clusters = Array.from(new Set(insights.map((i) => i.cluster)));
@@ -79,20 +66,18 @@ export function InsightsList() {
           return (
             <div key={cluster}>
               <div className="flex items-baseline justify-between gap-6 border-b border-border pb-4">
-                <h2 className="font-display text-[1.5rem] md:text-[1.75rem] font-medium text-ink">
-                  {cluster}
-                </h2>
+                <h2 className="ds-h2">{cluster}</h2>
                 <span className="ds-meta">
                   {items.length} {items.length === 1 ? "article" : "articles"}
                 </span>
               </div>
-              <ul className="border-t border-border">
+              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((insight, i) => (
-                  <Reveal as="li" key={insight.slug} delay={i * 0.04}>
+                  <Reveal key={insight.slug} delay={i * 0.04}>
                     <InsightCard insight={insight} />
                   </Reveal>
                 ))}
-              </ul>
+              </div>
             </div>
           );
         })}
@@ -102,8 +87,8 @@ export function InsightsList() {
 }
 
 /**
- * Homepage teaser. Three articles as a table-of-contents strip — an internal-
- * linking hook into /insights, not a second hub competing with the real one.
+ * Homepage teaser. Three articles as a card grid — an internal-linking hook
+ * into /insights, not a second hub competing with the real one.
  */
 export function InsightsTeaser({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
   const featured = insights.slice(0, 3);
@@ -123,13 +108,13 @@ export function InsightsTeaser({ tone = "plain" }: { tone?: "plain" | "soft" | "
           </Link>
         }
       />
-      <ul className="border-t border-border">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {featured.map((insight, i) => (
-          <Reveal as="li" key={insight.slug} delay={i * 0.05}>
+          <Reveal key={insight.slug} delay={i * 0.05}>
             <InsightCard insight={insight} />
           </Reveal>
         ))}
-      </ul>
+      </div>
     </Section>
   );
 }

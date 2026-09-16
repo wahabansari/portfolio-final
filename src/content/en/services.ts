@@ -36,7 +36,7 @@
 export type ServiceTier = "core" | "modernize" | "partnership";
 
 export const TIER_LABEL: Record<ServiceTier, string> = {
-  core: "Build & extend",
+  core: "Build & ship",
   modernize: "Modernize & migrate",
   partnership: "Partnership & specialist",
 };
@@ -1172,11 +1172,11 @@ export const serviceGroups: { tier: ServiceTier; label: string; items: Service[]
 
 /** Hub page copy. */
 export const servicesHub = {
-  metaTitle: "React & Next.js Development Services",
+  metaTitle: "Frontend Development, Product Engineering & Next.js Migration Services",
   metaDescription:
-    "React and Next.js development services for production websites, SaaS products, redesigns, migrations and existing applications.",
-  h1: "Production web engineering for real product constraints",
+    "Frontend development, product engineering, WordPress to Next.js migration and performance optimisation for production React and Next.js products and websites.",
+  h1: "Four commercial offers, one accountable engineer",
   intro:
-    "I help SaaS teams, agencies and growing businesses design, rebuild and ship web products that need strong frontend execution.",
-  note: "Seven services rather than a capability list. Pick the one that matches what you are trying to do — each page states who it is for, what it includes and where the scope ends.",
+    "Frontend development, product engineering, WordPress → Next.js migration and performance optimisation — the four offers I lead with, each with its own scope, process and proof.",
+  note: "The index goes wider than the four headline offers. Seven services in all, each page stating who it is for, what it includes and where the scope ends.",
 } as const;

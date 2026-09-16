@@ -27,94 +27,83 @@ function WorkHeading({ viewAll = true }: { viewAll?: boolean }) {
 }
 
 /**
- * Spotlight — every project gets the same presence.
+ * Proof card — one project on the curated proof wall.
  *
- * A large surface panel: index + kind over the domain, an oversized title,
- * the blurb, then a hairline row carrying scope and the CTA. Hover lifts
- * the corner glow and tints the border. All projects render equally — the
- * section is a uniform proof wall, not one showcase + footnotes.
+ * A compact card rather than a full-width panel: kind overline, a Bricolage
+ * title, the one-line blurb, the stack as chips, then a pinned footer row
+ * carrying the CTA. The whole card is one link (internal to the case study,
+ * external to the live site); hover lifts the card via .ds-card-interactive.
  */
-function Spotlight({
-  project,
-  index,
-}: {
-  project: Project;
-  index: number;
-}) {
+function ProofCard({ project }: { project: Project }) {
+  const isCaseStudy = Boolean(project.caseStudy);
   const isExternal = Boolean(project.href && !project.caseStudy);
-  const label = isExternal ? "View live project" : "Read case study";
+  const hasLink = isCaseStudy || isExternal;
+  const label = isExternal ? "View live project" : "View case study";
 
   const inner = (
     <>
-      <div className="flex items-center justify-between gap-6">
-        <span className="flex items-center gap-3">
-          <span className="font-mono text-[0.8125rem] font-medium tabular-nums text-accent">
-            {String(index).padStart(2, "0")}
-          </span>
-          <span className="ds-overline-accent">{project.kind}</span>
-        </span>
-        <span className="hidden font-mono text-[0.8125rem] tabular-nums text-fg-subtle sm:block">
-          {project.domain}
-        </span>
-      </div>
+      <span className="ds-overline-accent">{project.kind}</span>
+      <h3 className="ds-h3 mt-5">{project.title}</h3>
+      <p className="ds-body-sm mt-3">{project.blurb}</p>
 
-      <span className="mt-8 block max-w-3xl text-[clamp(2.25rem,5vw,4rem)] font-medium leading-[1.0] tracking-[-0.035em] text-fg md:mt-10">
-        {project.title}
+      <ul className="mt-5 flex flex-wrap gap-2">
+        {project.tools.slice(0, 5).map((tool) => (
+          <li key={tool} className="ds-chip">
+            {tool}
+          </li>
+        ))}
+      </ul>
+
+      <span className="mt-auto pt-6">
+        <span className="flex items-center justify-between gap-4 border-t border-border pt-5">
+          <span className="text-[0.9375rem] font-medium text-fg transition-colors duration-200 group-hover:text-accent">
+            {label}
+          </span>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-fg-subtle transition-colors duration-200 group-hover:border-accent group-hover:text-accent">
+            {isExternal ? <ExternalIcon className="h-3.5 w-3.5" /> : <ArrowIcon className="h-3.5 w-3.5" />}
+          </span>
+        </span>
       </span>
-
-      <p className="body-large mt-5 max-w-xl">{project.blurb}</p>
-
-      <div className="mt-10 flex flex-col gap-6 border-t border-border pt-7 sm:flex-row sm:items-center sm:justify-between md:mt-12 md:pt-8">
-        <span className="flex items-center gap-4">
-          <span className="ds-meta shrink-0">Scope</span>
-          <span className="ds-meta text-fg-muted">{project.scope}</span>
-        </span>
-        <span className="inline-flex items-center gap-3 text-[1rem] font-medium text-fg">
-          {label}
-          <span className="flex h-10 w-10 rotate-[-45deg] items-center justify-center rounded-full border border-accent/40 bg-accent/10 text-accent transition-all duration-200 group-hover:rotate-0">
-            {isExternal ? <ExternalIcon className="h-4 w-4" /> : <ArrowIcon className="h-4 w-4" />}
-          </span>
-        </span>
-      </div>
     </>
   );
 
-  const wrapClass =
-    "group ds-card ds-card-interactive relative block overflow-hidden p-7 md:p-12";
+  const cardClass =
+    "group ds-card ds-card-interactive flex h-full flex-col p-6 md:p-7";
 
-  return (
-    <Reveal>
-      {isExternal ? (
-        <OutboundLink
-          href={project.href as string}
-          event="case_study_view"
-          payload={{ project: project.slug }}
-          className={wrapClass}
-          ariaLabel={`Open ${project.title} in a new tab`}
-        >
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-glow blur-[80px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          />
-          {inner}
-        </OutboundLink>
-      ) : (
-        <Link href={`/work/${project.slug}`} className={wrapClass}>
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-glow blur-[80px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          />
-          {inner}
-        </Link>
-      )}
-    </Reveal>
-  );
+  if (isCaseStudy) {
+    return (
+      <Link
+        href={`/work/${project.slug}`}
+        data-track="cta_click"
+        data-track-label={`work:${project.slug}`}
+        className={cardClass}
+      >
+        {inner}
+      </Link>
+    );
+  }
+
+  if (isExternal) {
+    return (
+      <OutboundLink
+        href={project.href as string}
+        event="case_study_view"
+        payload={{ project: project.slug }}
+        className={cardClass}
+        ariaLabel={`Open ${project.title} in a new tab`}
+      >
+        {inner}
+      </OutboundLink>
+    );
+  }
+
+  return <div className={cn(cardClass, "cursor-default")}>{inner}</div>;
 }
 
 /**
  * A quiet list row — index | title + scope | arrow.
- * Used for "related proof" on detail pages, where the big cards would
- * compete with the page itself.
+ * Used for "related proof" on detail pages and the long tail on /work,
+ * where the big cards would compete with the page itself.
  */
 function ProjectRow({
   project,
@@ -174,21 +163,24 @@ function ProjectRow({
 }
 
 /**
- * Selected Work — the homepage centerpiece.
+ * Selected Work — the homepage proof wall.
  *
- * A uniform wall of spotlight cards. Each project gets the full treatment:
- * index + kind, oversized title, blurb, scope and CTA. No mockups, no rows
- * that read as afterthoughts — every project is equal proof.
+ * A curated grid of proof cards, one per featured project. Each card carries
+ * the kind, a Bricolage title, the one-line blurb, the stack and the route
+ * into the evidence — no mockups, no rows that read as afterthoughts; every
+ * featured project is equal proof.
  */
 export function SelectedWork({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
     <Section id="work" tone={tone}>
       <WorkHeading />
-      <div className="flex flex-col gap-6">
+      <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {featuredProjects.map((project, i) => (
-          <Spotlight key={project.slug} project={project} index={i + 1} />
+          <Reveal as="li" key={project.slug} delay={i * 0.05} className="flex h-full">
+            <ProofCard project={project} />
+          </Reveal>
         ))}
-      </div>
+      </ul>
       <div className="mt-8 border-t border-border pt-6 md:hidden">
         <Link
           href="/work"
@@ -205,7 +197,34 @@ export function SelectedWork({ tone = "plain" }: { tone?: "plain" | "soft" | "de
 /* ── /work index ─────────────────────────────────────────────────────── */
 
 export function WorkIndex() {
-  return <SelectedWork />;
+  const supporting = projects.filter((p) => !p.featured);
+
+  return (
+    <Section id="work" tone="plain">
+      <div className="mb-12 flex items-end justify-between gap-8">
+        <div>
+          <span className="ds-overline-accent mb-4 block">All projects</span>
+          <h2 className="ds-h2">The proof wall</h2>
+        </div>
+      </div>
+      <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {featuredProjects.map((project, i) => (
+          <Reveal as="li" key={project.slug} delay={i * 0.05} className="flex h-full">
+            <ProofCard project={project} />
+          </Reveal>
+        ))}
+      </ul>
+      {supporting.length > 0 && (
+        <ul className="mt-14 border-t border-border">
+          {supporting.map((project, i) => (
+            <Reveal as="li" key={project.slug} delay={i * 0.05}>
+              <ProjectRow project={project} index={i + 1} />
+            </Reveal>
+          ))}
+        </ul>
+      )}
+    </Section>
+  );
 }
 
 /** Related work, rendered at the foot of a service or case-study page. */
