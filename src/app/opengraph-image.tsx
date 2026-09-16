@@ -65,23 +65,23 @@ export default async function OpenGraphImage() {
 
         {/* Top bar — name + role */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 56,
-              height: 56,
-              borderRadius: 12,
-              background: ACCENT,
-              color: "#ffffff",
-              fontSize: 26,
-              fontWeight: 500,
-              letterSpacing: 1,
-            }}
-          >
-            WA
-          </div>
+          <svg width={56} height={56} viewBox="0 0 40 40">
+            <defs>
+              <linearGradient id="brand-og" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#4f46e5" />
+                <stop offset="100%" stopColor="#3730a3" />
+              </linearGradient>
+            </defs>
+            <rect width="40" height="40" rx="10" fill="url(#brand-og)" />
+            <path
+              d="M8 27 L11 12.5 14.6 20.5 20 8.5 25.4 20.5 29 12.5 32 27"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ fontSize: 24, fontWeight: 500, color: FG }}>{site.name}</span>
             <span style={{ fontSize: 18, fontWeight: 400, color: MUTED }}>{site.role}</span>

@@ -212,29 +212,32 @@ export function LinkedinIcon({ className }: { className?: string }) {
 }
 
 /* ── Brand mark ─────────────────────────────────────────────────────────────
- The site-wide monogram: a rounded accent tile holding a ligature of the two
- initials — a stroked "W" (open \/\/) with an "A" apex chevron rising from
- its centre valley. Drawn as strokes so it holds up at 36px and smaller.
- Used by the header, the footer wordmark and anywhere the brand appears. */
+ The site monogram, drawn as a single continuous stroke: a W whose two centre
+ strokes rise into the apex of the A. One line reads both letters — the left
+ and right legs stay short (W), the centre strokes run taller (A). It is the
+ whole mark, cut from a single path, so it holds its geometry at 16px and at
+ 512px.
+
+ The tile is a vertical indigo gradient (accent → accent-deep, theme-aware)
+ with an inset white ring for a crisp edge — a premium cut, not a flat chip.
+ Used by the header, footer wordmark, favicon, apple icon and OG card so the
+ brand reads identically everywhere. */
+
+const BRAND_PATH =
+  "M8 27 L11 12.5 14.6 20.5 20 8.5 25.4 20.5 29 12.5 32 27";
 
 export function BrandMark({ className }: { className?: string }) {
   return (
     <span aria-hidden className={cn("relative block shrink-0", className)}>
-      <svg viewBox="0 0 40 40" className="h-full w-full">
-        <rect width="40" height="40" rx="9" className="fill-accent" />
-        <g
+      <span className="absolute inset-0 rounded-[10px] bg-gradient-to-b from-accent to-accent-deep ring-1 ring-inset ring-white/15 shadow-[0_6px_16px_-8px_var(--color-accent-deep)]" />
+      <svg viewBox="0 0 40 40" className="relative h-full w-full">
+        <path
+          d={BRAND_PATH}
+          fill="none"
           stroke="var(--color-accent-fg)"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          fill="none"
-        >
-          <path d="M8 13v13l4.2-11.5 4.3 9 4.3-9 4.2 11.5V13" />
-        </g>
-        <path
-          d="M13.1 9.4 16.5 13.6 19.9 9.4z"
-          fill="var(--color-accent-fg)"
-          stroke="none"
         />
       </svg>
     </span>
