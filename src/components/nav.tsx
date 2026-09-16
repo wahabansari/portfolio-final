@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { useContent, useLocaleHref } from "./locale-provider";
 import { ThemeToggle } from "./theme-toggle";
-import { ArrowIcon } from "./ui";
+import { ArrowIcon, BrandMark } from "./ui";
 
 function subscribeToScroll(callback: () => void) {
   window.addEventListener("scroll", callback, { passive: true });
@@ -68,10 +68,10 @@ export function Nav() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-200",
+        "fixed inset-x-0 top-0 z-50 transition-all duration-200",
         scrolled
-          ? "border-b border-border-strong bg-bg/85 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent",
+          ? "bg-bg/85 backdrop-blur-md shadow-[0_2px_4px_rgba(28,23,18,0.05),0_10px_24px_-12px_rgba(28,23,18,0.28)]"
+          : "border-b border-transparent bg-transparent shadow-none",
       )}
     >
       <div className="ds-container flex h-[4.25rem] items-center justify-between gap-4 md:gap-6">
@@ -82,9 +82,7 @@ export function Nav() {
           aria-label="Home"
           className="flex items-center gap-2.5 text-[1.0625rem] font-semibold tracking-[-0.02em] text-fg"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-[0.75rem] font-bold text-accent-fg">
-            {site.initials}
-          </span>
+          <BrandMark className="h-9 w-9" />
           <span className="hidden sm:inline">{site.shortName}</span>
           <span className="sm:hidden">W.</span>
         </Link>

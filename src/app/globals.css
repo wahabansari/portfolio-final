@@ -531,16 +531,16 @@ html[data-theme="dark"] {
   color: var(--color-deep-text);
 }
 
-/* Grid lines — hero bands and inner page headers. 72px cadence, nearly
-   invisible, masked to fade downward so the lines dissolve before the band
-   ends. Only a background; never a layout concern. */
+/* Grid lines — hero bands and inner page headers. 40px cadence, nearly
+   invisible. Applied as a plain background so it NEVER masks child content:
+   the earlier version masked the whole section with a radial fade, which
+   dimmed CTA buttons sitting on the band. Lines stay put behind the
+   content; no layout or painting side effects. */
 .ds-grid-lines {
   background-image:
     linear-gradient(to right, var(--color-grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--color-grid-line) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: radial-gradient(140% 130% at 50% 0%, black 30%, transparent 88%);
-  -webkit-mask-image: radial-gradient(140% 130% at 50% 0%, black 30%, transparent 88%);
+  background-size: 40px 40px;
 }
 
 /* ── Hairline ────────────────────────────────────────────────────────── */

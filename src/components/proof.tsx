@@ -4,6 +4,51 @@ import { cn } from "@/lib/cn";
 import { ArrowIcon, Reveal, Section } from "./ui";
 
 /**
+ * One proof cell. Plain items render a big display figure; chip items render
+ * a tag row (stack / delivery focus) so the content reads as capabilities
+ * rather than a headline that wraps to two lines.
+ */
+function Stat({ item }: { item: (typeof proof)[number] }) {
+  if (item.chips) {
+    return (
+      <>
+        <span className="block text-[0.9375rem] font-medium text-fg">
+          {item.display}
+        </span>
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {item.chips.map((chip) => (
+            <li
+              key={chip}
+              className="inline-flex items-center rounded-full border border-accent-hairline bg-accent-soft px-3 py-1 text-[0.8125rem] font-semibold text-accent"
+            >
+              {chip}
+            </li>
+          ))}
+        </ul>
+        <span className="ds-body-sm mt-3 block">{item.note}</span>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <span
+        className={cn(
+          "block font-display text-[1.75rem] leading-none font-semibold tracking-[-0.02em] md:text-[2rem]",
+          item.verified ? "text-coral" : "text-fg",
+        )}
+      >
+        {item.display}
+      </span>
+      <span className="mt-2.5 block text-[0.9375rem] font-medium text-fg">
+        {item.label}
+      </span>
+      <span className="ds-body-sm mt-1 block">{item.note}</span>
+    </>
+  );
+}
+
+/**
  * Proof strip — four compact facts in a single bordered card.
  *
  * Brief module 03, sitting between Hero and Selected work. The numbers a
@@ -36,38 +81,14 @@ export function ProofStrip({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
                   data-track-label={`proof-strip:${item.label}`}
                   className="group block"
                 >
-                  <span
-                    className={cn(
-                      "block font-display text-[1.75rem] leading-none font-semibold tracking-[-0.02em] md:text-[2rem]",
-                      item.verified ? "text-coral" : "text-fg",
-                    )}
-                  >
-                    {item.display}
-                  </span>
-                  <span className="mt-2.5 block text-[0.9375rem] font-medium text-fg">
-                    {item.label}
-                  </span>
-                  <span className="ds-body-sm mt-1 block">{item.note}</span>
-                  <span className="mt-2.5 inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-accent underline-offset-4 group-hover:underline">
+                  <Stat item={item} />
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-accent underline-offset-4 group-hover:underline">
                     See how
                     <ArrowIcon className="h-3 w-3 transition-transform duration-150 group-hover:translate-x-0.5" />
                   </span>
                 </Link>
               ) : (
-                <>
-                  <span
-                    className={cn(
-                      "block font-display text-[1.75rem] leading-none font-semibold tracking-[-0.02em] md:text-[2rem]",
-                      item.verified ? "text-coral" : "text-fg",
-                    )}
-                  >
-                    {item.display}
-                  </span>
-                  <span className="mt-2.5 block text-[0.9375rem] font-medium text-fg">
-                    {item.label}
-                  </span>
-                  <span className="ds-body-sm mt-1 block">{item.note}</span>
-                </>
+                <Stat item={item} />
               )}
             </Reveal>
           ))}

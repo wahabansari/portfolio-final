@@ -226,6 +226,10 @@ export type ProofItem = {
   href?: string;
   /** Set on the stack readout, which is words rather than a figure. */
   wide?: boolean;
+  /** When present, the display string is replaced by a chip row — the
+      stack and the delivery focus read better as tags than as a headline
+      that wraps to two lines in a quarter-width column. */
+  chips?: string[];
 };
 
 export const proof: ProofItem[] = [
@@ -242,16 +246,16 @@ export const proof: ProofItem[] = [
     href: "/work/sunhub",
   },
   {
-    display: "React / Next.js",
-    label: "Primary stack",
+    display: "Primary stack",
+    label: "What I build with",
     note: "TypeScript, shipped to production",
-    wide: true,
+    chips: ["React", "Next.js", "TypeScript"],
   },
   {
     display: "Production",
-    label: "Focus",
-    note: "Scalable, maintainable, measurable delivery",
-    wide: true,
+    label: "Delivery focus",
+    note: "From plan to production, measured not assumed",
+    chips: ["Scalable", "Maintainable", "Measurable"],
   },
 ];
 

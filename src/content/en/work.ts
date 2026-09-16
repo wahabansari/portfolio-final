@@ -216,13 +216,12 @@ export const projects: Project[] = [
      CENNETSOL
      ══════════════════════════════════════════════════════════════════════ */
   {
-    slug: "cennetsol",
-    role: "Frontend / product implementation",
-    title: "Cennetsol",
-    kind: "Marketing site architecture",
+slug: "cennetsol",
+    role: "Design + frontend engineering → Next.js",
+    title: "CenNet Sol",
+    kind: "B2B platform",
     href: "https://www.cennetsol.com/",
     domain: "cennetsol.com",
-    featured: true,
     plate: "marketing",
     blurb: "A scalable Next.js marketing site for an enterprise AI consultancy.",
     problem: "A growing service catalogue would have needed a new layout for every new capability area.",
@@ -450,6 +449,7 @@ export const projects: Project[] = [
     href: "https://aussiemotor.com.au/",
     domain: "aussiemotor.com.au",
     plate: "marketplace",
+    featured: true,
     blurb: "A large automotive marketplace migrated from WordPress onto Next.js.",
     problem: "A large marketplace had outgrown what WordPress could maintainably support.",
     outcome: "Migrated onto Next.js, with dashboard interfaces and a reusable component library.",
@@ -506,6 +506,9 @@ export const projects: Project[] = [
 
 export type CaseStudyProject = Project & { caseStudy: CaseStudy };
 
+/* Featured = the curated proof wall on the homepage and /work: Sunhub,
+   AussieMotor, Verdira. Two of the three carry case studies; AussieMotor
+   is an external, team-delivered project that points at the live site. */
 export const featuredProjects = projects.filter((p) => p.featured);
 
 export const caseStudies = projects.filter(

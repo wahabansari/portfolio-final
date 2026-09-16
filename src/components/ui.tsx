@@ -210,6 +210,32 @@ export function LinkedinIcon({ className }: { className?: string }) {
  );
 }
 
+/* ── Brand mark ─────────────────────────────────────────────────────────────
+ The site-wide monogram: a rounded accent tile holding a ligature of the two
+ initials — a stroked "W" (open \/\/) with an "A" apex chevron rising from
+ its centre valley. Drawn as strokes so it holds up at 36px and smaller.
+ Used by the header, the footer wordmark and anywhere the brand appears. */
+
+export function BrandMark({ className }: { className?: string }) {
+  return (
+    <span aria-hidden className={cn("relative block shrink-0", className)}>
+      <svg viewBox="0 0 40 40" className="h-full w-full">
+        <rect width="40" height="40" rx="10" className="fill-accent" />
+        <g
+          stroke="var(--color-accent-fg)"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        >
+          <path d="M8.5 12.5 12.5 26.5 16.5 17.5 20.5 26.5 24.5 12.5" />
+          <path d="M13.6 10.6 16.5 8 19.4 10.6" />
+        </g>
+      </svg>
+    </span>
+  );
+}
+
 /* ── Wordmark ───────────────────────────────────────────────────────────────
  The full name, not a first name. On a site whose job is to be trusted by
  someone deciding whether to hire, the legal name is the asset — and it is
@@ -225,29 +251,7 @@ export function Wordmark({
 }) {
   return (
     <span className="flex items-center gap-3">
-      <span aria-hidden className="relative flex h-9 w-9 shrink-0 items-center justify-center">
-        <svg viewBox="0 0 36 36" fill="none" className="h-full w-full">
-          <rect width="36" height="36" rx="8" fill="currentColor" className="text-accent" />
-          <path
-            d="M9 26V10l4.5 10L18 10l4.5 10L27 10v16"
-            stroke="currentColor"
-            className="text-accent-fg"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <line
-            x1="18"
-            y1="10"
-            x2="18"
-            y2="7"
-            stroke="currentColor"
-            className="text-accent-fg"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-          />
-        </svg>
-      </span>
+      <BrandMark className="h-9 w-9" />
       <span className="flex flex-col leading-none">
         <span className="font-display text-[0.9375rem] font-semibold tracking-[-0.005em] text-ink">
           Wahab Ansari
