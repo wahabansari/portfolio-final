@@ -24,9 +24,15 @@ function useScrolled(threshold = 8) {
 }
 
 /**
- * Header — wordmark left, three core links center-right, theme toggle and
- * one CTA right. Sticky; scrolled state gains a blurred surface and a
- * hairline. On mobile the core links collapse into an accessible panel.
+ * Header — 68px fixed bar.
+ *
+ * Wordmark left, three core links center-right, theme toggle and one CTA
+ * right. Scrolled state gains a blurred surface and a hairline.
+ *
+ * On mobile the core links collapse into an animated panel using
+ * grid-rows (0fr → 1fr) + visibility so closed panels leave the a11y
+ * tree and keyboard tab order. Escape closes the panel and returns
+ * focus to the trigger.
  */
 export function Nav() {
   const pathname = usePathname();
@@ -38,7 +44,6 @@ export function Nav() {
 
   useEffect(() => setOpen(false), [pathname]);
 
-  /* Close on Escape and return focus to the trigger. */
   useEffect(() => {
     if (!open) return;
     function onKeyDown(e: KeyboardEvent) {
@@ -65,60 +70,65 @@ export function Nav() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-colors duration-200",
         scrolled
-          ? "border-b border-border bg-bg/85 backdrop-blur-md"
+          ? "border-b border-border-strong bg-bg/85 backdrop-blur-md"
           : "border-b border-transparent bg-transparent",
       )}
     >
-      <div className="ds-container flex h-16 items-center justify-between gap-3 md:gap-6">
+      <div className="ds-container flex h-[4.25rem] items-center justify-between gap-4 md:gap-6">
+        {/* Wordmark */}
         <Link
           href={localeHref("/")}
           data-track="nav_logo"
           aria-label="Home"
-          className="flex items-center gap-2 text-[1.0625rem] font-semibold tracking-[-0.02em] text-fg"
+          className="flex items-center gap-2.5 text-[1.0625rem] font-semibold tracking-[-0.02em] text-fg"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-[0.75rem] font-bold text-accent-fg">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-[0.75rem] font-bold text-accent-fg">
             {site.initials}
           </span>
           <span className="hidden sm:inline">{site.shortName}</span>
           <span className="sm:hidden">W.</span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              data-track="nav_link"
-              data-track-label={link.label.toLowerCase()}
-              className={cn(
-                "relative text-[0.9375rem] font-medium transition-colors duration-150",
-                isActive(link.href) ? "text-fg" : "text-fg-muted hover:text-fg",
-              )}
-            >
-              {link.label}
-              <span
-                aria-hidden
+        {/* Desktop links */}
+        <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
+          {links.map((link) => {
+            const active = isActive(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                data-track="nav_link"
+                data-track-label={link.label.toLowerCase()}
                 className={cn(
-                  "absolute -bottom-1.5 left-0 h-px bg-accent transition-all duration-200",
-                  isActive(link.href) ? "w-full" : "w-0",
+                  "relative rounded-md px-3 py-2 text-[0.875rem] font-medium tracking-wide transition-colors duration-150",
+                  active ? "text-fg" : "text-fg-muted hover:text-fg",
                 )}
-              />
-            </Link>
-          ))}
+              >
+                {link.label}
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute bottom-0.5 left-3 right-3 h-px bg-accent transition-all duration-200",
+                    active ? "scale-x-100" : "scale-x-0 origin-left",
+                  )}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <ThemeToggle />
           <Link
             href={localeHref("/contact")}
             data-track="nav_cta"
-            className="ds-btn ds-btn-primary !px-5 !py-2.5 !text-[0.875rem]"
+            className="hidden items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-[0.8125rem] font-semibold text-accent-fg transition-all duration-150 hover:bg-accent-hover hover:shadow-card sm:inline-flex"
           >
             Start a project
             <ArrowIcon className="h-3.5 w-3.5" />
           </Link>
 
-          {/* Mobile menu trigger */}
+          {/* Mobile trigger */}
           <button
             type="button"
             ref={triggerRef}
@@ -126,7 +136,7 @@ export function Nav() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-fg-muted transition-colors hover:border-border-strong hover:bg-surface hover:text-fg md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border text-fg-muted transition-colors hover:border-border-strong hover:bg-surface hover:text-fg md:hidden"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
               {open ? (
@@ -139,40 +149,48 @@ export function Nav() {
         </div>
       </div>
 
-      {/* Mobile panel */}
+      {/* Mobile panel — animated with grid rows + visibility */}
       <div
         id="mobile-menu"
+        aria-hidden={!open}
         className={cn(
-          "border-b border-border bg-bg/95 backdrop-blur-md md:hidden",
-          open ? "block" : "hidden",
+          "grid overflow-hidden border-b border-border bg-bg/95 backdrop-blur-md transition-[grid-template-rows,visibility] duration-300 md:hidden",
+          open ? "grid-rows-[1fr] visible" : "grid-rows-[0fr] invisible",
         )}
       >
-        <nav className="ds-container flex flex-col py-3" aria-label="Mobile">
-          {links.map((link) => (
+        <div className="min-h-0 overflow-hidden">
+          <nav className="ds-container flex flex-col py-2" aria-label="Mobile">
+            {links.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  data-track="nav_link"
+                  data-track-label={`mobile:${link.label.toLowerCase()}`}
+                  className={cn(
+                    "flex items-center justify-between rounded-lg border-l-2 px-4 py-4 text-[1rem] font-medium transition-colors",
+                    active
+                      ? "border-l-accent text-fg bg-accent-soft"
+                      : "border-l-transparent text-fg-muted",
+                  )}
+                >
+                  {link.label}
+                  <ArrowIcon className="h-4 w-4 text-fg-subtle" />
+                </Link>
+              );
+            })}
             <Link
-              key={link.href}
-              href={link.href}
-              data-track="nav_link"
-              data-track-label={`mobile:${link.label.toLowerCase()}`}
-              className={cn(
-                "flex items-center justify-between border-b border-border py-4 text-[1.0625rem] font-medium",
-                isActive(link.href) ? "text-fg" : "text-fg-muted",
-              )}
+              href={localeHref("/contact")}
+              data-track="nav_cta"
+              data-track-label="mobile"
+              className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 text-[0.9375rem] font-semibold text-accent-fg"
             >
-              {link.label}
-              <ArrowIcon className="h-4 w-4 text-fg-subtle" />
+              Start a project
+              <ArrowIcon className="h-4 w-4" />
             </Link>
-          ))}
-          <Link
-            href={localeHref("/contact")}
-            data-track="nav_cta"
-            data-track-label="mobile"
-            className="ds-btn ds-btn-primary mt-4"
-          >
-            Start a project
-            <ArrowIcon className="h-4 w-4" />
-          </Link>
-        </nav>
+          </nav>
+        </div>
       </div>
     </header>
   );

@@ -27,6 +27,7 @@
   --c-bg: #faf8f4;
   --c-surface: #ffffff;
   --c-surface-hover: #f3efe7;
+  --c-grid-line: rgba(28, 23, 18, 0.045);
   --c-border: #e8e2d6;
   --c-border-subtle: #f0ebe1;
   --c-fg: #1c1712;
@@ -75,6 +76,7 @@ html[data-theme="dark"] {
   --c-bg: #14110d;
   --c-surface: #1c1812;
   --c-surface-hover: #241f17;
+  --c-grid-line: rgba(245, 241, 232, 0.05);
   --c-border: #322b20;
   --c-border-subtle: #241f17;
   --c-fg: #f5f1e8;
@@ -141,6 +143,7 @@ html[data-theme="dark"] {
   --color-accent-hairline: var(--c-accent-hairline);
   --color-surface-blue: var(--c-surface-blue);
   --color-accent-line: var(--c-accent-line);
+  --color-grid-line: var(--c-grid-line);
   --color-glow: var(--c-glow);
   --color-coral: var(--c-coral);
   --color-coral-soft: var(--c-coral-soft);
@@ -254,9 +257,9 @@ html[data-theme="dark"] {
    naming it here keeps the intent explicit at the sizes that matter most. */
 .display {
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 5.5vw, 5rem);
-  line-height: 0.98;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.25rem, 3.8vw, 3.75rem);
+  line-height: 1.0;
+  letter-spacing: -0.035em;
   font-weight: 780;
   color: var(--color-fg);
 }
@@ -526,6 +529,18 @@ html[data-theme="dark"] {
 }
 .tone-deep .ds-link:hover {
   color: var(--color-deep-text);
+}
+
+/* Grid lines — hero bands and inner page headers. 72px cadence, nearly
+   invisible, masked to fade downward so the lines dissolve before the band
+   ends. Only a background; never a layout concern. */
+.ds-grid-lines {
+  background-image:
+    linear-gradient(to right, var(--color-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-grid-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(140% 130% at 50% 0%, black 30%, transparent 88%);
+  -webkit-mask-image: radial-gradient(140% 130% at 50% 0%, black 30%, transparent 88%);
 }
 
 /* ── Hairline ────────────────────────────────────────────────────────── */

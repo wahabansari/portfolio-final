@@ -28,9 +28,9 @@ export default function NotFound() {
  <>
  <Nav />
  <main id="main">
- <section className="relative overflow-hidden border-b border-border">
- <span aria-hidden className="ds-grid-field pointer-events-none absolute inset-0" />
- <div className="ds-container relative py-20 md:py-28">
+<section className="ds-grid-lines relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
+<span aria-hidden className="ds-grid-field pointer-events-none absolute inset-0" />
+<div className="ds-container relative">
  <span className="ds-overline">404</span>
  <h1 className="ds-h1 mt-5 max-w-[20ch]">
  That page does not exist — but these do.

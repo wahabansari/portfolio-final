@@ -601,26 +601,26 @@ export function Breadcrumbs({ trail }: { trail: Crumb[] }) {
  * band, so the page has a distinct head and body.
  */
 export function PageHeader({
- trail,
- eyebrow,
- title,
- lede,
- intro,
- actions,
- aside,
+  trail,
+  eyebrow,
+  title,
+  lede,
+  intro,
+  actions,
+  aside,
 }: {
- trail?: Crumb[];
- eyebrow?: string;
- title: string;
- lede?: string;
- intro?: readonly string[];
- actions?: ReactNode;
- aside?: ReactNode;
+  trail?: Crumb[];
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  intro?: readonly string[];
+  actions?: ReactNode;
+  aside?: ReactNode;
 }) {
- return (
- <section className="relative overflow-hidden border-b border-border bg-surface pt-6 pb-14 md:pt-8 md:pb-20">
- <div className="ds-container relative">
- {trail && <Breadcrumbs trail={trail} />}
+  return (
+  <section className="ds-grid-lines relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
+  <div className="ds-container relative">
+  {trail && <Breadcrumbs trail={trail} />}
 
  <div className={cn("grid gap-10 lg:grid-cols-12 lg:gap-16", trail && "mt-8")}>
  <div className={aside ? "lg:col-span-7" : "lg:col-span-9"}>
