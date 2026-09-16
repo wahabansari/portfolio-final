@@ -3,6 +3,24 @@ import { services, TIER_LABEL } from "@/content/services";
 import { ArrowIcon, Reveal, Section } from "./ui";
 
 /**
+ * The homepage shows four, not the full seven. The master brief is explicit
+ * that the homepage should not read as "three unrelated things at once" —
+ * it names exactly four commercial services. These four are the closest
+ * existing match, chosen for being the most directly resume-evidenced
+ * (frontend engineering, redesign/rebuild — the resume's own UI-designer
+ * role included an LMS redesign — performance work, and the WordPress
+ * migration). The other three (agency partnership, SaaS product work, AI
+ * integration) are real, honestly-written services; they stay live on the
+ * full index at /services rather than being deleted.
+ */
+const HOMEPAGE_SLUGS = [
+  "frontend-product-engineering",
+  "website-redesign-rebuild",
+  "performance-engineering",
+  "wordpress-to-nextjs-migration",
+] as const;
+
+/**
  * Services — 2-column asymmetric, premium style.
  *
  * Left: accent overline + heading. Right: numbered service list.
@@ -10,6 +28,10 @@ import { ArrowIcon, Reveal, Section } from "./ui";
  * one-line muted description. Section wraps its own container — no nesting.
  */
 export function ServicesOverview({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
+  const featured = HOMEPAGE_SLUGS.map((slug) => services.find((s) => s.slug === slug)).filter(
+    (s): s is (typeof services)[number] => Boolean(s),
+  );
+
   return (
     <Section id="services" tone={tone}>
       <div className="grid gap-16 lg:grid-cols-[1fr_1.4fr] lg:gap-24">
@@ -25,13 +47,13 @@ export function ServicesOverview({ tone = "soft" }: { tone?: "plain" | "soft" | 
             href="/services"
             className="mt-10 inline-flex items-center gap-2 text-[1rem] font-medium text-fg underline-offset-4 transition-colors duration-150 hover:text-accent hover:underline"
           >
-            Compare services
+            Compare all {services.length} services
             <ArrowIcon className="h-4 w-4" />
           </Link>
         </div>
 
         <ul className="border-t border-border">
-          {services.map((sv, i) => (
+          {featured.map((sv, i) => (
             <Reveal as="li" key={sv.slug} delay={i * 0.05}>
               <Link
                 href={`/services/${sv.slug}`}

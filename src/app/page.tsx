@@ -1,6 +1,7 @@
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
+import { ProofStrip } from "@/components/proof";
 import { SelectedWork } from "@/components/work";
 import { ServicesOverview } from "@/components/services";
 import { TrustLayer } from "@/components/trust";
@@ -23,6 +24,7 @@ export default function Home() {
       <Nav />
       <main id="main">
         <Hero />
+        <ProofStrip tone="soft" />
         <SelectedWork tone="plain" />
         <ServicesOverview tone="soft" />
         <TrustLayer tone="plain" />
