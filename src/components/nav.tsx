@@ -14,7 +14,7 @@ function subscribeToScroll(callback: () => void) {
 }
 
 function getScrollSnapshot() {
-  return window.scrollY > 8;
+  return window.scrollY > 4;
 }
 
 function useScrolled() {
@@ -131,6 +131,8 @@ export function Nav() {
                   <button
                     type="button"
                     onClick={() => setServicesOpen((v) => !v)}
+                    onMouseEnter={() => setServicesOpen(true)}
+                    onMouseLeave={() => setServicesOpen(false)}
                     aria-expanded={servicesOpen}
                     aria-haspopup="true"
                     data-track="nav_services_toggle"
@@ -140,7 +142,7 @@ export function Nav() {
                     )}
                   >
                     {link.label}
-                    <ChevronDownIcon className={cn("h-3.5 w-3.5 transition-transform", servicesOpen && "rotate-180")} />
+                    <ChevronDownIcon className={cn("h-3.5 w-3.5 transition-transform duration-200", servicesOpen && "rotate-180")} />
                     <span
                       aria-hidden
                       className={cn(
@@ -149,37 +151,42 @@ export function Nav() {
                       )}
                     />
                   </button>
-                  {servicesOpen && (
-                    <div
-                      className="absolute left-0 top-full z-50 mt-2 min-w-[220px] rounded-xl border border-border bg-bg/95 backdrop-blur-md shadow-[0_12px_32px_-12px_rgba(28,23,18,0.25)] py-2"
-                      role="menu"
-                      aria-label="Services"
-                    >
-                      {SERVICE_ITEMS.map((svc) => (
-                        <Link
-                          key={svc.slug}
-                          href={localeHref(`/services/${svc.slug}`)}
-                          data-track="nav_service"
-                          data-track-label={svc.slug}
-                          role="menuitem"
-                          className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-fg-muted hover:text-fg hover:bg-accent-soft/50 transition-colors"
-                        >
-                          {svc.label}
-                        </Link>
-                      ))}
-                      <hr className="my-2 border-border" />
+                  <div
+                    className={cn(
+                      "absolute left-0 top-full z-50 mt-2 min-w-[280px] rounded-xl border border-border bg-bg/95 backdrop-blur-md shadow-[0_12px_32px_-12px_rgba(28,23,18,0.25)] py-2 transition-all duration-200 ease-out",
+                      servicesOpen
+                        ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
+                        : "opacity-0 scale-y-95 translate-y-1 pointer-events-none",
+                    )}
+                    role="menu"
+                    aria-label="Services"
+                    onMouseEnter={() => setServicesOpen(true)}
+                    onMouseLeave={() => setServicesOpen(false)}
+                  >
+                    {SERVICE_ITEMS.map((svc) => (
                       <Link
-                        href={localeHref("/services")}
+                        key={svc.slug}
+                        href={localeHref(`/services/${svc.slug}`)}
                         data-track="nav_service"
-                        data-track-label="all"
+                        data-track-label={svc.slug}
                         role="menuitem"
-                        className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-accent hover:text-accent-hover"
+                        className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-fg-muted hover:text-fg hover:bg-accent-soft/50 transition-colors"
                       >
-                        View all services
-                        <ArrowIcon className="h-3.5 w-3.5" />
+                        {svc.label}
                       </Link>
-                    </div>
-                  )}
+                    ))}
+                    <hr className="my-2 border-border" />
+                    <Link
+                      href={localeHref("/services")}
+                      data-track="nav_service"
+                      data-track-label="all"
+                      role="menuitem"
+                      className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-accent hover:text-accent-hover"
+                    >
+                      View all services
+                      <ArrowIcon className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
                 </div>
               );
             }
