@@ -8,6 +8,8 @@ import { themeScript } from "@/components/theme-toggle";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TrackClicks } from "@/components/analytics";
 import { Gtm } from "@/components/gtm";
+import { Spotlight } from "@/components/spotlight";
+import { buildSearchIndex } from "@/lib/search-index";
 
 /*
  * Two voices, one hierarchy. Bricolage Grotesque display, Inter body.
@@ -121,6 +123,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Gtm />
           <TrackClicks />
           <SpeedInsights />
+          {/* Spotlight search — index built server-side, JSON-serialized in. */}
+          <Spotlight entries={buildSearchIndex()} />
         </LocaleProvider>
       </body>
     </html>

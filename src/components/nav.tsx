@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
@@ -13,14 +13,12 @@ function subscribeToScroll(callback: () => void) {
   return () => window.removeEventListener("scroll", callback);
 }
 
-function useScrolled(threshold = 8) {
-  const [scrolled, setScrolled] = useState(false);
-  const onScroll = useCallback(() => setScrolled(window.scrollY > threshold), [threshold]);
-  useEffect(() => {
-    onScroll();
-    return subscribeToScroll(onScroll);
-  }, [onScroll]);
-  return scrolled;
+function getScrollSnapshot() {
+  return window.scrollY > 8;
+}
+
+function useScrolled() {
+  return useSyncExternalStore(subscribeToScroll, getScrollSnapshot, () => false);
 }
 
 /**
@@ -42,7 +40,13 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => setOpen(false), [pathname]);
+  // Close the mobile panel whenever the route changes (React's recommended
+  // "adjusting state on prop change" pattern — no effect needed).
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setOpen(false);
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -116,6 +120,29 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* Spotlight search — Cmd/Ctrl+K also toggles it (see Spotlight) */}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent("spotlight:open"))}
+            aria-label="Search the site"
+            title="Search (Ctrl K)"
+            data-track="nav_search_open"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-fg-muted transition-colors hover:border-border-strong hover:bg-surface hover:text-fg"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+          </button>
           <ThemeToggle />
           <Link
             href={localeHref("/contact")}

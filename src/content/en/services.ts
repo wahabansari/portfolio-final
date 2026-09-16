@@ -103,9 +103,9 @@ export const services: Service[] = [
     shortTitle: "Frontend engineering",
     eyebrow: "Core offering",
     tier: "core",
-    metaTitle: "Frontend Product Engineering with React & Next.js",
+    metaTitle: "Hire a React & Next.js Developer",
     metaDescription:
-      "Production React and Next.js frontend development for SaaS products, dashboards, customer portals and business-critical web applications.",
+      "Hire a React & Next.js developer for production SaaS products, dashboards and portals — architecture, API integration and performance included.",
     keywords: [
       "React development services",
       "Next.js development",
@@ -276,7 +276,7 @@ export const services: Service[] = [
     tier: "modernize",
     metaTitle: "Website Redesign & Rebuild Services",
     metaDescription:
-      "Modernize outdated websites with website redesign and rebuild services — clearer UX, responsive implementation, faster pages and conversion-focused frontend work.",
+      "Redesign or rebuild an outdated website — clearer UX, responsive implementation, faster pages and frontend work built to convert.",
     keywords: [
       "website redesign",
       "conversion-focused website",
@@ -412,7 +412,7 @@ export const services: Service[] = [
     shortTitle: "Performance",
     eyebrow: "Measured, not promised",
     tier: "modernize",
-    metaTitle: "React & Next.js Performance Engineering",
+    metaTitle: "Improve Core Web Vitals & Page Speed",
     metaDescription:
       "Diagnose and fix slow React and Next.js applications — Core Web Vitals, bundle size, rendering strategy and asset delivery, measured before and after.",
     keywords: [
@@ -590,7 +590,7 @@ export const services: Service[] = [
     shortTitle: "WP → Next.js migration",
     eyebrow: "SEO-safe migration",
     tier: "modernize",
-    metaTitle: "WordPress to Next.js Migration Services",
+    metaTitle: "WordPress to Next.js Migration & SEO",
     metaDescription:
       "Migrate WordPress websites to Next.js with SEO preservation, redirects, content migration and performance-focused implementation.",
     keywords: [
@@ -774,7 +774,7 @@ export const services: Service[] = [
     shortTitle: "Agency partnership",
     eyebrow: "Under your brand",
     tier: "partnership",
-    metaTitle: "White-Label React & Next.js Development for Agencies",
+    metaTitle: "White-Label React & Next.js for Agencies",
     metaDescription:
       "Reliable white-label React and Next.js delivery for agencies that need extra frontend engineering capacity.",
     keywords: [
@@ -902,7 +902,7 @@ export const services: Service[] = [
     shortTitle: "SaaS & MVP",
     eyebrow: "Idea to production",
     tier: "core",
-    metaTitle: "SaaS & MVP Development with React & Next.js",
+    metaTitle: "SaaS & MVP Frontend Development",
     metaDescription:
       "Build customer-facing SaaS products, dashboards and MVPs with React and Next.js frontend development services.",
     keywords: [
@@ -1031,7 +1031,7 @@ export const services: Service[] = [
     shortTitle: "AI integration",
     eyebrow: "Practical AI features",
     tier: "partnership",
-    metaTitle: "AI Product Integration with React & Next.js",
+    metaTitle: "AI Features for Your Web Product",
     metaDescription:
       "Add practical AI features and LLM-powered capabilities to real web products with React and Next.js frontend engineering.",
     keywords: [
@@ -1172,7 +1172,7 @@ export const serviceGroups: { tier: ServiceTier; label: string; items: Service[]
 
 /** Hub page copy. */
 export const servicesHub = {
-  metaTitle: "Frontend Development, Product Engineering & Next.js Migration Services",
+  metaTitle: "Frontend Development & Next.js Services",
   metaDescription:
     "Frontend development, product engineering, WordPress to Next.js migration and performance optimisation for production React and Next.js products and websites.",
   h1: "Four commercial offers, one accountable engineer",

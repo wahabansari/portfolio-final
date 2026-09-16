@@ -448,7 +448,7 @@ export const insights: Insight[] = [
     title: "When Should You Rebuild a Website Instead of Redesigning It?",
     metaTitle: "Rebuild vs Redesign: How to Actually Decide",
     metaDescription:
-      "A practical framework for choosing between a website rebuild and a redesign — the signals that point to each, and the trap of rebuilding to avoid a content problem.",
+      "Signals that point to a rebuild vs a redesign — and the trap of rebuilding to avoid a content problem. A practical way to decide.",
     keywords: [
       "rebuild vs redesign website",
       "when to rebuild a website",
@@ -625,7 +625,7 @@ export const insights: Insight[] = [
     title: "React Performance Optimization: What I Check First",
     metaTitle: "React Performance Optimization: What I Check First",
     metaDescription:
-      "A diagnostic order for React performance problems — the network tab, bundle composition, render count, assets and third-party scripts, before any code changes.",
+      "A diagnostic order for React performance problems — the network tab, bundle composition, render count, assets and third-party scripts.",
     keywords: [
       "React performance checklist",
       "diagnose slow React app",
@@ -717,7 +717,7 @@ export const insights: Insight[] = [
     title: "How to Evaluate an Existing Next.js Codebase Before Adding Features",
     metaTitle: "Evaluating a Next.js Codebase Before Adding Features",
     metaDescription:
-      "What to check in an existing Next.js codebase before adding a new feature — rendering strategy fit, existing conventions, blast radius and regression protection.",
+      "What to check before adding a feature to an existing Next.js codebase — rendering strategy fit, existing conventions, blast radius and regression protection.",
     keywords: [
       "Next.js codebase evaluation",
       "adding features to existing React app",
@@ -993,7 +993,7 @@ export const insights: Insight[] = [
     title: "How to Add AI Features to an Existing Web Application",
     metaTitle: "How to Add AI Features to an Existing Web Application",
     metaDescription:
-      "A practical approach to adding AI features to an existing product — starting from the job to be done, grounding answers, designing for failure, and managing latency and cost.",
+      "How to add AI features to an existing product — from the job to be done, grounding answers, designing for failure, and managing latency and cost.",
     keywords: [
       "add AI features to web app",
       "AI product integration",
@@ -1085,7 +1085,7 @@ export const insights: Insight[] = [
     title: "What I Look For Before Taking Over a Frontend Codebase",
     metaTitle: "Evaluating a Frontend Codebase Before Taking It Over",
     metaDescription:
-      "What I actually check before taking over an existing React or Next.js codebase — state management, rendering strategy, component boundaries and technical debt.",
+      "What I actually check before taking on an existing React or Next.js codebase — state management, rendering strategy, component boundaries and technical debt.",
     keywords: [
       "evaluate existing React codebase",
       "Next.js codebase audit",
@@ -1171,7 +1171,7 @@ export const insightSlugs = insights.map((i) => i.slug);
 
 /** Hub page copy. */
 export const insightsHub = {
-  metaTitle: "Insights — React, Next.js & Migration Notes",
+  metaTitle: "React, Next.js & Migration Insights",
   metaDescription:
     "First-hand notes on React and Next.js engineering, WordPress migrations, performance and AI integration — written from production work, not general advice.",
   h1: "Insights",
