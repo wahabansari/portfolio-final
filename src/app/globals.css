@@ -650,21 +650,34 @@ html.js-motion [data-reveal="shown"] {
 }
 
 /* ── Page entrance ────────────────────────────────────────────────────────
-   A short fade + rise whenever the route changes. Applied by the
-   <PageTransition> wrapper (keyed on pathname) so it replays once per page
-   open without any JS beyond the remount. The global reduced-motion rule
-   below clamps it to an instant. */
+   A short fade whenever the route changes. Applied by the <PageTransition>
+   wrapper (keyed on pathname) so it replays once per page open without any
+   JS beyond the remount. The global reduced-motion rule below clamps it to
+   an instant.
+
+   Opacity only — no transform. <PageTransition> wraps each page's whole
+   output, header included (every page.tsx renders its own <Nav>/<Footer>
+   inside {children}, and the root layout wraps that in <PageTransition>).
+   A `transform` on this div, even at rest, makes it a new containing block
+   for descendant `position: fixed` elements, so the header stopped being
+   fixed to the viewport and scrolled away with the page instead — on every
+   route, permanently, not just during the 360ms the animation runs,
+   because `animation-fill-mode: both` holds the end keyframe's
+   `translateY(0)` forever, and `translateY(0)` still computes as a
+   non-`none` transform. Verified live: the only ancestor of <header> with a
+   transform/filter/perspective/will-change/contain was this div, holding
+   `matrix(1, 0, 0, 1, 0, 8)` long after the page had settled. Dropping the
+   rise and keeping only the fade removes the transform entirely, which is
+   the only value that doesn't create a containing block. */
 .page-enter {
   animation: page-enter 0.36s ease-out both;
 }
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

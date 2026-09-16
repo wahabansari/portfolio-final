@@ -54,16 +54,20 @@ function ProofCard({ project }: { project: Project }) {
         ))}
       </ul>
 
-      <span className="mt-auto pt-6">
-        <span className="flex items-center justify-between gap-4 border-t border-border pt-5">
-          <span className="text-[0.9375rem] font-medium text-fg transition-colors duration-200 group-hover:text-accent">
-            {label}
-          </span>
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-fg-subtle transition-colors duration-200 group-hover:border-accent group-hover:text-accent">
-            {isExternal ? <ExternalIcon className="h-3.5 w-3.5" /> : <ArrowIcon className="h-3.5 w-3.5" />}
+      {/* Only when the card actually goes somewhere — otherwise this reads
+          as "View case study" on a project with no case study to view. */}
+      {hasLink && (
+        <span className="mt-auto pt-6">
+          <span className="flex items-center justify-between gap-4 border-t border-border pt-5">
+            <span className="text-[0.9375rem] font-medium text-fg transition-colors duration-200 group-hover:text-accent">
+              {label}
+            </span>
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-fg-subtle transition-colors duration-200 group-hover:border-accent group-hover:text-accent">
+              {isExternal ? <ExternalIcon className="h-3.5 w-3.5" /> : <ArrowIcon className="h-3.5 w-3.5" />}
+            </span>
           </span>
         </span>
-      </span>
+      )}
     </>
   );
 
