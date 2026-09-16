@@ -28,7 +28,7 @@ export function ExperienceList({
           <Reveal as="li" key={role.company} delay={i * 0.05}>
             <article className="border-b border-border py-8 md:py-10">
               <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-                <header className="lg:col-span-4">
+                <header className="lg:col-span-4 ds-card ds-card-tags p-6 md:p-7">
                   <h3 className="ds-title">{role.role}</h3>
                   <p className="mt-2 text-[0.9375rem] font-medium text-accent">{role.company}</p>
                   {role.client && <p className="ds-meta mt-2 normal-case">Client · {role.client}</p>}

@@ -30,7 +30,7 @@ export function Capabilities({
       <ul className="grid gap-5 md:grid-cols-2">
         {capabilities.map((group, i) => (
           <Reveal as="li" key={group.title} delay={i * 0.04} className="h-full">
-            <div className="ds-card flex h-full flex-col p-6 md:p-7">
+            <div className="ds-card ds-card-tags flex h-full flex-col p-6 md:p-7">
               <div className="flex items-start justify-between gap-4">
                 <h3 className="ds-h3">{group.title}</h3>
                 <span className="ds-meta tabular-nums">

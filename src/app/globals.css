@@ -462,6 +462,16 @@ html[data-theme="dark"] {
   transform: translateY(-2px);
 }
 
+/* Cards that contain tags/chips — subtle accent tint */
+.ds-card-tags {
+  background-color: var(--color-accent-soft);
+  border-color: var(--color-accent-hairline);
+}
+.ds-card-tags:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-accent);
+}
+
 /* ── Container ───────────────────────────────────────────────────────── */
 .ds-container {
   width: 100%;
