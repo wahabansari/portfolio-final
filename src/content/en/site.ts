@@ -22,7 +22,7 @@ export const site = {
   url: "https://wahabansari-portfolio-final.vercel.app",
   available: true,
   availabilityNote: "Open to remote roles and selected projects",
-  resumeHref: "/Muhammad-Wahab-Ansari-Resume.pdf",
+  resumeHref: "/Resume-FEE.pdf",
 } as const;
 
 /**
@@ -71,6 +71,10 @@ export const hero = {
     "5+ years building production web experiences — with a focus on performance, architecture and polished UI.",
   primaryCta: { label: "Start a project", href: "/contact" },
   secondaryCta: { label: "View my work", href: "/work" },
+  /* The résumé is a first-class proof document, so it gets a third action in
+     the hero — a quiet ghost button that does not compete with the two that
+     are actually selling. */
+  resumeCta: { label: "View résumé", href: site.resumeHref },
   /* Availability is stated commercially rather than as job-seeking. Remote
      employment is real and stays visible — on /about and the résumé, which is
      where someone hiring for a role actually looks — but it does not compete
@@ -497,17 +501,16 @@ export type Experience = {
 export const experience: Experience[] = [
   {
     company: "Oxiliry",
-    role: "Frontend Developer",
+    role: "Senior Frontend Engineer",
     client: "Sunhub",
+    period: "Apr 2021 — Present",
     summary:
-      "Owned frontend delivery on a production React platform, with performance treated as a feature rather than an afterthought.",
+      "Frontend delivery on a production React platform, with performance treated as a feature rather than an afterthought.",
     highlights: [
-      "Delivered a 30% performance improvement by eliminating unused assets, optimising the build pipeline and implementing front-end performance strategies — improving Core Web Vitals and user retention.",
-      "Reached that result through lazy loading, tree-shaking, removal of unused assets, image compression and a streamlined build process.",
-      "Built responsive, high-performance React interfaces with cross-browser consistency across devices.",
-      "Worked from Figma with UI/UX designers, translating wireframes and high-fidelity mockups into accessible production interfaces.",
-      "Integrated REST APIs and built form validation with React Hook Form, covering data handling, error states and recovery.",
-      "Worked in Agile/Scrum — stand-ups, sprint planning, retrospectives — with version control across Git and Bitbucket.",
+      "Improved Core Web Vitals by 30% across production React and Next.js applications through bundle optimisation, lazy loading, tree-shaking, image compression and build-pipeline improvements.",
+      "Developed and maintained responsive, production-grade web applications with React, Next.js, TypeScript, reusable components and modern frontend architecture.",
+      "Redesigned and enhanced a production chat interface, resolving UX issues while preserving existing functionality, integrations and business logic.",
+      "Integrated RESTful APIs and delivered accessible, cross-browser interfaces from Figma, following responsive design, performance, SEO and Agile/Scrum practices.",
     ],
     stack: ["React.js", "REST APIs", "React Hook Form", "Figma", "Git", "Bitbucket", "Jira"],
   },
@@ -515,13 +518,14 @@ export const experience: Experience[] = [
     company: "Elite International Group",
     role: "User Interface Designer",
     client: "EHS Group",
+    period: "Nov 2020 — Mar 2021",
     summary:
-      "Led the end-to-end redesign of an LMS platform and built the design system the product still runs on.",
+      "Led the end-to-end redesign of an LMS platform and built the design system it runs on.",
     highlights: [
-      "Led the redesign of a full LMS platform, migrating the design workflow from Adobe XD to Figma and cutting design-to-development handoff time.",
-      "Reimagined dashboards, student portals and admin panels using a component-based approach built for long-term consistency.",
-      "Built and maintained a design system — reusable components, tokens, typography, spacing rules and icon libraries — across the product.",
-      "Ran structured handoff sessions with developers, removing ambiguity between design intent and shipped output.",
+      "Led the end-to-end UI redesign of an LMS platform — student dashboards, portals and administrative interfaces — using a component-based approach.",
+      "Built and maintained a reusable design system covering components, design tokens, typography, spacing and icon libraries.",
+      "Migrated the design workflow from Adobe XD to Figma, improving collaboration, feedback and developer handoff.",
+      "Conducted structured design handoffs with developers, ensuring pixel-accurate, responsive and consistent implementation across the product.",
     ],
     stack: ["Figma", "Adobe XD", "Design Systems", "Design Tokens", "Component Libraries"],
   },

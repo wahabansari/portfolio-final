@@ -9,7 +9,8 @@ import { GridOverlay } from "./grid-overlay";
  * Bricolage display on a warm-paper grid background with a soft accent glow
  * and a quiet watermark. Eyebrow → headline → support copy → two CTAs →
  * meta row. The grid lines dissolve downward via mask so they never fight
- * the content.
+ * the content. A third quiet action opens the résumé in a new tab rather
+ * than navigating the site — it is a document, not a page.
  */
 export function Hero() {
   return (
@@ -64,6 +65,16 @@ export function Hero() {
               className="ds-btn ds-btn-secondary"
             >
               {hero.secondaryCta.label}
+            </Link>
+            <Link
+              href={hero.resumeCta.href}
+              target="_blank"
+              rel="noreferrer"
+              data-track="cta_click"
+              data-track-label="hero-resume"
+              className="ds-btn ds-btn-ghost"
+            >
+              {hero.resumeCta.label}
             </Link>
           </div>
         </Reveal>

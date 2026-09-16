@@ -101,7 +101,7 @@ export const projects: Project[] = [
      ══════════════════════════════════════════════════════════════════════ */
   {
     slug: "sunhub",
-    role: "Frontend Developer, via Oxiliry",
+    role: "Senior Frontend Engineer, via Oxiliry",
     title: "Sunhub",
     kind: "Performance & platform",
     href: "https://www.sunhub.com/",
@@ -131,7 +131,7 @@ export const projects: Project[] = [
       ],
       h1: "Sunhub frontend performance and platform work",
       lede: "A production React platform where performance had become a product problem — and the build-pipeline work that fixed it.",
-      role: "Frontend Developer (via Oxiliry)",
+      role: "Senior Frontend Engineer (via Oxiliry)",
       scope: "Performance work and ongoing frontend delivery",
       status: "Live and in production",
       stack: ["React.js", "REST APIs", "React Hook Form", "Figma", "Git", "Bitbucket", "Jira"],
