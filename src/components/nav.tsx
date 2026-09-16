@@ -53,6 +53,7 @@ export function Nav() {
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Close all panels when route changes
   const [prevPathname, setPrevPathname] = useState(pathname);
@@ -104,8 +105,8 @@ export function Nav() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-200",
         scrolled
-          ? "bg-bg/85 backdrop-blur-md shadow-[0_6px_20px_-12px_rgba(28,23,18,0.18)]"
-          : "bg-transparent shadow-none",
+          ? "bg-bg/90 backdrop-blur-md shadow-[0_6px_20px_-12px_rgba(28,23,18,0.18)]"
+          : "bg-bg/60 backdrop-blur-sm shadow-none",
       )}
     >
       <div className="ds-container flex h-[4.25rem] items-center justify-between gap-4 md:gap-6">
@@ -131,8 +132,13 @@ export function Nav() {
                   <button
                     type="button"
                     onClick={() => setServicesOpen((v) => !v)}
-                    onMouseEnter={() => setServicesOpen(true)}
-                    onMouseLeave={() => setServicesOpen(false)}
+                    onMouseEnter={() => {
+                      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+                      setServicesOpen(true);
+                    }}
+                    onMouseLeave={() => {
+                      closeTimeoutRef.current = setTimeout(() => setServicesOpen(false), 120);
+                    }}
                     aria-expanded={servicesOpen}
                     aria-haspopup="true"
                     data-track="nav_services_toggle"
@@ -153,15 +159,20 @@ export function Nav() {
                   </button>
                   <div
                     className={cn(
-                      "absolute left-0 top-full z-50 mt-2 min-w-[280px] rounded-xl border border-border bg-bg/95 backdrop-blur-md shadow-[0_12px_32px_-12px_rgba(28,23,18,0.25)] py-2 transition-all duration-200 ease-out",
+                      "absolute left-0 top-full z-50 mt-0.5 min-w-[280px] rounded-xl border border-border bg-bg/95 backdrop-blur-md shadow-[0_12px_32px_-12px_rgba(28,23,18,0.25)] py-2 transition-all duration-200 ease-out",
                       servicesOpen
                         ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
                         : "opacity-0 scale-y-95 translate-y-1 pointer-events-none",
                     )}
                     role="menu"
                     aria-label="Services"
-                    onMouseEnter={() => setServicesOpen(true)}
-                    onMouseLeave={() => setServicesOpen(false)}
+                    onMouseEnter={() => {
+                      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+                      setServicesOpen(true);
+                    }}
+                    onMouseLeave={() => {
+                      closeTimeoutRef.current = setTimeout(() => setServicesOpen(false), 120);
+                    }}
                   >
                     {SERVICE_ITEMS.map((svc) => (
                       <Link
