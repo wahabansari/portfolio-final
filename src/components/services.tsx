@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { services, serviceGroups, TIER_LABEL, type Service } from "@/content/services";
-import { ArrowIcon, Reveal, Section } from "./ui";
+import { ArrowIcon, CodeIcon, GaugeIcon, LayoutIcon, RefreshIcon, UsersIcon, LayersIcon, SparklesIcon, Reveal, Section } from "./ui";
 
 /**
  * The four commercial headline offers. These lead the homepage ledger because
@@ -14,6 +14,17 @@ const COMMERCIAL_SLUGS = new Set([
   "wordpress-to-nextjs-migration",
   "performance-engineering",
 ]);
+
+// Service slug → icon mapping
+const SERVICE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  "frontend-product-engineering": CodeIcon,
+  "website-redesign-rebuild": LayoutIcon,
+  "performance-engineering": GaugeIcon,
+  "wordpress-to-nextjs-migration": RefreshIcon,
+  "agency-frontend-development": UsersIcon,
+  "saas-product-development": LayersIcon,
+  "ai-product-integration": SparklesIcon,
+};
 
 /**
  * One ledger row, shared by the homepage overview and the /services hub so
@@ -29,13 +40,17 @@ function ServiceRow({
   index: number;
   track: string;
 }) {
+  const Icon = SERVICE_ICONS[service.slug] || CodeIcon;
   return (
     <Link
       href={`/services/${service.slug}`}
       data-track="cta_click"
       data-track-label={track}
-      className="group grid grid-cols-[48px_minmax(0,1fr)_auto] items-center gap-x-4 border-b border-border py-7 transition-colors duration-200 hover:bg-surface-hover md:grid-cols-[64px_minmax(0,1fr)_auto] md:px-5 md:py-8"
+      className="group grid grid-cols-[40px_48px_minmax(0,1fr)_auto] items-center gap-x-4 border-b border-border py-7 transition-colors duration-200 hover:bg-surface-hover md:grid-cols-[56px_64px_minmax(0,1fr)_auto] md:px-5 md:py-8"
     >
+      <span className="flex items-center justify-center h-8 w-8 rounded-xl bg-accent-soft text-accent transition-colors duration-200 group-hover:bg-accent group-hover:text-accent-fg">
+        <Icon className="h-5 w-5" />
+      </span>
       <span className="font-display text-[0.9375rem] font-semibold tabular-nums tracking-[-0.01em] text-fg-subtle transition-colors duration-200 group-hover:text-accent md:text-[1rem]">
         {String(index + 1).padStart(2, "0")}
       </span>

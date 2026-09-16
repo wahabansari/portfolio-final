@@ -105,8 +105,8 @@ export function Nav() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-200",
         scrolled
-          ? "bg-bg/90 backdrop-blur-md shadow-[0_6px_20px_-12px_rgba(28,23,18,0.18)]"
-          : "bg-bg/60 backdrop-blur-sm shadow-none",
+          ? "bg-bg/95 backdrop-blur-md shadow-[0_6px_20px_-12px_rgba(28,23,18,0.25)]"
+          : "bg-bg/85 backdrop-blur-sm shadow-[0_1px_3px_rgba(28,23,18,0.06)]",
       )}
     >
       <div className="ds-container flex h-[4.25rem] items-center justify-between gap-4 md:gap-6">
