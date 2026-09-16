@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { en, enInsights } from "@/content";
 import * as siteEn from "@/content/en/site";
@@ -10,25 +10,26 @@ import { TrackClicks } from "@/components/analytics";
 import { Gtm } from "@/components/gtm";
 
 /*
- * One voice, one system. DM Sans only.
+ * One voice, one system. Inter only.
  *
- * Weight contrast (500 display, 400 body) carries all hierarchy —
- * no display serif, no mono. Tight tracking (-0.035em), dark theme.
+ * Weight contrast (600/650 display, 400 body) carries all hierarchy.
+ * Monochrome base + one indigo accent. Light and dark themes share the
+ * same tokens through CSS variables — no component changes needed.
  *
  * Self-hosted through next/font — downloaded once at build, no CDN
  * render-block, no layout shift from a late swap.
  */
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal"],
   display: "swap",
 });
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0b0d12" },
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
     { media: "(prefers-color-scheme: dark)", color: "#0b0d12" },
   ],
 };
@@ -91,8 +92,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       dir="ltr"
-      data-theme="dark"
-      className={dmSans.variable}
+      className={inter.variable}
       suppressHydrationWarning
     >
       <head>

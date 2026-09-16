@@ -1,11 +1,29 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { useContent, useLocaleHref } from "./locale-provider";
+import { ThemeToggle } from "./theme-toggle";
 import { ArrowIcon } from "./ui";
+
+/** Scroll position is external state — subscribe to it rather than mirroring
+    it into useState via an effect, which calls setState synchronously in the
+    effect body and triggers the cascading-render warning the React Compiler
+    flags. `getServerSnapshot` returns `false` so SSR and the first paint
+    agree (the page always starts unscrolled). */
+function subscribeToScroll(callback: () => void) {
+  window.addEventListener("scroll", callback, { passive: true });
+  return () => window.removeEventListener("scroll", callback);
+}
+function useScrolled(threshold = 8) {
+  return useSyncExternalStore(
+    subscribeToScroll,
+    () => window.scrollY > threshold,
+    () => false,
+  );
+}
 
 /**
  * Minimal fixed nav.
@@ -17,16 +35,7 @@ export function Nav() {
   const pathname = usePathname();
   const localeHref = useLocaleHref();
   const { site } = useContent();
-  const [scrolled, setScrolled] = useState(false);
-
-  const onScroll = useCallback(() => {
-    setScrolled(window.scrollY > 8);
-  }, []);
-  useEffect(() => {
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [onScroll]);
+  const scrolled = useScrolled();
 
   const links = [
     { label: "Work", href: localeHref("/work") },
@@ -83,14 +92,17 @@ export function Nav() {
           ))}
         </nav>
 
-        <Link
-          href={localeHref("/contact")}
-          data-track="nav_cta"
-          className="ds-btn ds-btn-primary !px-5 !py-2.5 !text-[0.875rem]"
-        >
-          Let&apos;s talk
-          <ArrowIcon className="h-3.5 w-3.5" />
-        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <Link
+            href={localeHref("/contact")}
+            data-track="nav_cta"
+            className="ds-btn ds-btn-primary !px-5 !py-2.5 !text-[0.875rem]"
+          >
+            Let&apos;s talk
+            <ArrowIcon className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
     </header>
   );

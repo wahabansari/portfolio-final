@@ -11,8 +11,10 @@ import { HomeJsonLd } from "@/components/json-ld";
  * Homepage — research-backed minimal composition.
  *
  * Hero → Work → Services → Trust → Contact → Footer.
- * Typography IS the container. No cards, no shadows, no radius >2px.
- * 104px section rhythm. Oversized DM Serif Display for hierarchy.
+ * Inter throughout, weight contrast carries hierarchy. Monochrome base with
+ * one indigo accent; surfaces are defined by a tint against the page
+ * background (bg-surface on bg-bg) rather than a border or shadow. See
+ * globals.css for the token set.
  */
 export default function Home() {
   return (

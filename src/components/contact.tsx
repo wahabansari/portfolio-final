@@ -610,102 +610,109 @@ export function Contact({
 }) {
  const Heading = level;
 
- return (
- <Section id="contact" tone={tone}>
- <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
- <Reveal className="lg:col-span-7">
- <span className="ds-overline">Contact</span>
- <Heading className={level === "h1" ? "ds-h1 mt-5" : "ds-h2 mt-5"}>{heading}</Heading>
- <p className="ds-body-lg mt-6">{body}</p>
- <div className="mt-9">
- <ContactForm />
- </div>
- </Reveal>
+return (
+    <Section id="contact" tone={tone}>
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
+        <Reveal className="lg:col-span-7">
+          <div className="max-w-2xl">
+            <div className="flex flex-wrap items-center gap-4">
+              <span className="ds-overline-accent">Contact</span>
+              {site.available && (
+                <span className="ds-chip ds-chip-success !py-1">
+                  <span className="ds-dot" aria-hidden />
+                  {site.availabilityNote}
+                </span>
+              )}
+            </div>
+            <Heading className={level === "h1" ? "ds-h1 mt-5" : "ds-h2 mt-5"}>{heading}</Heading>
+            <p className="ds-body-lg mt-6">{body}</p>
+          </div>
+          <div className="mt-10 rounded-lg border border-border bg-surface p-6 md:p-8">
+            <ContactForm />
+          </div>
+        </Reveal>
 
- <Reveal delay={0.06} className="lg:col-span-5">
- <div className="lg:sticky lg:top-28">
- {/* What happens next, before anyone fills anything in. The friction
- in a contact form is rarely the fields — it is not knowing what
- the reply will be, or whether sending one commits you to a
- sales call. */}
- <div className="border-t border-border pt-7">
- <p className="ds-meta">What happens next</p>
- <ol className="mt-2">
- {contactSteps.map((item, i) => (
- <li
- key={item.step}
- className="flex gap-4 border-b border-border py-4 last:border-b-0"
- >
- <span
- aria-hidden
- className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.75rem] font-semibold text-accent"
- >
- {i + 1}
- </span>
- <span>
- <span className="block text-[0.9375rem] font-medium text-ink">
- {item.step}
- </span>
- <span className="ds-body-sm mt-1 block">{item.detail}</span>
- </span>
- </li>
- ))}
- </ol>
- </div>
+        <Reveal delay={0.06} className="lg:col-span-5">
+          <div className="overflow-hidden rounded-lg border border-border bg-surface lg:sticky lg:top-28">
+            {/* What happens next, before anyone fills anything in. The friction
+               in a contact form is rarely the fields — it is not knowing what
+               the reply will be, or whether sending one commits you to a
+               sales call. */}
+            <div className="p-6 md:p-8">
+              <p className="ds-meta">What happens next</p>
+              <ol className="mt-5 space-y-5">
+                {contactSteps.map((item, i) => (
+                  <li key={item.step} className="flex gap-4">
+                    <span
+                      aria-hidden
+                      className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.8125rem] font-semibold tabular-nums text-accent"
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span>
+                      <span className="block text-[0.9375rem] font-medium text-ink">
+                        {item.step}
+                      </span>
+                      <span className="ds-body-sm mt-1 block">{item.detail}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
 
- <div className="mt-10 border-t border-border pt-7">
- <p className="ds-meta">Direct</p>
- <a
- href={`mailto:${site.email}`}
- data-track="email_click"
- data-track-label="contact-panel"
- className="mt-4 block font-display text-[1.0625rem] font-semibold break-all text-accent hover:underline"
- >
- {site.email}
- </a>
- <p className="ds-body-sm mt-3">
- Prefer to skip the form? Email works just as well — the fields are only a
- prompt for what is useful to include.
- </p>
+            <div className="border-t border-border bg-surface-hover/50 p-6 md:p-8">
+              <p className="ds-meta">Direct</p>
+              <a
+                href={`mailto:${site.email}`}
+                data-track="email_click"
+                data-track-label="contact-panel"
+                className="mt-4 block font-display text-[1.125rem] font-semibold break-all text-accent hover:underline"
+              >
+                {site.email}
+              </a>
+              <p className="ds-body-sm mt-3">
+                Prefer to skip the form? Email works just as well — the fields are only a
+                prompt for what is useful to include.
+              </p>
 
- <ul className="mt-7 border-t border-border">
- {socials
- .filter((s) => s.href.startsWith("http"))
- .map((s) => (
- <li key={s.label} className="border-b border-border">
- <a
- href={s.href}
- target="_blank"
- rel="noopener noreferrer"
- className="group flex min-h-14 items-center justify-between gap-4 py-3"
- >
- <span>
- <span className="block text-[0.9375rem] font-medium text-ink">
- {s.label}
- </span>
- <span className="ds-body-sm block">{s.handle}</span>
- </span>
- <ExternalIcon className="shrink-0 text-ink-soft transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
- </a>
- </li>
- ))}
- </ul>
+              <ul className="mt-7 border-t border-border">
+                {socials
+                  .filter((s) => s.href.startsWith("http"))
+                  .map((s) => (
+                    <li key={s.label} className="border-b border-border last:border-b-0">
+                      <a
+                        href={s.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex min-h-14 items-center justify-between gap-4 py-3"
+                      >
+                        <span>
+                          <span className="block text-[0.9375rem] font-medium text-ink">
+                            {s.label}
+                          </span>
+                          <span className="ds-body-sm block">{s.handle}</span>
+                        </span>
+                        <ExternalIcon className="shrink-0 text-ink-soft transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </a>
+                    </li>
+                  ))}
+              </ul>
 
- <dl className="mt-7 grid grid-cols-2 gap-6 border-t border-border pt-7">
- <div>
- <dt className="ds-meta">Based in</dt>
- <dd className="mt-1.5 text-[0.9375rem] font-medium text-ink">{site.location}</dd>
- </div>
- <div>
- <dt className="ds-meta">Timezone</dt>
- <dd className="mt-1.5 text-[0.9375rem] font-medium text-ink">{site.timezone}</dd>
- </div>
-</dl>
-  </div>
-  </div>
-  </Reveal>
-  </div>
-  </Section>
+              <dl className="mt-7 grid grid-cols-2 gap-6 border-t border-border pt-6">
+                <div>
+                  <dt className="ds-meta">Based in</dt>
+                  <dd className="mt-1.5 text-[0.9375rem] font-medium text-ink">{site.location}</dd>
+                </div>
+                <div>
+                  <dt className="ds-meta">Timezone</dt>
+                  <dd className="mt-1.5 text-[0.9375rem] font-medium text-ink">{site.timezone}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </Section>
   );
 }
 

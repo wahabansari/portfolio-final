@@ -6,8 +6,8 @@ import { Tooltip } from "@/components/ds/tooltip";
 type Theme = "dark" | "light";
 
 /** Runs before paint so there's no flash of the wrong palette.
-    Light is the designed default (white with the sky accent); dark is opt-in
-    via the toggle and is remembered.
+    Default follows the system preference (`prefers-color-scheme`); the
+    toggle overrides and persists in localStorage.
 
     It also stamps `js-motion` on <html>, which is what gates the scroll-reveal
     entrance in globals.css. Doing it here rather than in a component is the
@@ -16,7 +16,7 @@ type Theme = "dark" | "light";
     when this script runs, a visitor with JavaScript disabled — or a crawler
     that does not execute it — gets every section fully visible rather than a
     page of elements stuck at opacity 0. */
-export const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t!=='dark'){t='dark'}d.setAttribute('data-theme',t)}catch(e){d.setAttribute('data-theme','dark')}d.classList.add('js-motion')})();`;
+export const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}d.setAttribute('data-theme',t)}catch(e){d.setAttribute('data-theme','light')}d.classList.add('js-motion')})();`;
 
 /* The <html data-theme> attribute is the source of truth; the toggle reads it
    from the DOM instead of keeping a second copy in React state. */

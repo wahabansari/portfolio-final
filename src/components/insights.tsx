@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { insights, type Insight } from "@/content/insights";
 import { getService } from "@/content/services";
-import { site } from "@/content/site";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
 /** Human-readable date, stable between server and client (no relative time). */

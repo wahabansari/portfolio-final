@@ -1,15 +1,6 @@
 import type { Insight } from "@/content/insights";
 import type { Service } from "@/content/services";
-import {
-  capabilities,
-  homeFaqs,
-  positioning,
-  problemPaths,
-  process,
-  sections,
-  site,
-  socials,
-} from "@/content/site";
+import { capabilities, positioning, sections, site, socials } from "@/content/site";
 import type { CaseStudy, Project } from "@/content/work";
 import { caseStudies } from "@/content/work";
 
@@ -102,42 +93,6 @@ export function HomeJsonLd() {
             description: positioning,
             publisher: { "@id": PERSON_ID },
             inLanguage: "en",
-          },
-          {
-            "@type": "ItemList",
-            "@id": `${site.url}/#problems`,
-            name: "What are you trying to solve?",
-            itemListElement: problemPaths.map((p, i) => ({
-              "@type": "ListItem",
-              position: i + 1,
-              name: p.problem,
-              url: `${site.url}${p.href}`,
-            })),
-          },
-          {
-            "@type": "HowTo",
-            "@id": `${site.url}/#process`,
-            name: "How the work runs",
-            description: "The five-step delivery model used for every engagement.",
-            step: process.map((s, i) => ({
-              "@type": "HowToStep",
-              position: i + 1,
-              name: s.step,
-              text: s.detail,
-            })),
-          },
-          {
-            "@type": "FAQPage",
-            "@id": `${site.url}/#faq`,
-            speakable: {
-              "@type": "SpeakableSpecification",
-              cssSelector: [".ds-faq-answer"],
-            },
-            mainEntity: homeFaqs.map((f) => ({
-              "@type": "Question",
-              name: f.q,
-              acceptedAnswer: { "@type": "Answer", text: f.a },
-            })),
           },
           {
             "@type": "SiteNavigationElement",
@@ -262,19 +217,6 @@ export function ServiceJsonLd({ service }: { service: Service }) {
                 itemOffered: { "@type": "Service", name: d.title, description: d.detail },
               })),
             },
-          },
-          {
-            "@type": "FAQPage",
-            "@id": `${url}#faq`,
-            speakable: {
-              "@type": "SpeakableSpecification",
-              cssSelector: [".ds-faq-answer"],
-            },
-            mainEntity: service.faqs.map((f) => ({
-              "@type": "Question",
-              name: f.q,
-              acceptedAnswer: { "@type": "Answer", text: f.a },
-            })),
           },
           breadcrumbNode([
             { name: "Home", item: `${site.url}/` },
@@ -488,23 +430,6 @@ export function ArticleJsonLd({ insight }: { insight: Insight }) {
                 }
               : {}),
           },
-          ...(insight.faqs && insight.faqs.length > 0
-            ? [
-                {
-                  "@type": "FAQPage",
-                  "@id": `${url}#faq`,
-                  speakable: {
-                    "@type": "SpeakableSpecification",
-                    cssSelector: [".ds-faq-answer"],
-                  },
-                  mainEntity: insight.faqs.map((f) => ({
-                    "@type": "Question",
-                    name: f.q,
-                    acceptedAnswer: { "@type": "Answer", text: f.a },
-                  })),
-                },
-              ]
-            : []),
           breadcrumbNode([
             { name: "Home", item: `${site.url}/` },
             { name: "Insights", item: `${site.url}/insights` },

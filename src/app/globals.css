@@ -1,57 +1,113 @@
 @import "tailwindcss";
 
 /*
- * Design System — Premium Dark / DM Sans
+ * Design System — Inter, light + dark themes.
  *
- * Research-backed: Linear, Vercel, Stripe design language.
- * Monochrome base + one accent. DM Sans only (weight contrast = hierarchy).
- * No gradients, no shadows, no cards. Generosity of space = premium.
+ * One typeface (Inter, weight contrast = hierarchy). Monochrome base +
+ * one indigo accent. No gradients except a reserved ambient glow, no
+ * shadows, no radius beyond 8px. Generosity of space = premium.
+ *
+ * Raw tokens live on `--c-*`. `[data-theme="dark"]` overrides them; the
+ * Tailwind utilities reference them through `@theme inline`, so every
+ * `bg-bg`, `text-fg`, `border-border` adapts with zero component changes.
  */
 
-@theme {
-  /* ── Typography — DM Sans only ─────────────────────────────────────── */
-  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
-  --font-body: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
-  --font-display: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+/* ── Raw tokens — light (default) ────────────────────────────────────── */
+:root {
+  --c-bg: #fafafa;
+  --c-surface: #ffffff;
+  --c-surface-hover: #f3f4f6;
+  --c-border: #e5e7eb;
+  --c-border-subtle: #f0f1f3;
+  --c-fg: #111827;
+  --c-fg-muted: #4b5563;
+  --c-fg-subtle: #9ca3af;
+  --c-fg-softest: #d1d5db;
+  --c-accent: #5b50d8;
+  --c-accent-hover: #4a41c7;
+  --c-accent-deep: #4338ca;
+  --c-accent-soft: rgba(91, 80, 216, 0.1);
+  --c-accent-fg: #ffffff;
+  --c-accent-hairline: #dbd6ff;
+  --c-glow: rgba(91, 80, 216, 0.12);
+  --c-success: #15803d;
+  --c-success-soft: #dcfce7;
+  --c-success-border: #bbf7d0;
+  --c-deep: #312e7e;
+  --c-deep-text: #ffffff;
+}
+
+/* ── Raw tokens — dark ───────────────────────────────────────────────── */
+html[data-theme="dark"] {
+  --c-bg: #0b0d12;
+  --c-surface: #11141b;
+  --c-surface-hover: #171b24;
+  --c-border: #20242e;
+  --c-border-subtle: #161a22;
+  --c-fg: #edeff2;
+  --c-fg-muted: #a2a8b5;
+  --c-fg-subtle: #6a7080;
+  --c-fg-softest: #4d5360;
+  --c-accent: #7b74ff;
+  --c-accent-hover: #9a94ff;
+  --c-accent-deep: #4c45cc;
+  --c-accent-soft: rgba(123, 116, 255, 0.12);
+  --c-accent-fg: #ffffff;
+  --c-accent-hairline: rgba(123, 116, 255, 0.4);
+  --c-glow: rgba(123, 116, 255, 0.14);
+  --c-success: #4ade80;
+  --c-success-soft: #0b2214;
+  --c-success-border: #164329;
+  --c-deep: #0e1022;
+  --c-deep-text: #ffffff;
+}
+
+@theme inline {
+  /* ── Typography — Inter only ─────────────────────────────────────── */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
-  --text-display-size: 4.5rem;
-  --text-h1-size: 3.5rem;
-  --text-h2-size: 2.5rem;
-  --text-h3-size: 1.75rem;
-
-  /* ── Colors — deep charcoal-navy, not flat black ───────────────────── */
-  --color-bg: #0b0d12;
-  --color-surface: #11141b;
-  --color-surface-hover: #171b24;
-  --color-border: #20242e;
-  --color-border-subtle: #161a22;
-  --color-fg: #edeff2;
-  --color-fg-muted: #a2a8b5;
-  --color-fg-subtle: #6a7080;
-  --color-accent: #7b74ff;
-  --color-accent-hover: #9a94ff;
-  --color-accent-deep: #4c45cc;
-  --color-accent-soft: rgba(123, 116, 255, 0.12);
-  --color-glow: rgba(123, 116, 255, 0.14);
-  --color-success: #4ade80;
+  /* ── Colors — theme tokens ──────────────────────────────────────── */
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-hover: var(--c-surface-hover);
+  --color-border: var(--c-border);
+  --color-border-subtle: var(--c-border-subtle);
+  --color-fg: var(--c-fg);
+  --color-fg-muted: var(--c-fg-muted);
+  --color-fg-subtle: var(--c-fg-subtle);
+  --color-fg-softest: var(--c-fg-softest);
+  --color-accent: var(--c-accent);
+  --color-accent-hover: var(--c-accent-hover);
+  --color-accent-deep: var(--c-accent-deep);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-accent-fg: var(--c-accent-fg);
+  --color-accent-hairline: var(--c-accent-hairline);
+  --color-glow: var(--c-glow);
+  --color-success: var(--c-success);
+  --color-success-soft: var(--c-success-soft);
+  --color-success-border: var(--c-success-border);
+  --color-deep: var(--c-deep);
+  --color-deep-text: var(--c-deep-text);
   --color-white: #ffffff;
 
-  /* Semantic aliases (kept for component compatibility) */
-  --color-ink: var(--color-fg);
-  --color-ink-muted: var(--color-fg-muted);
-  --color-ink-soft: var(--color-fg-subtle);
-  --color-ink-softest: #4d5360;
-  --color-paper: var(--color-bg);
-  --color-paper-bright: var(--color-surface);
-  --color-hairline: var(--color-border);
-  --color-accent-fg: var(--color-white);
-  --color-surface-2: var(--color-surface);
+  /* Semantic aliases (kept for older components) */
+  --color-ink: var(--c-fg);
+  --color-ink-muted: var(--c-fg-muted);
+  --color-ink-soft: var(--c-fg-subtle);
+  --color-ink-softest: var(--c-fg-softest);
+  --color-paper: var(--c-bg);
+  --color-paper-bright: var(--c-surface);
+  --color-hairline: var(--c-border);
+  --color-border-strong: var(--c-fg-subtle);
+  --color-surface-2: var(--c-surface);
+  --color-surface-3: var(--c-deep);
 
-  /* ── Spacing — 8px base ────────────────────────────────────────────── */
+  /* ── Spacing — 8px base ──────────────────────────────────────────── */
   --space-1: 4px;
   --space-2: 8px;
-  --space-3: 12px;
   --space-4: 16px;
   --space-6: 24px;
   --space-8: 32px;
@@ -64,11 +120,15 @@
   --spacing-section: 120px;
   --spacing-section-mobile: 80px;
 
-  /* ── Radius — sharp, professional ──────────────────────────────────── */
+  /* ── Radius ──────────────────────────────────────────────────────── */
   --radius-sm: 6px;
   --radius-md: 8px;
-  --radius-lg: 8px;
-  --radius-card: 8px;
+  --radius-lg: 10px;
+  /* Master brief calls for a medium, consistent radius on surfaces —
+     roughly 12-18px. 16px sits at the centre of that range; sm/md/lg stay
+     tighter for controls (buttons, inputs, chips), which the brief doesn't
+     ask to change. */
+  --radius-card: 16px;
 }
 
 /* ── Base ────────────────────────────────────────────────────────────── */
@@ -97,6 +157,7 @@ body {
     transparent 70%
   );
   background-repeat: no-repeat;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* ── Typography scale ────────────────────────────────────────────────── */
@@ -105,50 +166,46 @@ body {
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   line-height: 1.0;
   letter-spacing: -0.035em;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-fg);
 }
 
 .ds-h1 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(2rem, 4vw, 3.25rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
-  font-weight: 500;
+  font-weight: 650;
   color: var(--color-fg);
 }
 
 .ds-h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.625rem, 3vw, 2.5rem);
+  font-size: clamp(1.625rem, 3vw, 2.375rem);
   line-height: 1.1;
   letter-spacing: -0.025em;
-  font-weight: 500;
+  font-weight: 650;
   color: var(--color-fg);
 }
 
 .ds-h3 {
   font-family: var(--font-display);
-  font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+  font-size: clamp(1.375rem, 2.5vw, 1.625rem);
   line-height: 1.2;
   letter-spacing: -0.02em;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-fg);
 }
 
 /* Body */
-.body-large {
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: var(--color-fg-muted);
-}
+.body-large { font-size: 1.125rem; line-height: 1.6; color: var(--color-fg-muted); }
 .ds-body-lg { font-size: 1.125rem; line-height: 1.6; color: var(--color-fg-muted); }
 .ds-body { font-size: 1rem; line-height: 1.5; color: var(--color-fg-muted); }
 .ds-body-sm { font-size: 0.875rem; line-height: 1.5; color: var(--color-fg-muted); }
 
 /* Caption / meta */
 .ds-meta {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0;
   color: var(--color-fg-subtle);
@@ -157,17 +214,16 @@ body {
 /* Overline — the only decorative typographic move */
 .ds-overline {
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--color-fg-subtle);
 }
 
-/* Accent overline — the "designed" flag. Used sparingly on one label
-   per viewport (hero + each section head), so color stays an accent. */
+/* Accent overline — the "designed" flag. Used on one label per viewport. */
 .ds-overline-accent {
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--color-accent);
@@ -196,7 +252,7 @@ body {
   border-radius: var(--radius-md);
   padding: 0.875rem 1.75rem;
   font-size: 0.9375rem;
-  font-weight: 500;
+  font-weight: 550;
   line-height: 1;
   text-decoration: none;
   transition: all 0.15s ease-out;
@@ -212,7 +268,7 @@ body {
 
 .ds-btn-primary {
   background-color: var(--color-accent);
-  color: var(--color-white);
+  color: var(--color-accent-fg);
 }
 .ds-btn-primary:hover {
   background-color: var(--color-accent-hover);
@@ -226,6 +282,7 @@ body {
 }
 .ds-btn-secondary:hover {
   border-color: var(--color-fg-subtle);
+  background-color: var(--color-surface-hover);
 }
 
 .ds-btn-ghost {
@@ -253,11 +310,11 @@ body {
 .ds-chip-accent {
   border-color: var(--color-accent);
   background-color: var(--color-accent-soft);
-  color: var(--color-accent-hover);
+  color: var(--color-accent);
 }
 .ds-chip-success {
-  border-color: #1f3d2e;
-  background-color: #0a1f16;
+  border-color: var(--color-success-border);
+  background-color: var(--color-success-soft);
   color: var(--color-success);
 }
 
@@ -292,10 +349,10 @@ body {
 /* ── Section tones ───────────────────────────────────────────────────── */
 .tone-plain { background-color: var(--color-bg); }
 .tone-soft { background-color: var(--color-surface); }
-/* Deep = the inverted accent band. A deep indigo-tinted surface with a
-   soft radial glow — the visual anchor at the bottom of the page. */
+/* Deep = the inverted band. Dark indigo in light mode, darker indigo-ink
+   in dark mode — white text stays readable in both. */
 .tone-deep {
-  background-color: #0e1022;
+  background-color: var(--color-deep);
   background-image: radial-gradient(
     55rem 28rem at 50% 115%,
     var(--color-glow) 0%,
@@ -321,7 +378,7 @@ body {
   pointer-events: none;
   user-select: none;
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 0.85;
   color: var(--color-fg);
@@ -398,5 +455,5 @@ body {
 /* ── Selection ───────────────────────────────────────────────────────── */
 ::selection {
   background-color: var(--color-accent);
-  color: var(--color-white);
+  color: var(--color-accent-fg);
 }
