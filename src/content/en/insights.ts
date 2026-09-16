@@ -1161,6 +1161,369 @@ export const insights: Insight[] = [
       primaryLabel: "Discuss a frontend project",
     },
   },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     13 · FRONTEND ARCHITECTURE FOR SAAS PRODUCTS
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "frontend-architecture-for-saas-products",
+    title: "Frontend Architecture for SaaS Products",
+    metaTitle: "Frontend Architecture for SaaS Products",
+    metaDescription:
+      "What actually distinguishes a SaaS product's frontend from a marketing site's — feature boundaries, auth, role-aware UI and the states that carry the product.",
+    keywords: [
+      "SaaS frontend architecture",
+      "React SaaS architecture",
+      "Next.js SaaS development",
+      "SaaS product frontend",
+    ],
+    h1: "Frontend architecture for SaaS products",
+    dek: "A SaaS frontend is a different kind of build from a marketing site — here is what actually changes, and why it changes early.",
+    cluster: "SaaS",
+    intent: "Commercial investigation",
+    publishedAt: "2026-09-16",
+    updatedAt: "2026-09-16",
+    definition:
+      "SaaS frontend architecture is the set of structural decisions — feature-based component boundaries, server-enforced authentication, role-aware interfaces and explicit handling of the states between loading and done — that let a product's interface grow with new features instead of being rewritten for them.",
+    intro: [
+      "A marketing site and a SaaS product frontend can share a framework, a design system and a developer, and still be fundamentally different builds. A marketing site's job is to present the same thing well to everyone who visits it. A SaaS product's frontend has to answer a different question for every request: who is asking, what are they allowed to see, and what is true about their account right now.",
+      "That difference sounds abstract until it is not — usually around the third feature that has to know whether the user is an admin, or the fifth screen that needs to handle a slow API response gracefully. The architecture decisions below are the ones that determine whether that moment is routine or expensive.",
+    ],
+    sections: [
+      {
+        heading: "Component boundaries drawn around features, not file types",
+        body: [
+          "A folder of every button, every card and every hook in the application is fine at twenty components and unworkable past a hundred, because nothing in that structure tells you what belongs together. A feature-based structure — everything a given piece of product functionality needs, colocated — means a new feature lands in one place instead of five, and a removed feature can actually be removed rather than leaving orphaned files behind in three different folders.",
+          "This was one of the concrete decisions in rebuilding Verdira: the codebase was reorganised around feature boundaries during the rebuild specifically because doing it later, once the application had grown, would have cost far more than doing it while the structure was still small enough to hold in one head.",
+        ],
+      },
+      {
+        heading: "Two surfaces, two sets of rules",
+        body: [
+          "Most SaaS products have a public surface — marketing pages, pricing, sign-up — and an authenticated surface behind it, and the two have opposite requirements. The public pages should be as static and cacheable as possible, because they are the same for everyone and speed there affects conversion and SEO. The authenticated surface is per-user by definition and must never be cached the same way.",
+          "Drawing that boundary explicitly at the routing layer — rather than letting the whole application default to dynamic rendering because one part of it needs to be — is what keeps the marketing pages fast without asking the authenticated pages to pretend they are static. On Verdira this was the specific reason the public marketing surface stayed statically rendered through the introduction of accounts: adding auth cost the public pages nothing in speed or indexability, because the two were never treated as one rendering strategy.",
+        ],
+      },
+      {
+        heading: "Authorization enforced where the request is answered, not where the button is drawn",
+        body: [
+          "Hiding a button or a nav link for a user without permission is a UX decision, not a security one — it stops a request from being obvious, not from being possible. A user who knows or guesses the URL, or replays a request with developer tools, is not stopped by a link that was never rendered.",
+          "The rule that holds up is simple to state and easy to skip under deadline pressure: authorization is checked on the server, at the point the data or the mutation is actually served, every time — not once, optimistically, in a layout that assumes it already ran. This is exactly the decision documented on the Verdira rebuild: protected client areas were enforced server-side rather than by conditionally rendering a link, because a client area that is only hidden is not protected.",
+        ],
+      },
+      {
+        heading: "The interface has to account for the states a demo skips",
+        body: [
+          "A product demo shows the happy path: data loads quickly, the request succeeds, the user has permission. A real SaaS product spends a meaningful share of its actual usage in the states around that — a dashboard with no data yet, a save that failed and needs a retry, a session that expired mid-form. Treating those as edge cases to add later is how a product ships technically complete and still feels unfinished.",
+          "In practice this means every data-dependent screen gets a defined loading state, empty state and error state as part of building the feature, not as a follow-up ticket — and forms specifically need validation and recovery paths that do not lose what the user already typed.",
+        ],
+      },
+      {
+        heading: "Structured for the version that has not shipped yet",
+        body: [
+          "The expensive version of an MVP is the one built as if it will be thrown away, because when the core workflow proves out, there is nothing underneath it to extend — the second version becomes a rewrite instead of an iteration. Feature boundaries, server-enforced auth and typed data contracts cost very little to set up at the start and are the specific things that let a second version build on the first rather than replace it.",
+          "This is a scope discipline as much as a technical one: naming what is explicitly out of the first version, in writing, alongside what is in it, is what keeps the architecture proportionate to a product that has not yet proven which parts of it matter.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Does a SaaS product need Next.js specifically, or does React alone work?",
+        a: "Plain React is a reasonable choice for a fully authenticated application behind a login, where server rendering buys little because nothing needs to be publicly indexed. Next.js earns its place once there is a public marketing surface that needs SEO and fast first loads sitting alongside the authenticated product — which describes most SaaS products with a real go-to-market motion.",
+      },
+      {
+        q: "How early should authentication architecture be decided?",
+        a: "Before the first protected screen is built, not after. Deciding where sessions live, how protected routes are enforced, and how roles are checked is a foundational decision that every subsequent feature builds on top of — retrofitting it into screens that already assumed an open application is far more expensive than deciding it once, early.",
+      },
+      {
+        q: "What is the actual cost of skipping feature-based structure at the start?",
+        a: "Not much, for the first few weeks — that is exactly what makes it easy to skip. The cost shows up later, as a growing folder where nothing indicates what belongs together, and as features that are hard to remove cleanly because their files are scattered across the codebase by type rather than grouped by what they do.",
+      },
+    ],
+    references: [
+      { label: "Next.js: Project structure and organization", url: "https://nextjs.org/docs/app/getting-started/project-structure" },
+      { label: "React: Thinking in React", url: "https://react.dev/learn/thinking-in-react" },
+    ],
+
+    relatedServiceSlug: "saas-product-development",
+    relatedCaseStudySlugs: ["verdira"],
+    cta: {
+      heading: "Building or restructuring a SaaS product frontend?",
+      body: "Tell me the workflow the product exists for and what already exists. I will reply with what I would put in the architecture first, and why.",
+      primaryLabel: "Discuss an MVP",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     14 · AUTHENTICATION ARCHITECTURE IN NEXT.JS
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "authentication-architecture-in-nextjs",
+    title: "Authentication Architecture in Next.js",
+    metaTitle: "Authentication Architecture in Next.js",
+    metaDescription:
+      "How to structure sessions, protected routes and role checks in a Next.js application — and why the enforcement point matters more than the auth provider you pick.",
+    keywords: [
+      "Next.js authentication architecture",
+      "Next.js protected routes",
+      "Next.js session management",
+      "Next.js role-based access",
+    ],
+    h1: "Authentication architecture in Next.js",
+    dek: "The provider you pick matters less than where you enforce the check — this is the part that actually determines whether protected data stays protected.",
+    cluster: "SaaS",
+    intent: "Problem solving",
+    publishedAt: "2026-09-16",
+    updatedAt: "2026-09-16",
+    definition:
+      "Authentication architecture in Next.js is the decision about where a session is stored, where protected routes are enforced, and how role or permission checks reach every place that serves sensitive data — not the choice of which auth library issues the session in the first place.",
+    intro: [
+      "Which auth provider or library to use is usually the first question asked and the least consequential one, in the sense that several good options all handle sign-in correctly. The decision that actually determines whether a Next.js application's protected areas are protected is where the authorization check runs, and that decision is easy to get subtly wrong under deadline pressure.",
+      "This is the structure I use, informed directly by rebuilding Verdira from a static marketing site into an application with genuinely private, password-protected client areas sitting alongside a public marketing surface that had to keep working exactly as before.",
+    ],
+    sections: [
+      {
+        heading: "A session is a claim, not a fact, until it is checked",
+        body: [
+          "A cookie or token that says who a user is has to be verified — decrypted, checked for expiry, matched against what the server expects — every time it is relied on for something sensitive. Reading it once in a layout and assuming the rest of the request tree can trust that read is where protection quietly becomes optimistic rather than real.",
+          "The pattern that holds up is centralising verification in one place — a single function every protected data request or mutation calls — rather than re-implementing the check inline wherever it happens to be needed. One place to get it right is easier to keep right than a dozen copies of the same logic drifting apart over time.",
+        ],
+      },
+      {
+        heading: "Protect the data, not the link",
+        body: [
+          "Conditionally rendering a nav link or a page based on session state is a real UX improvement — it stops a signed-out user from being confused by a link that will not work. It does nothing to stop a request. A protected page's data has to be checked at the point it is fetched or mutated, on the server, regardless of whether the UI that would normally link to it was ever rendered.",
+          "This is the specific decision behind Verdira's protected client areas: route protection was enforced server-side, at the point a request for that content was actually answered, rather than by hiding the areas from navigation for users without access. A client area that is only hidden is not protected — it is unlinked.",
+        ],
+      },
+      {
+        heading: "Keep the public surface out of the authenticated rendering path",
+        body: [
+          "Adding accounts to an application does not have to mean the whole application becomes dynamically rendered. Public marketing pages have no session to check and no reason to be recomputed per request — they can stay statically rendered while the authenticated routes handle sessions on their own, separately.",
+          "Getting this wrong is a common, avoidable performance cost: an application where introducing auth accidentally makes every route dynamic, including the ones nobody needed to protect in the first place, pays a real speed and indexability tax for a decision that only needed to apply to a subset of the app.",
+        ],
+      },
+      {
+        heading: "Roles are a data problem before they are a UI problem",
+        body: [
+          "Role-based access starts with a clear answer to \"what can this specific role see and do,\" recorded somewhere authoritative, before any component checks it. A role check scattered across components as ad hoc conditionals is difficult to audit and easy to get inconsistent — the same permission enforced one way on the dashboard and a slightly different way on the settings page.",
+          "The interface layer's job is to read that authoritative answer and render accordingly; it should not be where the permission logic itself lives, because a UI-only permission check is exactly the kind of protection that a direct request bypasses entirely.",
+        ],
+      },
+      {
+        heading: "Sessions expire; the interface should expect that, not react to it",
+        body: [
+          "A session that expires mid-form, or an API call that comes back unauthorized because a token rotated, is a normal event in a long-lived application, not an edge case. Designing for it — a clear re-authentication path that does not discard what the user was doing, rather than a confusing blank screen or a silent failure — is part of the authentication architecture, not a separate concern handled by a generic error boundary.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Should authentication checks happen in Next.js middleware/proxy, or in the route itself?",
+        a: "Both, for different reasons. A proxy-level check is useful for fast, optimistic redirects — sending a clearly signed-out user to a login page before any data fetching starts. The check that actually protects sensitive data has to happen close to that data, at the point it is read or written, because the optimistic check is a UX convenience, not the security boundary itself.",
+      },
+      {
+        q: "Is it safe to store role information only in the session cookie?",
+        a: "For quick, optimistic UI decisions, yes. For anything that gates real access to data, the role should be verified against the source of truth — typically a database — at the point of the sensitive request, because a client-readable cookie is not the place to put the final authorization decision.",
+      },
+      {
+        q: "Does adding authentication always make a Next.js app slower?",
+        a: "No — it makes the routes that actually need a session dynamic, which is a cost specific to those routes. Public, unauthenticated pages can and should stay statically rendered regardless of how much of the rest of the application requires a login, as long as the rendering strategy is set per route rather than globally.",
+      },
+    ],
+    references: [
+      { label: "Next.js: How to implement authentication", url: "https://nextjs.org/docs/app/guides/authentication" },
+      { label: "OWASP: Session Management Cheat Sheet", url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html" },
+    ],
+
+    relatedServiceSlug: "saas-product-development",
+    relatedCaseStudySlugs: ["verdira"],
+    cta: {
+      heading: "Adding accounts or protected areas to an application?",
+      body: "Describe what exists and what needs to be protected. I will tell you honestly where the real risk is and what the architecture should look like.",
+      primaryLabel: "Discuss an MVP",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     15 · NEXT.JS IMAGE OPTIMIZATION FOR PRODUCTION APPLICATIONS
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "nextjs-image-optimization-for-production-applications",
+    title: "Next.js Image Optimization for Production Applications",
+    metaTitle: "Next.js Image Optimization for Production Applications",
+    metaDescription:
+      "Why images are usually the biggest lever on a slow Next.js application's LCP, and the specific decisions — sizing, format, loading priority — that actually move it.",
+    keywords: [
+      "Next.js image optimization",
+      "next/image",
+      "Next.js LCP optimization",
+      "image performance React",
+    ],
+    cluster: "Performance",
+    intent: "Problem solving",
+    publishedAt: "2026-09-16",
+    updatedAt: "2026-09-16",
+    h1: "Next.js image optimization for production applications",
+    dek: "Images are the most common Core Web Vitals lever in a Next.js application, and most of the win is sizing them correctly rather than compressing them harder.",
+    definition:
+      "Next.js image optimization means serving every image at the size it is actually displayed, in a modern compressed format, with loading priority set deliberately — eager for whatever appears above the fold, deferred for everything else — rather than shipping one large source file everywhere and letting the browser scale it down.",
+    intro: [
+      "Images are, by a wide margin, the most common thing making a Core Web Vitals report look bad, and also the fastest thing to genuinely fix, because the fix is rarely about compressing harder — it is about not sending pixels nobody sees. A 3000px-wide source image displayed at 400px wide costs the same download whether or not the extra resolution is visible, and that gap is the first thing worth checking.",
+      "This is the specific work behind part of the measured 30% Core Web Vitals improvement on Sunhub: images were compressed and served at sizes matching their actual display dimensions, alongside the bundle and rendering changes documented in that case study. The reasoning below is general — it applies to any Next.js application — but it is the reasoning that produced that result, not a generic checklist assembled afterward.",
+    ],
+    sections: [
+      {
+        heading: "The `next/image` component's actual job",
+        body: [
+          "`next/image` generates correctly sized variants and serves modern formats automatically, but it can only do that well if it is told the real display dimensions — the `width`, `height` or `fill` behaviour, and a `sizes` value that matches the actual responsive layout. Dropping an image into the component without those specified correctly is a common way to get a smaller version of the improvement than is actually available.",
+          "The `sizes` prop specifically is where a lot of unclaimed performance sits: a responsive image that renders at 33% of a wide viewport but is missing a `sizes` hint often still downloads a much larger source than needed, because the browser has no way to know in advance how the layout will resolve it.",
+        ],
+      },
+      {
+        heading: "Eager loading is a decision, not a default to avoid",
+        body: [
+          "The instinct to lazy-load everything for a better bundle score is exactly backwards for whatever image is the page's actual LCP candidate — usually a hero image or the first meaningful visual. Deferring that one specific image trades a bundle metric for the metric that actually measures how fast the page feels, which is the wrong trade.",
+          "The rule that holds: whatever renders in the initial viewport and is likely the largest visible element loads eagerly, with `priority` set explicitly on it; everything below the fold, in a carousel that has not been scrolled to, or behind an interaction, defers. This split was drawn at the first meaningful render on Sunhub specifically because getting it backwards — deferring something above the fold — repairs one number while damaging the actual experience.",
+        ],
+      },
+      {
+        heading: "Format and compression are the smaller half of the win",
+        body: [
+          "Modern formats (WebP, AVIF where the browser support and encode time justify it) reduce file size for the same visual quality, and `next/image` handles this automatically when configured to. But format conversion on an image that is already three times larger than its display size is optimising the wrong variable — the sizing problem dominates, and fixing it first is usually most of the available improvement before format choice even enters the picture.",
+        ],
+      },
+      {
+        heading: "Remote images need explicit configuration, not assumptions",
+        body: [
+          "Images served from a CMS, a storage bucket or a third-party domain need their host explicitly allowed in Next.js's image configuration, and the optimization pipeline only applies to images actually running through the `next/image` component — a raw `<img>` tag anywhere in the codebase, often left over from an earlier build, silently opts that image out of every optimization discussed here. Auditing for stray `<img>` tags is a five-minute check that occasionally finds the single largest unoptimized image on the page.",
+        ],
+      },
+      {
+        heading: "Measure the specific images, not just the aggregate score",
+        body: [
+          "A Lighthouse score improving is a useful signal but not the diagnosis. The useful version of this work identifies which specific images are contributing the most bytes and the most layout risk — usually visible directly in a request waterfall — and fixes those first, rather than applying a blanket optimization pass and hoping the aggregate number reflects it. Isolating changes this way is also what makes the resulting improvement attributable to something specific rather than to the engagement as a whole.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Does using next/image guarantee good image performance automatically?",
+        a: "No — it removes the manual work of generating variants and modern formats, but it still needs accurate width, height and sizes information to serve the right variant. A misconfigured next/image usage can still ship an oversized image; the component is a tool applied correctly, not a guarantee applied automatically.",
+      },
+      {
+        q: "Should every image be lazy-loaded for better performance?",
+        a: "No. Whatever image is the largest visible element in the initial viewport should load eagerly with priority set, because that is very often the page's LCP candidate — lazy-loading it trades a faster-looking bundle metric for a slower-feeling page, which is the opposite of the intended result.",
+      },
+      {
+        q: "Is image compression or image sizing the bigger performance lever?",
+        a: "Sizing, in most real cases. An image served at three or four times its display size wastes far more bandwidth than the difference between a well-compressed JPEG and an equivalent WebP — fixing the size first is usually where most of the available improvement is, with format and compression closing the smaller remaining gap.",
+      },
+    ],
+    references: [
+      { label: "Next.js: Image component", url: "https://nextjs.org/docs/app/api-reference/components/image" },
+      { label: "MDN: Web performance", url: "https://developer.mozilla.org/en-US/docs/Web/Performance" },
+    ],
+
+    relatedServiceSlug: "performance-engineering",
+    relatedCaseStudySlugs: ["sunhub"],
+    cta: {
+      heading: "Images dragging down your Core Web Vitals?",
+      body: "Send the site or app. I will tell you which specific images are costing the most and what I would fix first.",
+      primaryLabel: "Request a performance assessment",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     16 · HOW I STRUCTURE REACT APPLICATIONS FOR LONG-TERM MAINTAINABILITY
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "how-i-structure-react-applications-for-long-term-maintainability",
+    title: "How I Structure React Applications for Long-Term Maintainability",
+    metaTitle: "How I Structure React Applications for Long-Term Maintainability",
+    metaDescription:
+      "The structural decisions that keep a React application easy to change two years in — component boundaries, rendering strategy and where state actually lives.",
+    keywords: [
+      "React application architecture",
+      "maintainable React applications",
+      "React project structure",
+      "long-term React architecture",
+    ],
+    cluster: "Engineering",
+    intent: "Expertise / proof",
+    publishedAt: "2026-09-16",
+    updatedAt: "2026-09-16",
+    h1: "How I structure React applications for long-term maintainability",
+    dek: "Not a style guide — the specific decisions that determine whether a codebase is still pleasant to work in two years on, drawn from actually being the one working in it.",
+    definition:
+      "A maintainable React application is one where a new feature can be added by touching the code that owns the thing being changed, without needing to understand or risk the rest of the application first — which is a property of where boundaries were drawn, not of how much documentation exists.",
+    intro: [
+      "This is not a list of best practices collected from articles. It is the set of decisions I actually make, informed by five years maintaining the same production platform rather than handing work off and moving on — which is what teaches you which shortcuts cost something later and which ones genuinely do not matter.",
+      "None of this is exotic. The decisions below are ordinary, and the value is almost entirely in making them early and consistently, before a codebase is large enough that changing course is expensive.",
+    ],
+    sections: [
+      {
+        heading: "Component boundaries follow the data, not the screen",
+        body: [
+          "A component boundary drawn where a screen happens to have a visual break — a card, a section, a panel — looks reasonable until a small requirement change needs to touch three of those components because none of them actually own the thing that changed. A boundary drawn where the underlying data changes tends to hold up, because the component that owns a piece of state is the one place a change to that state actually has to be made.",
+          "The practical test I use: for a plausible near-term feature request, how much of the component tree would need to move? If the honest answer is \"most of it,\" the boundaries were drawn around layout, not data, and that is worth fixing before it compounds.",
+        ],
+      },
+      {
+        heading: "State lives at the narrowest point that needs it",
+        body: [
+          "State that starts as one `useState` and gets threaded through nine components via props is usually a sign the state was declared where it was first needed, not where it actually belongs. Lifting state up only as far as the components that genuinely share it — and no further — keeps re-renders scoped and keeps the ownership of a piece of data legible from reading the component tree.",
+          "This is separate from the question of which state management library to use. The library matters far less than whether the underlying decision — where does this specific piece of state belong — was made deliberately, because a global store holding state only one screen needs has the same maintainability problem as prop-drilled local state, just relocated.",
+        ],
+      },
+      {
+        heading: "Rendering strategy is chosen per route, not defaulted into",
+        body: [
+          "In a Next.js application specifically, whether a route is server-rendered, statically generated or client-rendered should follow from what that route actually needs — public and indexable, or private and per-user, or genuinely interactive with no SEO requirement — rather than being whatever the app happened to default into during its first few weeks.",
+          "An application that is client-rendered everywhere because that was the path of least resistance early on usually still works; it is carrying cost it did not have to, in bundle size, initial load and indexability on pages that should have been indexable. This is fixable incrementally, route by route, which is exactly why it is worth revisiting rather than accepting as fixed.",
+        ],
+      },
+      {
+        heading: "Remove before you optimise",
+        body: [
+          "The cheapest code to maintain, and the cheapest asset to load, is the one that no longer exists. On the Sunhub platform, the largest single performance win came from removing unused assets and dead code paths accumulated across years of feature delivery — not from micro-optimising code that should not have been shipping in the first place. The same principle applies to maintainability: a codebase gets easier to work in by deleting what nothing uses, on a normal cadence, rather than only during a dedicated cleanup effort.",
+          "Tree-shaking specifically depends on this discipline — a barrel import that pulls a whole module into a page defeats it silently, and nobody notices until the bundle is audited directly.",
+        ],
+      },
+      {
+        heading: "The states that are not the happy path are part of the feature",
+        body: [
+          "Loading, empty, error and partial states get built last, if at all, and they are usually most of what a real user actually experiences — the API is occasionally slow, a list is sometimes empty, a request sometimes fails. Treating these as edge cases to add later is how a feature ships technically complete and still needs rework once real usage starts. Building them alongside the happy path, as part of the same feature, is slower by a small amount up front and cheaper by a larger amount later.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Is this approach specific to large applications, or does it matter for small ones too?",
+        a: "It matters most for whatever application is going to keep being worked on. A prototype that will be thrown away does not need any of this. A small application that is going to grow benefits from these decisions being made early precisely because they cost almost nothing at a small scale and become expensive to retrofit once the codebase is bigger.",
+      },
+      {
+        q: "Does this mean over-engineering everything from day one?",
+        a: "No — the opposite failure mode is real too. The goal is boundaries and decisions proportionate to what is actually being built, made deliberately rather than defaulted into. An MVP still benefits from state living in the right place and rendering strategy being a decision, without needing the full architecture a much larger product would.",
+      },
+      {
+        q: "How do you know if an existing codebase already has these problems?",
+        a: "By reading it against exactly these questions — where does state actually live, was rendering strategy chosen or defaulted into, where are component boundaries drawn, and what do the non-happy-path states currently do. That is the same read I do before taking over a codebase, covered in more detail in the related article on evaluating one before adding features.",
+      },
+    ],
+    references: [
+      { label: "React: Thinking in React", url: "https://react.dev/learn/thinking-in-react" },
+      { label: "Next.js: Project structure and organization", url: "https://nextjs.org/docs/app/getting-started/project-structure" },
+    ],
+
+    relatedServiceSlug: "frontend-product-engineering",
+    relatedCaseStudySlugs: ["sunhub", "verdira"],
+    cta: {
+      heading: "Inheriting or growing a React codebase?",
+      body: "Send the repo, or describe the situation if it's private. I will tell you honestly what I would check first and what I think the real scope of the work is.",
+      primaryLabel: "Discuss a frontend project",
+    },
+  },
 ];
 
 export function getInsight(slug: string): Insight | undefined {
