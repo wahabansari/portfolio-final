@@ -432,7 +432,8 @@ export function Faqs({
 /* ── Fit lists ──────────────────────────────────────────────────────────────
  "Who this is for" beside "who it is not for". The second column is the one
  that earns trust: a service page that cannot name anyone it is wrong for is
- a sales page. Side-by-side soft cards — no outlines. */
+ a sales page. A hairline top rule and a single vertical divider between the
+ two columns carry the structure — no card fill, no shadow. */
 
 export function FitLists({
  idealFor,
@@ -442,8 +443,8 @@ export function FitLists({
  notIdealFor: readonly string[];
 }) {
  return (
- <div className="grid gap-4 md:grid-cols-2">
- <div className="ds-card p-7">
+ <div className="grid gap-10 border-t border-border pt-8 md:grid-cols-2 md:gap-16">
+ <div>
  <p className="ds-meta text-success">A good fit</p>
  <ul className="mt-5 space-y-3.5">
  {idealFor.map((item) => (
@@ -454,7 +455,7 @@ export function FitLists({
  ))}
  </ul>
  </div>
- <div className="ds-card p-7">
+ <div className="md:border-l md:border-border md:pl-16">
  <p className="ds-meta">Not a fit</p>
  <ul className="mt-5 space-y-3.5">
  {notIdealFor.map((item) => (
@@ -470,9 +471,9 @@ export function FitLists({
 }
 
 /* ── Numbered steps ─────────────────────────────────────────────────────────
- A grid of soft cards rather than a hairline table: each step is a #F8F9FA
- fill on the white band, with a plain blue index number — no boxes inside
- boxes. */
+ A hairline top rule carries the block; each step is bare — a large index
+ numeral, a heading, a line — with the column gap doing the separation
+ instead of a card fill. */
 
 export function StepList({
   steps,
@@ -484,15 +485,15 @@ export function StepList({
   return (
     <ol
       className={cn(
-        "grid gap-4 sm:grid-cols-2",
+        "grid gap-x-8 gap-y-10 border-t border-border pt-9 sm:grid-cols-2",
         columns === 4 ? "lg:grid-cols-4" : "lg:grid-cols-5",
       )}
     >
       {steps.map((s, i) => (
-        <li key={s.step} className="flex flex-col ds-card p-6">
+        <li key={s.step} className="flex flex-col">
           <span
             aria-hidden
-            className="font-display text-[0.8125rem] font-medium text-accent tabular-nums"
+            className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums"
           >
             {String(i + 1).padStart(2, "0")}
           </span>

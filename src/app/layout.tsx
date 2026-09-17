@@ -13,17 +13,13 @@ import { buildSearchIndex } from "@/lib/search-index";
 import { PageTransition } from "@/components/page-transition";
 
 /*
- * Two voices, one hierarchy. Bricolage Grotesque display, Inter body.
- *
- * Bricolage is the variable display cut used for headings, overlines and
- * numerals: it carries an optical-size axis (opsz 12-96) that redraws the
- * letterforms for their size rather than scaling one drawing, plus a
- * continuous weight range (200-800). Hierarchy is weight + size, not a pile
- * of families.
- *
- * Inter is the neutral workhorse for everything read at length or clicked —
- * paragraphs, buttons, fields. One extra file, but layout-shift-free via
- * next/font self-hosting, and both stay well inside the font budget.
+ * One typeface, everywhere — including the data-styled moments (the hero's
+ * terminal panel, tabular figures, badges). Bricolage is the variable cut
+ * used for all of it: it carries an optical-size axis (opsz 12-96) that
+ * redraws the letterforms for their size rather than scaling one drawing,
+ * plus a continuous weight range (200-800). Hierarchy is weight + size +
+ * tabular-nums alignment, not a second family brought in for anything that
+ * looks like output.
  */
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",

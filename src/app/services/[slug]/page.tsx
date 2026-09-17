@@ -13,15 +13,25 @@ import {
  ArrowIcon,
  CheckIcon,
  ChipList,
+ CodeIcon,
+ CompassIcon,
  Definition,
  Faqs,
  FitLists,
+ GaugeIcon,
+ LayersIcon,
+ LayoutIcon,
  MinusIcon,
  PageHeader,
+ RefreshIcon,
  Reveal,
+ RocketIcon,
+ SearchIcon,
  Section,
  SectionHeading,
+ ServerIcon,
  StepList,
+ UserIcon,
 } from "@/components/ui";
 import { insights } from "@/content/insights";
 import { getService, services, serviceSlugs } from "@/content/services";
@@ -40,6 +50,27 @@ const SECTIONS = [
  { id: "why", label: "Why me" },
  { id: "faq", label: "FAQ" },
 ];
+
+/* A representative icon per technical-group label, matched by keyword rather
+   than an exact lookup table so a new group on a future service degrades to
+   CodeIcon instead of rendering nothing. Covers every group label in
+   content/services.ts today: Core, Data, Interface, Forms & auth,
+   Performance, Delivery, Build, Content, Search, Measurement, Rendering,
+   Assets, Migration, CMS, Styling, Process, Application, Auth, Operations,
+   Retrieval, Workflow. */
+function technicalIcon(label: string) {
+ const l = label.toLowerCase();
+ if (l.includes("auth")) return UserIcon;
+ if (l.includes("performance") || l.includes("measurement")) return GaugeIcon;
+ if (l.includes("search") || l.includes("retrieval")) return SearchIcon;
+ if (l.includes("rendering")) return ServerIcon;
+ if (l.includes("data") || l.includes("cms")) return LayersIcon;
+ if (l.includes("interface") || l.includes("content") || l.includes("styling") || l.includes("assets")) return LayoutIcon;
+ if (l.includes("migration") || l.includes("integration") || l.includes("workflow")) return RefreshIcon;
+ if (l.includes("delivery") || l.includes("application") || l.includes("operations")) return RocketIcon;
+ if (l.includes("process")) return CompassIcon;
+ return CodeIcon;
+}
 
 export function generateStaticParams() {
  return serviceSlugs.map((slug) => ({ slug }));
@@ -151,17 +182,21 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  overline="The problem"
  title="What this service is actually solving"
  />
- <ul className="grid gap-4 lg:grid-cols-3">
+ <ul className="border-t border-border">
  {service.problems.map((problem, i) => (
  <Reveal
  as="li"
  key={problem.title}
  delay={i * 0.05}
- className="flex flex-col ds-card p-7"
+ className="grid grid-cols-1 gap-x-8 gap-y-3 border-b border-border py-8 md:grid-cols-12 md:items-baseline"
  >
- <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
- <h3 className="ds-title-sm mt-4">{problem.title}</h3>
- <p className="ds-body-sm mt-3">{problem.detail}</p>
+ <span className="font-display text-[2.25rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums md:col-span-2 md:text-[2.5rem]">
+ {String(i + 1).padStart(2, "0")}
+ </span>
+ <div className="md:col-span-10">
+ <h3 className="ds-title-sm">{problem.title}</h3>
+ <p className="ds-body-sm mt-3 max-w-2xl">{problem.detail}</p>
+ </div>
  </Reveal>
  ))}
  </ul>
@@ -173,9 +208,14 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  title="What you get"
  description="Concrete outputs, not activities. Everything here is something that exists at the end of the engagement."
  />
- <ul className="grid gap-4 md:grid-cols-2">
+ <ul className="grid border-t border-border sm:grid-cols-2">
  {service.deliverables.map((d, i) => (
- <Reveal as="li" key={d.title} delay={i * 0.03} className="ds-card p-7">
+ <Reveal
+ as="li"
+ key={d.title}
+ delay={i * 0.03}
+ className="border-b border-border py-7 sm:py-8 sm:odd:pr-8 sm:odd:border-r sm:even:pl-8"
+ >
  <div className="flex items-start gap-3.5">
  <CheckIcon className="mt-1 shrink-0 text-accent" />
  <div>
@@ -201,13 +241,19 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  title="What it is built with, and why that matters to you"
  description={service.technical.summary}
  />
- <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
- {service.technical.groups.map((group, i) => (
- <Reveal key={group.label} delay={i * 0.04} className="ds-card p-6">
+ <div className="grid gap-x-8 gap-y-10 border-t border-border pt-9 sm:grid-cols-2 lg:grid-cols-3">
+ {service.technical.groups.map((group, i) => {
+ const Icon = technicalIcon(group.label);
+ return (
+ <Reveal key={group.label} delay={i * 0.04}>
+ <div className="flex items-center gap-2.5">
+ <Icon className="h-4 w-4 shrink-0 text-accent" />
  <p className="ds-meta">{group.label}</p>
+ </div>
  <ChipList items={group.items} className="mt-4" />
  </Reveal>
- ))}
+ );
+ })}
  </div>
  </Section>
 
@@ -225,8 +271,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  title="Where the scope starts and stops"
  description="Stated up front so it is a shared understanding rather than a negotiation halfway through."
  />
- <div className="grid gap-4 md:grid-cols-2">
- <Reveal className="ds-card p-7">
+ <div className="grid gap-10 border-t border-border pt-8 md:grid-cols-2 md:gap-16">
+ <Reveal>
  <p className="ds-meta text-success">Included</p>
  <ul className="mt-5 space-y-3.5">
  {service.scope.includes.map((item) => (
@@ -237,7 +283,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
  ))}
  </ul>
  </Reveal>
- <Reveal delay={0.05} className="bg-surface p-7">
+ <Reveal delay={0.05} className="md:border-l md:border-border md:pl-16">
  <p className="ds-meta">Not included</p>
  <ul className="mt-5 space-y-3.5">
  {service.scope.excludes.map((item) => (

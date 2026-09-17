@@ -5,7 +5,9 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { ArticleJsonLd } from "@/components/json-ld";
 import { RelatedWork } from "@/components/work";
+import { ServiceToc } from "@/components/service-toc";
 import { PageEvent } from "@/components/analytics";
+import { InsightCover } from "@/components/insights";
 import {
  ArrowIcon,
  CtaBand,
@@ -61,6 +63,30 @@ function readingTime(insight: { definition: string; intro: string[]; sections: {
  return Math.max(1, Math.round(words / 250));
 }
 
+function slugify(text: string) {
+ return text
+   .toLowerCase()
+   .replace(/[^a-z0-9]+/g, "-")
+   .replace(/(^-|-$)/g, "");
+}
+
+/**
+ * A pull quote — one line, already written elsewhere on the page (the dek,
+ * which exists precisely to be quotable), set apart in large italic type on
+ * a tinted field. Long-form technical writing reads as a wall of text
+ * without a break like this partway through; a diagram would do the same
+ * job if the content had one to show.
+ */
+function PullQuote({ children }: { children: string }) {
+ return (
+   <blockquote className="border-l-[3px] border-l-coral bg-coral-soft py-6 pl-7 pr-6 md:py-7 md:pl-8">
+     <p className="font-display text-[1.375rem] leading-[1.4] font-medium tracking-[-0.01em] text-ink italic md:text-[1.5rem]">
+       &ldquo;{children}&rdquo;
+     </p>
+   </blockquote>
+ );
+}
+
 export default async function InsightPage({ params }: { params: Promise<{ slug: string }> }) {
  const { slug } = await params;
  const insight = getInsight(slug);
@@ -69,6 +95,15 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  const service = getService(insight.relatedServiceSlug);
  const index = insights.findIndex((i) => i.slug === insight.slug);
  const nextInsight = insights[(index + 1) % insights.length];
+
+ const tocSections = insight.sections.map((s) => ({ id: slugify(s.heading), label: s.heading }));
+ /* Sections alternate tone starting on "soft" (the Definition block right
+    above is "plain", and two bands of the same fill are never allowed to
+    touch). Whatever the last section lands on, the FAQ band that follows
+    has to be the other one — computed rather than hardcoded, since the
+    section count differs per article. */
+ const lastSectionTone = (insight.sections.length - 1) % 2 === 0 ? "soft" : "plain";
+ const faqTone = lastSectionTone === "soft" ? "plain" : "soft";
 
  return (
  <>
@@ -103,34 +138,28 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  </>
  )
  }
- aside={
- <div className="h-full border-t border-border">
- <p className="ds-meta">Published</p>
- <p className="ds-body-sm mt-3">
- <time dateTime={insight.publishedAt}>{formatDate(insight.publishedAt)}</time>
- <span className="ds-meta mx-2">&middot;</span>
- <span className="ds-meta">{readingTime(insight)} min read</span>
- </p>
- {insight.updatedAt !== insight.publishedAt && (
- <div className="mt-5 border-t border-border pt-5">
- <p className="ds-meta">Last updated</p>
- <p className="ds-body-sm mt-3">
- <time dateTime={insight.updatedAt}>{formatDate(insight.updatedAt)}</time>
- </p>
- </div>
- )}
- </div>
- }
  />
 
- {/* Answer-first. One quotable sentence before any explanation. */}
+ {/* The cover — real image treatment (large, full-width, its own visual
+ moment) rather than a small panel squeezed beside the header text. */}
  <Section tone="plain">
  <Reveal>
+ <InsightCover slug={insight.slug} className="aspect-[21/9] w-full md:aspect-[3/1]" />
+ <div className="mt-5 flex flex-wrap items-center gap-3">
+ <span className="ds-chip ds-chip-accent">{insight.cluster}</span>
+ <span className="ds-meta">{formatDate(insight.publishedAt)}</span>
+ <span className="ds-meta" aria-hidden="true">&middot;</span>
+ <span className="ds-meta">{readingTime(insight)} min read</span>
+ </div>
+ </Reveal>
+
+ {/* Answer-first. One quotable sentence before any explanation. */}
+ <Reveal delay={0.05} className="mt-10">
  <div className="mx-auto max-w-[70ch]">
  <Definition term="In one sentence">{insight.definition}</Definition>
  </div>
  </Reveal>
- <Reveal delay={0.05} className="mt-10">
+ <Reveal delay={0.08} className="mt-10">
  <div className="mx-auto max-w-[70ch] space-y-5">
  {insight.intro.map((p) => (
  <p key={p} className="ds-body-lg">
@@ -141,12 +170,26 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  </Reveal>
  </Section>
 
- <Section tone="soft">
- <div className="mx-auto max-w-[70ch] space-y-12">
- {insight.sections.map((section, i) => (
- <Reveal key={section.heading} delay={i * 0.03}>
- <h2 className="ds-h2">{section.heading}</h2>
- <div className="mt-5 space-y-5">
+ {tocSections.length > 1 && <ServiceToc sections={tocSections} />}
+
+ {insight.sections.map((section, i) => {
+ const tone = i % 2 === 0 ? "soft" : "plain";
+ return (
+ <Section key={section.heading} id={slugify(section.heading)} tone={tone}>
+ <div className="mx-auto max-w-[70ch]">
+ <Reveal delay={i * 0.03}>
+ <div className="flex items-start gap-5">
+ <span className="shrink-0 font-display text-[2.25rem] font-bold leading-[0.9] tracking-[-0.03em] text-accent tabular-nums md:text-[2.75rem]">
+ {String(i + 1).padStart(2, "0")}
+ </span>
+ <div className="flex-1 pt-1">
+ <h2 className="font-display text-[1.625rem] font-bold leading-[1.2] tracking-[-0.02em] text-fg md:text-[1.875rem]">
+ {section.heading}
+ </h2>
+ <span aria-hidden className="mt-4 block h-[3px] w-16 bg-accent" />
+ </div>
+ </div>
+ <div className="mt-8 space-y-5 md:pl-[4.25rem]">
  {section.body.map((p) => (
  <p key={p} className="ds-body-lg">
  {p}
@@ -154,12 +197,18 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  ))}
  </div>
  </Reveal>
- ))}
+ {i === 0 && (
+ <Reveal delay={0.1} className="mt-10">
+ <PullQuote>{insight.dek}</PullQuote>
+ </Reveal>
+ )}
  </div>
  </Section>
+ );
+ })}
 
 {insight.faqs && insight.faqs.length > 0 && (
-  <Section id="faq" tone="soft">
+  <Section id="faq" tone={faqTone}>
   <SectionHeading overline="Questions" title="Common questions" />
   <Reveal>
   <Faqs faqs={insight.faqs} className="mx-auto max-w-4xl" />

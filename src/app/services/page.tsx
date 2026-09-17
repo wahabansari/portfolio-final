@@ -57,13 +57,21 @@ export default function ServicesPage() {
             description="If two of these look right, it is usually the first one — the others are shaped around a specific situation."
           />
 
-          <ul className="grid gap-4 md:grid-cols-2">
-            {services.map((service) => (
-              <Reveal as="li" key={service.slug} className="flex flex-col ds-card p-7">
-                <h3 className="font-display text-[1.0625rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg">
+          <ul className="grid border-t border-border sm:grid-cols-2">
+            {services.map((service, i) => (
+              <Reveal
+                as="li"
+                key={service.slug}
+                delay={i * 0.03}
+                className="border-b border-border py-7 sm:odd:border-r sm:odd:pr-8 sm:even:pl-8"
+              >
+                <span className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="font-display text-[1.0625rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg mt-3">
                   {service.title}
                 </h3>
-                <p className="ds-body-sm mt-3 flex-1">
+                <p className="ds-body-sm mt-3">
                   <span className="font-medium text-ink">Pick this if: </span>
                   {service.idealFor[0].charAt(0).toLowerCase() + service.idealFor[0].slice(1)}.
                 </p>

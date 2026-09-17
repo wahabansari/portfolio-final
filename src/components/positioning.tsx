@@ -35,11 +35,11 @@ export function Audiences({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" 
                 data-track-label={`audience:${audience.href.replace("/services/", "")}`}
                 className="group grid grid-cols-1 items-baseline gap-x-8 gap-y-3 border-b border-border py-8 transition-colors hover:bg-surface md:grid-cols-12 md:py-10"
               >
-                <span className="md:col-span-1 md:pl-2">
+                <span className="md:col-span-2">
                   <span
                     aria-hidden
                     className={cn(
-                      "font-display text-[1.25rem] font-medium tabular-nums transition-colors group-hover:text-accent",
+                      "font-display text-[2.25rem] font-semibold leading-none tracking-[-0.02em] tabular-nums transition-colors group-hover:text-accent md:text-[2.75rem]",
                       primary ? "text-accent" : "text-ink-soft",
                     )}
                   >
@@ -66,7 +66,7 @@ export function Audiences({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" 
                   <span className="ds-meta mt-1 block">{audience.label}</span>
                 </span>
 
-                <span className="ds-body-sm text-ink-muted md:col-span-6">
+                <span className="ds-body-sm text-ink-muted md:col-span-5">
                   {audience.detail}
                 </span>
 

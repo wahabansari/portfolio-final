@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cn } from "@/lib/cn";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { CaseStudyJsonLd } from "@/components/json-ld";
@@ -181,15 +182,24 @@ export default async function CaseStudyPage({
 
  <Section tone="soft">
  <SectionHeading overline="The work" title="What was built" />
- <div className="grid gap-4 md:grid-cols-2">
+ <ul className="border-t border-border">
  {study.build.map((block, i) => (
- <Reveal key={block.heading} delay={i * 0.04} className="ds-card p-7 md:p-8">
- <span className="ds-meta text-accent">{String(i + 1).padStart(2, "0")}</span>
- <h3 className="ds-title mt-4">{block.heading}</h3>
- <p className="ds-body-sm mt-3">{block.body}</p>
+ <Reveal
+ as="li"
+ key={block.heading}
+ delay={i * 0.04}
+ className="grid grid-cols-1 gap-x-8 gap-y-3 border-b border-border py-8 md:grid-cols-12 md:items-baseline"
+ >
+ <span className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums md:col-span-1">
+ {String(i + 1).padStart(2, "0")}
+ </span>
+ <div className="md:col-span-11">
+ <h3 className="ds-title">{block.heading}</h3>
+ <p className="ds-body-sm mt-3 max-w-2xl">{block.body}</p>
+ </div>
  </Reveal>
  ))}
- </div>
+ </ul>
  </Section>
 
  <Section tone="plain">
@@ -218,13 +228,17 @@ export default async function CaseStudyPage({
  title="What actually came out of it"
  description="Measured results are marked as such. Where there is no measured figure, the outcome is stated as what changed rather than dressed up as a statistic."
  />
- <ul className="grid gap-4 md:grid-cols-3">
+ <ul className="grid border-t border-border sm:grid-cols-3">
  {study.outcome.map((o, i) => (
  <Reveal
  as="li"
  key={o.statement}
  delay={i * 0.05}
- className="flex flex-col ds-card p-7"
+ className={cn(
+ "flex flex-col border-b border-border py-7 sm:py-8",
+ i < study.outcome.length - 1 && "sm:border-r sm:pr-7",
+ i > 0 && "sm:pl-7",
+ )}
  >
  <span
  className={

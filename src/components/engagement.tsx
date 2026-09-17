@@ -1,14 +1,24 @@
 import Link from "next/link";
 import { engagements } from "@/content/site";
+import { cn } from "@/lib/cn";
 import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
 
+/* Border per pane in the 3-up window grid, spelled out per index the same
+   way the homepage's offer grid is — divide-x/divide-y borders every DOM
+   sibling in source order, which cannot express "only the first two columns
+   get a left rule" once panes wrap onto a second row on narrow screens. */
+const PANE_DIVIDER = [
+  "",
+  "border-t sm:border-t-0 sm:border-l border-border",
+  "border-t md:border-t-0 md:border-l border-border",
+];
+
 /**
- * Three ways to work together, set as a full-width index.
- *
- * Three audiences — a hiring manager, a direct client and an agency — each
- * need to see their own path named explicitly. Each arrangement is a hairline
- * row: a mono index number, the shape at display scale, what it means in
- * practice, and the route on the right — no cards, no equal-weight boxes.
+ * Three ways to work together, as panes in a window grid — not stacked
+ * hairline rows and not cards. Each pane carries its own index numeral,
+ * the arrangement at display scale, what it means in practice and the
+ * route into it; separated from its neighbours only by the grid's own
+ * dividers.
  */
 export function Engagement({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
@@ -19,36 +29,27 @@ export function Engagement({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
         description="Three arrangements, each with a different shape. Whichever fits, the first step is the same conversation."
       />
 
-      <ul className="border-t border-border">
+      <div className="grid border-t border-border sm:grid-cols-2 md:grid-cols-3">
         {engagements.map((option, i) => (
-          <Reveal as="li" key={option.title} delay={i * 0.05}>
-            <div className="group grid items-center gap-x-8 gap-y-3 border-b border-border py-8 transition-colors hover:bg-surface md:grid-cols-12 md:py-10">
-              <span className="md:col-span-1 md:pl-2">
-                <span className="font-display text-[1.25rem] font-medium text-accent tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+          <Reveal key={option.title} delay={i * 0.05} className={cn("group", PANE_DIVIDER[i])}>
+            <Link href={option.cta.href} className="flex h-full flex-col p-7 transition-colors duration-200 hover:bg-surface md:p-8">
+              <span className="font-display text-[2rem] font-bold leading-none tracking-[-0.03em] text-accent-soft tabular-nums">
+                {String(i + 1).padStart(2, "0")}
               </span>
-
-              <h3 className="font-display text-[1.375rem] leading-snug font-medium tracking-[-0.014em] text-ink transition-colors group-hover:text-accent md:text-[1.625rem] md:col-span-3">
+              <h3 className="mt-5 font-display text-[1.375rem] leading-snug font-bold tracking-[-0.015em] text-ink transition-colors group-hover:text-accent md:text-[1.5rem]">
                 {option.title}
               </h3>
-
-              <p className="text-[0.9375rem] leading-relaxed text-ink-muted md:col-span-5">
+              <p className="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-ink-muted">
                 {option.detail}
               </p>
-
-              <Link
-                href={option.cta.href}
-                data-track={option.cta.href.includes("agency") ? "cta_click" : undefined}
-                className="inline-flex items-center gap-1.5 font-mono text-[0.8125rem] font-medium uppercase tracking-[0.06em] text-accent md:col-span-3 md:justify-end md:pr-2"
-              >
+              <span className="mt-6 inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-accent">
                 {option.cta.label}
                 <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-              </Link>
-            </div>
+              </span>
+            </Link>
           </Reveal>
         ))}
-      </ul>
+      </div>
     </Section>
   );
 }

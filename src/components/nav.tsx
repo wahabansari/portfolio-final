@@ -93,6 +93,7 @@ export function Nav() {
   const links = [
     { label: "Work", href: localeHref("/work") },
     { label: "Services", href: localeHref("/services") },
+    { label: "Insights", href: localeHref("/insights") },
     { label: "About", href: localeHref("/about") },
   ];
 

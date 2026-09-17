@@ -65,6 +65,15 @@
   --c-warn-border: #fecaca;
   --c-deep: #211a6e;
   --c-deep-text: #ffffff;
+  /* Terminal/data panel — deliberately fixed-dark in both themes, like a
+     real terminal window rather than a themed surface. Border does the work
+     of keeping it a distinct object when the page itself turns dark. */
+  --c-panel: #14110d;
+  --c-panel-text: #f5f1e8;
+  /* Same pairing as dark theme's --c-fg-subtle on --c-bg (#14110d):
+     verified 5.3:1. */
+  --c-panel-dim: #948a76;
+  --c-panel-border: rgba(245, 241, 232, 0.12);
   /* Card shadow — genuinely restrained: a soft, close, low-opacity lift,
      not a floating-panel drop shadow. */
   --shadow-card: 0 1px 2px rgba(28, 23, 18, 0.03), 0 2px 8px rgba(28, 23, 18, 0.04);
@@ -109,6 +118,12 @@ html[data-theme="dark"] {
   --c-warn-border: #4c1d1d;
   --c-deep: #0d0a2e;
   --c-deep-text: #ffffff;
+  /* One step darker than dark-theme --c-bg (#14110d) so the panel still
+     reads as a distinct object rather than merging into the page. */
+  --c-panel: #0a0805;
+  --c-panel-text: #f5f1e8;
+  --c-panel-dim: #948a76;
+  --c-panel-border: rgba(245, 241, 232, 0.16);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.25);
   --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.25), 0 8px 20px rgba(0, 0, 0, 0.3);
 }
@@ -120,7 +135,10 @@ html[data-theme="dark"] {
   --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+  /* One typeface site-wide — anything that used to reach for a separate
+     mono face for "data" styling (tabular figures, badges) uses Bricolage
+     too, leaning on tabular-nums and weight instead of a second family. */
+  --font-mono: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
 
   /* ── Colors — theme tokens ──────────────────────────────────────── */
   --color-bg: var(--c-bg);
@@ -153,6 +171,10 @@ html[data-theme="dark"] {
   --color-warn-border: var(--c-warn-border);
   --color-deep: var(--c-deep);
   --color-deep-text: var(--c-deep-text);
+  --color-panel: var(--c-panel);
+  --color-panel-text: var(--c-panel-text);
+  --color-panel-dim: var(--c-panel-dim);
+  --color-panel-border: var(--c-panel-border);
   --color-white: #ffffff;
 
   /* Semantic aliases (kept for older components) */
