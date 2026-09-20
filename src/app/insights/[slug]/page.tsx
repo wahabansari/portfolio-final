@@ -144,7 +144,7 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  moment) rather than a small panel squeezed beside the header text. */}
  <Section tone="plain">
  <Reveal>
- <InsightCover slug={insight.slug} className="aspect-[21/9] w-full md:aspect-[3/1]" />
+ <InsightCover insight={insight} className="aspect-[21/9] w-full md:aspect-[3/1]" />
  <div className="mt-5 flex flex-wrap items-center gap-3">
  <span className="ds-chip ds-chip-accent">{insight.cluster}</span>
  <span className="ds-meta">{formatDate(insight.publishedAt)}</span>

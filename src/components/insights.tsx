@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { insights, type Insight } from "@/content/insights";
 import { cn } from "@/lib/cn";
-import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
+import { SERVICE_ICONS } from "./services";
+import { ArrowIcon, CodeIcon, Reveal, Section, SectionHeading } from "./ui";
 
 /* A short, stable integer from a string — used to vary each article's cover
    deterministically (same slug always renders the same cover) without
@@ -14,33 +15,67 @@ function hashSeed(input: string): number {
   return h;
 }
 
+/* Deterministic float in [0,1) from two integers — a sine-hash PRNG. Pure
+   floating-point, no bitwise shifts, so there is no signed/unsigned pitfall
+   to repeat (an earlier cover generator used `seed >> n` on a value that can
+   exceed 2^31 and got reinterpreted as negative — see git history). Used
+   here only to vary the background wash angle, which has no bounds to
+   overflow regardless of the input. */
+function rand(seed: number, salt: number): number {
+  const x = Math.sin(seed * 12.9898 + salt * 78.233) * 43758.5453;
+  return x - Math.floor(x);
+}
+
 /**
- * The "image" for an article that has no photography — a soft two-tone
- * gradient-mesh cover, the same accent/coral pair used everywhere else on
- * the site, laid out differently per article from a hash of its slug so the
- * hub doesn't repeat one identical tile. Used small as a hub thumbnail and
- * large as the article page's hero cover.
+ * The "image" for an article that has no photography — a solid indigo
+ * gradient tile (the same accent → accent-deep pairing the brand mark and
+ * OG card use, so it reads as designed rather than as a faded placeholder),
+ * with the matching service's icon (via `SERVICE_ICONS`, one shared mapping
+ * so a topic never gets two different icons on different pages) floating in
+ * an elevated white card on top. A light grid texture and a few small dots
+ * — decorative only, small enough that any hash-driven position still looks
+ * intentional — keep the fill from reading as flat. The gradient angle and
+ * dot layout are the only things varied per article; nothing here is
+ * positioned in a way that can clip or land off-tile. Used small as a hub
+ * thumbnail and large as the article page's hero cover.
  */
-export function InsightCover({ slug, className }: { slug: string; className?: string }) {
-  const seed = hashSeed(slug);
-  const x1 = 10 + (seed % 35);
-  const y1 = 5 + ((seed >> 3) % 45);
-  const x2 = 45 + ((seed >> 6) % 45);
-  const y2 = 35 + ((seed >> 9) % 45);
+export function InsightCover({ insight, className }: { insight: Insight; className?: string }) {
+  const seed = hashSeed(insight.slug);
+  const angle = Math.round(rand(seed, 0) * 360);
+  const Icon = SERVICE_ICONS[insight.relatedServiceSlug] ?? CodeIcon;
+  const dots = Array.from({ length: 5 }, (_, i) => ({
+    x: 10 + rand(seed, 10 + i * 2) * 80,
+    y: 10 + rand(seed, 11 + i * 2) * 80,
+    r: 1 + rand(seed, 30 + i) * 1.4,
+  }));
+
   return (
-    <div className={cn("relative overflow-hidden rounded-[var(--radius-card)] bg-bg", className)}>
-      <div aria-hidden className="ds-grid-lines absolute inset-0 opacity-50" />
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-[var(--radius-card)] shadow-[0_10px_28px_-14px_rgba(28,23,18,0.4)]",
+        className,
+      )}
+      style={{ background: `linear-gradient(${angle}deg, var(--color-accent) 0%, var(--color-accent-deep) 100%)` }}
+    >
       <div
         aria-hidden
-        className="absolute h-[75%] w-[75%] rounded-full bg-accent-soft blur-3xl"
-        style={{ left: `${x1}%`, top: `${y1}%`, transform: "translate(-50%,-50%)" }}
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)",
+          backgroundSize: "22px 22px",
+        }}
       />
-      <div
-        aria-hidden
-        className="absolute h-[60%] w-[60%] rounded-full bg-coral-soft blur-3xl"
-        style={{ left: `${x2}%`, top: `${y2}%`, transform: "translate(-50%,-50%)" }}
-      />
-      <div aria-hidden className="absolute inset-0 border border-border/60" />
+      <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+        {dots.map((d, i) => (
+          <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#fff" fillOpacity={0.3} />
+        ))}
+      </svg>
+      <div aria-hidden className="absolute inset-0 flex items-center justify-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface text-accent shadow-[0_14px_30px_-10px_rgba(0,0,0,0.4)] md:h-20 md:w-20">
+          <Icon className="h-8 w-8 md:h-10 md:w-10" />
+        </span>
+      </div>
     </div>
   );
 }
@@ -78,7 +113,10 @@ function InsightEntry({ insight, index }: { insight: Insight; index: number }) {
       data-track-label={insight.slug}
       className="group mb-10 block break-inside-avoid"
     >
-      <InsightCover slug={insight.slug} className="aspect-[4/3] w-full" />
+      <InsightCover
+        insight={insight}
+        className="aspect-[4/3] w-full transition-transform duration-300 ease-out group-hover:scale-[1.015]"
+      />
       <span className="ds-meta mt-4 block text-accent">{String(index + 1).padStart(2, "0")}</span>
       <h3 className="mt-1.5 font-display text-[1.25rem] font-semibold leading-[1.2] tracking-[-0.015em] text-fg transition-colors group-hover:text-accent">
         {insight.title}

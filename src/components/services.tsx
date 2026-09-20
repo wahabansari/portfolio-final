@@ -16,8 +16,10 @@ const COMMERCIAL_SLUGS = new Set([
   "performance-engineering",
 ]);
 
-// Service slug → icon mapping
-const SERVICE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+// Service slug → icon mapping. Exported so anything routing to the same
+// service topic (e.g. an Insights article's `relatedServiceSlug`) can reuse
+// the exact same icon rather than maintaining a second, driftable mapping.
+export const SERVICE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   "frontend-product-engineering": CodeIcon,
   "website-redesign-rebuild": LayoutIcon,
   "performance-engineering": GaugeIcon,

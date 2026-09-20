@@ -8,6 +8,7 @@ import { ServicesOverview } from "@/components/services";
 import { AboutTeaser, Process } from "@/components/about";
 import { ExperienceList } from "@/components/experience";
 import { Capabilities } from "@/components/skills";
+import { TrustLayer } from "@/components/trust";
 import { ContactCTA } from "@/components/contact";
 import { HomeJsonLd } from "@/components/json-ld";
 import { process } from "@/content/site";
@@ -16,13 +17,16 @@ import { process } from "@/content/site";
  * Homepage — premium proof wall for a senior product-minded engineer.
  *
  * Order: Hero → Proof strip → Selected work → Who I work with → Services →
- * How I work → Experience → Stack by capability → About → Final CTA.
+ * How I work → Experience → Stack by capability → About → Trust → Final CTA.
  *
  * The first screen answers who/what/value; every section after earns the
  * next scroll with proof rather than claims. "Who I work with" sits right
  * before the services ledger so a visitor finds their own situation before
- * being asked to translate it into a service name. Bricolage Grotesque
- * display over Inter body; one indigo accent; light warm paper default.
+ * being asked to translate it into a service name. Trust sits directly
+ * before the final CTA — the risk-reduction case immediately ahead of the
+ * ask, not just tucked into the contact page a visitor may never reach.
+ * Bricolage Grotesque display over Inter body; one indigo accent; light
+ * warm paper default.
  */
 export default function Home() {
   return (
@@ -45,6 +49,7 @@ export default function Home() {
         <ExperienceList tone="plain" />
         <Capabilities tone="soft" />
         <AboutTeaser tone="plain" />
+        <TrustLayer tone="soft" />
         <ContactCTA tone="deep" />
       </main>
       <Footer />
