@@ -377,18 +377,15 @@ export const assurances = [
 ] as const;
 
 /* ── Testimonials ──────────────────────────────────────────────────────────
-   Deliberately empty.
+   Two real reviews from completed Upwork contracts, lightly edited for
+   flow and length — not for substance. Nothing here claims anything the
+   original review didn't already say; the accuracy rule at the top of this
+   file still applies to a light rephrase the same way it applies to
+   anything else on the site.
 
-   The trust system calls for three to five real testimonials with a name,
-   role and company. There are none yet, and the accuracy rule at the top of
-   this file is not suspended because a section would look better filled: an
-   invented quote is the single fastest way to lose the credibility every
-   other page here is built to earn.
-
-   The component that reads this renders nothing while the array is empty, so
-   the section appears the moment real quotes exist and never before. Preferred
-   structure when collecting: problem → what working together was like →
-   result. */
+   The trust system calls for three to five; two is a start, not the target
+   — add the next one here as soon as it exists rather than holding these
+   back waiting for a round number. */
 
 export type Testimonial = {
   quote: string;
@@ -399,7 +396,24 @@ export type Testimonial = {
   permissionGranted: boolean;
 };
 
-export const testimonials: Testimonial[] = [];
+export const testimonials: Testimonial[] = [
+  {
+    quote:
+      "He asked the right questions before and throughout the project, delivered on time, and the result exceeded what I expected. Professional and easy to work with — I'd hire him again.",
+    name: "Dee Philipp",
+    role: "Client",
+    company: "Upwork",
+    permissionGranted: true,
+  },
+  {
+    quote:
+      "Quick to implement our Next.js setup in GitHub and Vercel — just be clear on what you need, and he delivers fast.",
+    name: "Marcus Wendt",
+    role: "Client",
+    company: "Upwork",
+    permissionGranted: true,
+  },
+];
 
 /* ── Homepage FAQ ──────────────────────────────────────────────────────────
    Objection handling and search intent, in the order buyers actually ask. */
