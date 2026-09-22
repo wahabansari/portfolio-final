@@ -1524,6 +1524,389 @@ export const insights: Insight[] = [
       primaryLabel: "Discuss a frontend project",
     },
   },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     17 · IS YOUR AI-BUILT MVP SECURE BEFORE LAUNCH
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "is-your-ai-built-mvp-secure-before-launch",
+    title: "Your AI-Built MVP Works. That's the Dangerous Part.",
+    metaTitle: "Is Your AI-Built MVP Secure Before Launch?",
+    metaDescription:
+      "Apps built with Lovable, Bolt or Replit are optimized for demos, not production. A five-point security checklist to run before real users and real data arrive.",
+    keywords: [
+      "AI-built MVP security",
+      "vibe coding security risks",
+      "Lovable app security",
+      "Bolt.new security checklist",
+      "is my AI-built app secure",
+    ],
+    cluster: "Engineering",
+    intent: "Problem solving",
+    publishedAt: "2026-09-22",
+    updatedAt: "2026-09-22",
+    h1: "Your AI-built MVP works. That's the dangerous part.",
+    dek: "A working demo and a production-ready app are not the same thing — the checklist to run before real users and real data show up.",
+    definition:
+      "An AI-built MVP is secure before launch only once someone has explicitly checked database access rules, moved authentication and authorization decisions to the server, removed secrets from the client, separated the development and production databases, and turned on error tracking — a working demo proves none of these were done, because tools like Lovable, Bolt and Replit optimize for a fast, convincing demo, not for what happens once real users and real data arrive.",
+    intro: [
+      "Tools like Lovable, Bolt and Replit have made it possible to go from an idea to a working app in a weekend — and the apps they produce genuinely work. That is exactly what makes them dangerous to ship without a second look: a demo that works end to end feels finished, and \"it works\" is not the same claim as \"it is safe to put in front of real users.\"",
+      "The gap between the two is not theoretical. It shows up at scale the moment enough of these apps exist in production for someone to go looking.",
+    ],
+    sections: [
+      {
+        heading: "The evidence this is a common failure, not an edge case",
+        body: [
+          "In 2026, security firm Escape.tech scanned 5,600 publicly reachable AI-built applications and found more than 2,000 high-impact vulnerabilities, over 400 exposed secrets and 175 cases of exposed personal data — all in live production systems, not test environments. The scan's own conclusion was blunt: the failure rate was not exceptional, it was typical.",
+          "Around the same time, Moltbook — an AI social platform with 1.5 million registered users — exposed its entire database because its Supabase backend had no Row Level Security policy configured. The API key was sitting in plain sight on the public site; without RLS, that key granted full read access to every row in every table. The fix, once found, was two SQL statements. The exposure before it was found was not reversible.",
+        ],
+      },
+      {
+        heading: "Why this specific gap keeps happening",
+        body: [
+          "AI app builders are optimized to produce something that demonstrably works, fast — a login that logs in, a dashboard that shows data, a form that saves. That is a genuinely useful thing to optimize for during the first hour of building something. It is a different objective than \"this cannot be read or written by someone who should not have access to it,\" and nothing about a working demo tells you whether that second objective was met.",
+          "The result is a specific, recurring pattern: authorization checks that exist in the interface — a button is hidden — but not in the database, where the row is still fetchable directly; API keys and service credentials that end up shipped to the browser because that was the fastest way to get a feature working; and a single shared database used for both development experiments and the real, live product.",
+        ],
+      },
+      {
+        heading: "The five checks that matter before anyone but you sees it",
+        body: [
+          "Database access rules, enforced at the database. If you are on Postgres via Supabase or similar, Row Level Security has to be turned on and actually scoped per table — not left at its default, which in some setups grants full access to anyone holding the key. This is the single check that would have stopped Moltbook.",
+          "Authentication and authorization decided on the server, not just the browser. A check that exists only in client-side code is a suggestion, not a control — anyone can call the underlying API directly and skip the button entirely.",
+          "Secrets kept out of the client bundle. Any API key, service credential or database connection string that does not need to be visible to a browser should never ship inside one. If it can be found by viewing page source or the network tab, it is not a secret.",
+          "Separate development and production databases. A prototype and a live product sharing one database means a test script, a reset or an experiment can touch real user data — and means the checks above have to be done twice as carefully, because there is no safe environment left to test a fix in.",
+          "Error tracking turned on before launch, not after the first incident. The fastest way to find out RLS is misconfigured is a monitoring alert on an unexpected query pattern — not a security researcher's blog post.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Does this apply if I only used the AI tool for the frontend, not the database?",
+        a: "It applies less, but not zero — the frontend is usually where the client-side-only authorization mistake shows up. If the backend and database were set up by hand, the two highest-risk items — RLS and secrets in the client — are less likely, but still worth confirming rather than assuming.",
+      },
+      {
+        q: "Can I run this checklist myself, or do I need a security audit?",
+        a: "The five checks here are things a developer can verify directly — most take minutes once you know where to look. Supabase's own dashboard, for instance, shows whether RLS is enabled per table. A full security audit goes further, but this checklist catches the specific, well-documented failure pattern behind most of the incidents that have made the news.",
+      },
+      {
+        q: "What's the actual cost of skipping this before launch?",
+        a: "Usually nothing, for a while — right up until it isn't. Moltbook ran for a period before anyone found the gap; the fix took two SQL statements, but only after 1.5 million keys were already exposed. The cost is asymmetric: the checklist takes an afternoon, the incident it prevents does not have an undo button.",
+      },
+    ],
+    references: [
+      {
+        label: "Escape.tech: Methodology — 2,000+ vulnerabilities in vibe-coded apps",
+        url: "https://escape.tech/blog/methodology-how-we-discovered-vulnerabilities-apps-built-with-vibe-coding/",
+      },
+      {
+        label: "Wiz: Hacking Moltbook — how 1.5M API keys were exposed",
+        url: "https://www.wiz.io/blog/exposed-moltbook-database-reveals-millions-of-api-keys",
+      },
+    ],
+
+    relatedServiceSlug: "saas-product-development",
+    relatedCaseStudySlugs: ["verdira"],
+    cta: {
+      heading: "Not sure your AI-built app would pass this checklist?",
+      body: "Send me the app. I will tell you honestly which of the five gaps apply and what it would take to close them before real users arrive.",
+      primaryLabel: "Request a pre-launch review",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     18 · RESCUE OR REWRITE
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "rescue-or-rewrite-deciding-what-to-do-with-inherited-code",
+    title: "Rescue or Rewrite? The Question Every Founder With Inherited Code Is Afraid to Ask",
+    metaTitle: "Rescue or Rewrite: Deciding What to Do With Old Code",
+    metaDescription:
+      "A founder can't judge code quality directly. The four-question framework I run on any inherited React or Next.js codebase before recommending fix or rebuild.",
+    keywords: [
+      "should I rewrite my codebase",
+      "inherited code decision",
+      "fix or rewrite legacy app",
+      "evaluating an inherited codebase",
+      "technical debt decision framework",
+    ],
+    cluster: "Engineering",
+    intent: "Problem solving",
+    publishedAt: "2026-09-22",
+    updatedAt: "2026-09-22",
+    h1: "Rescue or rewrite? The question every founder with inherited code is afraid to ask",
+    dek: "You can't judge the code yourself, and you're stuck between two expensive-sounding options. Here's the actual decision framework, not a guess.",
+    definition:
+      "Deciding whether to rescue or rewrite an inherited codebase comes down to four checks — whether the system has real architectural boundaries, how bad its worst parts are versus how much of the codebase they touch, whether the current team can ship safely today, and what a rewrite would honestly cost — and in most codebases that are merely unpleasant rather than fundamentally broken, the answer that comes out of those four checks is rescue, not rewrite.",
+    intro: [
+      "Every founder who inherits a codebase — through a co-founder split, a first hire leaving, or an agency handoff — ends up stuck the same way: unable to read the code well enough to judge it, and facing two options that both sound expensive. Keep it, and the problems you already know about keep happening. Rewrite it, and you are betting months of runway on a decision you cannot fully evaluate.",
+      "What follows is the actual framework I run before recommending either path on a codebase I did not write. It will not make the decision feel smaller than it is, but it replaces a guess with an answer you can check.",
+    ],
+    sections: [
+      {
+        heading: "How the system is actually put together, not how it looks",
+        body: [
+          "The first thing worth checking is not code style — it's whether the system has real boundaries. Can the payments logic change without touching the UI? Is there one place that decides what a user is allowed to see, or is that check copy-pasted in a dozen places? A codebase with real boundaries can usually be improved a piece at a time. One without them tends to make every change risk everything else, regardless of how many features it already has.",
+          "This is a structural question, not a taste question — and it's answerable in a day or two of reading, without needing to run the app or interview whoever wrote it.",
+        ],
+      },
+      {
+        heading: "How bad the worst parts are, and how much of the codebase they touch",
+        body: [
+          "Every real codebase has a worst file. The question is whether the worst parts are isolated — a single gnarly module everyone avoids — or systemic, meaning the same bad pattern repeats through most of what exists. Isolated problems get rescued: wrap them, test them, replace them one at a time while everything else keeps working. Systemic problems are a much stronger signal toward a rebuild, because there is no small piece to start with.",
+        ],
+      },
+      {
+        heading: "Whether the team can ship safely today",
+        body: [
+          "This is the most practical check, and the one founders can usually answer themselves: when the current team makes a small change, does it usually work the first time, or does it usually break something unrelated? A codebase that mostly behaves when touched carefully is a rescue candidate almost regardless of how it looks internally. A codebase where every change is a gamble is telling you something a code review alone won't — that confidence in it is already gone, and that has its own cost even before you count the bugs.",
+        ],
+      },
+      {
+        heading: "What a rewrite actually costs, honestly priced",
+        body: [
+          "A rewrite is not just the time to write new code — it's the time spent re-discovering every edge case the current system already handles, most of which nobody wrote down. Reaching feature parity with a system that's been in production for a year usually takes longer than the original build did, because the original build didn't have to match anything. That's not an argument against ever rewriting — some codebases genuinely earn it — it's the number that has to be weighed honestly against the cost of the rescue path before either one gets chosen.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "What if the codebase fails more than one of these four checks?",
+        a: "That's the strongest signal toward a rewrite — not because any single failure is disqualifying, but because they compound. A system with no boundaries and systemic quality issues and a team afraid to touch it is usually more expensive to rescue piece by piece than to rebuild with what's now known about the product.",
+      },
+      {
+        q: "Can a rescue be done gradually while the product keeps shipping?",
+        a: "Usually, yes — that's the main advantage a rescue has over a rewrite. Isolating and replacing the worst modules one at a time, behind the same interface, means the product keeps shipping features throughout instead of pausing for months. This depends on the first check passing; without real boundaries, a \"gradual\" rescue tends to become a rewrite anyway, just a slower and less deliberate one.",
+      },
+      {
+        q: "How long does this evaluation actually take?",
+        a: "For a codebase of normal size, one to a few days of focused reading and a handful of test changes — not weeks. The point of the framework is to replace an open-ended \"audit\" with four specific, answerable questions.",
+      },
+    ],
+
+    relatedServiceSlug: "frontend-product-engineering",
+    relatedCaseStudySlugs: ["sunhub"],
+    cta: {
+      heading: "Stuck deciding what to do with an inherited codebase?",
+      body: "Send the repo, or describe the situation if it's private. I will run these four checks and tell you honestly which side of the decision it lands on.",
+      primaryLabel: "Discuss your codebase",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     19 · YOUR SITE ISN'T SLOW, IT'S LOSING YOU CUSTOMERS
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "why-a-slow-website-is-costing-you-customers",
+    title: "Your Site Isn't Slow. It's Quietly Losing You Customers.",
+    metaTitle: "Why a Slow Website Is Costing You Customers",
+    metaDescription:
+      "Core Web Vitals in plain English — the three most common causes of a slow site, what each one actually costs you, and how to fix them.",
+    keywords: [
+      "slow website losing customers",
+      "core web vitals explained",
+      "why is my website slow",
+      "website speed and conversions",
+      "core web vitals fixes",
+    ],
+    cluster: "Performance",
+    intent: "Problem solving",
+    publishedAt: "2026-09-22",
+    updatedAt: "2026-09-22",
+    h1: "Your site isn't slow. It's quietly losing you customers.",
+    dek: "Speed isn't a technical checkbox — it's the first impression, and most of what makes a site feel slow comes down to three fixable causes.",
+    definition:
+      "A slow website costs customers because speed is the first experience a visitor has with a product, before any copy or design gets a chance to make a case — and in the large majority of slow sites, the cause is one of three things: images heavier than the screen they're shown on, more JavaScript shipped than the page actually needs on first load, or a third-party script blocking the page while it loads.",
+    intro: [
+      "\"Slow\" rarely gets treated as a business problem, because it sounds like a technical one — something for a developer to eventually get around to. It isn't. A visitor decides whether a site feels trustworthy and worth their time before they've read a single sentence, and speed is a big part of that decision. The good news is that the causes are almost always one of three specific, fixable things, not a mystery.",
+    ],
+    sections: [
+      {
+        heading: "Images heavier than the screen that shows them",
+        body: [
+          "The most common cause, by far, is an image uploaded at its original size and displayed much smaller — a 4000px-wide photo shown in a 400px card, downloaded in full before being shrunk by the browser. Every visitor pays the download cost of the original file for a fraction of the pixels. The fix is serving images at the size they're actually displayed, in a modern format like WebP or AVIF, and only loading what's visible on screen at first.",
+        ],
+      },
+      {
+        heading: "More JavaScript than the first screen needs",
+        body: [
+          "A page that ships its entire application's code before showing anything is waiting on work most of which isn't needed yet — the checkout flow's code, for instance, has no reason to block the homepage's first render. The fix is splitting code by route or by feature, so a visitor downloads what the page in front of them needs and nothing else, with the rest loading in the background or on demand.",
+        ],
+      },
+      {
+        heading: "Slow third-party scripts blocking the page",
+        body: [
+          "Analytics tags, chat widgets, ad scripts and embedded videos are often the actual bottleneck, and they're easy to miss because they weren't written by the team that built the site. Each one is a request to someone else's server, on someone else's schedule, and a page that waits for all of them before rendering anything is only as fast as the slowest one. The fix is loading these after the main content, not before it.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "How do I know which of these three is my problem?",
+        a: "Chrome's own Lighthouse report, built into DevTools and free to run, usually names the specific cause — it flags oversized images, unused JavaScript and render-blocking third-party requests as distinct findings, not just a single \"slow\" score.",
+      },
+      {
+        q: "Does fixing this actually move a business number, or just a technical score?",
+        a: "It's a business number wearing a technical name. On Sunhub, the performance work behind a measured 30% Core Web Vitals improvement targeted exactly these three causes — unused assets, missing lazy loading and oversized images — and independent research has repeatedly linked load time directly to bounce rate and conversion.",
+      },
+      {
+        q: "Is a fast site enough on its own to convert better?",
+        a: "No — speed removes a reason to leave before anything else gets a chance to work, it doesn't replace the rest of the case a site has to make. A fast page with a weak pitch will still underperform, but a slow page never gets the chance to find out if its pitch was any good.",
+      },
+    ],
+    references: [{ label: "web.dev: Core Web Vitals", url: "https://web.dev/articles/vitals" }],
+
+    relatedServiceSlug: "performance-engineering",
+    relatedCaseStudySlugs: ["sunhub"],
+    cta: {
+      heading: "Not sure what's actually slowing your site down?",
+      body: "Send the site. I will tell you which of these three is the real cause and what I would fix first.",
+      primaryLabel: "Request a performance assessment",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     20 · THE DASHBOARD LOOKED FINISHED IN THE DEMO
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "why-dashboards-break-after-launch-and-how-to-prevent-it",
+    title: "The Dashboard Looked Finished in the Demo. Then Real Users Logged In.",
+    metaTitle: "Why Dashboards Break After Launch (and How to Prevent It)",
+    metaDescription:
+      "Demos hide the exact problems that show up once real users and real data arrive. A production-readiness checklist for any dashboard or client portal.",
+    keywords: [
+      "dashboard breaks after launch",
+      "production ready dashboard checklist",
+      "client portal bugs",
+      "SaaS dashboard testing",
+      "why does my dashboard break",
+    ],
+    cluster: "SaaS",
+    intent: "Problem solving",
+    publishedAt: "2026-09-22",
+    updatedAt: "2026-09-22",
+    h1: "The dashboard looked finished in the demo. Then real users logged in.",
+    dek: "A demo only ever shows the data and the user path you planned for. Production shows you everything you didn't.",
+    definition:
+      "A dashboard that looks finished in a demo breaks after launch because a demo only exercises the data and the single user path someone planned for, while production immediately exposes three things a demo never tests: whether one user can see another user's data, what happens when the data is empty, malformed or larger than expected, and what a user sees when something fails instead of nothing at all.",
+    intro: [
+      "A demo is a curated path — the same account, the same clean data, the same three clicks, every time. That's exactly why a dashboard can look completely finished right up until the first real week in production, when a hundred different users hit it with a hundred different combinations of account state, data volume and things going wrong that nobody rehearsed.",
+    ],
+    sections: [
+      {
+        heading: "Permission boundaries that only exist in the demo account",
+        body: [
+          "The most common failure isn't a visible bug, it's an invisible one: user A can see user B's data, because the query fetching a dashboard's data filtered by what's shown rather than by what this specific logged-in user is allowed to see. A demo run by one person, in one account, will never surface this — it only shows up the moment two real accounts exist side by side, which is also the worst possible time to find it.",
+        ],
+      },
+      {
+        heading: "What the screen does with data nobody planned for",
+        body: [
+          "A demo account has clean, populated, reasonably-sized data because someone set it up that way. A real account starts empty, then fills unevenly — some users have one record, others have ten thousand — and a dashboard built and tested against the demo's tidy middle case is often completely untested against either edge. The result is a blank screen with no explanation, a table that silently stops rendering past a few hundred rows, or a chart that breaks on a value nobody anticipated.",
+        ],
+      },
+      {
+        heading: "What happens when something fails, not just when everything works",
+        body: [
+          "A dashboard demo is, almost by definition, a sequence of things going right. Production is where an API call times out, a third-party service is briefly down, or a session expires mid-action — and a product with no defined behaviour for \"something failed\" shows a blank screen, a frozen spinner, or a raw error message instead of a clear, recoverable state. Designing the failure states is usually a smaller job than it sounds, and it's the single biggest difference between a dashboard that feels reliable and one that feels fragile the first time anything goes wrong.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "How do I test for the permissions issue before launch, not after?",
+        a: "Create two real test accounts, not one, and check every screen from both of them — specifically anything that fetches data by a shared or predictable ID. Most permission leaks are found this way in under an hour; almost none are found by testing a single account carefully, no matter how thoroughly.",
+      },
+      {
+        q: "What counts as 'empty state' testing?",
+        a: "Load every screen with a brand-new account that has zero data, and separately with an account that has an unusually large amount. Both extremes tend to break things a normal-sized demo account never exercises — a missing empty-state design, or a table or chart that assumes a reasonable row count.",
+      },
+      {
+        q: "Is this only a risk for dashboards built quickly, or does it apply to any dashboard?",
+        a: "It applies to any dashboard, but it's a bigger risk the faster the build — AI-assisted or template-based dashboards especially, because the fast path to a working demo and the fast path to a production-safe one are different roads, and only one of them was optimized for.",
+      },
+    ],
+
+    relatedServiceSlug: "saas-product-development",
+    relatedCaseStudySlugs: ["verdira"],
+    cta: {
+      heading: "About to launch a dashboard or client portal?",
+      body: "Send the app. I will tell you honestly which of these gaps apply before your first real users find them for you.",
+      primaryLabel: "Discuss your dashboard",
+    },
+  },
+
+  /* ══════════════════════════════════════════════════════════════════════
+     21 · YOU DON'T NEED TO REBUILD YOUR PRODUCT TO ADD AI
+     ══════════════════════════════════════════════════════════════════════ */
+  {
+    slug: "should-you-add-an-ai-feature-or-rebuild-your-product",
+    title: "You Don't Need to Rebuild Your Product to Add AI",
+    metaTitle: "Add an AI Feature Without Rebuilding Your Product",
+    metaDescription:
+      "Adding AI doesn't require a full rebuild. How to pick one time-wasting workflow, scope it as a small feature, and ship it without touching everything else.",
+    keywords: [
+      "add AI to existing app",
+      "AI feature without rebuild",
+      "how to add AI to my product",
+      "AI integration for existing SaaS",
+      "small AI feature ideas",
+    ],
+    cluster: "AI Integration",
+    intent: "Commercial investigation",
+    publishedAt: "2026-09-22",
+    updatedAt: "2026-09-22",
+    h1: "You don't need to rebuild your product to add AI",
+    dek: "The pressure to \"add AI\" feels like it demands a new architecture. Usually it doesn't — it needs one well-chosen feature.",
+    definition:
+      "Adding AI to an existing product doesn't require rebuilding it — it requires identifying one specific, repetitive workflow that already wastes real time inside the product, and adding a small, contained AI feature to that one workflow, rather than treating \"AI\" as a reason to re-architect the whole system.",
+    intro: [
+      "Almost every founder I talk to right now is under some version of the same pressure: competitors are shipping AI features, customers are asking about it, and the assumption that follows is that adding AI means a significant rebuild — a new architecture, a bigger team, months of work before anything ships. For the large majority of products, that assumption is wrong.",
+      "The products that ship an AI feature well tend to do the opposite: they pick one narrow, already-annoying workflow, wrap it in a small, well-scoped feature, and leave the rest of the product exactly as it was.",
+    ],
+    sections: [
+      {
+        heading: "Start with time wasted, not with 'where could AI go'",
+        body: [
+          "The wrong starting question is where in our product could we use AI — that produces a list of places AI is technically possible, most of which nobody actually needs. The useful starting question is narrower: what does someone using this product spend real time on today that is repetitive, pattern-based and mildly annoying? Drafting a reply to a common type of support message. Summarizing a long record before a meeting. Turning a form's raw answers into a first-draft document. These are small, bounded, and the AI's mistake in any one of them costs a minute of editing, not a broken product.",
+        ],
+      },
+      {
+        heading: "Scope it as a feature with an edge, not a platform without one",
+        body: [
+          "A well-scoped AI feature has a clear boundary: it drafts, the human sends; it summarizes, the human decides what matters; it suggests, the human confirms. That boundary is what keeps the feature contained — it can be added to one screen, tested against real examples, and shipped without touching the rest of the product's architecture, because it's genuinely just another feature, not a new foundation everything else has to be rebuilt on top of.",
+          "This is the same shape of work as any other feature integration I take on — a resume-builder tool I built used exactly this pattern: an LLM drafts the content, PDF export handles the output, and neither one required rearchitecting the rest of the application around them.",
+        ],
+      },
+      {
+        heading: "What actually changes in the codebase, and what doesn't",
+        body: [
+          "In practice, adding a scoped AI feature means one or two new API routes that call a model provider, a place to store the result — usually a new field or table, not a schema overhaul — and a UI element that shows a draft or suggestion with an obvious edit-or-accept action. The authentication, the database, the rest of the product's screens: none of that needs to change. The scope of the change matches the scope of the feature, which is the entire point of picking one workflow instead of adding AI everywhere at once.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "How do I know if a workflow is a good first AI feature or not?",
+        a: "Good candidates are repetitive, have a clear input and a clear draft-quality output, and are recoverable if the AI gets it wrong — a draft that needs editing is fine, a decision that can't be undone is not a good first candidate. Support replies, summaries and first-draft content all fit; anything that acts autonomously on money, permissions or irreversible actions doesn't, at least not first.",
+      },
+      {
+        q: "Do I need my own model or fine-tuning to do this well?",
+        a: "Almost never, for a first feature. A well-written prompt against an existing model API handles the large majority of workflows worth automating first. Fine-tuning or a custom model becomes worth discussing once a specific feature is proven valuable and its current approach has a specific, identified limitation — not before.",
+      },
+      {
+        q: "What's the actual timeline for something this scoped?",
+        a: "Meaningfully shorter than a rebuild — often weeks, not months, because the work is additive to an existing system rather than a replacement of it. The scoping conversation, deciding which workflow and where the boundary is, usually takes longer to get right than the implementation itself.",
+      },
+    ],
+
+    relatedServiceSlug: "ai-product-integration",
+    relatedCaseStudySlugs: [],
+    cta: {
+      heading: "Trying to figure out where AI actually fits in your product?",
+      body: "Describe the workflow that wastes the most time today. I will tell you honestly whether it's a good first AI feature and what scoping it would look like.",
+      primaryLabel: "Discuss an AI feature",
+    },
+  },
 ];
 
 export function getInsight(slug: string): Insight | undefined {
