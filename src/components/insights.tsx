@@ -100,56 +100,105 @@ export function readingTime(insight: Insight): number {
 }
 
 /**
- * One article entry — a compact vertical block that flows in a CSS-columns
- * index, not a row in a list and not a bordered card. No border, no fill,
- * no shadow of its own; only the cover, the typography and the space around
- * it. `break-inside-avoid` keeps a block from being split across columns.
+ * The one magazine-cover moment on the hub — the single most recently
+ * updated article, full width, cover art on one side and an oversized
+ * headline on the other. This is the only place on the hub that spends a
+ * cover on a list item; everything below it is typography-only, which is
+ * what actually separates this page from a generic blog grid rather than
+ * just re-skinning the same thumbnail-plus-title card.
  */
-function InsightEntry({ insight, index }: { insight: Insight; index: number }) {
+function FeaturedInsight({ insight }: { insight: Insight }) {
+  return (
+    <Section tone="plain">
+      <Reveal>
+        <Link
+          href={`/insights/${insight.slug}`}
+          data-track="cta_click"
+          data-track-label={insight.slug}
+          className="group grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16"
+        >
+          <div>
+            <span className="ds-overline-accent block">Latest &middot; {insight.cluster}</span>
+            <h2 className="mt-5 font-display text-[2rem] font-bold leading-[1.05] tracking-[-0.03em] text-fg transition-colors duration-200 group-hover:text-accent md:text-[2.75rem]">
+              {insight.title}
+            </h2>
+            <p className="ds-body-lg mt-5 max-w-xl text-fg-muted">{insight.dek}</p>
+            <div className="mt-6 flex items-center gap-3">
+              <time dateTime={insight.updatedAt} className="ds-meta whitespace-nowrap">
+                {formatDate(insight.updatedAt)}
+              </time>
+              <span className="ds-meta" aria-hidden="true">&middot;</span>
+              <span className="ds-meta whitespace-nowrap">{readingTime(insight)} min read</span>
+            </div>
+            <span className="mt-7 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-fg transition-colors duration-200 group-hover:text-accent">
+              Read the article
+              <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            </span>
+          </div>
+          <InsightCover
+            insight={insight}
+            className="aspect-[4/3] w-full transition-transform duration-500 ease-out group-hover:scale-[1.01] lg:aspect-[5/4]"
+          />
+        </Link>
+      </Reveal>
+    </Section>
+  );
+}
+
+/**
+ * One row in the index — a large tabular numeral, the title, a single-line
+ * dek and the date/reading-time off to the side, separated only by a
+ * hairline. No cover, no card, no fill: below the one featured article, the
+ * hub is typography doing all the work, the way a table of contents or an
+ * editorial index reads rather than a scanned rack of thumbnails.
+ */
+function InsightIndexRow({ insight, index }: { insight: Insight; index: number }) {
   return (
     <Link
       href={`/insights/${insight.slug}`}
       data-track="cta_click"
       data-track-label={insight.slug}
-      className="group mb-10 block break-inside-avoid"
+      className="group flex items-start gap-5 border-b border-border py-7 transition-colors duration-150 hover:bg-surface-hover md:items-center md:gap-8 md:py-8"
     >
-      <InsightCover
-        insight={insight}
-        className="aspect-[4/3] w-full transition-transform duration-300 ease-out group-hover:scale-[1.015]"
-      />
-      <span className="ds-meta mt-4 block text-accent">{String(index + 1).padStart(2, "0")}</span>
-      <h3 className="mt-1.5 font-display text-[1.25rem] font-semibold leading-[1.2] tracking-[-0.015em] text-fg transition-colors group-hover:text-accent">
-        {insight.title}
-      </h3>
-      <p className="ds-body-sm mt-2 text-fg-muted">{insight.dek}</p>
-      <div className="mt-3 flex items-center gap-2">
+      <span className="shrink-0 font-display text-[1.375rem] font-bold leading-none text-ink-softest tabular-nums transition-colors duration-150 group-hover:text-accent md:text-[1.75rem]">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <div className="min-w-0 flex-1">
+        <h3 className="font-display text-[1.1875rem] font-bold leading-[1.2] tracking-[-0.015em] text-fg transition-colors duration-150 group-hover:text-accent md:text-[1.5rem]">
+          {insight.title}
+        </h3>
+        <p className="ds-body-sm mt-1.5 max-w-2xl text-fg-muted">{insight.dek}</p>
+      </div>
+      <div className="hidden shrink-0 flex-col items-end gap-1 text-right sm:flex">
         <time dateTime={insight.updatedAt} className="ds-meta whitespace-nowrap">
           {formatDate(insight.updatedAt)}
         </time>
-        <span className="ds-meta" aria-hidden="true">&middot;</span>
         <span className="ds-meta whitespace-nowrap">{readingTime(insight)} min</span>
       </div>
+      <ArrowIcon className="hidden h-4 w-4 shrink-0 text-ink-soft transition-all duration-150 group-hover:translate-x-0.5 group-hover:text-accent md:block" />
     </Link>
   );
 }
 
 /**
- * /insights hub — every published article, grouped by cluster. Each cluster
- * is its own full-width band (tone alternates cluster to cluster) with a
- * bold, accent-ruled heading, then a CSS-columns index rather than a card
- * grid or a stacked row list — entries flow and settle at whatever height
- * their own content needs, so the section reads as a magazine index rather
- * than a rack of identical boxes or a scrolling table.
+ * /insights hub. One featured article leads (see `FeaturedInsight`), then
+ * every remaining article grouped by cluster as a plain typographic index
+ * (see `InsightIndexRow`) — no thumbnail grid, no cards, no CSS-columns
+ * masonry. The featured pick is whichever article has the most recent
+ * `updatedAt`, computed rather than hardcoded, so publishing a new or
+ * refreshed article moves it to the top automatically.
  */
 export function InsightsList() {
-  const clusters = Array.from(new Set(insights.map((i) => i.cluster)));
+  const [featured, ...rest] = [...insights].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  const clusters = Array.from(new Set(rest.map((i) => i.cluster)));
 
   return (
     <>
+      {featured && <FeaturedInsight insight={featured} />}
       {clusters.map((cluster, ci) => {
-        const items = insights.filter((i) => i.cluster === cluster);
+        const items = rest.filter((i) => i.cluster === cluster);
         return (
-          <Section key={cluster} tone={ci % 2 === 0 ? "plain" : "soft"}>
+          <Section key={cluster} tone={ci % 2 === 0 ? "soft" : "plain"}>
             <div className="flex items-baseline justify-between gap-6 border-b-2 border-accent pb-5">
               <h2 className="font-display text-[1.75rem] font-bold tracking-[-0.02em] text-fg md:text-[2.25rem]">
                 {cluster}
@@ -158,10 +207,10 @@ export function InsightsList() {
                 {items.length} {items.length === 1 ? "article" : "articles"}
               </span>
             </div>
-            <div className="columns-1 gap-10 pt-9 sm:columns-2 lg:columns-3">
+            <div className="mt-2">
               {items.map((insight, i) => (
-                <Reveal key={insight.slug} delay={i * 0.04}>
-                  <InsightEntry insight={insight} index={i} />
+                <Reveal key={insight.slug} delay={i * 0.03}>
+                  <InsightIndexRow insight={insight} index={i} />
                 </Reveal>
               ))}
             </div>
@@ -173,9 +222,9 @@ export function InsightsList() {
 }
 
 /**
- * Homepage teaser. Three articles in a simple row of the same entry blocks
- * the hub uses — an internal-linking hook into /insights, not a second hub
- * competing with it.
+ * Homepage teaser — three index rows, the same typography-only treatment
+ * the hub uses below its featured pick. An internal-linking hook into
+ * /insights, not a second hub competing with it.
  */
 export function InsightsTeaser({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
   const featured = insights.slice(0, 3);
@@ -195,10 +244,10 @@ export function InsightsTeaser({ tone = "plain" }: { tone?: "plain" | "soft" | "
           </Link>
         }
       />
-      <div className="grid gap-10 sm:grid-cols-3">
+      <div className="mt-2 border-t border-border">
         {featured.map((insight, i) => (
           <Reveal key={insight.slug} delay={i * 0.05}>
-            <InsightEntry insight={insight} index={i} />
+            <InsightIndexRow insight={insight} index={i} />
           </Reveal>
         ))}
       </div>
