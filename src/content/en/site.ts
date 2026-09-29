@@ -22,7 +22,7 @@ export const site = {
   url: "https://wahabansari-portfolio-final.vercel.app",
   available: true,
   availabilityNote: "Open to remote roles and selected projects",
-  resumeHref: "/Resume-FEE.pdf",
+  resumeHref: "/Resume-FEE-Extended.pdf",
 } as const;
 
 /**

@@ -176,7 +176,7 @@ already on the résumé. If you add a service, add the underlying skill too.
   **Verify both.**
 - **Employment dates** aren't shown, because the source résumé doesn't contain
   them. Add a `period` to any `experience` entry and it's ready to display.
-- **`public/Resume-FEE.pdf`** (0.30 MB) is small enough to serve direct on
+- **`public/Resume-FEE-Extended.pdf`** (0.30 MB) is small enough to serve direct on
   every "View résumé" click.
 
 ---
