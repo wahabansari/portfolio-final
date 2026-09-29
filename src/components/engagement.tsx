@@ -33,10 +33,10 @@ export function Engagement({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
         {engagements.map((option, i) => (
           <Reveal key={option.title} delay={i * 0.05} className={cn("group", PANE_DIVIDER[i])}>
             <Link href={option.cta.href} className="flex h-full flex-col p-7 transition-colors duration-200 hover:bg-surface md:p-8">
-              <span className="font-display text-[2rem] font-bold leading-none tracking-[-0.03em] text-accent-soft tabular-nums">
+              <span className="font-mono text-[1.125rem] font-medium leading-none text-accent tabular-nums">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="mt-5 font-display text-[1.375rem] leading-snug font-bold tracking-[-0.015em] text-ink transition-colors group-hover:text-accent md:text-[1.5rem]">
+              <h3 className="mt-5 font-display text-[1.375rem] leading-snug font-semibold tracking-[-0.01em] text-ink transition-colors group-hover:text-accent md:text-[1.5rem]">
                 {option.title}
               </h3>
               <p className="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-ink-muted">

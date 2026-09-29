@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { en } from "@/content";
 import * as siteEn from "@/content/en/site";
@@ -13,25 +13,25 @@ import { buildSearchIndex } from "@/lib/search-index";
 import { PageTransition } from "@/components/page-transition";
 
 /*
- * One typeface, everywhere — including the data-styled moments (the hero's
- * terminal panel, tabular figures, badges). Bricolage is the variable cut
- * used for all of it: it carries an optical-size axis (opsz 12-96) that
- * redraws the letterforms for their size rather than scaling one drawing,
- * plus a continuous weight range (200-800). Hierarchy is weight + size +
- * tabular-nums alignment, not a second family brought in for anything that
- * looks like output.
+ * One typeface, everywhere: Poppins. It is a static (non-variable) family,
+ * so only the four weights the design uses are loaded — 400 body, 500 labels
+ * and links, 600 headings and buttons, 700 the heaviest display moments.
+ * Anything else in the CSS would silently snap to one of these, which is why
+ * the scale in globals.css only names those four. Poppins is wide and
+ * tall-set, so its scale runs looser than a grotesque's: less negative
+ * tracking, taller line-heights, slightly smaller sizes.
  */
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-  axes: ["opsz"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf8f4" },
-    { media: "(prefers-color-scheme: dark)", color: "#14110d" },
+    { media: "(prefers-color-scheme: light)", color: "#fafaf8" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0b0c" },
   ],
 };
 
@@ -93,7 +93,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       dir="ltr"
-      className={`${bricolage.variable}`}
+      data-theme="light"
+      className={poppins.variable}
       suppressHydrationWarning
     >
       <head>

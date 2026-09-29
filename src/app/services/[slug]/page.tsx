@@ -10,45 +10,43 @@ import { ServiceToc } from "@/components/service-toc";
 import { PageEvent } from "@/components/analytics";
 import { Contact } from "@/components/contact";
 import {
- ArrowIcon,
- CheckIcon,
- ChipList,
- CodeIcon,
- CompassIcon,
- Definition,
- Faqs,
- FitLists,
- GaugeIcon,
- LayersIcon,
- LayoutIcon,
- MinusIcon,
- PageHeader,
- RefreshIcon,
- Reveal,
- RocketIcon,
- SearchIcon,
- Section,
- SectionHeading,
- ServerIcon,
- StepList,
- UserIcon,
+  ArrowIcon,
+  CheckIcon,
+  ChipList,
+  CodeIcon,
+  CompassIcon,
+  Definition,
+  Faqs,
+  GaugeIcon,
+  LayersIcon,
+  LayoutIcon,
+  MinusIcon,
+  PageHeader,
+  RefreshIcon,
+  Reveal,
+  RocketIcon,
+  SearchIcon,
+  Section,
+  SectionHeading,
+  ServerIcon,
+  UserIcon,
 } from "@/components/ui";
 import { insights } from "@/content/insights";
-import { getService, services, serviceSlugs } from "@/content/services";
+import { getService, services, serviceSlugs, TIER_LABEL } from "@/content/services";
 import { pageMetadata } from "@/lib/seo";
 
 /* One source for the in-page navigation and the anchors it points at, so a
- renamed section cannot leave a dead chip behind. */
+   renamed section cannot leave a dead link behind. */
 const SECTIONS = [
- { id: "fit", label: "Who it is for" },
- { id: "problems", label: "Problems" },
- { id: "deliverables", label: "Deliverables" },
- { id: "engagement", label: "Process" },
- { id: "technical", label: "Technical depth" },
- { id: "proof", label: "Proof" },
- { id: "scope", label: "Scope" },
- { id: "why", label: "Why me" },
- { id: "faq", label: "FAQ" },
+  { id: "fit", label: "Who it is for" },
+  { id: "problems", label: "Problems" },
+  { id: "deliverables", label: "Deliverables" },
+  { id: "engagement", label: "Process" },
+  { id: "technical", label: "Technical depth" },
+  { id: "scope", label: "Scope" },
+  { id: "proof", label: "Proof" },
+  { id: "why", label: "Why me" },
+  { id: "faq", label: "FAQ" },
 ];
 
 /* A representative icon per technical-group label, matched by keyword rather
@@ -59,323 +57,433 @@ const SECTIONS = [
    Assets, Migration, CMS, Styling, Process, Application, Auth, Operations,
    Retrieval, Workflow. */
 function technicalIcon(label: string) {
- const l = label.toLowerCase();
- if (l.includes("auth")) return UserIcon;
- if (l.includes("performance") || l.includes("measurement")) return GaugeIcon;
- if (l.includes("search") || l.includes("retrieval")) return SearchIcon;
- if (l.includes("rendering")) return ServerIcon;
- if (l.includes("data") || l.includes("cms")) return LayersIcon;
- if (l.includes("interface") || l.includes("content") || l.includes("styling") || l.includes("assets")) return LayoutIcon;
- if (l.includes("migration") || l.includes("integration") || l.includes("workflow")) return RefreshIcon;
- if (l.includes("delivery") || l.includes("application") || l.includes("operations")) return RocketIcon;
- if (l.includes("process")) return CompassIcon;
- return CodeIcon;
+  const l = label.toLowerCase();
+  if (l.includes("auth")) return UserIcon;
+  if (l.includes("performance") || l.includes("measurement")) return GaugeIcon;
+  if (l.includes("search") || l.includes("retrieval")) return SearchIcon;
+  if (l.includes("rendering")) return ServerIcon;
+  if (l.includes("data") || l.includes("cms")) return LayersIcon;
+  if (l.includes("interface") || l.includes("content") || l.includes("styling") || l.includes("assets")) return LayoutIcon;
+  if (l.includes("migration") || l.includes("integration") || l.includes("workflow")) return RefreshIcon;
+  if (l.includes("delivery") || l.includes("application") || l.includes("operations")) return RocketIcon;
+  if (l.includes("process")) return CompassIcon;
+  return CodeIcon;
 }
 
 export function generateStaticParams() {
- return serviceSlugs.map((slug) => ({ slug }));
+  return serviceSlugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
- params,
+  params,
 }: {
- params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
- const { slug } = await params;
- const service = getService(slug);
- if (!service) return {};
+  const { slug } = await params;
+  const service = getService(slug);
+  if (!service) return {};
 
- return pageMetadata({
- title: service.metaTitle,
- description: service.metaDescription,
- path: `/services/${service.slug}`,
- });
+  return pageMetadata({
+    title: service.metaTitle,
+    description: service.metaDescription,
+    path: `/services/${service.slug}`,
+  });
+}
+
+type Tone = "plain" | "soft";
+const flip = (t: Tone): Tone => (t === "plain" ? "soft" : "plain");
+
+/* A left-aligned block inside the main column: overline, heading, optional
+   lede, then the content. One wrapper so every block opens the same way. */
+function Block({
+  id,
+  overline,
+  title,
+  description,
+  children,
+}: {
+  id: string;
+  overline: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section id={id} className="scroll-mt-28">
+      <Reveal>
+        <span className="ds-overline-accent">{overline}</span>
+        <h2 className="ds-h2 mt-4">{title}</h2>
+        {description && <p className="ds-body mt-4 max-w-2xl">{description}</p>}
+      </Reveal>
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
+
+/* A titled list of check / minus lines in the shared card. Used for fit and
+   scope, which are the same shape: what is in, and what is out. */
+function ListCard({
+  label,
+  positive,
+  items,
+}: {
+  label: string;
+  positive: boolean;
+  items: readonly string[];
+}) {
+  return (
+    <div className="ds-card h-full p-6">
+      <p className={positive ? "ds-meta text-success" : "ds-meta"}>{label}</p>
+      <ul className="mt-5 space-y-3.5">
+        {items.map((item) => (
+          <li key={item} className="flex items-start gap-3">
+            {positive ? (
+              <CheckIcon className="mt-1 shrink-0 text-success" />
+            ) : (
+              <MinusIcon className="mt-1 shrink-0 text-ink-soft" />
+            )}
+            <span className={positive ? "ds-body-sm text-fg" : "ds-body-sm"}>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
- const { slug } = await params;
- const service = getService(slug);
- if (!service) notFound();
+  const { slug } = await params;
+  const service = getService(slug);
+  if (!service) notFound();
 
- /* The next service in the catalogue, so a reader who has decided this is not
- theirs has somewhere to go other than back. */
- const index = services.findIndex((s) => s.slug === service.slug);
- const nextService = services[(index + 1) % services.length];
- const relatedInsights = insights.filter((i) => i.relatedServiceSlug === service.slug);
+  /* The next service in the catalogue, so a reader who has decided this is not
+     theirs has somewhere to go other than back. */
+  const index = services.findIndex((s) => s.slug === service.slug);
+  const nextService = services[(index + 1) % services.length];
+  const relatedInsights = insights.filter((i) => i.relatedServiceSlug === service.slug);
 
- return (
- <>
- <ServiceJsonLd service={service} />
- <PageEvent event="service_view" label={service.slug} />
- <Nav />
- <main id="main">
- <PageHeader
- trail={[
- { label: "Home", href: "/" },
- { label: "Services", href: "/services" },
- { label: service.title },
- ]}
- eyebrow={service.eyebrow}
- title={service.h1}
- lede={service.subhead}
- actions={
- <>
- <Link
- href="/contact"
- data-track="cta_click"
- data-track-label={service.slug}
- className="ds-btn ds-btn-primary"
- >
- {service.cta.primaryLabel}
- <ArrowIcon />
- </Link>
- <Link href="/work" className="ds-btn ds-btn-secondary">
- See relevant work
- </Link>
- </>
- }
- aside={
- <div className="h-full border-t border-border">
- <p className="ds-meta">Best fit</p>
- <p className="ds-body-sm mt-3">{service.idealFor[0]}.</p>
- <div className="mt-6 border-t border-border pt-6">
- <p className="ds-meta">Not this</p>
- <p className="ds-body-sm mt-3">{service.notIdealFor[0]}.</p>
- </div>
- <Link href="#faq" className="ds-link mt-6">
- Jump to common questions
- <ArrowIcon className="h-3.5 w-3.5" />
- </Link>
- </div>
- }
- />
+  /* Bands after the two-column body alternate; the optional insights band
+     shifts the sequence, so the tones are derived rather than hard-coded. */
+  const proofTone: Tone = "soft";
+  const insightsTone = flip(proofTone);
+  const whyTone = relatedInsights.length > 0 ? flip(insightsTone) : insightsTone;
+  const faqTone = flip(whyTone);
+  const contactTone = flip(faqTone);
+  const nextTone = flip(contactTone);
 
- <ServiceToc sections={SECTIONS} />
+  return (
+    <>
+      <ServiceJsonLd service={service} />
+      <PageEvent event="service_view" label={service.slug} />
+      <Nav />
+      <main id="main">
+        <PageHeader
+          align="center"
+          trail={[
+            { label: "Home", href: "/" },
+            { label: "Services", href: "/services" },
+            { label: service.title },
+          ]}
+          eyebrow={service.eyebrow}
+          title={service.h1}
+          lede={service.subhead}
+          actions={
+            <>
+              <Link
+                href="/contact"
+                data-track="cta_click"
+                data-track-label={service.slug}
+                className="ds-btn ds-btn-primary"
+              >
+                {service.cta.primaryLabel}
+                <ArrowIcon />
+              </Link>
+              <Link href="/work" className="ds-btn ds-btn-secondary">
+                See relevant work
+              </Link>
+            </>
+          }
+        />
 
- {/* Answer-first. One quotable sentence before any sales copy. */}
- <Section tone="plain">
- <Reveal>
- <Definition term="In one sentence">{service.definition}</Definition>
- </Reveal>
- <Reveal delay={0.05} className=" mt-10 space-y-5">
- {service.intro.map((p) => (
- <p key={p} className="ds-body">
- {p}
- </p>
- ))}
- </Reveal>
- </Section>
+        {/* Phone and tablet: the sticky chip row. Desktop gets the rail. */}
+        <ServiceToc sections={SECTIONS} className="lg:hidden" />
 
- <Section id="fit" tone="soft">
- <SectionHeading
- overline="Fit"
- title="Who this is for, and who it is not"
- description="Naming the wrong fit saves both of us a call. If your situation is in the right-hand column, say so and I will point you somewhere better."
- />
- <Reveal>
- <FitLists idealFor={service.idealFor} notIdealFor={service.notIdealFor} />
- </Reveal>
- </Section>
+        <Section tone="plain">
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
+            <div className="min-w-0 space-y-20 lg:col-span-8">
+              {/* Answer-first. One quotable sentence before any sales copy. */}
+              <div>
+                <Reveal>
+                  <Definition term="In one sentence">{service.definition}</Definition>
+                </Reveal>
+                <Reveal delay={0.05} className="mt-8 space-y-5">
+                  {service.intro.map((p) => (
+                    <p key={p} className="ds-body">
+                      {p}
+                    </p>
+                  ))}
+                </Reveal>
+              </div>
 
- <Section id="problems" tone="plain">
- <SectionHeading
- overline="The problem"
- title="What this service is actually solving"
- />
- <ul className="border-t border-border">
- {service.problems.map((problem, i) => (
- <Reveal
- as="li"
- key={problem.title}
- delay={i * 0.05}
- className="grid grid-cols-1 gap-x-8 gap-y-3 border-b border-border py-8 md:grid-cols-12 md:items-baseline"
- >
- <span className="font-display text-[2.25rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums md:col-span-2 md:text-[2.5rem]">
- {String(i + 1).padStart(2, "0")}
- </span>
- <div className="md:col-span-10">
- <h3 className="ds-title-sm">{problem.title}</h3>
- <p className="ds-body-sm mt-3 max-w-2xl">{problem.detail}</p>
- </div>
- </Reveal>
- ))}
- </ul>
- </Section>
+              <Block
+                id="fit"
+                overline="Fit"
+                title="Who this is for, and who it is not"
+                description="Naming the wrong fit saves both of us a call. If your situation is in the right-hand card, say so and I will point you somewhere better."
+              >
+                <div className="grid gap-5 md:grid-cols-2">
+                  <Reveal className="h-full">
+                    <ListCard label="A good fit" positive items={service.idealFor} />
+                  </Reveal>
+                  <Reveal delay={0.05} className="h-full">
+                    <ListCard label="Not a fit" positive={false} items={service.notIdealFor} />
+                  </Reveal>
+                </div>
+              </Block>
 
- <Section id="deliverables" tone="soft">
- <SectionHeading
- overline="Deliverables"
- title="What you get"
- description="Concrete outputs, not activities. Everything here is something that exists at the end of the engagement."
- />
- <ul className="grid border-t border-border sm:grid-cols-2">
- {service.deliverables.map((d, i) => (
- <Reveal
- as="li"
- key={d.title}
- delay={i * 0.03}
- className="border-b border-border py-7 sm:py-8 sm:odd:pr-8 sm:odd:border-r sm:even:pl-8"
- >
- <div className="flex items-start gap-3.5">
- <CheckIcon className="mt-1 shrink-0 text-accent" />
- <div>
- <h3 className="ds-title-sm">{d.title}</h3>
- <p className="ds-body-sm mt-2">{d.detail}</p>
- </div>
- </div>
- </Reveal>
- ))}
- </ul>
- </Section>
+              <Block id="problems" overline="The problem" title="What this service is actually solving">
+                <ol className="space-y-4">
+                  {service.problems.map((problem, i) => (
+                    <Reveal as="li" key={problem.title} delay={i * 0.04}>
+                      <div className="ds-card flex items-start gap-5 p-6">
+                        <span
+                          aria-hidden
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.875rem] font-semibold text-accent tabular-nums"
+                        >
+                          {i + 1}
+                        </span>
+                        <div>
+                          <h3 className="ds-title-sm">{problem.title}</h3>
+                          <p className="ds-body-sm mt-2">{problem.detail}</p>
+                        </div>
+                      </div>
+                    </Reveal>
+                  ))}
+                </ol>
+              </Block>
 
- <Section id="engagement" tone="plain">
- <SectionHeading overline="Engagement" title="How it runs" />
- <Reveal>
- <StepList steps={service.engagement} />
- </Reveal>
- </Section>
+              <Block
+                id="deliverables"
+                overline="Deliverables"
+                title="What you get"
+                description="Concrete outputs, not activities. Everything here is something that exists at the end of the engagement."
+              >
+                <ul className="grid gap-4 sm:grid-cols-2">
+                  {service.deliverables.map((d, i) => (
+                    <Reveal as="li" key={d.title} delay={i * 0.03} className="h-full">
+                      <div className="ds-card h-full p-6">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                          <CheckIcon />
+                        </span>
+                        <h3 className="ds-title-sm mt-4">{d.title}</h3>
+                        <p className="ds-body-sm mt-2">{d.detail}</p>
+                      </div>
+                    </Reveal>
+                  ))}
+                </ul>
+              </Block>
 
- <Section id="technical" tone="soft">
- <SectionHeading
- overline="Technical depth"
- title="What it is built with, and why that matters to you"
- description={service.technical.summary}
- />
- <div className="grid gap-x-8 gap-y-10 border-t border-border pt-9 sm:grid-cols-2 lg:grid-cols-3">
- {service.technical.groups.map((group, i) => {
- const Icon = technicalIcon(group.label);
- return (
- <Reveal key={group.label} delay={i * 0.04}>
- <div className="flex items-center gap-2.5">
- <Icon className="h-4 w-4 shrink-0 text-accent" />
- <p className="ds-meta">{group.label}</p>
- </div>
- <ChipList items={group.items} className="mt-4" />
- </Reveal>
- );
- })}
- </div>
- </Section>
+              <Block id="engagement" overline="Engagement" title="How it runs">
+                <ol>
+                  {service.engagement.map((step, i) => {
+                    const last = i === service.engagement.length - 1;
+                    return (
+                      <Reveal as="li" key={step.step} delay={i * 0.04}>
+                        <div className="relative flex gap-5 pb-8 last:pb-0">
+                          {!last && (
+                            <span
+                              aria-hidden
+                              className="absolute top-10 bottom-0 left-[1.0625rem] w-px bg-border"
+                            />
+                          )}
+                          <span
+                            aria-hidden
+                            className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-[0.875rem] font-semibold text-accent-fg tabular-nums"
+                          >
+                            {i + 1}
+                          </span>
+                          <div className="pt-1">
+                            <h3 className="ds-title">{step.step}</h3>
+                            <p className="ds-body-sm mt-2">{step.detail}</p>
+                          </div>
+                        </div>
+                      </Reveal>
+                    );
+                  })}
+                </ol>
+              </Block>
 
- <RelatedWork
- id="proof"
- tone="plain"
- slugs={service.proofSlugs}
- heading="Where this has been done before"
- description="Production work relevant to this service. Each case study covers the problem, the decisions and what came out of it."
- />
+              <Block
+                id="technical"
+                overline="Technical depth"
+                title="What it is built with, and why that matters to you"
+                description={service.technical.summary}
+              >
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {service.technical.groups.map((group, i) => {
+                    const Icon = technicalIcon(group.label);
+                    return (
+                      <Reveal key={group.label} delay={i * 0.03} className="h-full">
+                        <div className="ds-card h-full p-6">
+                          <div className="flex items-center gap-2.5">
+                            <Icon className="h-4 w-4 shrink-0 text-accent" />
+                            <p className="ds-meta">{group.label}</p>
+                          </div>
+                          <ChipList items={group.items} className="mt-4" />
+                        </div>
+                      </Reveal>
+                    );
+                  })}
+                </div>
+              </Block>
 
- <Section id="scope" tone="soft">
- <SectionHeading
- overline="Scope"
- title="Where the scope starts and stops"
- description="Stated up front so it is a shared understanding rather than a negotiation halfway through."
- />
- <div className="grid gap-10 border-t border-border pt-8 md:grid-cols-2 md:gap-16">
- <Reveal>
- <p className="ds-meta text-success">Included</p>
- <ul className="mt-5 space-y-3.5">
- {service.scope.includes.map((item) => (
- <li key={item} className="flex items-start gap-3">
- <CheckIcon className="mt-1 shrink-0 text-success" />
- <span className="text-[0.9375rem] leading-relaxed text-ink">{item}</span>
- </li>
- ))}
- </ul>
- </Reveal>
- <Reveal delay={0.05} className="md:border-l md:border-border md:pl-16">
- <p className="ds-meta">Not included</p>
- <ul className="mt-5 space-y-3.5">
- {service.scope.excludes.map((item) => (
- <li key={item} className="flex items-start gap-3">
- <MinusIcon className="mt-1 shrink-0 text-ink-soft" />
- <span className="text-[0.9375rem] leading-relaxed text-ink-muted">
- {item}
- </span>
- </li>
- ))}
- </ul>
- </Reveal>
- </div>
- </Section>
+              <Block
+                id="scope"
+                overline="Scope"
+                title="Where the scope starts and stops"
+                description="Stated up front so it is a shared understanding rather than a negotiation halfway through."
+              >
+                <div className="grid gap-5 md:grid-cols-2">
+                  <Reveal className="h-full">
+                    <ListCard label="Included" positive items={service.scope.includes} />
+                  </Reveal>
+                  <Reveal delay={0.05} className="h-full">
+                    <ListCard label="Not included" positive={false} items={service.scope.excludes} />
+                  </Reveal>
+                </div>
+              </Block>
+            </div>
 
- {relatedInsights.length > 0 && (
- <Section tone="deep">
- <SectionHeading
- overline="Further reading"
- title="Related insights"
- description="First-hand notes that go deeper on the approach behind this service."
- />
-<ul className="border-t border-white/15">
-{relatedInsights.map((insight, i) => (
-<Reveal as="li" key={insight.slug} delay={i * 0.04}>
-<Link
-href={`/insights/${insight.slug}`}
-className="group flex flex-col gap-2.5 border-b border-white/15 py-6 transition-colors hover:bg-white/10 md:flex-row md:items-baseline md:justify-between"
->
-<span>
-<span className="flex items-center gap-2.5">
-<span className="ds-title-sm text-deep-text transition-colors group-hover:text-white">
-{insight.title}
-</span>
-<span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3 py-0.5 text-[0.75rem] font-medium text-deep-text/90">
-{insight.cluster}</span>
-</span>
-<span className="ds-body-sm mt-1.5 block max-w-2xl text-deep-text/70">{insight.dek}</span>
-</span>
-<span className="ds-link text-deep-text">
-Read
-<ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-</span>
-</Link>
-</Reveal>
-))}
-</ul>
- </Section>
- )}
+            {/* Desktop rail: the engagement at a glance, the action, the page map. */}
+            <aside className="hidden lg:col-span-4 lg:block">
+              <div className="sticky top-28 space-y-5">
+                <div className="ds-card p-6">
+                  <span className="ds-overline-accent">{TIER_LABEL[service.tier]}</span>
+                  <p className="ds-title mt-3">{service.shortTitle}</p>
+                  <dl className="mt-5 space-y-3 border-t border-border pt-5">
+                    <div className="flex items-baseline justify-between gap-4">
+                      <dt className="ds-body-sm">Deliverables</dt>
+                      <dd className="ds-title-sm tabular-nums">{service.deliverables.length}</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-4">
+                      <dt className="ds-body-sm">Process steps</dt>
+                      <dd className="ds-title-sm tabular-nums">{service.engagement.length}</dd>
+                    </div>
+                    <div className="flex items-baseline justify-between gap-4">
+                      <dt className="ds-body-sm">Questions answered</dt>
+                      <dd className="ds-title-sm tabular-nums">{service.faqs.length}</dd>
+                    </div>
+                  </dl>
+                  <Link
+                    href="/contact"
+                    data-track="cta_click"
+                    data-track-label={`${service.slug}:rail`}
+                    className="ds-btn ds-btn-primary mt-6 w-full justify-center"
+                  >
+                    {service.cta.primaryLabel}
+                    <ArrowIcon />
+                  </Link>
+                </div>
 
- <Principles
- id="why"
- tone="plain"
- heading="Why work with me on this"
- description="The same four things whichever service you are reading. Each is tied to something you can check rather than to an adjective."
- />
+                <nav aria-label="On this page" className="ds-card p-6">
+                  <p className="ds-meta">On this page</p>
+                  <ul className="mt-4 space-y-1">
+                    {SECTIONS.map((section) => (
+                      <li key={section.id}>
+                        <a
+                          href={`#${section.id}`}
+                          className="block rounded-lg px-3 py-1.5 text-[0.875rem] font-medium text-fg-muted transition-colors hover:bg-accent-soft hover:text-accent"
+                        >
+                          {section.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            </aside>
+          </div>
+        </Section>
 
- <Section id="faq" tone="soft">
- <SectionHeading overline="Questions" title="Common questions" />
- <Reveal>
- <Faqs faqs={service.faqs} className="mx-auto max-w-4xl" />
- </Reveal>
- </Section>
+        <RelatedWork
+          id="proof"
+          tone={proofTone}
+          slugs={service.proofSlugs}
+          heading="Where this has been done before"
+          description="Production work relevant to this service. Each case study covers the problem, the decisions and what came out of it."
+        />
 
- <Contact tone="plain" heading={service.cta.heading} body={service.cta.body} />
+        {relatedInsights.length > 0 && (
+          <Section tone={insightsTone}>
+            <SectionHeading
+              overline="Further reading"
+              title="Related insights"
+              description="First-hand notes that go deeper on the approach behind this service."
+            />
+            <ul className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2">
+              {relatedInsights.map((insight, i) => (
+                <Reveal as="li" key={insight.slug} delay={i * 0.05} className="h-full">
+                  <Link
+                    href={`/insights/${insight.slug}`}
+                    className="group ds-card ds-card-interactive flex h-full flex-col p-7"
+                  >
+                    <span className="ds-chip self-start">{insight.cluster}</span>
+                    <span className="ds-title mt-4 transition-colors group-hover:text-accent">
+                      {insight.title}
+                    </span>
+                    <span className="ds-body-sm mt-3 text-fg-muted">{insight.dek}</span>
+                    <span className="ds-link mt-auto pt-6">
+                      Read
+                      <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </span>
+                  </Link>
+                </Reveal>
+              ))}
+            </ul>
+          </Section>
+        )}
 
- {/* Next service. Every service page links onward rather than dead-ending
- for a reader who has decided this one is not theirs. */}
- <Section tone="soft" bordered>
- <Reveal>
- <Link
- href={`/services/${nextService.slug}`}
- className="group flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
- >
- <div>
- <p className="ds-meta">Next service</p>
- <p className="ds-h3 mt-3 transition-colors group-hover:text-accent">
- {nextService.title}
- </p>
- <p className="ds-body-sm mt-2 max-w-xl">{nextService.summary}</p>
- </div>
- <span
- aria-hidden
- className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-ink-soft transition-[border-color,color,translate] duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:text-accent"
- >
- <ArrowIcon />
- </span>
- </Link>
- </Reveal>
- </Section>
- </main>
- <Footer />
- </>
- );
+        <Principles
+          id="why"
+          tone={whyTone}
+          heading="Why work with me on this"
+          description="The same four things whichever service you are reading. Each is tied to something you can check rather than to an adjective."
+        />
+
+        <Section id="faq" tone={faqTone}>
+          <SectionHeading overline="Questions" title="Common questions" />
+          <Reveal>
+            <Faqs faqs={service.faqs} className="mx-auto max-w-4xl" />
+          </Reveal>
+        </Section>
+
+        <Contact tone={contactTone} heading={service.cta.heading} body={service.cta.body} />
+
+        {/* Next service. Every service page links onward rather than dead-ending
+            for a reader who has decided this one is not theirs. */}
+        <Section tone={nextTone} bordered>
+          <Reveal>
+            <Link
+              href={`/services/${nextService.slug}`}
+              className="group ds-card ds-card-interactive mx-auto flex max-w-4xl items-center justify-between gap-6 p-7 md:p-8"
+            >
+              <div>
+                <p className="ds-meta">Next service</p>
+                <p className="ds-h3 mt-3 transition-colors group-hover:text-accent">
+                  {nextService.title}
+                </p>
+                <p className="ds-body-sm mt-2 max-w-xl">{nextService.summary}</p>
+              </div>
+              <span
+                aria-hidden
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-fg-subtle transition-all duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:text-accent"
+              >
+                <ArrowIcon />
+              </span>
+            </Link>
+          </Reveal>
+        </Section>
+      </main>
+      <Footer />
+    </>
+  );
 }

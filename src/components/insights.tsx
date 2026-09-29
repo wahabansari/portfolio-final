@@ -27,21 +27,16 @@ function rand(seed: number, salt: number): number {
 }
 
 /**
- * The "image" for an article that has no photography — a solid indigo
- * gradient tile (the same accent → accent-deep pairing the brand mark and
- * OG card use, so it reads as designed rather than as a faded placeholder),
- * with the matching service's icon (via `SERVICE_ICONS`, one shared mapping
- * so a topic never gets two different icons on different pages) floating in
- * an elevated white card on top. A light grid texture and a few small dots
- * — decorative only, small enough that any hash-driven position still looks
- * intentional — keep the fill from reading as flat. The gradient angle and
- * dot layout are the only things varied per article; nothing here is
- * positioned in a way that can clip or land off-tile. Used small as a hub
- * thumbnail and large as the article page's hero cover.
+ * The "image" for an article that has no photography — a dark bento tile
+ * with two soft lime/cyan glows, a dot grid and a few accent dots, carrying
+ * the matching service's icon (via `SERVICE_ICONS`, one shared mapping so a
+ * topic never gets two different icons on different pages) in a
+ * hairline-edged square. The glow positions and dot layout are the only
+ * things varied per article, and every one of them stays inside the tile.
+ * Used small as a hub thumbnail and large as the article page's hero cover.
  */
 export function InsightCover({ insight, className }: { insight: Insight; className?: string }) {
   const seed = hashSeed(insight.slug);
-  const angle = Math.round(rand(seed, 0) * 360);
   const Icon = SERVICE_ICONS[insight.relatedServiceSlug] ?? CodeIcon;
   const dots = Array.from({ length: 5 }, (_, i) => ({
     x: 10 + rand(seed, 10 + i * 2) * 80,
@@ -49,30 +44,39 @@ export function InsightCover({ insight, className }: { insight: Insight; classNa
     r: 1 + rand(seed, 30 + i) * 1.4,
   }));
 
+  /* Two glow centres, positioned per article so the covers differ without
+     ever leaving the tile. */
+  const ax = 15 + Math.round(rand(seed, 1) * 40);
+  const ay = 10 + Math.round(rand(seed, 2) * 40);
+  const bx = 55 + Math.round(rand(seed, 3) * 35);
+  const by = 50 + Math.round(rand(seed, 4) * 40);
+
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[var(--radius-card)] shadow-[0_10px_28px_-14px_rgba(28,23,18,0.4)]",
+        "relative overflow-hidden rounded-[var(--radius-card)] border border-border",
         className,
       )}
-      style={{ background: `linear-gradient(${angle}deg, var(--color-accent) 0%, var(--color-accent-deep) 100%)` }}
+      style={{
+        background: `radial-gradient(60% 70% at ${ax}% ${ay}%, var(--color-gradient-from) 0%, transparent 70%), radial-gradient(55% 65% at ${bx}% ${by}%, var(--color-gradient-to) 0%, transparent 70%), var(--color-surface)`,
+      }}
     >
       <div
         aria-hidden
-        className="absolute inset-0 opacity-[0.12]"
+        className="absolute inset-0"
         style={{
           backgroundImage:
-            "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)",
-          backgroundSize: "22px 22px",
+            "radial-gradient(var(--color-grid-line) 1px, transparent 1px)",
+          backgroundSize: "18px 18px",
         }}
       />
       <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
         {dots.map((d, i) => (
-          <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="#fff" fillOpacity={0.3} />
+          <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="var(--color-accent)" fillOpacity={0.45} />
         ))}
       </svg>
       <div aria-hidden className="absolute inset-0 flex items-center justify-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface text-accent shadow-[0_14px_30px_-10px_rgba(0,0,0,0.4)] md:h-20 md:w-20">
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-hairline bg-bg text-accent shadow-[0_0_40px_-8px_var(--color-accent-hairline)] md:h-20 md:w-20">
           <Icon className="h-8 w-8 md:h-10 md:w-10" />
         </span>
       </div>
@@ -119,7 +123,7 @@ function FeaturedInsight({ insight }: { insight: Insight }) {
         >
           <div>
             <span className="ds-overline-accent block">Latest &middot; {insight.cluster}</span>
-            <h2 className="mt-5 font-display text-[2rem] font-bold leading-[1.05] tracking-[-0.03em] text-fg transition-colors duration-200 group-hover:text-accent md:text-[2.75rem]">
+            <h2 className="mt-5 font-display text-[2rem] font-bold leading-[1.2] tracking-[-0.01em] text-fg transition-colors duration-200 group-hover:text-accent md:text-[2.5rem]">
               {insight.title}
             </h2>
             <p className="ds-body-lg mt-5 max-w-xl text-fg-muted">{insight.dek}</p>
@@ -160,11 +164,11 @@ function InsightIndexRow({ insight, index }: { insight: Insight; index: number }
       data-track-label={insight.slug}
       className="group flex items-start gap-5 border-b border-border py-7 transition-colors duration-150 hover:bg-surface-hover md:items-center md:gap-8 md:py-8"
     >
-      <span className="shrink-0 font-display text-[1.375rem] font-bold leading-none text-ink-softest tabular-nums transition-colors duration-150 group-hover:text-accent md:text-[1.75rem]">
+      <span className="shrink-0 font-mono text-[1rem] font-medium leading-none text-fg-subtle tabular-nums transition-colors duration-150 group-hover:text-accent md:text-[1.75rem]">
         {String(index + 1).padStart(2, "0")}
       </span>
       <div className="min-w-0 flex-1">
-        <h3 className="font-display text-[1.1875rem] font-bold leading-[1.2] tracking-[-0.015em] text-fg transition-colors duration-150 group-hover:text-accent md:text-[1.5rem]">
+        <h3 className="font-display text-[1.1875rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg transition-colors duration-150 group-hover:text-accent md:text-[1.5rem]">
           {insight.title}
         </h3>
         <p className="ds-body-sm mt-1.5 max-w-2xl text-fg-muted">{insight.dek}</p>
@@ -200,7 +204,7 @@ export function InsightsList() {
         return (
           <Section key={cluster} tone={ci % 2 === 0 ? "soft" : "plain"}>
             <div className="flex items-baseline justify-between gap-6 border-b-2 border-accent pb-5">
-              <h2 className="font-display text-[1.75rem] font-bold tracking-[-0.02em] text-fg md:text-[2.25rem]">
+              <h2 className="font-display text-[1.75rem] font-semibold tracking-[-0.01em] text-fg md:text-[2.25rem]">
                 {cluster}
               </h2>
               <span className="ds-meta whitespace-nowrap">

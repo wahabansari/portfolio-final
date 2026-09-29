@@ -119,7 +119,7 @@ export function Nav() {
           href={localeHref("/")}
           data-track="nav_logo"
           aria-label="Home"
-          className="flex items-center gap-2.5 text-[1.0625rem] font-semibold tracking-[-0.02em] text-fg"
+          className="flex items-center gap-2.5 text-[1.0625rem] font-semibold tracking-[-0.01em] text-fg"
         >
           <BrandMark className="h-9 w-9" />
           <span className="hidden sm:inline">{site.shortName}</span>
@@ -147,7 +147,7 @@ export function Nav() {
                     aria-haspopup="true"
                     data-track="nav_services_toggle"
                     className={cn(
-                      "flex items-center gap-1.5 rounded-md px-3 py-2 text-[0.875rem] font-medium tracking-wide transition-colors duration-150",
+                      "flex items-center gap-1.5 rounded-md px-3 py-2 text-[0.875rem] font-medium transition-colors duration-150",
                       active || servicesOpen ? "text-fg" : "text-fg-muted hover:text-fg",
                     )}
                   >
@@ -212,7 +212,7 @@ export function Nav() {
                 data-track="nav_link"
                 data-track-label={link.label.toLowerCase()}
                 className={cn(
-                  "relative rounded-md px-3 py-2 text-[0.875rem] font-medium tracking-wide transition-colors duration-150",
+                  "relative rounded-md px-3 py-2 text-[0.875rem] font-medium transition-colors duration-150",
                   active ? "text-fg" : "text-fg-muted hover:text-fg",
                 )}
               >
@@ -257,7 +257,7 @@ export function Nav() {
           <Link
             href={localeHref("/contact")}
             data-track="nav_cta"
-            className="hidden items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-[0.8125rem] font-semibold text-accent-fg transition-all duration-150 hover:bg-accent-hover hover:shadow-card sm:inline-flex"
+            className="hidden items-center gap-2 whitespace-nowrap rounded-lg bg-fg px-5 py-2.5 text-[0.8125rem] font-medium text-bg transition-colors duration-150 hover:bg-accent hover:text-accent-fg sm:inline-flex"
           >
             Start a project
             <ArrowIcon className="h-3.5 w-3.5" />
@@ -362,7 +362,7 @@ export function Nav() {
               href={localeHref("/contact")}
               data-track="nav_cta"
               data-track-label="mobile"
-              className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 text-[0.9375rem] font-semibold text-accent-fg"
+              className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-fg px-5 py-3 text-[0.9375rem] font-medium text-bg"
             >
               Start a project
               <ArrowIcon className="h-4 w-4" />

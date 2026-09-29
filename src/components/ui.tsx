@@ -53,7 +53,7 @@ export function SectionHeading({
  description,
  aside,
  level = "h2",
- align = "center",
+ align = "left",
  size,
 }: {
  overline: string;
@@ -66,7 +66,7 @@ export function SectionHeading({
 }) {
  const Heading = level;
  return (
- <Reveal className="mb-10 md:mb-14">
+ <Reveal className="mb-7 md:mb-9">
  <div
  className={cn(
  "flex flex-col gap-6",
@@ -75,10 +75,10 @@ export function SectionHeading({
  )}
  >
  <div className={cn("max-w-3xl", align === "center" && "text-center")}>
- <span className="ds-overline">{overline}</span>
+ <span className="ds-overline-accent">{overline}</span>
  <Heading
  className={cn(
- "mt-5",
+ "mt-3",
  level === "h1"
  ? "ds-h1"
  : size === "sm"
@@ -88,12 +88,56 @@ export function SectionHeading({
  >
  {title}
  </Heading>
- {description && <p className="ds-lede mt-5 mx-auto">{description}</p>}
+ {description && (
+            <p className={cn("ds-lede mt-4", align === "center" && "mx-auto")}>{description}</p>
+          )}
  </div>
  {aside && <div className="shrink-0">{aside}</div>}
  </div>
  </Reveal>
  );
+}
+
+/**
+ * The editorial two-part section: a narrow heading rail on the left (sticky
+ * on desktop) and the material on the right. Sections that hold a list —
+ * work, services, testimonials, questions — all open this way, so the page
+ * reads as one index rather than a stack of different layouts.
+ */
+export function SectionRail({
+  id,
+  tone = "plain",
+  bordered = true,
+  overline,
+  title,
+  description,
+  action,
+  children,
+}: {
+  id?: string;
+  tone?: "plain" | "soft" | "deep";
+  bordered?: boolean;
+  overline: string;
+  title: ReactNode;
+  description?: string;
+  action?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <Section id={id} tone={tone} bordered={bordered}>
+      <div className="grid gap-x-12 gap-y-7 lg:grid-cols-12">
+        <Reveal className="lg:col-span-4">
+          <div className="lg:sticky lg:top-24">
+            <span className="ds-overline-accent">{overline}</span>
+            <h2 className="ds-h2 mt-3">{title}</h2>
+            {description && <p className="ds-body mt-4 max-w-sm">{description}</p>}
+            {action && <div className="mt-6">{action}</div>}
+          </div>
+        </Reveal>
+        <div className="min-w-0 lg:col-span-8">{children}</div>
+      </div>
+    </Section>
+  );
 }
 
 /* ── Icons ──────────────────────────────────────────────────────────────── */
@@ -493,7 +537,7 @@ export function StepList({
         <li key={s.step} className="flex flex-col">
           <span
             aria-hidden
-            className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums"
+            className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.01em] text-ink-soft tabular-nums"
           >
             {String(i + 1).padStart(2, "0")}
           </span>
@@ -530,9 +574,10 @@ export function CtaBand({
   steps?: readonly { step: string; detail: string }[];
   tone?: "plain" | "soft" | "deep";
   /**
-   * Renders the band as the closing bookend: a full-bleed tonal-blue panel
-   * (#E8F0FE) with ink type and the filled blue action. When off, the band
-   * stays on the section tone with the accent hairline.
+   * Renders the band as the closing bookend: a rounded panel in the brand
+   * gradient (`.ds-gradient-band`, same as the homepage contact CTA) with
+   * ink type and the primary action. When off, the band stays on the
+   * section tone with the accent hairline.
    */
   navy?: boolean;
 }) {
@@ -542,7 +587,7 @@ export function CtaBand({
     return (
       <Section tone={tone}>
         <Reveal>
-          <div className="rounded-[1.75rem] bg-surface-blue px-6 py-12 sm:px-10 md:px-14 md:py-16">
+          <div className="ds-gradient-band rounded-[1.75rem] px-6 py-12 sm:px-10 md:px-14 md:py-16">
             <div
               className={cn(
                 "relative",
@@ -578,7 +623,7 @@ export function CtaBand({
                       <li key={item.step} className="flex gap-4">
                         <span
                           aria-hidden
-                          className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-surface text-[0.75rem] font-semibold text-accent"
+                          className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.75rem] font-semibold text-accent"
                         >
                           {i + 1}
                         </span>
@@ -671,10 +716,10 @@ export function CtaBand({
 
 export type Crumb = { label: string; href?: string };
 
-export function Breadcrumbs({ trail }: { trail: Crumb[] }) {
+export function Breadcrumbs({ trail, center = false }: { trail: Crumb[]; center?: boolean }) {
  return (
  <nav aria-label="Breadcrumb">
- <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
+ <ol className={cn("flex flex-wrap items-center gap-x-2 gap-y-1", center && "justify-center")}>
  {trail.map((crumb, i) => {
  const last = i === trail.length - 1;
  return (
@@ -709,11 +754,11 @@ export function Breadcrumbs({ trail }: { trail: Crumb[] }) {
 
 /**
  * The header band every inner page opens with. Breadcrumbs, an eyebrow, the
- * one h1, its value proposition, and the page's dominant action — on the soft
- * band, so the page has a distinct head and body.
+ * one h1, its value proposition, and the page's dominant action — on the
+ * soft band, so the page has a distinct head and body.
  *
- * Visual parity with the homepage hero: subtle grid cadence, accent bloom,
- * and a quiet watermark so inner pages don't feel flat.
+ * Visual parity with the homepage hero: the same single brand gradient
+ * glow (`.ds-hero-glow`) and nothing else — no grid lines, no watermark.
  */
 export function PageHeader({
   trail,
@@ -723,6 +768,7 @@ export function PageHeader({
   intro,
   actions,
   aside,
+  align = "left",
 }: {
   trail?: Crumb[];
   eyebrow?: string;
@@ -731,46 +777,49 @@ export function PageHeader({
   intro?: readonly string[];
   actions?: ReactNode;
   aside?: ReactNode;
+  align?: "left" | "center";
 }) {
+  if (align === "center") {
+    return (
+      <section className="relative overflow-hidden border-b border-border bg-surface pt-28 pb-16 md:pt-32 md:pb-20">
+        <div aria-hidden className="ds-hero-glow pointer-events-none absolute inset-0" />
+        <div className="ds-container relative">
+          {trail && <Breadcrumbs trail={trail} center />}
+          <div className={cn("mx-auto flex max-w-3xl flex-col items-center text-center", trail && "mt-8")}>
+            {eyebrow && <span className="ds-overline-accent mb-5 block">{eyebrow}</span>}
+            <h1 className="ds-h1">{title}</h1>
+            {lede && <p className="ds-lede mx-auto mt-6 max-w-2xl">{lede}</p>}
+            {intro && (
+              <div className="mt-6 space-y-4">
+                {intro.map((p) => (
+                  <p key={p} className="ds-body">
+                    {p}
+                  </p>
+                ))}
+              </div>
+            )}
+            {actions && (
+              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
+                {actions}
+              </div>
+            )}
+          </div>
+          {aside && <div className="mx-auto mt-10 max-w-4xl">{aside}</div>}
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="relative overflow-hidden border-b border-border bg-surface pt-24 pb-14 md:pt-28 md:pb-20">
-      {/* Subtle grid cadence — static, no breathing animation on inner pages */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 ds-grid-lines opacity-50" style={{ animation: "none" }} />
-      {/* Accent wash raining off the top edge */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-accent-line/50 to-transparent"
-      />
-      {/* Soft corner bloom (like hero) */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-32 -right-20 h-80 w-80 rounded-full blur-[110px]"
-        style={{ background: "var(--color-glow)" }}
-      />
-      {/* Quiet watermark — site short name */}
-      <span
-        aria-hidden
-        className="ds-watermark absolute -bottom-8 right-0 text-[clamp(6rem,20vw,18rem)] md:right-8"
-      >
-        W.A.
-      </span>
+    <section className="relative overflow-hidden border-b border-border bg-surface pt-28 pb-16 md:pt-32 md:pb-20">
+      <div aria-hidden className="ds-hero-glow pointer-events-none absolute inset-0" />
 
       <div className="ds-container relative">
-        {trail && (
-          <div className="flex items-center gap-3">
-            <span aria-hidden className="h-2 w-2 shrink-0 rounded-[3px] bg-accent" />
-            <Breadcrumbs trail={trail} />
-          </div>
-        )}
+        {trail && <Breadcrumbs trail={trail} />}
 
-        <div className={cn("grid gap-10 lg:grid-cols-12 lg:gap-16", trail && "mt-9")}>
+        <div className={cn("grid gap-10 lg:grid-cols-12 lg:gap-16", trail && "mt-8")}>
           <div className={cn("max-w-3xl", aside ? "lg:col-span-7" : "lg:col-span-9")}>
-            {eyebrow && (
-              <span className="mb-6 flex items-center gap-3">
-                <span aria-hidden className="h-px w-9 shrink-0 bg-accent" />
-                <span className="ds-overline-accent">{eyebrow}</span>
-              </span>
-            )}
+            {eyebrow && <span className="ds-overline-accent mb-5 block">{eyebrow}</span>}
             <h1 className={cn("ds-h1", !eyebrow && "max-w-2xl")}>{title}</h1>
             {lede && <p className="ds-lede mt-6 max-w-2xl">{lede}</p>}
 
@@ -803,7 +852,7 @@ export function PageHeader({
  */
 export function Definition({ term, children }: { term: string; children: ReactNode }) {
  return (
- <div className="border-l-[3px] border-l-accent bg-accent-soft p-7 md:p-8">
+ <div className="rounded-2xl border border-accent-hairline bg-accent-soft p-7 md:p-8">
  <p className="ds-meta text-accent">{term}</p>
  <p className=" mt-3 font-display text-[1.1875rem] leading-[1.55] font-medium text-ink md:text-[1.3125rem]">
  {children}

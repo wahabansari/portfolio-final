@@ -1,149 +1,126 @@
 @import "tailwindcss";
 
 /*
- * Design System v2 — Bricolage Grotesque, light + dark themes.
+ * Design System v5 — "Swiss Index".
  *
- * One typeface (Bricolage Grotesque, variable — opsz axis redraws letterforms
- * by size, wght 200-800 carries all hierarchy: ~780 display, 550-600 labels
- * and buttons, 400 body). Warm paper base, not cool grey — the master brief
- * asks for "warm-white," and a warm base is also what actually reads as
- * distinct from the previous cool-toned palette. One indigo-violet primary
- * accent for links, CTAs and focus states; one warm coral kept strictly to
- * data points and the odd illustrative highlight, per the brief's "optional
- * second accent only for data visualization."
+ * A light, typographic system built on Poppins alone. Structure comes from a
+ * 12-column grid and 1px hairlines rather than boxes and shadows; colour is
+ * monochrome ink on warm paper with one signal-orange accent used for links,
+ * numerals, labels and focus. Sections are compact (≈68px between bands),
+ * headings are set tight, and content sits in a two-part rhythm: a narrow
+ * heading rail on the left, the material on the right. Dark theme is
+ * available through the toggle and maps the same tokens onto near-black.
  *
- * Cards are real cards now: a 1px border plus a genuinely restrained shadow,
- * per the brief's literal "white cards with subtle 1px border and very
- * restrained shadow" — this replaces the previous fill-only, borderless,
- * shadowless surface treatment site-wide.
+ * Reference points (researched, not copied): Linear's Inter-only,
+ * monochrome-plus-one-accent discipline and tight display tracking; Stripe's
+ * hairline-and-whitespace layout; Swiss/International grid layouts for the
+ * index-style lists.
  *
- * Raw tokens live on `--c-*`. `[data-theme="dark"]` overrides them; the
+ * Raw tokens live on `--c-*`. `html[data-theme="dark"]` overrides them; the
  * Tailwind utilities reference them through `@theme inline`, so every
  * `bg-bg`, `text-fg`, `border-border` adapts with zero component changes.
  */
 
 /* ── Raw tokens — light (default) ────────────────────────────────────── */
 :root {
-  --c-bg: #faf8f4;
+  --c-bg: #fafaf8;
   --c-surface: #ffffff;
-  --c-surface-hover: #f3efe7;
-  --c-grid-line: rgba(28, 23, 18, 0.045);
-  --c-border: #e8e2d6;
-  --c-border-subtle: #f0ebe1;
-  --c-fg: #1c1712;
-  --c-fg-muted: #5a5245;
-  /* Measured against --c-bg (#faf8f4): 5.4:1, clears AA with margin. */
-  --c-fg-subtle: #756c5d;
-  --c-fg-softest: #ded6c7;
-  --c-accent: #4f46e5;
-  --c-accent-hover: #4338ca;
-  --c-accent-deep: #3730a3;
-  --c-accent-deep-hover: #312e81;
-  --c-accent-soft: rgba(79, 70, 229, 0.1);
+  --c-surface-hover: #f4f4f1;
+  --c-band: #f3f3f0;
+  --c-grid-line: rgba(13, 13, 15, 0.06);
+  --c-border: #e3e3de;
+  --c-border-subtle: #ecece8;
+  --c-fg: #0d0d0f;
+  --c-fg-muted: #4f4f57;
+  /* 4.5:1 or better on both --c-bg and --c-band. */
+  --c-fg-subtle: #6a6a73;
+  --c-fg-softest: #d2d2cc;
+  --c-accent: #c8340c;
+  --c-accent-hover: #a92b09;
+  --c-accent-deep: #c8340c;
+  --c-accent-deep-hover: #a92b09;
+  --c-accent-soft: rgba(200, 52, 12, 0.08);
   --c-accent-fg: #ffffff;
-  --c-accent-hairline: #c7c2f9;
-  /* Faint indigo tint — open accordion panel fill and one navy-band CTA fill. */
-  --c-surface-blue: #eef0fe;
-  --c-accent-line: #c7c2f9;
-  --c-glow: rgba(79, 70, 229, 0.1);
-  /* Coral — data points and the one illustrative highlight only. Never a
-     large fill, never body text (2.9:1 on white — decorative use only). */
-  --c-coral: #e8542e;
-  --c-coral-soft: rgba(232, 84, 46, 0.1);
-  --c-success: #15803d;
-  --c-success-soft: #dcfce7;
-  --c-success-border: #bbf7d0;
-  /* Form validation / error state — every field error, the failed-submission
-     banner and the invalid-select border on the contact form all reference
-     this. It never existed as a token before this pass (the class names
-     text-warn/border-warn/bg-warn resolved to nothing), so every error state
-     on the site's one conversion form was rendering in the same colour as
-     ordinary text — an error a visitor could not visually distinguish from
-     a label. 6.1:1 on this background. */
+  --c-accent-hairline: rgba(200, 52, 12, 0.4);
+  --c-surface-blue: #fdf1ec;
+  --c-accent-line: rgba(200, 52, 12, 0.4);
+  --c-glow: rgba(200, 52, 12, 0.06);
+  /* Warm wash used only by the insight cover tiles. */
+  --c-gradient-from: rgba(200, 52, 12, 0.11);
+  --c-gradient-to: rgba(200, 52, 12, 0.04);
+  --c-coral: #9a4507;
+  --c-coral-soft: rgba(154, 69, 7, 0.1);
+  --c-success: #166534;
+  --c-success-soft: #e8f5ec;
+  --c-success-border: #bfe3c9;
   --c-warn: #b91c1c;
   --c-warn-soft: #fef2f2;
   --c-warn-border: #fecaca;
-  --c-deep: #211a6e;
-  --c-deep-text: #ffffff;
-  /* Terminal/data panel — deliberately fixed-dark in both themes, like a
-     real terminal window rather than a themed surface. Border does the work
-     of keeping it a distinct object when the page itself turns dark. */
-  --c-panel: #14110d;
-  --c-panel-text: #f5f1e8;
-  /* Same pairing as dark theme's --c-fg-subtle on --c-bg (#14110d):
-     verified 5.3:1. */
-  --c-panel-dim: #948a76;
-  --c-panel-border: rgba(245, 241, 232, 0.12);
-  /* Card shadow — genuinely restrained: a soft, close, low-opacity lift,
-     not a floating-panel drop shadow. */
-  --shadow-card: 0 1px 2px rgba(28, 23, 18, 0.03), 0 2px 8px rgba(28, 23, 18, 0.04);
-  --shadow-card-hover: 0 1px 3px rgba(28, 23, 18, 0.04), 0 4px 12px rgba(28, 23, 18, 0.05);
+  --c-deep: #101012;
+  --c-deep-text: #f4f4f1;
+  --c-panel: #101012;
+  --c-panel-text: #f4f4f1;
+  --c-panel-dim: #9a9aa3;
+  --c-panel-border: rgba(255, 255, 255, 0.12);
+  --shadow-card: none;
+  --shadow-card-hover: none;
 }
 
 /* ── Raw tokens — dark ───────────────────────────────────────────────── */
 html[data-theme="dark"] {
-  --c-bg: #14110d;
-  --c-surface: #1c1812;
-  --c-surface-hover: #241f17;
-  --c-grid-line: rgba(245, 241, 232, 0.05);
-  --c-border: #322b20;
-  --c-border-subtle: #241f17;
-  --c-fg: #f5f1e8;
-  --c-fg-muted: #b3a996;
-  /* Measured against --c-bg (#14110d): 5.3:1. */
-  --c-fg-subtle: #948a76;
-  --c-fg-softest: #4a4335;
-  --c-accent: #8b83ff;
-  --c-accent-hover: #a29aff;
-  /* accent-deep stays a genuine fill colour (not the light-on-dark text
-     accent) so white button text clears 4.5:1 — see .ds-btn-primary. */
-  --c-accent-deep: #5b52e8;
-  /* Capped lighten: going as light as the light-theme step (#6f66ff) drops
-     white-on-it to 4.18:1 and fails AA. #6860ea is the ceiling that still
-     clears 4.5:1 (4.72:1) while staying visibly different from the base. */
-  --c-accent-deep-hover: #6860ea;
-  --c-accent-soft: rgba(139, 131, 255, 0.14);
-  --c-accent-fg: #ffffff;
-  --c-accent-hairline: rgba(139, 131, 255, 0.4);
-  --c-surface-blue: #1d2135;
-  --c-accent-line: rgba(139, 131, 255, 0.4);
-  --c-glow: rgba(139, 131, 255, 0.14);
-  --c-coral: #ff8264;
-  --c-coral-soft: rgba(255, 130, 100, 0.14);
+  --c-bg: #0b0b0c;
+  --c-surface: #131315;
+  --c-surface-hover: #1a1a1c;
+  --c-band: #101012;
+  --c-grid-line: rgba(255, 255, 255, 0.06);
+  --c-border: #262629;
+  --c-border-subtle: #1b1b1e;
+  --c-fg: #f4f4f1;
+  --c-fg-muted: #a6a6ae;
+  --c-fg-subtle: #8a8a93;
+  --c-fg-softest: #3a3a3f;
+  --c-accent: #ff6b3d;
+  --c-accent-hover: #ff8560;
+  --c-accent-deep: #ff6b3d;
+  --c-accent-deep-hover: #ff8560;
+  --c-accent-soft: rgba(255, 107, 61, 0.12);
+  --c-accent-fg: #170803;
+  --c-accent-hairline: rgba(255, 107, 61, 0.45);
+  --c-surface-blue: #1c120e;
+  --c-accent-line: rgba(255, 107, 61, 0.45);
+  --c-glow: rgba(255, 107, 61, 0.08);
+  --c-gradient-from: rgba(255, 107, 61, 0.16);
+  --c-gradient-to: rgba(255, 107, 61, 0.05);
+  --c-coral: #fbbf24;
+  --c-coral-soft: rgba(251, 191, 36, 0.12);
   --c-success: #4ade80;
-  --c-success-soft: #0b2214;
-  --c-success-border: #164329;
+  --c-success-soft: rgba(74, 222, 128, 0.1);
+  --c-success-border: rgba(74, 222, 128, 0.28);
   --c-warn: #f87171;
-  --c-warn-soft: #2d1414;
-  --c-warn-border: #4c1d1d;
-  --c-deep: #0d0a2e;
-  --c-deep-text: #ffffff;
-  /* One step darker than dark-theme --c-bg (#14110d) so the panel still
-     reads as a distinct object rather than merging into the page. */
-  --c-panel: #0a0805;
-  --c-panel-text: #f5f1e8;
-  --c-panel-dim: #948a76;
-  --c-panel-border: rgba(245, 241, 232, 0.16);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.25), 0 8px 20px rgba(0, 0, 0, 0.3);
+  --c-warn-soft: rgba(248, 113, 113, 0.1);
+  --c-warn-border: rgba(248, 113, 113, 0.3);
+  --c-deep: #0e0e10;
+  --c-deep-text: #f4f4f1;
+  --c-panel: #0e0e10;
+  --c-panel-text: #f4f4f1;
+  --c-panel-dim: #8a8a93;
+  --c-panel-border: rgba(255, 255, 255, 0.12);
 }
 
 @theme inline {
-  /* ── Typography — Bricolage Grotesque everywhere (display + body) ───── */
-  /* Single font family throughout. Variable opsz axis redraws letterforms
-     by size; wght 200-800 carries all hierarchy. No Inter fallback. */
-  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  /* One typeface site-wide — anything that used to reach for a separate
-     mono face for "data" styling (tabular figures, badges) uses Bricolage
-     too, leaning on tabular-nums and weight instead of a second family. */
-  --font-mono: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  /* ── Typography — Poppins, everywhere ────────────────────────────────── */
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  /* No separate mono face: anything that used one gets Poppins, with tabular
+     figures where numbers need to line up. */
+  --font-mono: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
   /* ── Colors — theme tokens ──────────────────────────────────────── */
   --color-bg: var(--c-bg);
   --color-surface: var(--c-surface);
   --color-surface-hover: var(--c-surface-hover);
+  --color-band: var(--c-band);
   --color-border: var(--c-border);
   --color-border-subtle: var(--c-border-subtle);
   --color-fg: var(--c-fg);
@@ -161,6 +138,8 @@ html[data-theme="dark"] {
   --color-accent-line: var(--c-accent-line);
   --color-grid-line: var(--c-grid-line);
   --color-glow: var(--c-glow);
+  --color-gradient-from: var(--c-gradient-from);
+  --color-gradient-to: var(--c-gradient-to);
   --color-coral: var(--c-coral);
   --color-coral-soft: var(--c-coral-soft);
   --color-success: var(--c-success);
@@ -189,7 +168,7 @@ html[data-theme="dark"] {
   --color-surface-2: var(--c-surface);
   --color-surface-3: var(--c-deep);
 
-  /* ── Spacing — 8px base ──────────────────────────────────────────── */
+  /* ── Spacing ─────────────────────────────────────────────────────── */
   --space-1: 4px;
   --space-2: 8px;
   --space-4: 16px;
@@ -201,45 +180,19 @@ html[data-theme="dark"] {
   --space-20: 80px;
   --space-24: 96px;
   --space-30: 120px;
-  --spacing-section: 120px;
-  --spacing-section-mobile: 80px;
+  /* Compact bands: 68px desktop, 44px phone. */
+  --spacing-section: 68px;
+  --spacing-section-mobile: 44px;
 
-  /* ── Radius ──────────────────────────────────────────────────────── */
-  --radius-sm: 10px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  /* select.tsx's combobox referenced this without it ever being defined —
-     var() with an unset custom property is invalid, so the rule was
-     dropped entirely and the control rendered with square (0px) corners.
-     Matched to --radius-sm since it's a form control, same family as
-     .ds-field. */
-  --radius-control: 10px;
-  /* Top of the brief's "roughly 12-18px" surface-radius range — Bricolage
-     Grotesque's rounded-but-technical letterforms read best against an
-     equally confident radius rather than the previous 16px/10px system. */
-  --radius-card: 18px;
+  /* ── Radius — small and square-ish, in keeping with the grid ─────── */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-control: 6px;
+  --radius-card: 10px;
 }
 
 /* ── Base ────────────────────────────────────────────────────────────── */
-/*
- * Everything below, through the closing brace before "Field", used to sit
- * outside any Tailwind layer. Unlayered CSS beats every layered rule
- * regardless of specificity or source order — @import "tailwindcss"
- * declares `@layer theme, base, components, utilities`, and content with no
- * @layer at all is treated as coming after all of them. In practice: every
- * `.ds-meta.text-accent`, `.ds-body-sm.text-fg-muted`, `.display.text-white`
- * pairing anywhere in the app was silently losing to .ds-meta/.ds-body-sm/
- * .display's own `color` — the Tailwind colour utility was applied, present
- * in the DOM, and completely inert. Verified live before fixing: a "text-
- * success" label and a "text-accent" numeral on /services/[slug] both
- * rendered as plain --color-fg-subtle grey, the accent and success colours
- * never reaching the page at all.
- *
- * Wrapping element resets in `@layer base` and every reusable class in
- * `@layer components` puts them at the priority Tailwind's own utilities
- * layer expects to beat, which is the entire point of those two layers
- * existing separately from `utilities` in the first place.
- */
 @layer base {
   *,
   *::before,
@@ -248,133 +201,136 @@ html[data-theme="dark"] {
   }
 
   html {
-    /* Deliberately NOT smooth. Next.js's App Router does a scrollTo(0, 0) on
-       every navigation; with smooth scrolling that becomes an interruptible
-       animation rather than an instant jump, and if the incoming page's
-       height is still settling (PageTransition remounts {children} on a
-       short delay) the animation can end anywhere, including not moving at
-       all. Verified live: clicking the logo from scrollY 4000 landed the
-       visitor back at scrollY 4000 on the homepage — mid page, not the
-       hero. Anchor offset for in-page navigation is handled per-section via
-       scroll-mt-20 on .ds-section, so nothing here needs to compensate for
-       removing this. */
+    /* Deliberately not smooth: App Router scrolls to top on navigation and a
+       smooth animation can be interrupted mid-page by the page transition. */
     scroll-behavior: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
   }
 
   body {
     font-family: var(--font-body);
     font-size: 1rem;
-    line-height: 1.55;
-    font-optical-sizing: auto;
+    line-height: 1.6;
     color: var(--color-fg);
     background-color: var(--color-bg);
-    background-image: radial-gradient(
-      60rem 40rem at 85% -10rem,
-      var(--color-glow) 0%,
-      transparent 70%
-    );
-    background-repeat: no-repeat;
     transition: background-color 0.25s ease, color 0.25s ease;
   }
 }
 
 @layer components {
 /* ── Typography scale ────────────────────────────────────────────────── */
-/* Bricolage's opsz axis wants to be told the size it's drawing at — Chrome
-   and Firefox infer it from font-size when font-optical-sizing is auto, but
-   naming it here keeps the intent explicit at the sizes that matter most. */
+/* Poppins, tuned per tier. It is wide and tall-set, so sizes run a step below
+   a grotesque's, tracking tightens only mildly at display sizes (−0.03em on
+   the display line down to 0 on body text), headings never drop below 1.12
+   line-height, and reading text sits at 1.65–1.75. Weight ladder: 700 the
+   display line · 600 headings · 500 labels, links and buttons · 400 reading
+   text. */
+.display,
+.ds-h1,
+.ds-h2,
+.ds-h3 {
+  text-wrap: balance;
+}
+.ds-lede,
+.body-large,
+.ds-body-lg,
+.ds-body,
+.ds-body-sm {
+  text-wrap: pretty;
+}
+
 .display {
   font-family: var(--font-display);
-  font-size: clamp(2.25rem, 3.8vw, 3.75rem);
-  line-height: 1.0;
-  letter-spacing: -0.035em;
-  font-weight: 780;
+  font-size: clamp(2.25rem, 6vw, 4.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  font-weight: 700;
   color: var(--color-fg);
 }
 
 .ds-h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.125rem, 4.4vw, 3.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.028em;
-  font-weight: 750;
+  font-size: clamp(2rem, 4.2vw, 3rem);
+  line-height: 1.14;
+  letter-spacing: -0.026em;
+  font-weight: 700;
   color: var(--color-fg);
 }
 
 .ds-h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-  line-height: 1.08;
-  letter-spacing: -0.022em;
-  font-weight: 700;
+  font-size: clamp(1.5rem, 2.7vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 600;
   color: var(--color-fg);
 }
 
 .ds-h3 {
   font-family: var(--font-display);
-  font-size: clamp(1.375rem, 2.5vw, 1.625rem);
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  font-weight: 650;
+  font-size: clamp(1.125rem, 1.6vw, 1.25rem);
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  font-weight: 600;
   color: var(--color-fg);
 }
 
-/* Display small — Bricolage labels inside cards and ledgers */
 .ds-title {
   font-family: var(--font-display);
-  font-size: 1.0625rem;
+  font-size: 1rem;
   font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
+  line-height: 1.4;
+  letter-spacing: -0.006em;
   color: var(--color-fg);
 }
 .ds-title-sm {
   font-family: var(--font-display);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -0.005em;
+  line-height: 1.45;
+  letter-spacing: 0;
   color: var(--color-fg);
 }
 
-/* Lede — the "what this section is" paragraph under a heading */
 .ds-lede {
-  font-size: 1.125rem;
-  line-height: 1.7;
+  font-size: 1rem;
+  line-height: 1.75;
   color: var(--color-fg-muted);
 }
 
-/* Body */
-.body-large { font-size: 1.125rem; line-height: 1.65; color: var(--color-fg-muted); }
-.ds-body-lg { font-size: 1.125rem; line-height: 1.65; color: var(--color-fg-muted); }
-.ds-body { font-size: 1rem; line-height: 1.55; color: var(--color-fg-muted); }
-.ds-body-sm { font-size: 0.875rem; line-height: 1.5; color: var(--color-fg-muted); }
+.body-large { font-size: 1.0625rem; line-height: 1.75; color: var(--color-fg-muted); }
+.ds-body-lg { font-size: 1rem; line-height: 1.75; color: var(--color-fg-muted); }
+.ds-body { font-size: 0.875rem; line-height: 1.75; color: var(--color-fg-muted); }
+.ds-body-sm { font-size: 0.8125rem; line-height: 1.7; color: var(--color-fg-muted); }
 
-/* Caption / meta */
 .ds-meta {
-  font-size: 0.8125rem;
-  font-weight: 550;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
   letter-spacing: 0;
   color: var(--color-fg-subtle);
 }
 
-/* Overline — the only decorative typographic move */
+/* Overline — small uppercase label that opens a block. */
 .ds-overline {
-  font-size: 0.75rem;
-  font-weight: 650;
+  font-size: 0.6875rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.09em;
+  line-height: 1.4;
   color: var(--color-fg-subtle);
 }
-
-/* Accent overline — the "designed" flag. Used on one label per viewport. */
 .ds-overline-accent {
-  font-size: 0.75rem;
-  font-weight: 650;
+  font-size: 0.6875rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.09em;
+  line-height: 1.4;
   color: var(--color-accent);
 }
 
@@ -384,7 +340,7 @@ html[data-theme="dark"] {
   align-items: center;
   gap: 0.5rem;
   color: var(--color-fg);
-  font-weight: 550;
+  font-weight: 500;
   text-decoration: none;
   transition: color 0.15s ease-out;
 }
@@ -399,12 +355,14 @@ html[data-theme="dark"] {
   justify-content: center;
   gap: 0.5rem;
   border-radius: var(--radius-md);
-  padding: 0.875rem 1.75rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1;
+  padding: 0.75rem 1.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0;
   text-decoration: none;
-  transition: all 0.15s ease-out;
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out,
+    color 0.15s ease-out, transform 0.15s ease-out;
   cursor: pointer;
 }
 .ds-btn:active {
@@ -415,29 +373,24 @@ html[data-theme="dark"] {
   cursor: not-allowed;
 }
 
+/* Primary is ink on paper (and paper on ink in dark) — the accent is kept
+   for smaller signals, so the strongest action is the highest-contrast one. */
 .ds-btn-primary {
-  /* accent-deep, not accent: the dark-theme accent is tuned to read well as
-     text/links on a dark page, which is too light to carry white button
-     text at 4.5:1. accent-deep carries its own per-theme values sized for
-     exactly this job. */
-  background-color: var(--color-accent-deep);
-  color: var(--color-accent-fg);
-  box-shadow: var(--shadow-card);
+  background-color: var(--color-fg);
+  color: var(--color-bg);
 }
 .ds-btn-primary:hover {
-  background-color: var(--color-accent-deep-hover);
-  transform: scale(1.02);
-  box-shadow: var(--shadow-card-hover);
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
 }
 
 .ds-btn-secondary {
-  background-color: var(--color-surface);
+  background-color: transparent;
   color: var(--color-fg);
   border: 1px solid var(--color-border);
 }
 .ds-btn-secondary:hover {
-  border-color: var(--color-fg-subtle);
-  background-color: var(--color-surface-hover);
+  border-color: var(--color-fg);
 }
 
 .ds-btn-ghost {
@@ -453,12 +406,13 @@ html[data-theme="dark"] {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  border-radius: 999px;
+  border-radius: 6px;
   border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  padding: 0.375rem 0.875rem;
-  font-size: 0.8125rem;
-  font-weight: 550;
+  background-color: transparent;
+  padding: 0.25rem 0.5625rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.3;
   color: var(--color-fg-muted);
   white-space: nowrap;
 }
@@ -473,51 +427,58 @@ html[data-theme="dark"] {
   color: var(--color-success);
 }
 
-/* ── Cards ───────────────────────────────────────────────────────────── */
-/* The one structural departure from the previous system: a real card, per
-   the brief's literal "white cards with subtle 1px border and very
-   restrained shadow." Fill still inverts against the band behind it
-   (surface on a plain band, bg on a soft band) so a card can't land the
-   same colour as what it sits on. */
-.ds-card {
+/* ── Cards ───────────────────────────────────────────────────────────────
+   Flat: a hairline and a fill, no shadow. `.ds-card-interactive` darkens the
+   border on hover and nothing else moves. `.ds-tile` is an alias. */
+.ds-card,
+.ds-tile {
+  position: relative;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
 }
 .ds-card-interactive {
-  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 .ds-card-interactive:hover {
-  box-shadow: var(--shadow-card-hover);
-  border-color: var(--color-fg-softest);
-  transform: translateY(-2px);
+  border-color: var(--color-fg);
+  background-color: var(--color-surface);
 }
 
-/* Cards that contain tags/chips — subtle accent tint */
+/* ── Surfaces that used to carry gradients ───────────────────────────────
+   The gradient hero glow is gone. The panel class stays for the closing CTA
+   and CtaBand: a flat surface with a 3px accent rule across the top. */
+.ds-hero-glow {
+  display: none;
+}
+.ds-gradient-band {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+}
+
 .ds-card-tags {
   background-color: var(--color-accent-soft);
   border-color: var(--color-accent-hairline);
 }
 .ds-card-tags:hover {
-  box-shadow: var(--shadow-card-hover);
   border-color: var(--color-accent);
 }
 
 /* ── Container ───────────────────────────────────────────────────────── */
 .ds-container {
   width: 100%;
-  max-width: 1320px;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 @media (min-width: 768px) {
-  .ds-container { padding-left: 48px; padding-right: 48px; }
+  .ds-container { padding-left: 32px; padding-right: 32px; }
 }
 @media (min-width: 1280px) {
-  .ds-container { padding-left: 80px; padding-right: 80px; }
+  .ds-container { padding-left: 40px; padding-right: 40px; }
 }
 
 /* ── Section ─────────────────────────────────────────────────────────── */
@@ -534,22 +495,11 @@ html[data-theme="dark"] {
 
 /* ── Section tones ───────────────────────────────────────────────────── */
 .tone-plain { background-color: var(--color-bg); }
-.tone-soft { background-color: var(--color-surface); }
-/* Deep = the inverted band. Dark indigo in light mode, darker indigo-ink
-   in dark mode — white text stays readable in both. */
+.tone-soft { background-color: var(--color-band); }
 .tone-deep {
   background-color: var(--color-deep);
-  background-image: radial-gradient(
-    55rem 28rem at 50% 115%,
-    var(--color-glow) 0%,
-    transparent 70%
-  );
 }
 
-/* Deep bands invert every headless type class so any section that hands us
-   a SectionHeading (or bare .ds-*) inside .tone-deep stays readable without
-   per-call-site surgery. Components that already spell their own deep-text
-   classes keep them: utilities beat these in the cascade. */
 .tone-deep .ds-h1,
 .tone-deep .ds-h2,
 .tone-deep .ds-h3,
@@ -561,6 +511,7 @@ html[data-theme="dark"] {
   color: var(--color-deep-text);
 }
 .tone-deep .ds-lede,
+.tone-deep .body-large,
 .tone-deep .ds-body-lg,
 .tone-deep .ds-body,
 .tone-deep .ds-body-sm,
@@ -570,26 +521,29 @@ html[data-theme="dark"] {
 .tone-deep .ds-link:hover {
   color: var(--color-deep-text);
 }
+/* On the ink band the primary action is the accent, the secondary a light outline. */
+.tone-deep .ds-btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
+}
+.tone-deep .ds-btn-primary:hover {
+  background-color: var(--color-deep-text);
+  color: var(--color-deep);
+}
+.tone-deep .ds-btn-secondary {
+  color: var(--color-deep-text);
+  border-color: color-mix(in srgb, var(--color-deep-text) 30%, transparent);
+}
+.tone-deep .ds-btn-secondary:hover {
+  border-color: var(--color-deep-text);
+}
 
-/* Grid lines — the hero band only (inner page headers are grid-free).
-   24px cadence, nearly invisible, with a slow "breathing" opacity cycle so
-   the band feels alive without moving content. Applied as a plain background
-   so it NEVER masks child content (the earlier masked version dimmed CTA
-   buttons). Cursor glow is layered on top by <GridOverlay>, not by this
-   class. */
+/* Legacy grid-lines helper (used by GridOverlay only). */
 .ds-grid-lines {
   background-image:
     linear-gradient(to right, var(--color-grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--color-grid-line) 1px, transparent 1px);
   background-size: 24px 24px;
-  animation: grid-breathe 8s ease-in-out infinite;
-}
-@keyframes grid-breathe {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.72; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-grid-lines { animation: none; }
 }
 
 /* ── Hairline ────────────────────────────────────────────────────────── */
@@ -605,13 +559,12 @@ html[data-theme="dark"] {
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Watermark — oversized background word, quiet by opacity ─────────── */
 .ds-watermark {
   pointer-events: none;
   user-select: none;
   font-family: var(--font-display);
-  font-weight: 780;
-  letter-spacing: -0.035em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
   line-height: 0.85;
   color: var(--color-fg);
   opacity: 0.035;
@@ -624,26 +577,25 @@ html[data-theme="dark"] {
   height: 8px;
   border-radius: 999px;
   background-color: var(--color-success);
-  box-shadow: 0 0 12px var(--color-success);
 }
 
 /* ── Field ───────────────────────────────────────────────────────────── */
 .ds-field {
   width: 100%;
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
+  padding: 0.6875rem 0.875rem;
   font-family: var(--font-body);
-  font-size: 0.9375rem;
-  line-height: 1.5;
+  font-size: 0.875rem;
+  line-height: 1.6;
   color: var(--color-fg);
   background-color: var(--color-surface);
-  transition: border-color 0.15s ease-out;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 .ds-field:focus {
   outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px var(--color-accent-soft);
+  border-color: var(--color-fg);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
 }
 .ds-field::placeholder {
   color: var(--color-fg-subtle);
@@ -653,24 +605,17 @@ html[data-theme="dark"] {
 }
 } /* end @layer components */
 
-/* Animations aren't subject to the override problem above (nothing Tailwind-
-   overrides an animation-name), so this stays unlayered.
-
-   Reveal-on-scroll gating. `motion.tsx` drops `js-motion` on <html> and tags
+/* Reveal-on-scroll gating. `motion.tsx` drops `js-motion` on <html> and tags
    elements with data-reveal="pending" → "shown" via IntersectionObserver.
-   Without the class nothing starts hidden (no-JS and SEO-safe); with it,
-   elements below the fold start 14px down + transparent and settle on
-   intersection. The transition lives on the "shown" rule so delayed items
-   (motion.tsx sets inline transition-delay) still work, and reduced-motion
-   force-reveals whatever is still pending. */
+   Without the class nothing starts hidden (no-JS and SEO-safe). */
 html.js-motion [data-reveal="pending"] {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(10px);
 }
 html.js-motion [data-reveal="shown"] {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @media (prefers-reduced-motion: reduce) {
   html.js-motion [data-reveal="pending"],
@@ -681,45 +626,17 @@ html.js-motion [data-reveal="shown"] {
   }
 }
 
-/* ── Page entrance ────────────────────────────────────────────────────────
-   A short fade whenever the route changes. Applied by the <PageTransition>
-   wrapper (keyed on pathname) so it replays once per page open without any
-   JS beyond the remount. The global reduced-motion rule below clamps it to
-   an instant.
-
-   Opacity only — no transform. <PageTransition> wraps each page's whole
-   output, header included (every page.tsx renders its own <Nav>/<Footer>
-   inside {children}, and the root layout wraps that in <PageTransition>).
-   A `transform` on this div, even at rest, makes it a new containing block
-   for descendant `position: fixed` elements, so the header stopped being
-   fixed to the viewport and scrolled away with the page instead — on every
-   route, permanently, not just during the 360ms the animation runs,
-   because `animation-fill-mode: both` holds the end keyframe's
-   `translateY(0)` forever, and `translateY(0)` still computes as a
-   non-`none` transform. Verified live: the only ancestor of <header> with a
-   transform/filter/perspective/will-change/contain was this div, holding
-   `matrix(1, 0, 0, 1, 0, 8)` long after the page had settled. Dropping the
-   rise and keeping only the fade removes the transform entirely, which is
-   the only value that doesn't create a containing block. */
+/* Page entrance — opacity only. A transform on the wrapper would make it a
+   containing block for the fixed header and stop the header sticking. */
 .page-enter {
   animation: page-enter 0.36s ease-out both;
 }
 @keyframes page-enter {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Header motion lives entirely as a Tailwind transition on .translate-y-0 /
-   .-translate-y-1.5 in nav.tsx now, driven by the `scrolled` boolean rather
-   than a mount keyframe — see the comment there for why. */
-
-/* ── Spotlight open animation ─────────────────────────────────────────────
-   Backdrop fades in; the panel settles from a slightly smaller, lower
-   position — a command-palette feel rather than a static pop. */
+/* ── Spotlight open animation ────────────────────────────────────────── */
 .spotlight-backdrop {
   animation: fade-in 0.18s ease-out both;
 }
@@ -727,37 +644,23 @@ html.js-motion [data-reveal="shown"] {
   animation: dialog-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes dialog-in {
-  from {
-    opacity: 0;
-    transform: scale(0.965) translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  from { opacity: 0; transform: scale(0.965) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 @layer base {
-  /* ── Focus rings ───────────────────────────────────────────────────── */
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
-  /* Indigo-on-indigo focus rings vanish on the deep band (≈2.3:1); a white
-     ring is the only thing that stays visible against both deep fills. */
   .tone-deep :focus-visible {
     outline-color: var(--color-deep-text);
   }
 
-  /* ── Reduced motion ────────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -767,13 +670,11 @@ html.js-motion [data-reveal="shown"] {
     html { scroll-behavior: auto; }
   }
 
-  /* ── Scrollbar ─────────────────────────────────────────────────────── */
   ::-webkit-scrollbar { width: 8px; }
   ::-webkit-scrollbar-track { background: var(--color-bg); }
   ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--color-fg-subtle); }
 
-  /* ── Selection ─────────────────────────────────────────────────────── */
   ::selection {
     background-color: var(--color-accent);
     color: var(--color-accent-fg);

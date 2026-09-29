@@ -30,6 +30,7 @@ export default function ServicesPage() {
       <Nav />
       <main id="main">
         <PageHeader
+          align="center"
           trail={[{ label: "Home", href: "/" }, { label: "Services" }]}
           eyebrow="Services"
           title={servicesHub.h1}
@@ -54,34 +55,30 @@ export default function ServicesPage() {
           <SectionHeading
             overline="Choosing"
             title="Which one is yours?"
-            description="If two of these look right, it is usually the first one — the others are shaped around a specific situation."
+            description="Find the sentence that sounds like your situation. If two fit, it is usually the first one — the others are shaped around a specific case."
           />
 
-          <ul className="grid border-t border-border sm:grid-cols-2">
-            {services.map((service, i) => (
-              <Reveal
-                as="li"
-                key={service.slug}
-                delay={i * 0.03}
-                className="border-b border-border py-7 sm:odd:border-r sm:odd:pr-8 sm:even:pl-8"
-              >
-                <span className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="font-display text-[1.0625rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg mt-3">
-                  {service.title}
-                </h3>
-                <p className="ds-body-sm mt-3">
-                  <span className="font-medium text-ink">Pick this if: </span>
-                  {service.idealFor[0].charAt(0).toLowerCase() + service.idealFor[0].slice(1)}.
-                </p>
-                <Link href={`/services/${service.slug}`} className="ds-link mt-5">
-                  {service.title}
-                  <ArrowIcon className="h-3.5 w-3.5" />
-                </Link>
-              </Reveal>
-            ))}
-          </ul>
+          <Reveal className="mx-auto max-w-4xl">
+            <ul className="ds-card divide-y divide-border overflow-hidden">
+              {services.map((service) => (
+                <li key={service.slug}>
+                  <Link
+                    href={`/services/${service.slug}`}
+                    className="group flex flex-col gap-3 px-6 py-5 transition-colors duration-200 hover:bg-surface-hover sm:flex-row sm:items-center sm:gap-6 sm:px-8"
+                  >
+                    <span className="ds-body-sm min-w-0 flex-1">
+                      <span className="font-medium text-fg">If </span>
+                      {service.idealFor[0].charAt(0).toLowerCase() + service.idealFor[0].slice(1)}.
+                    </span>
+                    <span className="flex shrink-0 items-center gap-3 text-[0.9375rem] font-medium text-accent">
+                      {service.title}
+                      <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </Section>
 
         <Process

@@ -31,7 +31,7 @@ export function Footer() {
           <div>
             <Link
               href={localeHref("/")}
-              className="text-[1.0625rem] font-semibold tracking-[-0.02em] text-fg"
+              className="text-[1.0625rem] font-semibold tracking-[-0.01em] text-fg"
             >
               {site.shortName}
             </Link>

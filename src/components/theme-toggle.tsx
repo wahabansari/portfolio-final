@@ -6,7 +6,7 @@ import { Tooltip } from "@/components/ds/tooltip";
 type Theme = "dark" | "light";
 
 /** Runs before paint so there's no flash of the wrong palette.
-    Default follows the system preference (`prefers-color-scheme`); the
+    Light is the default; the
     toggle overrides and persists in localStorage.
 
     It also stamps `js-motion` on <html>, which is what gates the scroll-reveal

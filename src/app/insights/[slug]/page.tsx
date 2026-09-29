@@ -179,11 +179,11 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
  <div className="mx-auto max-w-[70ch]">
  <Reveal delay={i * 0.03}>
  <div className="flex items-start gap-5">
- <span className="shrink-0 font-display text-[2.25rem] font-bold leading-[0.9] tracking-[-0.03em] text-accent tabular-nums md:text-[2.75rem]">
+ <span className="shrink-0 font-display text-[2.25rem] font-bold leading-[0.9] tracking-[-0.01em] text-accent tabular-nums md:text-[2.75rem]">
  {String(i + 1).padStart(2, "0")}
  </span>
  <div className="flex-1 pt-1">
- <h2 className="font-display text-[1.625rem] font-bold leading-[1.2] tracking-[-0.02em] text-fg md:text-[1.875rem]">
+ <h2 className="font-display text-[1.625rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg md:text-[1.875rem]">
  {section.heading}
  </h2>
  <span aria-hidden className="mt-4 block h-[3px] w-16 bg-accent" />

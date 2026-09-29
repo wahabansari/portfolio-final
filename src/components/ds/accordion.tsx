@@ -50,22 +50,22 @@ export function Accordion({
     <AccordionPrimitive.Root
       type="multiple"
       defaultValue={defaultOpen}
-      className={cn("flex flex-col gap-3", className)}
+      className={cn("flex flex-col border-t border-border", className)}
     >
       {entries.map((entry) => (
         <AccordionPrimitive.Item
           key={entry.value}
           value={entry.value}
-          className="group rounded-2xl bg-surface px-5 transition-colors duration-200 data-[state=open]:bg-surface-blue sm:px-6"
+          className="group border-b border-border"
         >
           <AccordionPrimitive.Header className="flex">
-            <AccordionPrimitive.Trigger className="flex w-full cursor-pointer items-start justify-between gap-6 py-4 text-left transition-colors hover:text-accent md:py-5">
+            <AccordionPrimitive.Trigger className="flex w-full cursor-pointer items-start justify-between gap-6 py-4 text-left transition-colors hover:text-accent">
               <span className="text-[0.9375rem] font-medium leading-snug text-ink transition-colors group-data-[state=open]:text-accent md:text-base">
                 {entry.title}
               </span>
               <span
                 aria-hidden
-                className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface text-ink-muted transition-colors group-data-[state=open]:bg-bg group-data-[state=open]:text-accent"
+                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center text-ink-muted transition-colors group-data-[state=open]:text-accent"
               >
                 {icon === "plus" ? <Plus /> : <Chevron />}
               </span>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { Form } from "radix-ui";
 import { services } from "@/content/services";
 import { contactSteps, site, socials } from "@/content/site";
@@ -611,14 +612,19 @@ export function Contact({
  const Heading = level;
 
 return (
-    <Section id="contact" tone={tone}>
-      <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
+    <Section id="contact" tone={tone} className={level === "h1" ? "relative overflow-hidden" : undefined}>
+      {/* As the /contact page's opening section it gets the same brand glow
+          every other page header has. */}
+      {level === "h1" && (
+        <div aria-hidden className="ds-hero-glow pointer-events-none absolute inset-0" />
+      )}
+      <div className="relative grid gap-12 lg:grid-cols-12 lg:gap-14">
         <Reveal className="lg:col-span-7">
           <div className="max-w-2xl">
             <div className="flex flex-wrap items-center gap-4">
               <span className="ds-overline-accent">Contact</span>
               {site.available && (
-                <span className="ds-chip ds-chip-success !py-1">
+                <span className="ds-chip ds-chip-success max-w-full whitespace-normal !py-1">
                   <span className="ds-dot" aria-hidden />
                   {site.availabilityNote}
                 </span>
@@ -717,54 +723,55 @@ return (
 }
 
 /**
- * ContactCTA — the homepage contact anchor.
- *
- * Rendered on the deep accent-tinted band: display statement, large
- * email link, availability chip. One conversion path, one color focus.
- *
- * The deep band is dark in both themes, but .ds-overline-accent/.display/
- * .body-large resolve to each theme's own ink colour — correct everywhere
- * else, wrong here, since light mode's ink is near-black. --color-deep-text
- * exists for exactly this (always white, in both themes); text-white/80
- * for the subhead keeps a hierarchy step under the fully-white heading
- * while staying well clear of AA at this size (contrast computed against
- * both themes' --color-deep, not assumed).
+ * ContactCTA — the homepage close: one rounded panel in the brand gradient
+ * (`.ds-gradient-band`), centered heading, one line, two actions. Uses the
+ * page's normal ink colours rather than a dark band, so it reads the same
+ * way in both themes with no per-theme text overrides.
  */
 export function ContactCTA({ tone = "deep" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
     <Section id="contact" tone={tone}>
-      <div className="max-w-3xl">
-          <span className="ds-overline mb-4 block text-deep-text">Contact</span>
-          <h2 className="display text-deep-text">
-            Have a product that needs a stronger frontend?
-          </h2>
-          <p className="body-large mt-8 max-w-xl text-white/80">
-            Tell me what you&apos;re building, what needs to change, and where you
-            need help.
-          </p>
-        </div>
+      <Reveal>
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-8">
+            <span className="ds-overline-accent">Contact</span>
+            <h2 className="ds-h1 mt-4 max-w-3xl">
+              Have a product that needs a stronger frontend?
+            </h2>
+            <p className="body-large mt-5 max-w-xl">
+              Tell me what you&apos;re building, what needs to change, and where you need help.
+            </p>
+          </div>
 
-        <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
-          <a href="/contact" className="ds-btn ds-btn-primary">
-            Start a project
-            <span aria-hidden>→</span>
-          </a>
-          <a
-            href={`mailto:${site.email}`}
-            data-track="email_click"
-            data-track-label="home-contact"
-            className="ds-btn inline-flex items-center justify-center rounded-[var(--radius-md)] bg-white px-7 py-3.5 text-[0.9375rem] font-semibold text-[#211a6e] transition-all duration-150 hover:scale-[1.02] hover:bg-white/90"
-          >
-            Email me
-          </a>
+          <div className="flex flex-col gap-3 lg:col-span-4 lg:items-end">
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/contact"
+                data-track="cta_click"
+                data-track-label="home-contact"
+                className="ds-btn ds-btn-primary"
+              >
+                Start a project
+                <ArrowIcon className="h-4 w-4" />
+              </Link>
+              <a
+                href={`mailto:${site.email}`}
+                data-track="email_click"
+                data-track-label="home-contact"
+                className="ds-btn ds-btn-secondary"
+              >
+                Email me
+              </a>
+            </div>
+            {site.available && (
+              <span className="ds-meta inline-flex items-center gap-2 lg:text-right">
+                <span className="ds-dot" aria-hidden />
+                {site.availabilityNote}
+              </span>
+            )}
+          </div>
         </div>
-
-        {site.available && (
-          <span className="ds-chip ds-chip-success mt-8 self-start">
-            <span className="ds-dot" aria-hidden />
-            {site.availabilityNote}
-          </span>
-        )}
+      </Reveal>
     </Section>
   );
 }

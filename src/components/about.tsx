@@ -1,64 +1,7 @@
 import Link from "next/link";
-import { about, positioning, site } from "@/content/site";
-import {
-  ArrowIcon,
-  DownloadIcon,
-  Field,
-  Reveal,
-  Section,
-  SectionHeading,
-} from "./ui";
+import { about, site } from "@/content/site";
+import { ArrowIcon, DownloadIcon, Reveal, Section, SectionHeading } from "./ui";
 import { ProcessSteps } from "./process";
-
-/** Homepage teaser. The full narrative lives on /about; this does not repeat
- it, so the two pages are not competing for the same search terms. */
-export function AboutTeaser({
-  tone = "plain",
-}: {
-  tone?: "plain" | "soft" | "deep";
-}) {
-  return (
-    <Section id="about" tone={tone}>
-      <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <Reveal className="lg:col-span-6">
-          <span className="ds-overline">About</span>
-          <h2 className="ds-h2 mt-5">{about.statement}</h2>
-          <p className="ds-lede mt-6">{about.teaser}</p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link href="/about" className="ds-btn ds-btn-secondary">
-              More about how I work
-              <ArrowIcon />
-            </Link>
-            <a
-              href={site.resumeHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ds-link"
-            >
-              <DownloadIcon className="h-4 w-4" />
-              Résumé
-            </a>
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.06} className="lg:col-span-6">
-          <div className="border-l-[3px] border-l-accent bg-accent-soft p-7 md:p-9">
-            <p className="ds-meta text-accent">Positioning</p>
-            <p className=" mt-4 font-display text-[1.1875rem] leading-[1.55] font-medium text-ink">
-              {positioning}
-            </p>
-            <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-border pt-7">
-              {about.facts.slice(0, 4).map((f) => (
-                <Field key={f.k} label={f.k} value={f.v} />
-              ))}
-            </dl>
-          </div>
-        </Reveal>
-      </div>
-    </Section>
-  );
-}
 
 /** /about — the narrative, with the facts pinned alongside it. */
 export function AboutNarrative() {
@@ -143,7 +86,7 @@ export function Process({
   description?: string;
 }) {
   return (
-    <Section tone={tone}>
+    <Section tone={tone} bordered>
       <SectionHeading
         overline={overline}
         title={title}

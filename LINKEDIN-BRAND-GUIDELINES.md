@@ -1,5 +1,9 @@
 # LinkedIn Brand Guidelines — Muhammad Wahab Ansari
 
+> **Update (v5):** the portfolio is now light-first — warm paper `#fafaf8`, ink `#0d0d0f`, signal-orange accent `#c8340c`, set in **Poppins** (free on Google Fonts; headlines 700, headings 600, labels 500, body 400). For LinkedIn assets use that palette and typeface; the Poppins/indigo/lime values below are superseded. See `PORTFOLIO-DESIGN-SYSTEM.md`.
+
+> **Font update — use Poppins, not Bricolage Grotesque.** The portfolio's typeface is now **Poppins** (free on Google Fonts). Wherever this document specifies Bricolage Grotesque, use Poppins instead, with these weights: headlines **700**, section headings **600**, body **400**, labels/metadata **500**. Set headlines with only mild negative tracking (about −0.02em at banner size) and line-height 1.15–1.2 — Poppins is wide and tall, so the tighter −0.03em / 1.0 values given below for the old font will look cramped. Colours, layout and the canvas sizes are unchanged. See `PORTFOLIO-DESIGN-SYSTEM.md` for the current type scale.
+
 **This is an adaptation, not a new system.** Every value here is carried over from `PORTFOLIO-DESIGN-SYSTEM.md`, which is the source of truth. Where LinkedIn's own platform constraints (native text posts can't use custom fonts or colors; profile pictures must be real photos) force a deviation from the portfolio, that's called out explicitly rather than silently improvised.
 
 **Relationship:** Portfolio (primary system) → LinkedIn (extension) → Banner / Profile photo / Posts / Carousels (applications of the same system).

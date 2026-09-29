@@ -190,7 +190,7 @@ export default async function CaseStudyPage({
  delay={i * 0.04}
  className="grid grid-cols-1 gap-x-8 gap-y-3 border-b border-border py-8 md:grid-cols-12 md:items-baseline"
  >
- <span className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums md:col-span-1">
+ <span className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.01em] text-ink-soft tabular-nums md:col-span-1">
  {String(i + 1).padStart(2, "0")}
  </span>
  <div className="md:col-span-11">

@@ -35,10 +35,10 @@ export function ExperienceList({
             <article className="border-b border-border py-10 md:py-12">
               <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
                 <header className="lg:col-span-4">
-                  <span className="font-display text-[2.5rem] font-bold leading-none tracking-[-0.03em] text-accent tabular-nums">
+                  <span className="font-display text-[2.5rem] font-bold leading-none tracking-[-0.01em] text-accent tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="font-display text-[1.5rem] font-bold leading-[1.2] tracking-[-0.02em] text-fg mt-4">
+                  <h3 className="font-display text-[1.5rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg mt-4">
                     {role.role}
                   </h3>
                   <p className="mt-1.5 text-[0.9375rem] font-semibold text-accent">{role.company}</p>

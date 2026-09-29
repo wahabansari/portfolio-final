@@ -3,64 +3,17 @@ import { featuredProjects, projects, type Project } from "@/content/work";
 import { cn } from "@/lib/cn";
 import { OutboundLink } from "./outbound";
 import { Plate } from "./plate";
-import {
-  ArrowIcon,
-  BriefcaseIcon,
-  ExternalIcon,
-  GaugeIcon,
-  LayersIcon,
-  LayoutIcon,
-  RefreshIcon,
-  Reveal,
-  Section,
-  ServerIcon,
-  UsersIcon,
-} from "./ui";
-
-/* Plate archetype → icon, the same keyed-lookup pattern SERVICE_ICONS uses
-   in services.tsx, so the proof grid can carry an icon without inventing a
-   second taxonomy for it. */
-const PROJECT_ICONS: Record<Project["plate"], React.ComponentType<{ className?: string }>> = {
-  platform: GaugeIcon,
-  marketing: LayoutIcon,
-  app: ServerIcon,
-  commerce: BriefcaseIcon,
-  marketplace: RefreshIcon,
-  portal: UsersIcon,
-  listing: LayersIcon,
-};
-
-/* ── Section heading — the shared "Proof before pitch" block ─────────── */
-
-function WorkHeading({ viewAll = true }: { viewAll?: boolean }) {
-  return (
-    <div className="mb-12 flex items-end justify-between gap-8">
-      <div>
-        <span className="ds-overline-accent mb-4 block">Selected work</span>
-        <h2 className="ds-h2">Proof before pitch</h2>
-      </div>
-      {viewAll && (
-        <Link
-          href="/work"
-          className="hidden items-center gap-2 text-[1rem] font-medium text-fg underline-offset-4 transition-colors duration-150 hover:text-accent hover:underline md:inline-flex"
-        >
-          View all
-          <ArrowIcon className="h-4 w-4" />
-        </Link>
-      )}
-    </div>
-  );
-}
+import { ArrowIcon, ExternalIcon, Reveal, Section, SectionRail } from "./ui";
 
 /**
- * Proof card — one project on the curated proof wall.
+ * Proof card — one project, in the site's one shared card style.
  *
- * A compact card rather than a full-width panel: kind overline, a Bricolage
- * title, the one-line blurb, the stack as chips, then a pinned footer row
- * carrying the CTA. The whole card is one link (internal to the case study,
- * external to the live site); hover lifts the card via .ds-card-interactive.
+ * Schematic plate on top, then kind, title, the one-line blurb, the stack
+ * as chips, and a pinned footer row carrying the CTA. The whole card is
+ * one link (internal to the case study, external to the live site); hover
+ * lifts the card via .ds-card-interactive.
  */
-function ProofCard({ project, index }: { project: Project; index: number }) {
+function ProofCard({ project, wide = false }: { project: Project; wide?: boolean }) {
   const isCaseStudy = Boolean(project.caseStudy);
   const isExternal = Boolean(project.href && !project.caseStudy);
   const hasLink = isCaseStudy || isExternal;
@@ -68,18 +21,13 @@ function ProofCard({ project, index }: { project: Project; index: number }) {
 
   const inner = (
     <>
-      <Plate project={project} className="border-b border-border" />
-      <div className="flex h-full flex-col p-6 md:p-7">
-        <div className="flex items-start justify-between gap-4">
-          <span className="ds-overline-accent">{project.kind}</span>
-          <span
-            aria-hidden
-            className="font-display text-[1.375rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums"
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-        </div>
-        <h3 className="ds-h3 mt-5">{project.title}</h3>
+      <Plate
+        project={project}
+        className={cn("border-b border-border", wide && "lg:w-[46%] lg:shrink-0 lg:border-r lg:border-b-0")}
+      />
+      <div className="flex h-full flex-1 flex-col p-6 md:p-7">
+        <span className="ds-overline-accent">{project.kind}</span>
+        <h3 className="ds-h3 mt-4">{project.title}</h3>
         <p className="ds-body-sm mt-3">{project.blurb}</p>
 
         <ul className="mt-5 flex flex-wrap gap-2">
@@ -109,7 +57,8 @@ function ProofCard({ project, index }: { project: Project; index: number }) {
   );
 
   const cardClass =
-    "group ds-card ds-card-interactive flex h-full flex-col overflow-hidden p-0";
+    "group ds-card ds-card-interactive flex h-full w-full flex-col overflow-hidden p-0";
+  const layoutClass = wide ? "lg:flex-row" : "";
 
   if (isCaseStudy) {
     return (
@@ -117,7 +66,7 @@ function ProofCard({ project, index }: { project: Project; index: number }) {
         href={`/work/${project.slug}`}
         data-track="cta_click"
         data-track-label={`work:${project.slug}`}
-        className={cardClass}
+        className={cn(cardClass, layoutClass)}
       >
         {inner}
       </Link>
@@ -130,7 +79,7 @@ function ProofCard({ project, index }: { project: Project; index: number }) {
         href={project.href as string}
         event="case_study_view"
         payload={{ project: project.slug }}
-        className={cardClass}
+        className={cn(cardClass, layoutClass)}
         ariaLabel={`Open ${project.title} in a new tab`}
       >
         {inner}
@@ -138,7 +87,7 @@ function ProofCard({ project, index }: { project: Project; index: number }) {
     );
   }
 
-  return <div className={cn(cardClass, "cursor-default")}>{inner}</div>;
+  return <div className={cn(cardClass, layoutClass, "cursor-default")}>{inner}</div>;
 }
 
 /**
@@ -157,12 +106,12 @@ function ProjectRow({
 
   const content = (
     <>
-      <span className="font-display text-[1.25rem] font-semibold leading-none tracking-[-0.02em] text-ink-soft tabular-nums transition-colors duration-150 group-hover:text-accent md:text-[1.5rem]">
+      <span className="font-display text-[1.25rem] font-semibold leading-none tracking-[-0.01em] text-ink-soft tabular-nums transition-colors duration-150 group-hover:text-accent md:text-[1.5rem]">
         {String(index).padStart(2, "0")}
       </span>
 
       <span className="min-w-0">
-        <span className="block text-[1.375rem] font-medium leading-snug tracking-[-0.02em] text-fg transition-colors duration-150 group-hover:text-accent md:text-[1.5rem]">
+        <span className="block text-[1.375rem] font-medium leading-snug tracking-[-0.01em] text-fg transition-colors duration-150 group-hover:text-accent md:text-[1.5rem]">
           {project.title}
         </span>
         <span className="ds-meta mt-1 block">{project.scope}</span>
@@ -204,104 +153,102 @@ function ProjectRow({
 }
 
 /**
- * One featured project, as a column in the same single-row ledger as the
- * homepage's four offers — icon and index, title, one-line blurb, then the
- * kind pinned to the bottom next to an arrow. Same grid mechanics, same
- * content rhythm, so the two sections read as one consistent system rather
- * than two different ideas about how to lay out three or four things.
+ * One featured project as an index entry: the schematic plate on the left,
+ * kind and year, title, blurb, the first few tools and the action on the
+ * right. The whole entry is one link (case study, or the live site when
+ * there is no case study).
  */
-function ProofPanel({ project, index }: { project: Project; index: number }) {
+function WorkEntry({ project }: { project: Project }) {
   const isCaseStudy = Boolean(project.caseStudy);
   const isExternal = Boolean(project.href && !project.caseStudy);
-  const hasLink = isCaseStudy || isExternal;
-  const Icon = PROJECT_ICONS[project.plate] || ServerIcon;
+  const label = isExternal ? "View live project" : "View case study";
 
   const inner = (
-    <>
-      <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition-colors duration-200 group-hover:bg-accent group-hover:text-accent-fg">
-          <Icon className="h-5 w-5" />
+    <div className="grid gap-5 py-6 md:grid-cols-12 md:gap-8">
+      <Plate
+        project={project}
+        className="overflow-hidden rounded-[8px] border border-border md:col-span-5"
+      />
+      <div className="flex flex-col md:col-span-7">
+        <span className="ds-overline-accent">
+          {project.kind}
+          {project.year ? ` · ${project.year}` : ""}
         </span>
-        <span
-          aria-hidden
-          className="font-display text-[0.9375rem] font-semibold text-ink-soft tabular-nums"
-        >
-          {String(index + 1).padStart(2, "0")}
-        </span>
-      </div>
-      <h3 className="mt-5 font-display text-[1.375rem] font-bold leading-[1.2] tracking-[-0.02em] text-fg transition-colors duration-200 group-hover:text-accent md:text-[1.5rem]">
-        {project.title}
-      </h3>
-      <p className="ds-body-sm mt-3 text-fg-muted">{project.blurb}</p>
-      <span className="mt-auto flex items-center gap-3 pt-6">
-        <span className="ds-chip">{project.kind}</span>
-        {hasLink && (
-          <span className="ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-fg-subtle transition-all duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:text-accent">
+        <h3 className="ds-h3 mt-2.5 transition-colors group-hover:text-accent">{project.title}</h3>
+        <p className="ds-body-sm mt-2.5">{project.blurb}</p>
+        <ul className="mt-4 flex flex-wrap gap-1.5">
+          {project.tools.slice(0, 4).map((tool) => (
+            <li key={tool} className="ds-chip">
+              {tool}
+            </li>
+          ))}
+        </ul>
+        {(isCaseStudy || isExternal) && (
+          <span className="mt-auto inline-flex items-center gap-2 pt-5 text-[0.875rem] font-medium text-fg transition-colors group-hover:text-accent">
+            {label}
             {isExternal ? <ExternalIcon className="h-3.5 w-3.5" /> : <ArrowIcon className="h-3.5 w-3.5" />}
           </span>
         )}
-      </span>
-    </>
+      </div>
+    </div>
   );
 
-  const panelClass = "group flex h-full flex-col p-8 transition-colors duration-200 hover:bg-accent-soft/40 md:p-9";
-
+  const cls = "group block";
   if (isCaseStudy) {
     return (
       <Link
         href={`/work/${project.slug}`}
         data-track="cta_click"
         data-track-label={`work:${project.slug}`}
-        className={panelClass}
+        className={cls}
       >
         {inner}
       </Link>
     );
   }
-
   if (isExternal) {
     return (
       <OutboundLink
         href={project.href as string}
         event="case_study_view"
         payload={{ project: project.slug }}
-        className={panelClass}
+        className={cls}
         ariaLabel={`Open ${project.title} in a new tab`}
       >
         {inner}
       </OutboundLink>
     );
   }
-
-  return <div className={cn(panelClass, "cursor-default")}>{inner}</div>;
+  return <div className={cls}>{inner}</div>;
 }
 
 /**
- * Selected Work — the homepage proof wall, laid out as the same single-row
- * ledger grid as "Four offers, one accountable engineer": one column per
- * featured project, hairline dividers instead of a card border each.
+ * Selected Work — the homepage proof list, as an index: heading rail on the
+ * left, one entry per featured project on the right, hairlines between.
  */
 export function SelectedWork({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
-    <Section id="work" tone={tone}>
-      <WorkHeading />
-      <div className="grid divide-y divide-border border-y border-border md:grid-cols-3 md:divide-x md:divide-y-0">
+    <SectionRail
+      id="work"
+      tone={tone}
+      overline="Selected work"
+      title="Proof before pitch"
+      description="Production work on real products — each entry links to the case study or the live site."
+      action={
+        <Link href="/work" className="ds-link text-[0.875rem]">
+          All projects
+          <ArrowIcon className="h-3.5 w-3.5" />
+        </Link>
+      }
+    >
+      <ul className="divide-y divide-border border-y border-border">
         {featuredProjects.map((project, i) => (
-          <Reveal key={project.slug} delay={i * 0.05} className="h-full">
-            <ProofPanel project={project} index={i} />
+          <Reveal as="li" key={project.slug} delay={i * 0.05}>
+            <WorkEntry project={project} />
           </Reveal>
         ))}
-      </div>
-      <div className="mt-6 md:hidden">
-        <Link
-          href="/work"
-          className="inline-flex items-center gap-2 text-[1rem] font-medium text-fg underline-offset-4 transition-colors duration-150 hover:text-accent hover:underline"
-        >
-          View all projects
-          <ArrowIcon className="h-4 w-4" />
-        </Link>
-      </div>
-    </Section>
+      </ul>
+    </SectionRail>
   );
 }
 
@@ -321,7 +268,7 @@ export function WorkIndex() {
       <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {featuredProjects.map((project, i) => (
           <Reveal as="li" key={project.slug} delay={i * 0.05} className="flex h-full">
-            <ProofCard project={project} index={i} />
+            <ProofCard project={project} />
           </Reveal>
         ))}
       </ul>
