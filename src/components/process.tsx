@@ -12,7 +12,7 @@ export function ProcessSteps({ steps }: { steps: readonly ProcessStep[] }) {
     <ol className="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-5">
       {steps.map((s, i) => (
         <Reveal as="li" key={s.step} delay={i * 0.05} className="h-full">
-          <div className="flex h-full flex-col border-t-2 border-fg pt-4">
+          <div className="flex h-full flex-col border-t border-border pt-5">
             <span className="text-[0.8125rem] font-semibold text-accent tabular-nums">
               {String(i + 1).padStart(2, "0")}
             </span>

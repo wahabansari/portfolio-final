@@ -107,21 +107,19 @@ export function Nav() {
            actually changing, never on first render, so there's nothing to
            see at the top of a freshly loaded page. Scrolling past the
            threshold is the only thing that moves it. */
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-out",
-        scrolled
-          ? "translate-y-0 bg-surface backdrop-blur-md shadow-[0_6px_20px_-12px_rgba(28,23,18,0.25)] border-b border-border"
-          : "-translate-y-1.5 bg-transparent shadow-none border-b border-transparent",
+        "fixed inset-x-0 top-0 z-50 bg-bg/72 shadow-[inset_0_-1px_0_0_var(--c-border-subtle)] backdrop-blur-3xl backdrop-saturate-[1.9] backdrop-brightness-[1.02] transition-[border-color,background-color] duration-300",
+        scrolled ? "border-b border-border-subtle" : "border-b border-transparent",
       )}
     >
-      <div className="ds-container flex h-17 items-center justify-between gap-4 md:gap-6">
+      <div className="ds-container flex h-12 items-center justify-between gap-4 md:gap-6">
         {/* Wordmark */}
         <Link
           href={localeHref("/")}
           data-track="nav_logo"
           aria-label="Home"
-          className="flex items-center gap-2.5 text-[1.0625rem] font-semibold tracking-[-0.01em] text-fg"
+          className="flex items-center gap-2 text-[0.9375rem] font-semibold tracking-[-0.014em] text-fg"
         >
-          <BrandMark className="h-9 w-9" />
+          <BrandMark className="h-7 w-7" />
           <span className="hidden sm:inline">{site.shortName}</span>
           <span className="sm:hidden">W.</span>
         </Link>
@@ -147,8 +145,8 @@ export function Nav() {
                     aria-haspopup="true"
                     data-track="nav_services_toggle"
                     className={cn(
-                      "flex items-center gap-1.5 rounded-md px-3 py-2 text-[0.875rem] font-medium transition-colors duration-150",
-                      active || servicesOpen ? "text-fg" : "text-fg-muted hover:text-fg",
+                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[0.8125rem] font-normal tracking-[-0.01em] transition-colors duration-150",
+                      active || servicesOpen ? "text-fg" : "text-fg/85 hover:text-fg",
                     )}
                   >
                     {link.label}
@@ -156,17 +154,17 @@ export function Nav() {
                     <span
                       aria-hidden
                       className={cn(
-                        "absolute bottom-0.5 left-3 right-3 h-px bg-accent transition-all duration-200",
+                        "hidden",
                         active ? "scale-x-100" : "scale-x-0 origin-left",
                       )}
                     />
                   </button>
                   <div
                     className={cn(
-                      "absolute left-0 top-full z-50 mt-0.5 min-w-70 rounded-xl border border-border bg-bg/95 backdrop-blur-md shadow-[0_12px_32px_-12px_rgba(28,23,18,0.25)] py-2 transition-all duration-200 ease-out",
+                      "fixed inset-x-0 top-12 border-b border-border-subtle bg-bg/96 shadow-[0_24px_48px_-24px_rgba(0,0,0,0.18)] transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
                       servicesOpen
-                        ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
-                        : "opacity-0 scale-y-95 translate-y-1 pointer-events-none",
+                        ? "pointer-events-auto translate-y-0 opacity-100"
+                        : "pointer-events-none -translate-y-2 opacity-0",
                     )}
                     role="menu"
                     aria-label="Services"
@@ -178,29 +176,36 @@ export function Nav() {
                       closeTimeoutRef.current = setTimeout(() => setServicesOpen(false), 120);
                     }}
                   >
-                    {SERVICE_ITEMS.map((svc) => (
-                      <Link
-                        key={svc.slug}
-                        href={localeHref(`/services/${svc.slug}`)}
-                        data-track="nav_service"
-                        data-track-label={svc.slug}
-                        role="menuitem"
-                        className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-fg-muted hover:text-fg hover:bg-accent-soft/50 transition-colors"
-                      >
-                        {svc.label}
-                      </Link>
-                    ))}
-                    <hr className="my-2 border-border" />
-                    <Link
-                      href={localeHref("/services")}
-                      data-track="nav_service"
-                      data-track-label="all"
-                      role="menuitem"
-                      className="flex items-center gap-3 px-4 py-2.5 text-[0.875rem] font-medium text-accent hover:text-accent-hover"
-                    >
-                      View all services
-                      <ArrowIcon className="h-3.5 w-3.5" />
-                    </Link>
+                    <div className="ds-container grid gap-8 py-7 md:grid-cols-12">
+                      <div className="md:col-span-3">
+                        <p className="ds-meta">Services</p>
+                        <Link
+                          href={localeHref("/services")}
+                          data-track="nav_service"
+                          data-track-label="all"
+                          role="menuitem"
+                          className="ds-link mt-2.5 text-[0.8125rem]"
+                        >
+                          View all services
+                          <ArrowIcon className="h-3 w-3" />
+                        </Link>
+                      </div>
+                      <ul className="grid gap-x-10 gap-y-1 md:col-span-9 md:grid-cols-2">
+                        {SERVICE_ITEMS.map((svc) => (
+                          <li key={svc.slug}>
+                            <Link
+                              href={localeHref(`/services/${svc.slug}`)}
+                              data-track="nav_service"
+                              data-track-label={svc.slug}
+                              role="menuitem"
+                              className="block py-1 text-[1.0625rem] font-semibold leading-snug tracking-[-0.014em] text-fg/85 transition-colors duration-200 hover:text-accent"
+                            >
+                              {svc.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               );
@@ -212,15 +217,15 @@ export function Nav() {
                 data-track="nav_link"
                 data-track-label={link.label.toLowerCase()}
                 className={cn(
-                  "relative rounded-md px-3 py-2 text-[0.875rem] font-medium transition-colors duration-150",
-                  active ? "text-fg" : "text-fg-muted hover:text-fg",
+                  "relative rounded-md px-3 py-1.5 text-[0.8125rem] font-normal tracking-[-0.01em] transition-colors duration-150",
+                  active ? "text-fg" : "text-fg/85 hover:text-fg",
                 )}
               >
                 {link.label}
                 <span
                   aria-hidden
                   className={cn(
-                    "absolute bottom-0.5 left-3 right-3 h-px bg-accent transition-all duration-200",
+                    "hidden",
                     active ? "scale-x-100" : "scale-x-0 origin-left",
                   )}
                 />
@@ -237,7 +242,7 @@ export function Nav() {
             aria-label="Search the site"
             title="Search (Ctrl K)"
             data-track="nav_search_open"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-fg-muted transition-colors hover:border-border-strong hover:bg-surface hover:text-fg"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface hover:text-fg"
           >
             <svg
               width="16"
@@ -257,7 +262,7 @@ export function Nav() {
           <Link
             href={localeHref("/contact")}
             data-track="nav_cta"
-            className="hidden items-center gap-2 whitespace-nowrap rounded-lg bg-fg px-5 py-2.5 text-[0.8125rem] font-medium text-bg transition-colors duration-150 hover:bg-accent hover:text-accent-fg sm:inline-flex"
+            className="ml-1 hidden items-center gap-1.5 whitespace-nowrap rounded-full bg-accent-deep px-4 py-1.5 text-[0.75rem] font-medium text-accent-fg transition-colors duration-150 hover:bg-accent-deep-hover sm:inline-flex"
           >
             Start a project
             <ArrowIcon className="h-3.5 w-3.5" />
@@ -271,13 +276,13 @@ export function Nav() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border text-fg-muted transition-colors hover:border-border-strong hover:bg-surface hover:text-fg md:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface hover:text-fg md:hidden"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden>
               {open ? (
                 <path d="M6 6l12 12M18 6L6 18" />
               ) : (
-                <path d="M4 7h16M4 12h16M4 17h16" />
+                <path d="M4 9h16M4 15h16" />
               )}
             </svg>
           </button>
@@ -322,7 +327,7 @@ export function Nav() {
                             href={localeHref(`/services/${svc.slug}`)}
                             data-track="nav_service"
                             data-track-label={svc.slug}
-                            className="block px-2 py-2 text-[0.9375rem] font-medium text-fg-muted hover:text-fg transition-colors"
+                            className="block px-2 py-2 text-[0.9375rem] font-medium text-fg/85 hover:text-fg transition-colors"
                           >
                             {svc.label}
                           </Link>
@@ -362,7 +367,7 @@ export function Nav() {
               href={localeHref("/contact")}
               data-track="nav_cta"
               data-track-label="mobile"
-              className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-fg px-5 py-3 text-[0.9375rem] font-medium text-bg"
+              className="mt-3 flex items-center justify-center gap-2 rounded-full bg-accent-deep px-5 py-2.5 text-[0.875rem] font-medium text-accent-fg"
             >
               Start a project
               <ArrowIcon className="h-4 w-4" />

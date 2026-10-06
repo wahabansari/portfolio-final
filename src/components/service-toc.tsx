@@ -25,7 +25,7 @@ export function ServiceToc({
     <nav
       aria-label="On this page"
       className={cn(
-        "sticky top-[4.5rem] z-30 border-b border-border bg-bg/90 backdrop-blur-md",
+        "sticky top-12 z-30 border-b border-border bg-bg/90 backdrop-blur-md",
         className,
       )}
     >

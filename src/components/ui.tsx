@@ -53,7 +53,7 @@ export function SectionHeading({
  description,
  aside,
  level = "h2",
- align = "left",
+ align = "center",
  size,
 }: {
  overline: string;
@@ -75,10 +75,10 @@ export function SectionHeading({
  )}
  >
  <div className={cn("max-w-3xl", align === "center" && "text-center")}>
- <span className="ds-overline-accent">{overline}</span>
+ {overline && <span className="ds-overline-accent">{overline}</span>}
  <Heading
  className={cn(
- "mt-3",
+ overline && "mt-3",
  level === "h1"
  ? "ds-h1"
  : size === "sm"
@@ -98,56 +98,44 @@ export function SectionHeading({
  );
 }
 
-/**
- * The editorial two-part section: a narrow heading rail on the left (sticky
- * on desktop) and the material on the right. Sections that hold a list —
- * work, services, testimonials, questions — all open this way, so the page
- * reads as one index rather than a stack of different layouts.
- */
-export function SectionRail({
-  id,
-  tone = "plain",
-  bordered = true,
-  overline,
-  title,
-  description,
-  action,
-  children,
-}: {
-  id?: string;
-  tone?: "plain" | "soft" | "deep";
-  bordered?: boolean;
-  overline: string;
-  title: ReactNode;
-  description?: string;
-  action?: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <Section id={id} tone={tone} bordered={bordered}>
-      <div className="grid gap-x-12 gap-y-7 lg:grid-cols-12">
-        <Reveal className="lg:col-span-4">
-          <div className="lg:sticky lg:top-24">
-            <span className="ds-overline-accent">{overline}</span>
-            <h2 className="ds-h2 mt-3">{title}</h2>
-            {description && <p className="ds-body mt-4 max-w-sm">{description}</p>}
-            {action && <div className="mt-6">{action}</div>}
-          </div>
-        </Reveal>
-        <div className="min-w-0 lg:col-span-8">{children}</div>
-      </div>
-    </Section>
-  );
-}
-
 /* ── Icons ──────────────────────────────────────────────────────────────── */
 
 export function ArrowIcon({ className }: { className?: string }) {
- return (
- <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
- <path d="M13.3 5.3a1 1 0 0 0 0 1.4l4.3 4.3H4a1 1 0 1 0 0 2h13.6l-4.3 4.3a1 1 0 1 0 1.4 1.4l6-6a1 1 0 0 0 0-1.4l-6-6a1 1 0 0 0-1.4 0z" />
- </svg>
- );
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="m9 5.5 6.5 6.5L9 18.5" />
+    </svg>
+  );
+}
+
+export function ChevronRightIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className={className}
+    >
+      <path d="m9 5 7 7-7 7" />
+    </svg>
+  );
 }
 
 export function ExternalIcon({ className }: { className?: string }) {
@@ -159,16 +147,16 @@ export function ExternalIcon({ className }: { className?: string }) {
 }
 
 export function DownloadIcon({ className }: { className?: string }) {
- return (
- <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
- <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
- </svg>
- );
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M12 4v10.5m0 0 4-4m-4 4-4-4M5 19.5h14" />
+    </svg>
+  );
 }
 
 export function SearchIcon({ className }: { className?: string }) {
   return (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
   <circle cx="11" cy="11" r="7" />
   <path d="m20 20-3.5-3.5" />
   </svg>
@@ -177,7 +165,7 @@ export function SearchIcon({ className }: { className?: string }) {
 
 export function ChevronDownIcon({ className }: { className?: string }) {
   return (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
   <path d="M6 9l6 6 6-6" />
   </svg>
   );
@@ -201,7 +189,7 @@ export function MinusIcon({ className }: { className?: string }) {
 
 export function UserIcon({ className }: { className?: string }) {
  return (
- <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
  <circle cx="12" cy="8" r="3.5" />
  <path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5" />
  </svg>
@@ -210,7 +198,7 @@ export function UserIcon({ className }: { className?: string }) {
 
 export function FileCheckIcon({ className }: { className?: string }) {
  return (
- <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
  <path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8z" />
  <path d="M14 3v5h5" />
  <path d="m9 14 2 2 4-4" />
@@ -220,7 +208,7 @@ export function FileCheckIcon({ className }: { className?: string }) {
 
 export function GaugeIcon({ className }: { className?: string }) {
  return (
- <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
  <path d="M3 15a9 9 0 1 1 18 0" />
  <path d="M12 15 16 9" />
  <path d="M7.5 17.5A3.5 3.5 0 0 1 12 14" />
@@ -230,7 +218,7 @@ export function GaugeIcon({ className }: { className?: string }) {
 
 export function CodeIcon({ className }: { className?: string }) {
  return (
- <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
  <path d="m8 7-5 5 5 5" />
  <path d="m16 7 5 5-5 5" />
  </svg>
@@ -239,7 +227,7 @@ export function CodeIcon({ className }: { className?: string }) {
 
 export function MailIcon({ className }: { className?: string }) {
  return (
- <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
  <rect x="3" y="5" width="18" height="14" rx="2" />
  <path d="m3 7 9 6 9-6" />
  </svg>
@@ -269,7 +257,7 @@ export function LinkedinIcon({ className }: { className?: string }) {
 
 export function LayersIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <path d="m12 3 9 5-9 5-9-5 9-5z" />
       <path d="m3.5 13.5 8.5 4.7 8.5-4.7" />
       <path d="m3.5 17.5 8.5 4.7 8.5-4.7" />
@@ -279,7 +267,7 @@ export function LayersIcon({ className }: { className?: string }) {
 
 export function LayoutIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <rect x="3" y="4" width="18" height="16" rx="2" />
       <path d="M3 9h18M9 9v11" />
     </svg>
@@ -288,7 +276,7 @@ export function LayoutIcon({ className }: { className?: string }) {
 
 export function RefreshIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <path d="M21 12a9 9 0 1 1-2.6-6.4" />
       <path d="M21 3v6h-6" />
     </svg>
@@ -297,7 +285,7 @@ export function RefreshIcon({ className }: { className?: string }) {
 
 export function SparklesIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z" />
       <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z" />
     </svg>
@@ -306,7 +294,7 @@ export function SparklesIcon({ className }: { className?: string }) {
 
 export function ServerIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <rect x="3" y="4" width="18" height="7" rx="2" />
       <rect x="3" y="13" width="18" height="7" rx="2" />
       <path d="M7 7.5h.01M7 16.5h.01" />
@@ -316,7 +304,7 @@ export function ServerIcon({ className }: { className?: string }) {
 
 export function RocketIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
       <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
       <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
@@ -327,7 +315,7 @@ export function RocketIcon({ className }: { className?: string }) {
 
 export function BriefcaseIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <rect x="2" y="7" width="20" height="14" rx="2" />
       <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
     </svg>
@@ -336,7 +324,7 @@ export function BriefcaseIcon({ className }: { className?: string }) {
 
 export function UsersIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -347,7 +335,7 @@ export function UsersIcon({ className }: { className?: string }) {
 
 export function CompassIcon({ className }: { className?: string }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
       <circle cx="12" cy="12" r="9" />
       <path d="m15.5 8.5-2 5-5 2 2-5 5-2z" />
     </svg>
@@ -853,7 +841,7 @@ export function PageHeader({
 export function Definition({ term, children }: { term: string; children: ReactNode }) {
  return (
  <div className="rounded-2xl border border-accent-hairline bg-accent-soft p-7 md:p-8">
- <p className="ds-meta text-accent">{term}</p>
+ <p className="ds-meta text-accent-hover">{term}</p>
  <p className=" mt-3 font-display text-[1.1875rem] leading-[1.55] font-medium text-ink md:text-[1.3125rem]">
  {children}
  </p>

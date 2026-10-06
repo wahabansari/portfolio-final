@@ -66,9 +66,9 @@ export const hero = {
   /* The role, plain. "Senior Frontend Engineer" gives a recruiter the
      box to tick and a founder the rank to measure against immediately. */
   eyebrow: "Senior Frontend Engineer · React & Next.js",
-  headline: "I build fast, scalable web products with React & Next.js.",
+  headline: "I help founders ship fast, scalable web products.",
   support:
-    "5+ years building production web experiences — with a focus on performance, architecture and polished UI.",
+    "A senior React & Next.js engineer with 5+ years in production, focused on performance, architecture and polished UI.",
   primaryCta: { label: "Start a project", href: "/contact" },
   secondaryCta: { label: "View my work", href: "/work" },
   /* The résumé is a first-class proof document, so it gets a third action in

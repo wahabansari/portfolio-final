@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import Link from "next/link";
 import { Form } from "radix-ui";
 import { services } from "@/content/services";
 import { contactSteps, site, socials } from "@/content/site";
@@ -718,60 +717,6 @@ return (
           </div>
         </Reveal>
       </div>
-    </Section>
-  );
-}
-
-/**
- * ContactCTA — the homepage close: one rounded panel in the brand gradient
- * (`.ds-gradient-band`), centered heading, one line, two actions. Uses the
- * page's normal ink colours rather than a dark band, so it reads the same
- * way in both themes with no per-theme text overrides.
- */
-export function ContactCTA({ tone = "deep" }: { tone?: "plain" | "soft" | "deep" }) {
-  return (
-    <Section id="contact" tone={tone}>
-      <Reveal>
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-8">
-            <span className="ds-overline-accent">Contact</span>
-            <h2 className="ds-h1 mt-4 max-w-3xl">
-              Have a product that needs a stronger frontend?
-            </h2>
-            <p className="body-large mt-5 max-w-xl">
-              Tell me what you&apos;re building, what needs to change, and where you need help.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 lg:col-span-4 lg:items-end">
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/contact"
-                data-track="cta_click"
-                data-track-label="home-contact"
-                className="ds-btn ds-btn-primary"
-              >
-                Start a project
-                <ArrowIcon className="h-4 w-4" />
-              </Link>
-              <a
-                href={`mailto:${site.email}`}
-                data-track="email_click"
-                data-track-label="home-contact"
-                className="ds-btn ds-btn-secondary"
-              >
-                Email me
-              </a>
-            </div>
-            {site.available && (
-              <span className="ds-meta inline-flex items-center gap-2 lg:text-right">
-                <span className="ds-dot" aria-hidden />
-                {site.availabilityNote}
-              </span>
-            )}
-          </div>
-        </div>
-      </Reveal>
     </Section>
   );
 }

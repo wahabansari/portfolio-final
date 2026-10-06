@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { en } from "@/content";
 import * as siteEn from "@/content/en/site";
@@ -13,25 +13,24 @@ import { buildSearchIndex } from "@/lib/search-index";
 import { PageTransition } from "@/components/page-transition";
 
 /*
- * One typeface, everywhere: Poppins. It is a static (non-variable) family,
- * so only the four weights the design uses are loaded — 400 body, 500 labels
- * and links, 600 headings and buttons, 700 the heaviest display moments.
- * Anything else in the CSS would silently snap to one of these, which is why
- * the scale in globals.css only names those four. Poppins is wide and
- * tall-set, so its scale runs looser than a grotesque's: less negative
- * tracking, taller line-heights, slightly smaller sizes.
+ * Type follows Apple: San Francisco (SF Pro) on Apple devices, via the system
+ * font stack in globals.css. Everywhere else the stack falls through to
+ * Inter - the closest open typeface to SF - which is loaded here as a
+ * variable font so every weight is available from one file.
  */
-const poppins = Poppins({
-  variable: "--font-poppins",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  /* Optical size axis: Inter then behaves like SF Pro Display at large
+     sizes and SF Pro Text at small ones. */
+  axes: ["opsz"],
   display: "swap",
 });
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafaf8" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0b0c" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
 };
 
@@ -94,7 +93,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       lang="en"
       dir="ltr"
       data-theme="light"
-      className={poppins.variable}
+      className={inter.variable}
       suppressHydrationWarning
     >
       <head>

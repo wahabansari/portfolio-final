@@ -184,7 +184,7 @@ export function Plate({
   className,
   priority = false,
 }: {
-  project: Project;
+  project: Pick<Project, "title" | "kind" | "image" | "domain" | "plate">;
   className?: string;
   priority?: boolean;
 }) {

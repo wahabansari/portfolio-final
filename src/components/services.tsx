@@ -1,19 +1,6 @@
 import Link from "next/link";
-import { services, serviceGroups, TIER_LABEL, type Service } from "@/content/services";
-import { ArrowIcon, CodeIcon, GaugeIcon, LayoutIcon, RefreshIcon, UsersIcon, LayersIcon, SparklesIcon, Reveal, Section, SectionHeading, SectionRail } from "./ui";
-
-/**
- * The four commercial headline offers. These lead the homepage ledger because
- * they are what a buyer actually chooses between; the rest of the catalogue
- * supports them. The set drives grouping only — display order follows the
- * catalogue (services.ts) itself, so the two can never disagree.
- */
-const COMMERCIAL_SLUGS = new Set([
-  "frontend-product-engineering",
-  "saas-product-development",
-  "wordpress-to-nextjs-migration",
-  "performance-engineering",
-]);
+import { serviceGroups, type Service } from "@/content/services";
+import { ArrowIcon, CodeIcon, GaugeIcon, LayoutIcon, RefreshIcon, UsersIcon, LayersIcon, SparklesIcon, Reveal, Section, SectionHeading } from "./ui";
 
 // Service slug → icon mapping. Exported so anything routing to the same
 // service topic (e.g. an Insights article's `relatedServiceSlug`) can reuse
@@ -67,66 +54,6 @@ function ServiceCard({ service, track }: { service: Service; track: string }) {
         </span>
       </span>
     </Link>
-  );
-}
-
-/**
- * Homepage — the commercial layer. The four headline offers as a numbered
- * index (number · title and summary · tier · arrow) beside a heading rail.
- * The rest of the catalogue lives on /services, one click away.
- */
-export function ServicesOverview({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
-  const offers = services.filter((s) => COMMERCIAL_SLUGS.has(s.slug));
-
-  return (
-    <SectionRail
-      id="services"
-      tone={tone}
-      overline="What I do"
-      title="Four offers, one engineer"
-      description="For startups, SaaS teams, growing businesses and agencies. Each service page states who it's for, what it includes and where the scope ends."
-      action={
-        <Link href="/services" className="ds-link text-[0.875rem]">
-          Compare all {services.length} services
-          <ArrowIcon className="h-3.5 w-3.5" />
-        </Link>
-      }
-    >
-      <ol className="divide-y divide-border border-y border-border">
-        {offers.map((sv, i) => {
-          const Icon = SERVICE_ICONS[sv.slug] || CodeIcon;
-          return (
-            <Reveal as="li" key={sv.slug} delay={i * 0.05}>
-              <Link
-                href={`/services/${sv.slug}`}
-                data-track="cta_click"
-                data-track-label={`home-services:${sv.slug}`}
-                className="group grid grid-cols-[2rem_minmax(0,1fr)_auto] items-start gap-x-4 py-5 transition-colors hover:bg-surface-hover md:grid-cols-[2.5rem_minmax(0,1fr)_auto] md:gap-x-6 md:px-3"
-              >
-                <span className="pt-1 text-[0.8125rem] font-semibold text-accent tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="min-w-0">
-                  <span className="flex items-center gap-2.5">
-                    <Icon className="hidden h-4 w-4 shrink-0 text-fg-subtle sm:block" />
-                    <span className="ds-h3 transition-colors group-hover:text-accent">
-                      {sv.title}
-                    </span>
-                  </span>
-                  <span className="ds-body-sm mt-2 block max-w-xl">{sv.summary}</span>
-                </span>
-                <span className="flex items-center gap-4 pt-1">
-                  <span className="hidden text-[0.75rem] font-medium text-fg-subtle md:block">
-                    {TIER_LABEL[sv.tier]}
-                  </span>
-                  <ArrowIcon className="h-4 w-4 text-fg-subtle transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent" />
-                </span>
-              </Link>
-            </Reveal>
-          );
-        })}
-      </ol>
-    </SectionRail>
   );
 }
 

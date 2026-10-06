@@ -3,7 +3,7 @@ import { featuredProjects, projects, type Project } from "@/content/work";
 import { cn } from "@/lib/cn";
 import { OutboundLink } from "./outbound";
 import { Plate } from "./plate";
-import { ArrowIcon, ExternalIcon, Reveal, Section, SectionRail } from "./ui";
+import { ArrowIcon, ExternalIcon, Reveal, Section } from "./ui";
 
 /**
  * Proof card — one project, in the site's one shared card style.
@@ -149,106 +149,6 @@ function ProjectRow({
     >
       {content}
     </Link>
-  );
-}
-
-/**
- * One featured project as an index entry: the schematic plate on the left,
- * kind and year, title, blurb, the first few tools and the action on the
- * right. The whole entry is one link (case study, or the live site when
- * there is no case study).
- */
-function WorkEntry({ project }: { project: Project }) {
-  const isCaseStudy = Boolean(project.caseStudy);
-  const isExternal = Boolean(project.href && !project.caseStudy);
-  const label = isExternal ? "View live project" : "View case study";
-
-  const inner = (
-    <div className="grid gap-5 py-6 md:grid-cols-12 md:gap-8">
-      <Plate
-        project={project}
-        className="overflow-hidden rounded-[8px] border border-border md:col-span-5"
-      />
-      <div className="flex flex-col md:col-span-7">
-        <span className="ds-overline-accent">
-          {project.kind}
-          {project.year ? ` · ${project.year}` : ""}
-        </span>
-        <h3 className="ds-h3 mt-2.5 transition-colors group-hover:text-accent">{project.title}</h3>
-        <p className="ds-body-sm mt-2.5">{project.blurb}</p>
-        <ul className="mt-4 flex flex-wrap gap-1.5">
-          {project.tools.slice(0, 4).map((tool) => (
-            <li key={tool} className="ds-chip">
-              {tool}
-            </li>
-          ))}
-        </ul>
-        {(isCaseStudy || isExternal) && (
-          <span className="mt-auto inline-flex items-center gap-2 pt-5 text-[0.875rem] font-medium text-fg transition-colors group-hover:text-accent">
-            {label}
-            {isExternal ? <ExternalIcon className="h-3.5 w-3.5" /> : <ArrowIcon className="h-3.5 w-3.5" />}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-
-  const cls = "group block";
-  if (isCaseStudy) {
-    return (
-      <Link
-        href={`/work/${project.slug}`}
-        data-track="cta_click"
-        data-track-label={`work:${project.slug}`}
-        className={cls}
-      >
-        {inner}
-      </Link>
-    );
-  }
-  if (isExternal) {
-    return (
-      <OutboundLink
-        href={project.href as string}
-        event="case_study_view"
-        payload={{ project: project.slug }}
-        className={cls}
-        ariaLabel={`Open ${project.title} in a new tab`}
-      >
-        {inner}
-      </OutboundLink>
-    );
-  }
-  return <div className={cls}>{inner}</div>;
-}
-
-/**
- * Selected Work — the homepage proof list, as an index: heading rail on the
- * left, one entry per featured project on the right, hairlines between.
- */
-export function SelectedWork({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
-  return (
-    <SectionRail
-      id="work"
-      tone={tone}
-      overline="Selected work"
-      title="Proof before pitch"
-      description="Production work on real products — each entry links to the case study or the live site."
-      action={
-        <Link href="/work" className="ds-link text-[0.875rem]">
-          All projects
-          <ArrowIcon className="h-3.5 w-3.5" />
-        </Link>
-      }
-    >
-      <ul className="divide-y divide-border border-y border-border">
-        {featuredProjects.map((project, i) => (
-          <Reveal as="li" key={project.slug} delay={i * 0.05}>
-            <WorkEntry project={project} />
-          </Reveal>
-        ))}
-      </ul>
-    </SectionRail>
   );
 }
 
