@@ -18,7 +18,7 @@ export function TrustLayer({ tone = "plain" }: { tone?: "plain" | "soft" | "deep
       />
 
       {hasTestimonials ? (
-        <ul className="theme-dark mx-auto grid max-w-6xl gap-x-14 gap-y-12 rounded-[28px] px-7 py-12 md:grid-cols-2 md:px-14 md:py-16">
+        <ul className="theme-tint mx-auto grid max-w-6xl gap-x-14 gap-y-12 rounded-[28px] px-7 py-12 md:grid-cols-2 md:px-14 md:py-16">
           {testimonials.map((t, i) => (
             <Reveal as="li" key={t.name + t.company} delay={i * 0.06}>
               <figure>

@@ -70,11 +70,11 @@ export async function POST(request: Request) {
   const brief = str(body.brief, MAX.brief);
 
   const errors: Record<string, string> = {};
-  if (!name) errors.name = "Enter your name so I know who I am replying to.";
-  if (!email) errors.email = "Enter an email address so I can reply.";
+  if (!name) errors.name = "Enter your name so we know who we are replying to.";
+  if (!email) errors.email = "Enter an email address so we can reply.";
   else if (!EMAIL.test(email)) errors.email = "That does not look like an email address.";
   if (!projectType) errors.projectType = "Pick the closest option.";
-  if (brief.length < 20) errors.brief = "Tell me a little more about what you are building.";
+  if (brief.length < 20) errors.brief = "Tell us a little more about what you are building.";
 
   if (Object.keys(errors).length > 0) {
     return Response.json({ errors }, { status: 400 });

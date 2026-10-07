@@ -2,15 +2,10 @@ import { experience } from "@/content/site";
 import { CheckIcon, ChipList, Reveal, Section, SectionHeading } from "./ui";
 
 /**
- * Experience. Two roles, both written up in full — a long run on one product
- * is the substance of the CV, not a gap to apologise for, so it gets the space
- * rather than being compressed into a two-line timeline entry.
- *
- * The role header used to live in a small tinted card next to the highlight
- * list — a box next to a bullet list read as two disconnected UI elements.
- * A large numeral plus bare, bold typography now carries the same
- * information as one continuous block, matching the numeral language used
- * everywhere else on the site.
+ * Experience as a vertical timeline: a rail down the left, a node per role and
+ * one bordered card each. A long run on one product is the substance of the
+ * founder's experience, so each role keeps its full write-up; the current role
+ * is marked with a pulsing node. Highlights are the founder's own, unchanged.
  */
 export function ExperienceList({
   tone = "plain",
@@ -24,44 +19,62 @@ export function ExperienceList({
       {!hideHeading && (
         <SectionHeading
           overline="Experience"
-          title="Where the five years went"
+          title="Where the experience comes from"
           description="Production frontend engineering, and the interface and design-system work underneath it."
         />
       )}
 
-      <ol className="border-t border-border">
-        {experience.map((role, i) => (
-          <Reveal as="li" key={role.company} delay={i * 0.05}>
-            <article className="border-b border-border py-10 md:py-12">
-              <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
-                <header className="lg:col-span-4">
-                  <span className="font-display text-[2.5rem] font-bold leading-none tracking-[-0.01em] text-accent tabular-nums">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="font-display text-[1.5rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg mt-4">
-                    {role.role}
-                  </h3>
-                  <p className="mt-1.5 text-[0.9375rem] font-semibold text-accent">{role.company}</p>
-                  {role.client && <p className="ds-meta mt-3 normal-case">Client &middot; {role.client}</p>}
-                  {role.period && <p className="ds-meta mt-1 normal-case">{role.period}</p>}
-                  <p className="ds-body-sm mt-5">{role.summary}</p>
-                  <ChipList items={role.stack} className="mt-6" />
+      <ol className="relative mx-auto max-w-5xl space-y-8 pl-8 md:pl-12">
+        <span
+          aria-hidden
+          className="absolute top-2 bottom-2 left-[0.6875rem] w-0.5 rounded-full bg-border md:left-[1.1875rem]"
+        />
+        {experience.map((role, i) => {
+          const current = role.period?.toLowerCase().includes("present");
+          return (
+            <Reveal as="li" key={role.company} delay={i * 0.08} className="relative">
+              <span
+                aria-hidden
+                className="absolute top-7 -left-8 flex h-6 w-6 items-center justify-center rounded-full border-2 border-accent-deep bg-bg md:-left-12 md:h-7 md:w-7"
+              >
+                <span className="relative flex h-2.5 w-2.5">
+                  {current && (
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-deep opacity-60" />
+                  )}
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-deep" />
+                </span>
+              </span>
+
+              <article className="rounded-3xl border border-border-subtle bg-bg p-6 shadow-[0_1px_2px_rgba(28,30,60,0.03)] md:p-8">
+                <header className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <h3 className="ds-h3">{role.role}</h3>
+                    <p className="mt-1 text-[1rem] font-semibold text-accent">
+                      {role.company}
+                      {role.client && <span className="font-normal text-fg-muted"> · for {role.client}</span>}
+                    </p>
+                  </div>
+                  {role.period && (
+                    <span className="ds-chip shrink-0 self-start !text-[0.8125rem] font-medium">{role.period}</span>
+                  )}
                 </header>
 
-                <div className="lg:col-span-8">
-                  <ul className="space-y-5 border-t border-border pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
-                    {role.highlights.map((h) => (
-                      <li key={h} className="flex gap-3.5">
-                        <CheckIcon className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
-                        <p className="ds-body">{h}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </article>
-          </Reveal>
-        ))}
+                <p className="ds-body mt-4 max-w-3xl">{role.summary}</p>
+
+                <ul className="mt-6 grid gap-x-8 gap-y-4 border-t border-border-subtle pt-6 md:grid-cols-2">
+                  {role.highlights.map((h) => (
+                    <li key={h} className="flex gap-3">
+                      <CheckIcon className="mt-1 h-4 w-4 shrink-0 text-accent" />
+                      <p className="ds-body-sm text-fg-muted">{h}</p>
+                    </li>
+                  ))}
+                </ul>
+
+                <ChipList items={role.stack} className="mt-6" />
+              </article>
+            </Reveal>
+          );
+        })}
       </ol>
     </Section>
   );

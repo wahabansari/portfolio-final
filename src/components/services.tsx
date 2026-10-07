@@ -1,26 +1,33 @@
 import Link from "next/link";
-import { serviceGroups, type Service } from "@/content/services";
-import { ArrowIcon, CodeIcon, GaugeIcon, LayoutIcon, RefreshIcon, UsersIcon, LayersIcon, SparklesIcon, Reveal, Section, SectionHeading } from "./ui";
+import { services, type Service } from "@/content/services";
+import { ServicesShowcase, type ShowcaseService } from "./services-showcase";
+import { ArrowIcon, CodeIcon, LayoutIcon, RefreshIcon, SparklesIcon, Reveal, Section, SectionHeading } from "./ui";
 
 // Service slug → icon mapping. Exported so anything routing to the same
-// service topic (e.g. an Insights article's `relatedServiceSlug`) can reuse
-// the exact same icon rather than maintaining a second, driftable mapping.
+// service topic (e.g. the problem selector, an Insight's `relatedServiceSlug`)
+// can reuse the exact same icon rather than maintaining a second, driftable mapping.
 export const SERVICE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  "frontend-product-engineering": CodeIcon,
-  "website-redesign-rebuild": LayoutIcon,
-  "performance-engineering": GaugeIcon,
-  "wordpress-to-nextjs-migration": RefreshIcon,
-  "agency-frontend-development": UsersIcon,
-  "saas-product-development": LayersIcon,
-  "ai-product-integration": SparklesIcon,
+  "custom-web-development": CodeIcon,
+  "business-dashboards": LayoutIcon,
+  "software-modernization": RefreshIcon,
+  "ai-business-automation": SparklesIcon,
 };
 
 /**
- * A horizontal service card for the /services hub: icon, title, summary, the
- * first "good fit" line, then a footer of real counts pulled from the
- * service itself. The whole card is the link.
+ * One service as an editorial row: a large numeral, the name and summary, an
+ * optional "best for" line and the link, separated from its neighbours only by
+ * a rule. Used by the homepage (`compact`) and the /services hub. The whole
+ * row is the link.
  */
-function ServiceCard({ service, track }: { service: Service; track: string }) {
+function ServiceRow({
+  service,
+  track,
+  compact = false,
+}: {
+  service: Service;
+  track: string;
+  compact?: boolean;
+}) {
   const Icon = SERVICE_ICONS[service.slug] || CodeIcon;
   const fit = service.idealFor[0];
   return (
@@ -28,71 +35,100 @@ function ServiceCard({ service, track }: { service: Service; track: string }) {
       href={`/services/${service.slug}`}
       data-track="cta_click"
       data-track-label={track}
-      className="group ds-card ds-card-interactive flex h-full flex-col gap-5 p-6 sm:flex-row sm:p-7"
+      className="group -mx-4 grid items-center gap-x-8 gap-y-3 rounded-3xl px-4 py-6 transition-colors duration-200 hover:bg-accent-soft md:grid-cols-12 md:py-7"
     >
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent transition-colors duration-200 group-hover:bg-accent group-hover:text-accent-fg">
-        <Icon className="h-5 w-5" />
-      </span>
-      <span className="flex min-w-0 flex-1 flex-col">
-        <span className="ds-h3 transition-colors duration-200 group-hover:text-accent">
-          {service.title}
+      <span className="flex items-center gap-4 md:col-span-5">
+        <span className="font-display text-[2.5rem] leading-none font-bold tracking-[-0.03em] text-accent-hairline tabular-nums transition-colors duration-200 group-hover:text-accent md:text-[3.25rem]">
+          {service.index}
         </span>
-        <span className="ds-body-sm mt-2.5 text-fg-muted">{service.summary}</span>
-        <span className="ds-body-sm mt-4 block">
-          <span className="font-medium text-fg">Best for: </span>
-          {fit.charAt(0).toLowerCase() + fit.slice(1)}.
-        </span>
-        <span className="mt-auto flex items-center gap-2 pt-6">
-          <span className="ds-chip">{service.deliverables.length} deliverables</span>
-          <span className="ds-chip">{service.engagement.length}-step process</span>
-          <span
-            aria-hidden
-            className="ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-fg-subtle transition-all duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:text-accent"
-          >
-            <ArrowIcon className="h-3.5 w-3.5" />
+        <span className="flex min-w-0 items-center gap-3">
+          <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent sm:flex">
+            <Icon className="h-5 w-5" />
           </span>
+          <span className="ds-h3 transition-colors duration-200 group-hover:text-accent">{service.title}</span>
         </span>
+      </span>
+
+      <span className="md:col-span-6">
+        <span className="ds-body-sm block">{service.summary}</span>
+        {!compact && (
+          <span className="ds-body-sm mt-2 block">
+            <span className="font-medium text-fg">Best for: </span>
+            {fit.charAt(0).toLowerCase() + fit.slice(1)}
+            {fit.endsWith(".") ? "" : "."}
+          </span>
+        )}
+      </span>
+
+      <span
+        aria-hidden
+        className="hidden h-10 w-10 items-center justify-center justify-self-end rounded-full border border-border text-accent transition-all duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:bg-accent-deep group-hover:text-accent-fg md:col-span-1 md:flex"
+      >
+        <ArrowIcon className="h-4 w-4" />
       </span>
     </Link>
   );
 }
 
-/**
- * /services hub — the full set, grouped by engagement tier. Each group is a
- * two-part row: the tier label and its count on the left, the group's cards
- * stacked on the right, so a buyer can discard a whole kind of engagement
- * without reading its cards.
- */
+function RowList({ track, compact }: { track: string; compact?: boolean }) {
+  return (
+    <ul className="mx-auto max-w-6xl border-b border-border">
+      {services.map((sv, i) => (
+        <Reveal as="li" key={sv.slug} delay={i * 0.05} className="border-t border-border">
+          <ServiceRow service={sv} track={`${track}:${sv.slug}`} compact={compact} />
+        </Reveal>
+      ))}
+    </ul>
+  );
+}
+
+/** Homepage: the four services as a selector (list on the left, detail on the right). */
+export function ServicesOverview({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
+  const items: ShowcaseService[] = services.map((sv) => {
+    const fit = sv.idealFor[0];
+    return {
+      slug: sv.slug,
+      index: sv.index,
+      title: sv.title,
+      shortTitle: sv.shortTitle,
+      eyebrow: sv.eyebrow,
+      summary: sv.summary,
+      bestFor: `${fit.charAt(0).toLowerCase()}${fit.slice(1)}${fit.endsWith(".") ? "" : "."}`,
+      gets: sv.deliverables.slice(0, 3).map((d) => d.title),
+    };
+  });
+
+  return (
+    <Section id="services" tone={tone}>
+      <Reveal className="mx-auto mb-8 flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <span className="ds-overline-accent block">Services</span>
+          <h2 className="mt-3 text-[1.75rem] leading-tight font-bold tracking-[-0.025em] text-fg md:text-[2rem]">
+            Four ways we can help
+          </h2>
+        </div>
+        <Link href="/services" className="ds-link shrink-0 text-[0.9375rem]">
+          Compare all services
+          <ArrowIcon className="h-3 w-3" />
+        </Link>
+      </Reveal>
+      <Reveal delay={0.05}>
+        <ServicesShowcase items={items} />
+      </Reveal>
+    </Section>
+  );
+}
+
+/** /services hub: the four services, with who each one is for. */
 export function ServicesList() {
   return (
     <Section tone="plain">
       <SectionHeading
-        overline="All services"
-        title="What I take on"
-        description="Seven services grouped by the kind of engagement each one is, so you can rule most of them out in one pass."
+        overline="The services"
+        title="Four services, one way of working"
+        description="Pick the one closest to your situation. Each page explains what we build, what you get and how the engagement runs."
       />
-
-      <div className="mx-auto max-w-6xl space-y-14 md:space-y-16">
-        {serviceGroups.map((group) => (
-          <div key={group.tier} className="grid gap-6 lg:grid-cols-12 lg:gap-10">
-            <div className="lg:col-span-3">
-              <div className="lg:sticky lg:top-28">
-                <span className="ds-overline-accent">
-                  {group.items.length} {group.items.length === 1 ? "service" : "services"}
-                </span>
-                <h3 className="ds-h3 mt-3">{group.label}</h3>
-              </div>
-            </div>
-            <ul className="grid gap-6 lg:col-span-9">
-              {group.items.map((sv, i) => (
-                <Reveal as="li" key={sv.slug} delay={i * 0.05}>
-                  <ServiceCard service={sv} track={`hub:${sv.slug}`} />
-                </Reveal>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      <RowList track="hub" />
     </Section>
   );
 }

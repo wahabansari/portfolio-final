@@ -1,52 +1,48 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
-import { PageHeader } from "@/components/ui";
-import { AboutNarrative } from "@/components/about";
+import { AboutHero, AboutStory } from "@/components/about";
 import { ExperienceList } from "@/components/experience";
 import { Capabilities } from "@/components/skills";
-import { Credentials } from "@/components/credentials";
 import { Engagement } from "@/components/engagement";
 import { ProfilePageJsonLd } from "@/components/json-ld";
 import { CtaBand } from "@/components/ui";
-import { about } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
-  "Learn about Wahab Ansari, an independent React & Next.js frontend developer with 5+ years of production experience building SaaS products, websites and web apps.";
+  "Craftwise is a founder-led software studio in Lahore. Meet Muhammad Wahab Ansari: 5+ years of production React and Next.js, and a design background.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About Wahab Ansari | React & Next.js Product Engineer",
+  title: "About Craftwise | Founder-led software development studio",
   description,
   path: "/about",
   type: "profile",
   absoluteTitle: true,
 });
 
+/**
+ * Who is behind Craftwise? The founder, the story, the experience and the
+ * skills behind the studio, then the two ways to work with it. The capability
+ * inventory lives here rather than on the homepage.
+ */
 export default function AboutPage() {
   return (
     <>
       <ProfilePageJsonLd />
       <Nav />
       <main id="main">
-        <PageHeader
-          trail={[{ label: "Home", href: "/" }, { label: "About" }]}
-          eyebrow="About"
-          title={about.h1}
-          lede={about.statement}
-        />
-        <AboutNarrative />
-        <ExperienceList tone="soft" />
-        <Capabilities tone="plain" />
-        <Engagement tone="soft" />
-        <Credentials tone="plain" />
+        <AboutHero />
+        <AboutStory tone="soft" />
+        <ExperienceList tone="plain" />
+        <Capabilities tone="soft" />
+        <Engagement tone="plain" />
         <CtaBand
           navy
           tone="soft"
-          heading="Hiring, or have something to build?"
-          body="I am open to remote product roles, project and contract work, and agency frontend partnerships. Tell me which one this is and we can work out whether it fits."
-          primary={{ label: "Work with me", href: "/contact" }}
-          secondary={{ label: "View selected work", href: "/work" }}
+          heading="Have a project in mind?"
+          body="Tell us what you are building, what needs to change, or where your current system is getting in the way."
+          primary={{ label: "Start a project", href: "/contact" }}
+          secondary={{ label: "View our work", href: "/work" }}
         />
       </main>
       <Footer />

@@ -21,13 +21,10 @@ function useScrolled(threshold = 4) {
 
 // Services for dropdown — keep in sync with src/content/en/services.ts
 const SERVICE_ITEMS = [
-  { slug: "frontend-product-engineering", label: "React & Next.js Development" },
-  { slug: "website-redesign-rebuild", label: "Website Redesign & Rebuild" },
-  { slug: "performance-engineering", label: "Web Performance & Core Web Vitals" },
-  { slug: "wordpress-to-nextjs-migration", label: "WordPress to Next.js Migration" },
-  { slug: "agency-frontend-development", label: "White-Label & Agency Development" },
-  { slug: "saas-product-development", label: "SaaS & MVP Development" },
-  { slug: "ai-product-integration", label: "AI Integration for Web Products" },
+  { slug: "custom-web-development", label: "Custom Web Development" },
+  { slug: "business-dashboards", label: "Business Dashboards & Custom Software" },
+  { slug: "software-modernization", label: "Software Modernization" },
+  { slug: "ai-business-automation", label: "AI Business Automation" },
 ] as const;
 
 /**

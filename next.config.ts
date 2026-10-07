@@ -1,111 +1,69 @@
 import type { NextConfig } from "next";
 
 /**
- * Redirects from the previous information architecture.
+ * Redirects from the previous information architectures.
  *
- * The old site published three service categories with sixteen detail pages
- * beneath them, plus standalone /skills and /experience routes. All of those
- * URLs are indexed, so none of them may simply 404 — each one 308s to the page
- * that now covers the same intent. A permanent redirect passes the signals on;
- * a 404 discards them.
+ * The site has published two earlier service structures: three categories with
+ * sixteen detail pages (/services/frontend/*, /automation/*, /wordpress/*), and
+ * then seven standalone services. It now publishes four. Every one of those
+ * URLs may be indexed or linked, so none of them may simply 404: each one 308s
+ * straight to the page that now covers the same intent. A permanent redirect
+ * passes the signals on; a 404 discards them.
  *
- * Order matters: Next matches top to bottom, so the specific mappings have to
- * come before the category-wide catch-alls beneath them. The catch-alls exist
- * so that any old URL missed here still lands on a relevant page rather than
- * an error.
+ * Every destination below is a final URL (one of the four services, or the
+ * /services hub), never another redirect, so there are no chains.
+ *
+ * Order matters: Next matches top to bottom, so the specific mappings come
+ * before the category-wide catch-alls beneath them. The catch-alls exist so
+ * that any old URL missed here still lands on a relevant page.
  */
+const CUSTOM_WEB = "/services/custom-web-development";
+const DASHBOARDS = "/services/business-dashboards";
+const MODERNIZATION = "/services/software-modernization";
+const AI_AUTOMATION = "/services/ai-business-automation";
+
 const serviceRedirects: { source: string; destination: string }[] = [
-  /* ── The redesign service's own rename ────────────────────────────────
-     "Conversion" became "Rebuild" when the service was repositioned around
-     modernization rather than conversion-rate work. The old slug was
-     indexed, so it redirects rather than 404s — and it has to sit above the
-     catch-alls, which is why it leads the list. */
-  {
-    source: "/services/website-redesign-conversion",
-    destination: "/services/website-redesign-rebuild",
-  },
+  /* ── The seven standalone services (previous structure) ───────────────── */
+  { source: "/services/frontend-product-engineering", destination: CUSTOM_WEB },
+  { source: "/services/website-redesign-rebuild", destination: CUSTOM_WEB },
+  { source: "/services/website-redesign-conversion", destination: CUSTOM_WEB },
+  { source: "/services/saas-product-development", destination: DASHBOARDS },
+  { source: "/services/performance-engineering", destination: MODERNIZATION },
+  { source: "/services/wordpress-to-nextjs-migration", destination: MODERNIZATION },
+  { source: "/services/ai-product-integration", destination: AI_AUTOMATION },
+  /* Agency work is an engagement model, not a service: it lives on the hub. */
+  { source: "/services/agency-frontend-development", destination: "/services" },
 
-  /* ── Frontend detail pages that now belong to the redesign service ───── */
-  {
-    source: "/services/frontend/email-template-development",
-    destination: "/services/website-redesign-rebuild",
-  },
-  {
-    source: "/services/frontend/website-dashboard-redesign",
-    destination: "/services/website-redesign-rebuild",
-  },
+  /* ── Frontend detail pages (original structure) ──────────────────────── */
+  { source: "/services/frontend/email-template-development", destination: CUSTOM_WEB },
+  { source: "/services/frontend/website-dashboard-redesign", destination: CUSTOM_WEB },
+  { source: "/services/frontend/react-nextjs-development", destination: CUSTOM_WEB },
+  { source: "/services/frontend/responsive-web-development", destination: CUSTOM_WEB },
+  { source: "/services/frontend/progressive-web-app-development", destination: CUSTOM_WEB },
+  { source: "/services/frontend/ui-ux-design", destination: CUSTOM_WEB },
 
-  /* ── Frontend detail pages absorbed into the primary service ─────────── */
-  {
-    source: "/services/frontend/react-nextjs-development",
-    destination: "/services/frontend-product-engineering",
-  },
-  {
-    source: "/services/frontend/responsive-web-development",
-    destination: "/services/frontend-product-engineering",
-  },
-  {
-    source: "/services/frontend/progressive-web-app-development",
-    destination: "/services/frontend-product-engineering",
-  },
-  {
-    source: "/services/frontend/ui-ux-design",
-    destination: "/services/frontend-product-engineering",
-  },
-
-  /* ── Automation category → AI product integration ────────────────────── */
-  {
-    source: "/services/automation/ai-chatbot-development",
-    destination: "/services/ai-product-integration",
-  },
-  {
-    source: "/services/automation/rag-chatbot-agent",
-    destination: "/services/ai-product-integration",
-  },
-  {
-    source: "/services/automation/dental-clinic-ai-assistant",
-    destination: "/services/ai-product-integration",
-  },
-  {
-    source: "/services/automation/n8n-workflow-automation",
-    destination: "/services/ai-product-integration",
-  },
+  /* ── Automation category → AI business automation ────────────────────── */
+  { source: "/services/automation/ai-chatbot-development", destination: AI_AUTOMATION },
+  { source: "/services/automation/rag-chatbot-agent", destination: AI_AUTOMATION },
+  { source: "/services/automation/dental-clinic-ai-assistant", destination: AI_AUTOMATION },
+  { source: "/services/automation/n8n-workflow-automation", destination: AI_AUTOMATION },
 
   /* ── WordPress category ───────────────────────────────────────────────
-     Two of these now have an exact-intent destination that did not exist when
-     the map was first written: the old migration URL points at the dedicated
-     migration service rather than at a general redesign page, and the speed
-     URL points at performance engineering. A redirect to a merely related
-     page keeps the signal; a redirect to the page about the same problem
-     keeps the visitor too. */
-  {
-    source: "/services/wordpress/wordpress-to-nextjs-migration",
-    destination: "/services/wordpress-to-nextjs-migration",
-  },
-  {
-    source: "/services/wordpress/wordpress-speed-optimization",
-    destination: "/services/performance-engineering",
-  },
-  {
-    source: "/services/wordpress/custom-wordpress-theme-development",
-    destination: "/services/website-redesign-rebuild",
-  },
-  {
-    source: "/services/wordpress/wordpress-plugin-development",
-    destination: "/services/website-redesign-rebuild",
-  },
-  {
-    source: "/services/wordpress/landing-page-development",
-    destination: "/services/website-redesign-rebuild",
-  },
+     Migration and speed work are software modernization; theme, plugin and
+     landing-page work are custom web development. */
+  { source: "/services/wordpress/wordpress-to-nextjs-migration", destination: MODERNIZATION },
+  { source: "/services/wordpress/wordpress-speed-optimization", destination: MODERNIZATION },
+  { source: "/services/wordpress/custom-wordpress-theme-development", destination: CUSTOM_WEB },
+  { source: "/services/wordpress/wordpress-plugin-development", destination: CUSTOM_WEB },
+  { source: "/services/wordpress/landing-page-development", destination: CUSTOM_WEB },
 
   /* ── Category roots, then their catch-alls ───────────────────────────── */
-  { source: "/services/frontend", destination: "/services/frontend-product-engineering" },
-  { source: "/services/frontend/:path*", destination: "/services/frontend-product-engineering" },
-  { source: "/services/automation", destination: "/services/ai-product-integration" },
-  { source: "/services/automation/:path*", destination: "/services/ai-product-integration" },
-  { source: "/services/wordpress", destination: "/services/wordpress-to-nextjs-migration" },
-  { source: "/services/wordpress/:path*", destination: "/services/website-redesign-rebuild" },
+  { source: "/services/frontend", destination: CUSTOM_WEB },
+  { source: "/services/frontend/:path*", destination: CUSTOM_WEB },
+  { source: "/services/automation", destination: AI_AUTOMATION },
+  { source: "/services/automation/:path*", destination: AI_AUTOMATION },
+  { source: "/services/wordpress", destination: MODERNIZATION },
+  { source: "/services/wordpress/:path*", destination: CUSTOM_WEB },
 ];
 
 const nextConfig: NextConfig = {

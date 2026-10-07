@@ -1,27 +1,21 @@
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Hero, ProofBand } from "@/components/hero";
-import {
-  HomeClose,
-  HomeEngagement,
-  HowItWorks,
-  ProblemPaths,
-  StackGrid,
-  WhyMe,
-  WorkResults,
-} from "@/components/home-sections";
+import { HomeClose, HowItWorks, ProblemPaths, WhyMe, WorkResults } from "@/components/home-sections";
+import { ServicesOverview } from "@/components/services";
 import { TrustLayer } from "@/components/trust";
 import { HomeFaq } from "@/components/home-faq";
 import { StickyCta } from "@/components/sticky-cta";
 import { HomeJsonLd } from "@/components/json-ld";
 
 /**
- * Homepage - built to convert. Everything a buyer needs to decide is on this
- * one page, in short pieces: who I am and the proof (hero, stats), whether I
- * solve their problem (problem paths), evidence (results, testimonials), how
- * it works (process, stack, commitments, engagement models), the objections
- * (FAQ), and a clear next step (close). Each section is an icon, a title and
- * a line; the depth sits one click away on the pages they link to.
+ * Homepage - built to convert, and short on purpose. In the order a buyer's
+ * questions arrive: what is this (hero), can they be trusted (proof), is this
+ * my problem (selector), has it been done (work), what is offered (services),
+ * how does it run (process), why this studio (reasons), what do clients say
+ * (testimonials), the objections (FAQ) and a clear next step (close). Each
+ * section is an icon, a title and a line; the depth sits one click away on the
+ * service, work and About pages.
  *
  * White and light bands alternate so two neighbours never share a fill.
  */
@@ -35,13 +29,12 @@ export default function Home() {
         <ProofBand tone="soft" />
         <ProblemPaths tone="plain" />
         <WorkResults tone="soft" />
-        <HowItWorks tone="plain" />
-        <StackGrid tone="soft" />
+        <ServicesOverview tone="plain" />
+        <HowItWorks tone="soft" />
         <WhyMe tone="plain" />
-        <HomeEngagement tone="soft" />
-        <TrustLayer tone="plain" />
-        <HomeFaq tone="soft" />
-        <HomeClose tone="plain" />
+        <TrustLayer tone="soft" />
+        <HomeFaq tone="plain" />
+        <HomeClose tone="soft" />
       </main>
       <Footer />
       <StickyCta />

@@ -1,6 +1,6 @@
 import { insights } from "@/content/insights";
 import { services } from "@/content/services";
-import { positioning, promise, site } from "@/content/site";
+import { founder, positioning, promise, site } from "@/content/site";
 import { caseStudies, projects } from "@/content/work";
 
 /**
@@ -26,12 +26,12 @@ export function GET() {
     "",
     "## Pages",
     "",
-    `- [Home](${u("/")}): Positioning, proof, services, selected work and contact.`,
-    `- [Work](${u("/work")}): Production projects, with three written up as case studies.`,
-    `- [Services](${u("/services")}): The seven services, in commercial order.`,
-    `- [Insights](${u("/insights")}): First-hand articles on migration and performance.`,
-    `- [About](${u("/about")}): Background, experience, capabilities and credentials.`,
-    `- [Contact](${u("/contact")}): Project brief form and direct contact paths.`,
+    `- [Home](${u("/")}): The studio, proof, the four services, selected work and contact.`,
+    `- [Work](${u("/work")}): Selected software projects, with case studies for the main ones.`,
+    `- [Services](${u("/services")}): The four services: custom web development, business dashboards, software modernization and AI business automation.`,
+    `- [Insights](${u("/insights")}): First-hand articles on migration, performance and building software that lasts.`,
+    `- [About](${u("/about")}): Who is behind Craftwise: the founder, the experience and the way the studio works.`,
+    `- [Contact](${u("/contact")}): Project inquiry form and direct contact.`,
     "",
     "## Services",
     "",
@@ -72,8 +72,8 @@ export function GET() {
     "## Contact",
     "",
     `- Email: ${site.email}`,
+    `- Founder: ${founder.name}`,
     `- Location: ${site.location} (${site.timezone})`,
-    `- Résumé: ${u(site.resumeHref)}`,
     "",
   );
 

@@ -5,7 +5,6 @@ import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { ServiceJsonLd } from "@/components/json-ld";
 import { RelatedWork } from "@/components/work";
-import { Principles } from "@/components/positioning";
 import { ServiceToc } from "@/components/service-toc";
 import { PageEvent } from "@/components/analytics";
 import { Contact } from "@/components/contact";
@@ -32,22 +31,24 @@ import {
   UserIcon,
 } from "@/components/ui";
 import { insights } from "@/content/insights";
-import { getService, services, serviceSlugs, TIER_LABEL } from "@/content/services";
+import { getService, services, serviceSlugs } from "@/content/services";
 import { pageMetadata } from "@/lib/seo";
 
 /* One source for the in-page navigation and the anchors it points at, so a
-   renamed section cannot leave a dead link behind. */
-const SECTIONS = [
-  { id: "fit", label: "Who it is for" },
-  { id: "problems", label: "Problems" },
-  { id: "deliverables", label: "Deliverables" },
-  { id: "engagement", label: "Process" },
-  { id: "technical", label: "Technical depth" },
-  { id: "scope", label: "Scope" },
-  { id: "proof", label: "Proof" },
-  { id: "why", label: "Why me" },
-  { id: "faq", label: "FAQ" },
-];
+   renamed section cannot leave a dead link behind. "Relevant work" is only
+   listed for a service that has verified work to show. */
+function sectionsFor(hasProof: boolean) {
+  return [
+    { id: "problems", label: "What it solves" },
+    { id: "fit", label: "Who it is for" },
+    { id: "deliverables", label: "What you get" },
+    { id: "engagement", label: "How it runs" },
+    { id: "technical", label: "Technical approach" },
+    { id: "scope", label: "Scope" },
+    ...(hasProof ? [{ id: "proof", label: "Relevant work" }] : []),
+    { id: "faq", label: "FAQ" },
+  ];
+}
 
 /* A representative icon per technical-group label, matched by keyword rather
    than an exact lookup table so a new group on a future service degrades to
@@ -132,7 +133,7 @@ function ListCard({
   items: readonly string[];
 }) {
   return (
-    <div className="ds-card h-full p-6">
+    <div className="h-full p-6 md:p-7">
       <p className={positive ? "ds-meta text-success" : "ds-meta"}>{label}</p>
       <ul className="mt-5 space-y-3.5">
         {items.map((item) => (
@@ -161,12 +162,14 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   const nextService = services[(index + 1) % services.length];
   const relatedInsights = insights.filter((i) => i.relatedServiceSlug === service.slug);
 
-  /* Bands after the two-column body alternate; the optional insights band
-     shifts the sequence, so the tones are derived rather than hard-coded. */
+  const hasProof = service.proofSlugs.length > 0;
+  const sections = sectionsFor(hasProof);
+
+  /* Bands after the two-column body alternate; the optional proof and insights
+     bands shift the sequence, so the tones are derived rather than hard-coded. */
   const proofTone: Tone = "soft";
-  const insightsTone = flip(proofTone);
-  const whyTone = relatedInsights.length > 0 ? flip(insightsTone) : insightsTone;
-  const faqTone = flip(whyTone);
+  const insightsTone: Tone = hasProof ? flip(proofTone) : proofTone;
+  const faqTone = relatedInsights.length > 0 ? flip(insightsTone) : insightsTone;
   const contactTone = flip(faqTone);
   const nextTone = flip(contactTone);
 
@@ -205,7 +208,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         />
 
         {/* Phone and tablet: the sticky chip row. Desktop gets the rail. */}
-        <ServiceToc sections={SECTIONS} className="lg:hidden" />
+        <ServiceToc sections={sections} className="lg:hidden" />
 
         <Section tone="plain">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
@@ -224,32 +227,16 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                 </Reveal>
               </div>
 
-              <Block
-                id="fit"
-                overline="Fit"
-                title="Who this is for, and who it is not"
-                description="Naming the wrong fit saves both of us a call. If your situation is in the right-hand card, say so and I will point you somewhere better."
-              >
-                <div className="grid gap-5 md:grid-cols-2">
-                  <Reveal className="h-full">
-                    <ListCard label="A good fit" positive items={service.idealFor} />
-                  </Reveal>
-                  <Reveal delay={0.05} className="h-full">
-                    <ListCard label="Not a fit" positive={false} items={service.notIdealFor} />
-                  </Reveal>
-                </div>
-              </Block>
-
               <Block id="problems" overline="The problem" title="What this service is actually solving">
-                <ol className="space-y-4">
+                <ol className="border-b border-border">
                   {service.problems.map((problem, i) => (
                     <Reveal as="li" key={problem.title} delay={i * 0.04}>
-                      <div className="ds-card flex items-start gap-5 p-6">
+                      <div className="flex items-start gap-5 border-t border-border py-6">
                         <span
                           aria-hidden
-                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft text-[0.875rem] font-semibold text-accent tabular-nums"
+                          className="font-display text-[1.75rem] leading-none font-bold tracking-[-0.02em] text-accent-hairline tabular-nums"
                         >
-                          {i + 1}
+                          {String(i + 1).padStart(2, "0")}
                         </span>
                         <div>
                           <h3 className="ds-title-sm">{problem.title}</h3>
@@ -262,20 +249,38 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
               </Block>
 
               <Block
+                id="fit"
+                overline="Fit"
+                title="Who this is for, and who it is not"
+                description="Naming the wrong fit saves both of us a call. If your situation is in the right-hand card, say so and we will point you somewhere better."
+              >
+                <div className="grid divide-y divide-border-subtle overflow-hidden rounded-3xl border border-border bg-bg md:grid-cols-2 md:divide-x md:divide-y-0">
+                  <Reveal className="h-full">
+                    <ListCard label="A good fit" positive items={service.idealFor} />
+                  </Reveal>
+                  <Reveal delay={0.05} className="h-full">
+                    <ListCard label="Not a fit" positive={false} items={service.notIdealFor} />
+                  </Reveal>
+                </div>
+              </Block>
+
+              <Block
                 id="deliverables"
                 overline="Deliverables"
                 title="What you get"
                 description="Concrete outputs, not activities. Everything here is something that exists at the end of the engagement."
               >
-                <ul className="grid gap-4 sm:grid-cols-2">
+                <ul className="grid gap-x-10 border-b border-border sm:grid-cols-2 sm:[&>li:nth-child(n+3)]:border-t-0">
                   {service.deliverables.map((d, i) => (
-                    <Reveal as="li" key={d.title} delay={i * 0.03} className="h-full">
-                      <div className="ds-card h-full p-6">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                    <Reveal as="li" key={d.title} delay={i * 0.03} className="border-t border-border">
+                      <div className="flex h-full gap-4 py-6">
+                        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
                           <CheckIcon />
                         </span>
-                        <h3 className="ds-title-sm mt-4">{d.title}</h3>
-                        <p className="ds-body-sm mt-2">{d.detail}</p>
+                        <div>
+                          <h3 className="ds-title-sm">{d.title}</h3>
+                          <p className="ds-body-sm mt-2">{d.detail}</p>
+                        </div>
                       </div>
                     </Reveal>
                   ))}
@@ -314,21 +319,21 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
               <Block
                 id="technical"
-                overline="Technical depth"
-                title="What it is built with, and why that matters to you"
+                overline="Technical approach"
+                title="How it is built, and why that matters to you"
                 description={service.technical.summary}
               >
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="border-b border-border">
                   {service.technical.groups.map((group, i) => {
                     const Icon = technicalIcon(group.label);
                     return (
-                      <Reveal key={group.label} delay={i * 0.03} className="h-full">
-                        <div className="ds-card h-full p-6">
-                          <div className="flex items-center gap-2.5">
+                      <Reveal key={group.label} delay={i * 0.03}>
+                        <div className="grid gap-3 border-t border-border py-5 sm:grid-cols-12 sm:gap-6">
+                          <div className="flex items-center gap-2.5 sm:col-span-4">
                             <Icon className="h-4 w-4 shrink-0 text-accent" />
                             <p className="ds-meta">{group.label}</p>
                           </div>
-                          <ChipList items={group.items} className="mt-4" />
+                          <ChipList items={group.items} className="sm:col-span-8" />
                         </div>
                       </Reveal>
                     );
@@ -342,7 +347,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                 title="Where the scope starts and stops"
                 description="Stated up front so it is a shared understanding rather than a negotiation halfway through."
               >
-                <div className="grid gap-5 md:grid-cols-2">
+                <div className="grid divide-y divide-border-subtle overflow-hidden rounded-3xl border border-border bg-bg md:grid-cols-2 md:divide-x md:divide-y-0">
                   <Reveal className="h-full">
                     <ListCard label="Included" positive items={service.scope.includes} />
                   </Reveal>
@@ -356,8 +361,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             {/* Desktop rail: the engagement at a glance, the action, the page map. */}
             <aside className="hidden lg:col-span-4 lg:block">
               <div className="sticky top-28 space-y-5">
-                <div className="ds-card p-6">
-                  <span className="ds-overline-accent">{TIER_LABEL[service.tier]}</span>
+                <div className="rounded-3xl border border-border bg-bg p-6">
+                  <span className="ds-overline-accent">Service {service.index} of {services.length}</span>
                   <p className="ds-title mt-3">{service.shortTitle}</p>
                   <dl className="mt-5 space-y-3 border-t border-border pt-5">
                     <div className="flex items-baseline justify-between gap-4">
@@ -384,10 +389,10 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                   </Link>
                 </div>
 
-                <nav aria-label="On this page" className="ds-card p-6">
+                <nav aria-label="On this page" className="rounded-3xl border border-border-subtle p-6">
                   <p className="ds-meta">On this page</p>
                   <ul className="mt-4 space-y-1">
-                    {SECTIONS.map((section) => (
+                    {sections.map((section) => (
                       <li key={section.id}>
                         <a
                           href={`#${section.id}`}
@@ -408,7 +413,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           id="proof"
           tone={proofTone}
           slugs={service.proofSlugs}
-          heading="Where this has been done before"
+          heading="Relevant work"
           description="Production work relevant to this service. Each case study covers the problem, the decisions and what came out of it."
         />
 
@@ -441,13 +446,6 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             </ul>
           </Section>
         )}
-
-        <Principles
-          id="why"
-          tone={whyTone}
-          heading="Why work with me on this"
-          description="The same four things whichever service you are reading. Each is tied to something you can check rather than to an adjective."
-        />
 
         <Section id="faq" tone={faqTone}>
           <SectionHeading overline="Questions" title="Common questions" />

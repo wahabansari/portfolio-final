@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
-import { InsightsList } from "@/components/insights";
+import { InsightsHero, InsightsList } from "@/components/insights";
 import { InsightsIndexJsonLd } from "@/components/json-ld";
-import { CtaBand, PageHeader } from "@/components/ui";
+import { CtaBand } from "@/components/ui";
 import { insights, insightsHub } from "@/content/insights";
 import { pageMetadata } from "@/lib/seo";
 
@@ -15,9 +15,9 @@ export const metadata: Metadata = pageMetadata({
 
 /**
  * The insights hub is a routing page into first-hand articles, the same way
- * /services routes into service pages — a reader lands here from search or a
- * service page, finds the closest article, and reads answer-first content
- * rather than a scroll of teaser copy.
+ * /services routes into service pages: a topic index to jump by problem, the
+ * latest article featured, then every topic with its articles. Image frames
+ * are placeholders until real images are supplied.
  */
 export default function InsightsPage() {
   return (
@@ -25,21 +25,15 @@ export default function InsightsPage() {
       <InsightsIndexJsonLd insights={insights} />
       <Nav />
       <main id="main">
-        <PageHeader
-          trail={[{ label: "Home", href: "/" }, { label: "Insights" }]}
-          eyebrow="Insights"
-          title={insightsHub.h1}
-          lede={insightsHub.intro}
-        />
-
+        <InsightsHero />
         <InsightsList />
 
         <CtaBand
           navy
-          tone="soft"
+          tone="plain"
           heading="Have the situation one of these describes?"
-          body="Send the site, the repo or a description of the problem. I will tell you honestly what I would do first."
-          primary={{ label: "Discuss your project", href: "/contact" }}
+          body="Send the site, the repo or a description of the problem. We will tell you honestly what we would do first."
+          primary={{ label: "Start a project", href: "/contact" }}
           secondary={{ label: "See the services", href: "/services" }}
         />
       </main>

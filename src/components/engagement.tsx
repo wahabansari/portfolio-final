@@ -1,55 +1,53 @@
 import Link from "next/link";
 import { engagements } from "@/content/site";
-import { cn } from "@/lib/cn";
-import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
+import { ArrowIcon, BriefcaseIcon, Reveal, Section, SectionHeading, UsersIcon } from "./ui";
 
-/* Border per pane in the 3-up window grid, spelled out per index the same
-   way the homepage's offer grid is — divide-x/divide-y borders every DOM
-   sibling in source order, which cannot express "only the first two columns
-   get a left rule" once panes wrap onto a second row on narrow screens. */
-const PANE_DIVIDER = [
-  "",
-  "border-t sm:border-t-0 sm:border-l border-border",
-  "border-t md:border-t-0 md:border-l border-border",
-];
+const ICONS = [BriefcaseIcon, UsersIcon];
 
 /**
- * Three ways to work together, as panes in a window grid — not stacked
- * hairline rows and not cards. Each pane carries its own index numeral,
- * the arrangement at display scale, what it means in practice and the
- * route into it; separated from its neighbours only by the grid's own
- * dividers.
+ * Two ways to work together as one split panel: the arrangement, what it
+ * means in practice and the route into it.
  */
 export function Engagement({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
     <Section id="engagement" tone={tone}>
       <SectionHeading
         overline="Engagement"
-        title="Work with me"
-        description="Three arrangements, each with a different shape. Whichever fits, the first step is the same conversation."
+        title="Two ways to work with us"
+        description="Two arrangements, each with a different shape. Whichever fits, the first step is the same conversation."
       />
 
-      <div className="grid border-t border-border sm:grid-cols-2 md:grid-cols-3">
-        {engagements.map((option, i) => (
-          <Reveal key={option.title} delay={i * 0.05} className={cn("group", PANE_DIVIDER[i])}>
-            <Link href={option.cta.href} className="flex h-full flex-col p-7 transition-colors duration-200 hover:bg-surface md:p-8">
-              <span className="font-mono text-[1.125rem] font-medium leading-none text-accent tabular-nums">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-5 font-display text-[1.375rem] leading-snug font-semibold tracking-[-0.01em] text-ink transition-colors group-hover:text-accent md:text-[1.5rem]">
-                {option.title}
-              </h3>
-              <p className="mt-3 flex-1 text-[0.9375rem] leading-relaxed text-ink-muted">
-                {option.detail}
-              </p>
-              <span className="mt-6 inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold uppercase tracking-[0.06em] text-accent">
-                {option.cta.label}
-                <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-              </span>
-            </Link>
-          </Reveal>
-        ))}
-      </div>
+      {/* A single split panel: the two arrangements side by side, divided by a rule. */}
+      <ul className="mx-auto grid max-w-4xl overflow-hidden rounded-3xl border border-border bg-bg md:grid-cols-2">
+        {engagements.map((option, i) => {
+          const Icon = ICONS[i] ?? BriefcaseIcon;
+          return (
+            <Reveal
+              as="li"
+              key={option.title}
+              delay={i * 0.06}
+              className="border-b border-border-subtle last:border-b-0 md:border-b-0 md:[&:not(:first-child)]:border-l"
+            >
+              <Link
+                href={option.cta.href}
+                data-track="cta_click"
+                data-track-label={`engagement:${i}`}
+                className="group flex h-full flex-col p-7 transition-colors duration-200 hover:bg-accent-soft md:p-8"
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accent-soft text-accent">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="ds-h3 mt-5">{option.title}</h3>
+                <p className="ds-body-sm mt-2 flex-1">{option.detail}</p>
+                <span className="ds-link mt-5 text-[0.9375rem]">
+                  {option.cta.label}
+                  <ArrowIcon className="h-3 w-3" />
+                </span>
+              </Link>
+            </Reveal>
+          );
+        })}
+      </ul>
     </Section>
   );
 }

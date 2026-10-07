@@ -162,7 +162,7 @@ export const insights: Insight[] = [
       { label: "Google: sitemaps overview", url: "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" },
     ],
 
-    relatedServiceSlug: "wordpress-to-nextjs-migration",
+    relatedServiceSlug: "software-modernization",
     relatedCaseStudySlugs: ["aussiemotor"],
     cta: {
       heading: "Considering the move?",
@@ -247,7 +247,7 @@ export const insights: Insight[] = [
       { label: "WordPress.org", url: "https://wordpress.org/" },
     ],
 
-    relatedServiceSlug: "wordpress-to-nextjs-migration",
+    relatedServiceSlug: "software-modernization",
     relatedCaseStudySlugs: ["cennetsol"],
     cta: {
       heading: "Not sure which side of this you're on?",
@@ -339,7 +339,7 @@ export const insights: Insight[] = [
       { label: "Next.js: redirects (next.config.ts)", url: "https://nextjs.org/docs/app/api-reference/config/next-config-js/redirects" },
     ],
 
-    relatedServiceSlug: "wordpress-to-nextjs-migration",
+    relatedServiceSlug: "software-modernization",
     relatedCaseStudySlugs: ["cennetsol", "sunhub"],
     cta: {
       heading: "Need this run on a real site, not a checklist?",
@@ -431,7 +431,7 @@ export const insights: Insight[] = [
       { label: "Next.js: redirects (next.config.ts)", url: "https://nextjs.org/docs/app/api-reference/config/next-config-js/redirects" },
     ],
 
-    relatedServiceSlug: "wordpress-to-nextjs-migration",
+    relatedServiceSlug: "software-modernization",
     relatedCaseStudySlugs: ["aussiemotor"],
     cta: {
       heading: "Building a redirect map for a real migration?",
@@ -523,7 +523,7 @@ export const insights: Insight[] = [
       { label: "Next.js documentation", url: "https://nextjs.org/docs" },
     ],
 
-    relatedServiceSlug: "website-redesign-rebuild",
+    relatedServiceSlug: "custom-web-development",
     relatedCaseStudySlugs: ["cennetsol", "verdira"],
     cta: {
       heading: "Not sure which one your site needs?",
@@ -608,7 +608,7 @@ export const insights: Insight[] = [
       { label: "Google web.dev: learn Core Web Vitals", url: "https://web.dev/learn-core-web-vitals/" },
     ],
 
-    relatedServiceSlug: "performance-engineering",
+    relatedServiceSlug: "software-modernization",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
       heading: "Have a React app that has gotten slow?",
@@ -700,7 +700,7 @@ export const insights: Insight[] = [
       { label: "MDN: Web performance", url: "https://developer.mozilla.org/en-US/docs/Web/Performance" },
     ],
 
-    relatedServiceSlug: "performance-engineering",
+    relatedServiceSlug: "software-modernization",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
       heading: "Want this diagnostic run on your actual app?",
@@ -792,7 +792,7 @@ export const insights: Insight[] = [
       { label: "React documentation", url: "https://react.dev/learn" },
     ],
 
-    relatedServiceSlug: "frontend-product-engineering",
+    relatedServiceSlug: "custom-web-development",
     relatedCaseStudySlugs: ["verdira"],
     cta: {
       heading: "Adding a feature to a codebase you didn't build?",
@@ -884,7 +884,7 @@ export const insights: Insight[] = [
       { label: "Google: API design guide", url: "https://cloud.google.com/apis/design" },
     ],
 
-    relatedServiceSlug: "frontend-product-engineering",
+    relatedServiceSlug: "custom-web-development",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
       heading: "Have a backend already and need the frontend built?",
@@ -976,7 +976,7 @@ export const insights: Insight[] = [
       { label: "React documentation", url: "https://react.dev/learn" },
     ],
 
-    relatedServiceSlug: "agency-frontend-development",
+    relatedServiceSlug: "custom-web-development",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
       heading: "Have a pipeline gap you need capacity for?",
@@ -1068,7 +1068,7 @@ export const insights: Insight[] = [
       { label: "Google: API design guide", url: "https://cloud.google.com/apis/design" },
     ],
 
-    relatedServiceSlug: "ai-product-integration",
+    relatedServiceSlug: "ai-business-automation",
     relatedCaseStudySlugs: ["cennetsol", "verdira"],
     cta: {
       heading: "Have a specific job in mind for an AI feature?",
@@ -1153,7 +1153,7 @@ export const insights: Insight[] = [
       { label: "Google: sitemaps overview", url: "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" },
     ],
 
-    relatedServiceSlug: "frontend-product-engineering",
+    relatedServiceSlug: "custom-web-development",
     relatedCaseStudySlugs: ["verdira", "sunhub"],
     cta: {
       heading: "Inheriting a codebase you need a real read on?",
@@ -1245,7 +1245,7 @@ export const insights: Insight[] = [
       { label: "React: Thinking in React", url: "https://react.dev/learn/thinking-in-react" },
     ],
 
-    relatedServiceSlug: "saas-product-development",
+    relatedServiceSlug: "business-dashboards",
     relatedCaseStudySlugs: ["verdira"],
     cta: {
       heading: "Building or restructuring a SaaS product frontend?",
@@ -1336,7 +1336,7 @@ export const insights: Insight[] = [
       { label: "OWASP: Session Management Cheat Sheet", url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html" },
     ],
 
-    relatedServiceSlug: "saas-product-development",
+    relatedServiceSlug: "business-dashboards",
     relatedCaseStudySlugs: ["verdira"],
     cta: {
       heading: "Adding accounts or protected areas to an application?",
@@ -1425,7 +1425,7 @@ export const insights: Insight[] = [
       { label: "MDN: Web performance", url: "https://developer.mozilla.org/en-US/docs/Web/Performance" },
     ],
 
-    relatedServiceSlug: "performance-engineering",
+    relatedServiceSlug: "software-modernization",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
       heading: "Images dragging down your Core Web Vitals?",
@@ -1516,7 +1516,7 @@ export const insights: Insight[] = [
       { label: "Next.js: Project structure and organization", url: "https://nextjs.org/docs/app/getting-started/project-structure" },
     ],
 
-    relatedServiceSlug: "frontend-product-engineering",
+    relatedServiceSlug: "custom-web-development",
     relatedCaseStudySlugs: ["sunhub", "verdira"],
     cta: {
       heading: "Inheriting or growing a React codebase?",
@@ -1604,7 +1604,7 @@ export const insights: Insight[] = [
       },
     ],
 
-    relatedServiceSlug: "saas-product-development",
+    relatedServiceSlug: "business-dashboards",
     relatedCaseStudySlugs: ["verdira"],
     cta: {
       heading: "Not sure your AI-built app would pass this checklist?",
@@ -1683,7 +1683,7 @@ export const insights: Insight[] = [
       },
     ],
 
-    relatedServiceSlug: "frontend-product-engineering",
+    relatedServiceSlug: "custom-web-development",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
       heading: "Stuck deciding what to do with an inherited codebase?",
@@ -1755,7 +1755,7 @@ export const insights: Insight[] = [
     ],
     references: [{ label: "web.dev: Core Web Vitals", url: "https://web.dev/articles/vitals" }],
 
-    relatedServiceSlug: "performance-engineering",
+    relatedServiceSlug: "software-modernization",
     relatedCaseStudySlugs: ["sunhub"],
     cta: {
       heading: "Not sure what's actually slowing your site down?",
@@ -1826,7 +1826,7 @@ export const insights: Insight[] = [
       },
     ],
 
-    relatedServiceSlug: "saas-product-development",
+    relatedServiceSlug: "business-dashboards",
     relatedCaseStudySlugs: ["verdira"],
     cta: {
       heading: "About to launch a dashboard or client portal?",
@@ -1899,7 +1899,7 @@ export const insights: Insight[] = [
       },
     ],
 
-    relatedServiceSlug: "ai-product-integration",
+    relatedServiceSlug: "ai-business-automation",
     relatedCaseStudySlugs: [],
     cta: {
       heading: "Trying to figure out where AI actually fits in your product?",

@@ -7,9 +7,9 @@ import { useContent, useLocaleHref } from "./locale-provider";
 /**
  * Footer — one compact band.
  *
- * Identity + role left, the four commercial paths center, contact + socials
- * right. Quiet: the page made its pitch already, this just keeps a buyer
- * moving and a recruiter one click from the résumé.
+ * Studio identity left, the page links and the four services center, contact
+ * right. Quiet: the page made its pitch already, this just keeps a buyer moving
+ * and gives every service page a link from every page.
  */
 export function Footer() {
   const year = new Date().getFullYear();
@@ -20,8 +20,16 @@ export function Footer() {
   const links = [
     { label: "Work", href: localeHref("/work") },
     { label: "Services", href: localeHref("/services") },
+    { label: "Insights", href: localeHref("/insights") },
     { label: "About", href: localeHref("/about") },
     { label: "Contact", href: localeHref("/contact") },
+  ];
+
+  const serviceLinks = [
+    { label: "Custom Web Development", href: "/services/custom-web-development" },
+    { label: "Business Dashboards", href: "/services/business-dashboards" },
+    { label: "Software Modernization", href: "/services/software-modernization" },
+    { label: "AI Business Automation", href: "/services/ai-business-automation" },
   ];
 
   return (
@@ -38,19 +46,34 @@ export function Footer() {
             <p className="ds-meta mt-2">{site.role}</p>
           </div>
 
-          <nav className="flex flex-wrap gap-x-7 gap-y-2" aria-label="Footer">
-            {links.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                data-track="footer_link"
-                data-track-label={link.label.toLowerCase()}
-                className={cnFooter(link, pathname)}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex flex-col gap-4">
+            <nav className="flex flex-wrap gap-x-7 gap-y-2" aria-label="Footer">
+              {links.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  data-track="footer_link"
+                  data-track-label={link.label.toLowerCase()}
+                  className={cnFooter(link, pathname)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+            <nav className="flex flex-wrap gap-x-6 gap-y-2" aria-label="Footer services">
+              {serviceLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={localeHref(link.href)}
+                  data-track="footer_link"
+                  data-track-label={link.href.split("/").pop()}
+                  className={cnFooter({ label: link.label, href: localeHref(link.href) }, pathname)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
           <div className="flex flex-col items-start gap-2 md:items-end">
             <a
@@ -64,7 +87,7 @@ export function Footer() {
             <span className="ds-meta">
               {site.location} · {site.timezone.split(" ")[0]} · Remote
             </span>
-            <span className="ds-meta">© {year}</span>
+            <span className="ds-meta">© {year} {site.name}</span>
           </div>
         </div>
       </div>

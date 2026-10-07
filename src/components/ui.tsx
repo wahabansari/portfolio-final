@@ -376,10 +376,8 @@ export function BrandMark({ className }: { className?: string }) {
 }
 
 /* ── Wordmark ───────────────────────────────────────────────────────────────
- The full name, not a first name. On a site whose job is to be trusted by
- someone deciding whether to hire, the legal name is the asset — and it is
- the string that has to stay identical across the site, the résumé, LinkedIn
- and the Person structured data for the entity to resolve to one person. */
+ The studio name. The founder's own name lives on the About page and in the
+ Person structured data, so the entity resolves to one person there. */
 
 export function Wordmark({
   compact = false,
@@ -393,7 +391,7 @@ export function Wordmark({
       <BrandMark className="h-9 w-9" />
       <span className="flex flex-col leading-none">
         <span className="font-display text-[1rem] font-semibold tracking-[-0.01em] text-fg">
-          Wahab Ansari
+          {site.name}
         </span>
         {!compact && (
           <span className="ds-meta mt-1 hidden text-[0.6875rem] sm:block">

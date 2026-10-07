@@ -1,6 +1,6 @@
 import type { Insight } from "@/content/insights";
 import type { Service } from "@/content/services";
-import { capabilities, positioning, sections, site, socials } from "@/content/site";
+import { capabilities, founder, positioning, sections, site, socials } from "@/content/site";
 import type { CaseStudy, Project } from "@/content/work";
 import { caseStudies } from "@/content/work";
 
@@ -11,10 +11,11 @@ import { caseStudies } from "@/content/work";
  *
  *   1. Markup describes what is visibly on the page. If a claim is not in the
  *      rendered HTML, it does not go in the JSON-LD.
- *   2. This is a personal site, so the entity is a Person. Marking it up as an
- *      Organization or a LocalBusiness would be a claim about a real-world
- *      presence that does not exist, and Google is explicit that Person /
- *      ProfilePage data is the right shape for a portfolio.
+ *   2. The site is a founder-led studio, so there are two entities: the
+ *      Organization (Craftwise) and the Person who founded it. The Organization
+ *      carries no staff, address beyond the city, ratings or reviews, because
+ *      none of those exist or are verifiable. A LocalBusiness would claim a
+ *      physical premises that is not offered.
  *
  * Schema is a comprehension aid, not a ranking lever — a Service block helps a
  * machine understand what a page offers, and does not by itself produce a rich
@@ -31,17 +32,46 @@ function Script({ data }: { data: object }) {
 }
 
 const PERSON_ID = `${site.url}/#person`;
+const ORG_ID = `${site.url}/#organization`;
 const SITE_ID = `${site.url}/#website`;
 
-/** The canonical Person node. Everything else references it by @id rather than
-    restating it, so there is exactly one description of the entity. */
+/** The studio. Referenced by @id everywhere else. */
+export const organizationNode = {
+  "@type": "Organization",
+  "@id": ORG_ID,
+  name: site.name,
+  legalName: site.name,
+  url: `${site.url}/`,
+  description: positioning,
+  email: `mailto:${site.email}`,
+  founder: { "@id": PERSON_ID },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Lahore",
+    addressCountry: "PK",
+  },
+  sameAs: socials.filter((s) => s.href.startsWith("http")).map((s) => s.href),
+  knowsAbout: [
+    "Custom web development",
+    "Business dashboards",
+    "Custom software",
+    "Software modernization",
+    "Workflow automation",
+    "React",
+    "Next.js",
+    "TypeScript",
+  ],
+};
+
+/** The founder. Everything else references it by @id rather than restating it,
+    so there is exactly one description of the person. */
 export const personNode = {
   "@type": "Person",
   "@id": PERSON_ID,
-  name: site.name,
-  jobTitle: site.role,
-  description: positioning,
-  url: `${site.url}/`,
+  name: founder.name,
+  jobTitle: founder.role,
+  description: `Founder of ${site.name}, a founder-led software development studio in Lahore, Pakistan, with 5+ years of production React and Next.js experience.`,
+  url: `${site.url}/about`,
   email: `mailto:${site.email}`,
   address: {
     "@type": "PostalAddress",
@@ -54,18 +84,12 @@ export const personNode = {
     "Next.js",
     "TypeScript",
     "Frontend Engineering",
-    "Frontend Product Engineering",
     "Web Performance",
     "Core Web Vitals",
-    "SaaS Development",
-    "AI Product Integration",
+    "Software Modernization",
     ...capabilities.flatMap((g) => g.lead),
   ],
-  worksFor: {
-    "@type": "Organization",
-    name: "Independent",
-    description: "Self-employed frontend product engineer",
-  },
+  worksFor: { "@id": ORG_ID },
   alumniOf: [
     {
       "@type": "CollegeOrUniversity",
@@ -75,15 +99,14 @@ export const personNode = {
   ],
 };
 
-/** Homepage: the Person, its WebSite, the navigation, the routing items, the
-    delivery process, and the FAQ — all the structured claims behind what the
-    homepage visibly says. */
+/** Homepage: the Organization, its founder, the WebSite and the navigation. */
 export function HomeJsonLd() {
   return (
     <Script
       data={{
         "@context": "https://schema.org",
         "@graph": [
+          organizationNode,
           personNode,
           {
             "@type": "WebSite",
@@ -91,7 +114,7 @@ export function HomeJsonLd() {
             url: `${site.url}/`,
             name: site.name,
             description: positioning,
-            publisher: { "@id": PERSON_ID },
+            publisher: { "@id": ORG_ID },
             inLanguage: "en",
           },
           {
@@ -125,6 +148,7 @@ export function ProfilePageJsonLd() {
             mainEntity: { "@id": PERSON_ID },
             isPartOf: { "@id": SITE_ID },
           },
+          organizationNode,
           personNode,
           breadcrumbNode([
             { name: "Home", item: `${site.url}/` },
@@ -175,7 +199,7 @@ export function PageJsonLd({
             name,
             description,
             isPartOf: { "@id": SITE_ID },
-            about: { "@id": PERSON_ID },
+            about: { "@id": ORG_ID },
             ...(action ? { potentialAction: action } : {}),
           },
           breadcrumbNode(
@@ -207,7 +231,7 @@ export function ServiceJsonLd({ service }: { service: Service }) {
             serviceType: service.title,
             description: service.metaDescription,
             url,
-            provider: { "@id": PERSON_ID },
+            provider: { "@id": ORG_ID },
             areaServed: { "@type": "Place", name: "Worldwide" },
             hasOfferCatalog: {
               "@type": "OfferCatalog",
@@ -223,7 +247,7 @@ export function ServiceJsonLd({ service }: { service: Service }) {
             { name: "Services", item: `${site.url}/services` },
             { name: service.title, item: url },
           ]),
-          personNode,
+          organizationNode,
         ],
       }}
     />
@@ -339,6 +363,7 @@ export function CaseStudyJsonLd({
             { name: "Work", item: `${site.url}/work` },
             { name: project.title, item: url },
           ]),
+          organizationNode,
           personNode,
         ],
       }}
@@ -405,12 +430,12 @@ export function ArticleJsonLd({ insight }: { insight: Insight }) {
             headline: insight.h1,
             description: insight.metaDescription,
             author: { "@id": PERSON_ID },
-            publisher: { "@id": PERSON_ID },
+            publisher: { "@id": ORG_ID },
             datePublished: insight.publishedAt,
             dateModified: insight.updatedAt,
             mainEntityOfPage: { "@type": "WebPage", "@id": url },
             isPartOf: { "@id": SITE_ID },
-            about: { "@id": PERSON_ID },
+            about: { "@id": ORG_ID },
             image: `${site.url}/opengraph-image`,
             keywords: insight.keywords.join(", "),
             ...(citedCaseStudies.length > 0 || (insight.references?.length ?? 0) > 0
@@ -435,6 +460,7 @@ export function ArticleJsonLd({ insight }: { insight: Insight }) {
             { name: "Insights", item: `${site.url}/insights` },
             { name: insight.title, item: url },
           ]),
+          organizationNode,
           personNode,
         ],
       }}

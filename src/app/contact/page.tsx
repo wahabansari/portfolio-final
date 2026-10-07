@@ -9,10 +9,10 @@ import { assurances, site } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 
 const description =
-  "Tell Wahab what you are building, improving or redesigning. Send a project brief for frontend engineering, website, SaaS or AI product work.";
+  "Start a project with Craftwise. Tell us what you are building, improving or automating: web development, dashboards, modernization or AI automation.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Contact | Hire a React & Next.js Developer",
+  title: "Contact | Start a project with Craftwise",
   description,
   path: "/contact",
   absoluteTitle: true,
@@ -20,30 +20,22 @@ export const metadata: Metadata = pageMetadata({
 
 /**
  * Different visitors arrive here for different reasons, and a single "get in
- * touch" serves none of them well. The routing block names all four paths
+ * touch" serves none of them well. The routing block names the three paths
  * explicitly so nobody has to work out whether the form is meant for them.
  */
 const paths = [
   {
     who: "Product or company buyer",
-    what: "A build, a rebuild, or frontend capacity on something already live.",
+    what: "A build, a rebuild, a business system, or an upgrade to software that is already live.",
     label: "Discuss your project",
     href: "#contact",
     routed: false,
   },
   {
     who: "Agency",
-    what: "White-label React and Next.js delivery behind your brand, under NDA.",
+    what: "Engineering capacity behind your client work. You keep the client relationship; we handle the build, under NDA where needed.",
     label: "Discuss an agency partnership",
-    href: "/services/agency-frontend-development",
-    routed: true,
-  },
-  {
-    who: "Recruiter or hiring manager",
-    what: "Remote frontend and product engineering roles. The CV covers the detail.",
-    label: "View résumé",
-    /* A static asset, not a route — Link would try to client-navigate to it. */
-    href: site.resumeHref,
+    href: "#contact",
     routed: false,
   },
   {
@@ -80,11 +72,11 @@ export default function ContactPage() {
           <SectionHeading
             overline="Routing"
             title="Whichever of these you are"
-            description="Four reasons people land here. Each one has a different first step."
+            description="Three reasons people land here. Each one has a different first step."
           />
-          <ul className="grid gap-4 md:grid-cols-2">
+          <ul className="grid border-b border-border md:grid-cols-3 md:gap-x-10">
             {paths.map((path, i) => (
-              <Reveal as="li" key={path.who} delay={i * 0.04} className="flex flex-col ds-card p-7">
+              <Reveal as="li" key={path.who} delay={i * 0.04} className="flex flex-col border-t border-border py-7">
                 <p className="ds-meta">{path.who}</p>
                 <p className="ds-body-sm mt-3 flex-1">{path.what}</p>
                 {path.routed ? (
@@ -95,13 +87,7 @@ export default function ContactPage() {
                 ) : (
                   <a
                     href={path.href}
-                    data-track={
-                      path.href.startsWith("mailto:")
-                        ? "email_click"
-                        : path.href.endsWith(".pdf")
-                          ? "resume_click"
-                          : undefined
-                    }
+                    data-track={path.href.startsWith("mailto:") ? "email_click" : undefined}
                     data-track-label="contact-routing"
                     className="ds-link mt-5"
                   >
@@ -122,21 +108,18 @@ export default function ContactPage() {
           <SectionHeading
             overline="How the work runs"
             title="What you are agreeing to, before you agree to it"
-            description="No engagement starts with a surprise. These four things are true of every project, whatever the service."
+            description="No engagement starts with a surprise. These things are true of every project, whatever the service."
           />
-          <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid gap-x-10 gap-y-8 md:grid-cols-3">
             {assurances.map((item, i) => (
-              <Reveal
-                as="li"
-                key={item.title}
-                delay={i * 0.04}
-                className="flex flex-col ds-card p-7"
-              >
-                <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft">
+              <Reveal as="li" key={item.title} delay={i * 0.04} className="flex gap-4">
+                <span aria-hidden className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft">
                   <CheckIcon className="text-accent" />
                 </span>
-                <h3 className="ds-title-sm mt-4">{item.title}</h3>
-                <p className="ds-body-sm mt-3 flex-1">{item.detail}</p>
+                <div>
+                  <h3 className="ds-title-sm">{item.title}</h3>
+                  <p className="ds-body-sm mt-2">{item.detail}</p>
+                </div>
               </Reveal>
             ))}
           </ul>

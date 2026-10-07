@@ -1,14 +1,34 @@
 import Link from "next/link";
 import { byRequest, capabilities } from "@/content/site";
-import { ArrowIcon, Reveal, Section, SectionHeading } from "./ui";
+import {
+  ArrowIcon,
+  CodeIcon,
+  GaugeIcon,
+  LayersIcon,
+  LayoutIcon,
+  Reveal,
+  RocketIcon,
+  Section,
+  SectionHeading,
+  ServerIcon,
+  SparklesIcon,
+} from "./ui";
+
+const GROUP_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Frontend: CodeIcon,
+  "Product engineering": LayoutIcon,
+  "Backend capability": ServerIcon,
+  Performance: GaugeIcon,
+  Delivery: RocketIcon,
+  "Workflow automation": SparklesIcon,
+};
 
 /**
- * Capabilities as a compact typographic grid, not a card grid or a bordered
- * list. Categories sit side by side — two up on tablet, three on desktop —
- * so the section reads as a dense reference block rather than a long column
- * of full-width rows. Each cell is just a label, the lead skills as tight
- * wrapping display type, and a quiet footnote of supporting skills; nothing
- * here has its own border, fill or shadow.
+ * Capabilities as one ruled table, a row per group: an icon and a name, one
+ * line on what the group is for, the lead skills as solid chips (what the
+ * studio would want to be judged on) and the supporting inventory as quieter,
+ * smaller chips. The strip underneath keeps the "also available, by request" work visible without
+ * letting it define the positioning.
  */
 export function Capabilities({
   tone = "plain",
@@ -22,45 +42,65 @@ export function Capabilities({
       {!hideHeading && (
         <SectionHeading
           overline="Capabilities"
-          title="What I am actually deep in"
-          description="Grouped by what it does rather than listed alphabetically. The bold words are what I would want to be judged on; the line below is the supporting inventory."
+          title="What the studio is deep in"
+          description="Grouped by what each skill is for. The highlighted chips are the core; the lighter ones are the supporting toolkit."
         />
       )}
 
-      <div className="mt-4 grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
-        {capabilities.map((group, i) => (
-          <Reveal key={group.title} delay={i * 0.04}>
-            <span className="ds-overline-accent block">{group.title}</span>
+      {/* One ruled table: the group on the left (icon, name, what it is for),
+          its skills on the right. Solid chips are the core; quiet ones the toolkit. */}
+      <ul className="mx-auto max-w-6xl overflow-hidden rounded-3xl border border-border bg-bg">
+        {capabilities.map((group, i) => {
+          const Icon = GROUP_ICONS[group.title] ?? LayersIcon;
+          return (
+            <Reveal as="li" key={group.title} delay={i * 0.04} className="border-b border-border-subtle last:border-b-0">
+              <div className="grid gap-4 p-6 md:grid-cols-12 md:gap-8 md:p-7">
+                <div className="flex items-start gap-4 md:col-span-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-accent">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 className="ds-title">{group.title}</h3>
+                    <p className="ds-body-sm mt-1">{group.summary}</p>
+                  </div>
+                </div>
 
-            <p className="mt-4 leading-[1.35]">
-              {group.lead.map((item, li) => (
-                <span
-                  key={item}
-                  className="mr-2 inline-block font-display text-[1.0625rem] font-semibold tracking-[-0.01em] text-fg"
-                >
-                  {item}
-                  {li < group.lead.length - 1 && (
-                    <span aria-hidden className="text-accent">
-                      {" "}
-                      ·
-                    </span>
-                  )}
-                </span>
-              ))}
-            </p>
+                <div className="md:col-span-8">
+                  <ul className="flex flex-wrap gap-2">
+                    {group.lead.map((item) => (
+                      <li
+                        key={item}
+                        className="rounded-full border border-accent-hairline bg-accent-soft px-3 py-1 text-[0.8125rem] font-semibold text-accent"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <ul className="mt-3 flex flex-wrap gap-1.5">
+                    {group.support.map((item) => (
+                      <li key={item} className="ds-chip !text-[0.6875rem]">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Reveal>
+          );
+        })}
+      </ul>
 
-            <p className="ds-meta mt-4 normal-case text-fg-subtle">{group.support.join(" · ")}</p>
-          </Reveal>
-        ))}
-      </div>
-
-      {/* The honest footnote: capabilities that are real but are not what I
-          lead with commercially. Kept visible so nobody has to guess. */}
-      <Reveal delay={0.1} className="mt-4 border-t border-border pt-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <Reveal delay={0.1} className="mx-auto mt-8 max-w-6xl">
+        <div className="flex flex-col gap-4 border-t border-border pt-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="ds-meta">Also available, by request</p>
-            <p className="ds-body-sm mt-2">{byRequest.join(" · ")}</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {byRequest.map((item) => (
+                <li key={item} className="ds-chip">
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
           <Link href="/contact" className="ds-link shrink-0">
             Ask about one

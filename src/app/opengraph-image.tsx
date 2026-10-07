@@ -99,7 +99,7 @@ export default async function OpenGraphImage() {
               lineHeight: 1.1,
             }}
           >
-            I build production-grade web
+            Digital products and
           </span>
           <span
             style={{
@@ -110,7 +110,7 @@ export default async function OpenGraphImage() {
               lineHeight: 1.1,
             }}
           >
-            products that are fast, clear
+            business systems,
           </span>
           <span
             style={{
@@ -121,10 +121,10 @@ export default async function OpenGraphImage() {
               lineHeight: 1.1,
             }}
           >
-            and built to ship.
+            built to work.
           </span>
           <span style={{ marginTop: 22, fontSize: 24, fontWeight: 400, color: MUTED }}>
-            React · Next.js · TypeScript — {site.location}
+            Founder-led software studio — {site.location}
           </span>
         </div>
 
@@ -133,7 +133,7 @@ export default async function OpenGraphImage() {
           {[
             { v: "5+", l: "Years in production" },
             { v: "30%", l: "Core Web Vitals improvement", accent: true },
-            { v: "React · Next.js", l: "Primary stack" },
+            { v: "React · Next.js", l: "Core stack" },
           ].map((s) => (
             <div
               key={s.l}

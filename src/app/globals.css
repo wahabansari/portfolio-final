@@ -10,8 +10,8 @@
  * 48px navigation bar, and motion that behaves like a physical object
  * (springs, momentum, interruptible).
  *
- * Colour is almost entirely neutral. The one accent is Apple's blue:
- * #0071e3 as a button fill, #0066cc (light) / #2997ff (dark) as link text.
+ * Colour is almost entirely neutral. The one accent is a calm indigo:
+ * #4f46e5 as a button fill, #4338ca (light) / #a5b4fc (dark) as link text.
  *
  * Tokens live on `--c-*`. Two token sets exist - light and dark - and each
  * can be applied to any region with `.theme-light` / `.theme-dark`, which is
@@ -20,103 +20,133 @@
  * set. Tailwind utilities read the tokens through `@theme inline`.
  */
 
-/* ── Tokens - light (default) ────────────────────────────────────────── */
+/* ── Tokens - light (default) ────────────────────────────────────────────
+   One soft indigo family on cool, near-white neutrals. Cards are a whisper
+   above white, borders are light, and the accent is a calm indigo that holds
+   4.5:1 or better against every surface it sits on (links 7.1:1 on white,
+   the button fill 6.3:1 against its white label). Success and warning keep
+   their conventional green and red so status colours still mean something. */
 :root,
 .theme-light {
   --c-bg: #ffffff;
-  /* Tiles and cards: a very light gray, a step above white. */
-  --c-surface: #f9f9fb;
-  --c-surface-hover: #f1f1f5;
-  --c-band: #fbfbfd;
-  --c-grid-line: rgba(0, 0, 0, 0.06);
-  --c-border: #e1e1e6;
-  --c-border-subtle: #ececf0;
-  --c-fg: #1d1d1f;
-  --c-fg-muted: #424245;
-  /* 5.0:1 on the light gray tile, 5.1:1 on white. */
-  --c-fg-subtle: #6e6e73;
-  --c-fg-softest: #d2d2d7;
-  /* Link blue. */
-  --c-accent: #0066cc;
-  --c-accent-hover: #0058b0;
-  /* Button blue. */
-  --c-accent-deep: #0071e3;
-  --c-accent-deep-hover: #0077ed;
-  --c-accent-soft: rgba(0, 113, 227, 0.1);
+  /* Tiles and cards: barely tinted, a light step above white. */
+  --c-surface: #f8f9fd;
+  --c-surface-hover: #f0f2fa;
+  /* Alternating section bands. */
+  --c-band: #f5f6fb;
+  --c-grid-line: rgba(67, 56, 202, 0.07);
+  --c-border: #e1e4f0;
+  --c-border-subtle: #eaecf5;
+  --c-fg: #1c1e30;
+  --c-fg-muted: #444860;
+  /* 5.4:1 on white, 5.1:1 on the card tint. */
+  --c-fg-subtle: #666a82;
+  --c-fg-softest: #d5d8e6;
+  /* Link indigo. */
+  --c-accent: #4338ca;
+  --c-accent-hover: #3730a3;
+  /* Button indigo. */
+  --c-accent-deep: #4f46e5;
+  --c-accent-deep-hover: #4338ca;
+  --c-accent-soft: rgba(79, 70, 229, 0.08);
   --c-accent-fg: #ffffff;
-  --c-accent-hairline: rgba(0, 113, 227, 0.4);
-  --c-surface-blue: #eaf3fd;
-  --c-accent-line: rgba(0, 113, 227, 0.4);
-  --c-glow: rgba(0, 113, 227, 0.06);
-  --c-gradient-from: rgba(0, 113, 227, 0.12);
-  --c-gradient-to: rgba(0, 113, 227, 0.04);
-  --c-aurora-a: rgba(0, 113, 227, 0.16);
-  --c-aurora-b: rgba(165, 120, 255, 0.17);
-  --c-aurora-c: rgba(52, 199, 220, 0.15);
+  --c-accent-hairline: rgba(79, 70, 229, 0.28);
+  --c-surface-blue: #eef0fd;
+  --c-accent-line: rgba(79, 70, 229, 0.35);
+  --c-glow: rgba(79, 70, 229, 0.06);
+  --c-gradient-from: rgba(79, 70, 229, 0.1);
+  --c-gradient-to: rgba(79, 70, 229, 0.04);
+  --c-aurora-a: rgba(99, 102, 241, 0.18);
+  --c-aurora-b: rgba(167, 139, 250, 0.16);
+  --c-aurora-c: rgba(56, 189, 248, 0.14);
   --c-coral: #8a5300;
-  --c-coral-soft: rgba(138, 83, 0, 0.1);
-  --c-success: #1a7f37;
-  --c-success-soft: #e8f5ec;
-  --c-success-border: #bfe3c9;
-  --c-warn: #d70015;
-  --c-warn-soft: #fff1f2;
-  --c-warn-border: #ffc9ce;
-  --c-deep: #000000;
-  --c-deep-text: #f5f5f7;
-  --c-panel: #1d1d1f;
-  --c-panel-text: #f5f5f7;
-  --c-panel-dim: #a1a1a6;
+  --c-coral-soft: rgba(138, 83, 0, 0.09);
+  --c-success: #17803d;
+  --c-success-soft: #e8f6ee;
+  --c-success-border: #bfe5cd;
+  --c-warn: #c8283c;
+  --c-warn-soft: #fff1f3;
+  --c-warn-border: #ffc9d1;
+  --c-deep: #14152a;
+  --c-deep-text: #f1f2fa;
+  --c-panel: #1a1b33;
+  --c-panel-text: #f1f2fa;
+  --c-panel-dim: #a4a7c4;
   --c-panel-border: rgba(255, 255, 255, 0.12);
-  --shadow-card: none;
-  --shadow-card-hover: 0 14px 34px -16px rgba(0, 0, 0, 0.28);
+  --shadow-card: 0 1px 2px rgba(28, 30, 60, 0.03);
+  --shadow-card-hover: 0 16px 36px -18px rgba(49, 46, 129, 0.28);
+}
+
+/* ── Tokens - tint ───────────────────────────────────────────────────────
+   A light, indigo-tinted panel for the moments that used to be black: the
+   stats strip, the testimonials, the closing call to action, the founder
+   panel. Same text colours as the page, a tinted fill, white cells inside. */
+.theme-tint {
+  --c-bg: #eef0fc;
+  --c-surface: #ffffff;
+  --c-surface-hover: #f6f7fe;
+  --c-band: #e9ecfa;
+  --c-border: #d3d8f3;
+  --c-border-subtle: #dde1f6;
+  --c-fg-subtle: #5f6380;
 }
 
 /* ── Tokens - dark ───────────────────────────────────────────────────── */
 html[data-theme="dark"],
 .theme-dark,
 .tone-deep {
-  --c-bg: #000000;
-  --c-surface: #1d1d1f;
-  --c-surface-hover: #2a2a2d;
-  --c-band: #101012;
-  --c-grid-line: rgba(255, 255, 255, 0.08);
-  --c-border: #424245;
-  --c-border-subtle: #2d2d30;
-  --c-fg: #f5f5f7;
-  --c-fg-muted: #a1a1a6;
-  --c-fg-subtle: #86868b;
-  --c-fg-softest: #3a3a3c;
-  --c-accent: #2997ff;
-  --c-accent-hover: #5cb0ff;
-  --c-accent-deep: #0071e3;
-  --c-accent-deep-hover: #0077ed;
-  --c-accent-soft: rgba(41, 151, 255, 0.16);
+  --c-bg: #0e0f1b;
+  --c-surface: #171829;
+  --c-surface-hover: #202239;
+  --c-band: #121324;
+  --c-grid-line: rgba(165, 180, 252, 0.09);
+  --c-border: #33365a;
+  --c-border-subtle: #262942;
+  --c-fg: #f1f2fb;
+  --c-fg-muted: #aaadc8;
+  --c-fg-subtle: #8c90ad;
+  --c-fg-softest: #3a3d5c;
+  --c-accent: #a5b4fc;
+  --c-accent-hover: #c7d2fe;
+  --c-accent-deep: #5457e8;
+  --c-accent-deep-hover: #6366f1;
+  --c-accent-soft: rgba(165, 180, 252, 0.14);
   --c-accent-fg: #ffffff;
-  --c-accent-hairline: rgba(41, 151, 255, 0.45);
-  --c-surface-blue: #0b1a2b;
-  --c-accent-line: rgba(41, 151, 255, 0.45);
-  --c-glow: rgba(41, 151, 255, 0.1);
-  --c-gradient-from: rgba(41, 151, 255, 0.18);
-  --c-gradient-to: rgba(41, 151, 255, 0.06);
-  --c-aurora-a: rgba(41, 151, 255, 0.2);
-  --c-aurora-b: rgba(150, 100, 255, 0.2);
-  --c-aurora-c: rgba(52, 199, 220, 0.14);
+  --c-accent-hairline: rgba(165, 180, 252, 0.4);
+  --c-surface-blue: #15183a;
+  --c-accent-line: rgba(165, 180, 252, 0.45);
+  --c-glow: rgba(129, 140, 248, 0.1);
+  --c-gradient-from: rgba(129, 140, 248, 0.18);
+  --c-gradient-to: rgba(129, 140, 248, 0.06);
+  --c-aurora-a: rgba(99, 102, 241, 0.26);
+  --c-aurora-b: rgba(167, 139, 250, 0.2);
+  --c-aurora-c: rgba(56, 189, 248, 0.14);
   --c-coral: #fbbf24;
   --c-coral-soft: rgba(251, 191, 36, 0.12);
-  --c-success: #30d158;
-  --c-success-soft: rgba(48, 209, 88, 0.1);
-  --c-success-border: rgba(48, 209, 88, 0.28);
-  --c-warn: #ff6961;
-  --c-warn-soft: rgba(255, 105, 97, 0.1);
-  --c-warn-border: rgba(255, 105, 97, 0.3);
-  --c-deep: #000000;
-  --c-deep-text: #f5f5f7;
-  --c-panel: #161618;
-  --c-panel-text: #f5f5f7;
-  --c-panel-dim: #86868b;
+  --c-success: #34d399;
+  --c-success-soft: rgba(52, 211, 153, 0.1);
+  --c-success-border: rgba(52, 211, 153, 0.28);
+  --c-warn: #ff7a8a;
+  --c-warn-soft: rgba(255, 122, 138, 0.1);
+  --c-warn-border: rgba(255, 122, 138, 0.3);
+  --c-deep: #0a0b16;
+  --c-deep-text: #f1f2fb;
+  --c-panel: #14152a;
+  --c-panel-text: #f1f2fb;
+  --c-panel-dim: #8c90ad;
   --c-panel-border: rgba(255, 255, 255, 0.14);
   --shadow-card: none;
   --shadow-card-hover: 0 14px 34px -16px rgba(0, 0, 0, 0.8);
+}
+/* A tint panel on the dark site is simply a raised dark panel. */
+html[data-theme="dark"] .theme-tint {
+  --c-bg: #171829;
+  --c-surface: #202239;
+  --c-surface-hover: #292c48;
+  --c-band: #121324;
+  --c-border: #33365a;
+  --c-border-subtle: #2a2d4a;
+  --c-fg-subtle: #8c90ad;
 }
 
 @theme inline {
@@ -207,6 +237,7 @@ html[data-theme="dark"],
    `.theme-dark` region would inherit the root's already-resolved light
    values. */
 .theme-light,
+.theme-tint,
 .theme-dark,
 .tone-deep {
   --color-bg: var(--c-bg);
@@ -293,6 +324,7 @@ html[data-theme="dark"],
 @layer components {
 /* A region that carries its own token set. */
 .theme-dark,
+.theme-tint,
 .tone-deep {
   background-color: var(--color-bg);
   color: var(--color-fg);
@@ -488,8 +520,8 @@ html[data-theme="dark"],
   align-items: center;
   gap: 0.5rem;
   border-radius: 999px;
-  border: 0;
   background-color: var(--color-surface-hover);
+  border: 1px solid var(--color-border-subtle);
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 400;
@@ -514,7 +546,7 @@ html[data-theme="dark"],
 .ds-tile {
   position: relative;
   background-color: var(--color-surface);
-  border: 0;
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
 }
@@ -526,13 +558,15 @@ html[data-theme="dark"],
   background-color: var(--color-surface);
 }
 .ds-card-interactive {
-  transition: background-color 0.25s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .ds-card-interactive:hover {
   background-color: var(--color-surface-hover);
+  border-color: var(--color-accent-hairline);
+  box-shadow: var(--shadow-card-hover);
 }
 .tone-soft .ds-card-interactive:hover {
-  background-color: var(--color-surface);
+  background-color: var(--color-bg);
 }
 
 /* ── Hero aurora ─────────────────────────────────────────────────────────
@@ -570,8 +604,8 @@ html[data-theme="dark"],
   display: none;
 }
 .ds-gradient-band {
-  background-color: var(--color-surface);
-  border: 0;
+  background: linear-gradient(135deg, var(--color-surface-blue) 0%, var(--color-surface) 100%);
+  border: 1px solid var(--color-accent-hairline);
 }
 
 .ds-card-tags {
@@ -725,6 +759,98 @@ html.js-motion [data-reveal="shown"] .pop {
     transform: none;
     transition: none;
   }
+}
+
+/* Process timeline. One `Reveal` wrapper switches everything on; each piece
+   reads its own delay from --d (seconds), so the line, the leading dot, the
+   badges and the cards land in one choreographed sequence. The progress line
+   takes --line-dur to cross, linearly, and badge i is timed to the moment the
+   line reaches it. Nothing is hidden without JavaScript, and reduced motion
+   shows the finished state. */
+.line-grow-x,
+.line-grow-y {
+  transition: none;
+}
+html.js-motion [data-reveal="pending"] .line-grow-x { transform: scaleX(0); }
+html.js-motion [data-reveal="pending"] .line-grow-y { transform: scaleY(0); }
+html.js-motion [data-reveal="shown"] .line-grow-x,
+html.js-motion [data-reveal="shown"] .line-grow-y {
+  transform: none;
+  transition: transform var(--line-dur, 2.4s) linear 0.3s;
+}
+.line-grow-x { transform-origin: left center; }
+.line-grow-y { transform-origin: center top; }
+
+.travel-dot {
+  opacity: 0;
+}
+html.js-motion [data-reveal="shown"] .travel-dot {
+  animation: travel-x var(--line-dur, 2.4s) linear 0.3s both;
+}
+html.js-motion [data-reveal="shown"] .travel-dot-y {
+  animation-name: travel-y;
+}
+@keyframes travel-x {
+  0% { left: 0; opacity: 1; }
+  94% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+@keyframes travel-y {
+  0% { top: 0; opacity: 1; }
+  94% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+html.js-motion [data-reveal="pending"] .step-in {
+  opacity: 0;
+  transform: translateY(16px);
+}
+html.js-motion [data-reveal="shown"] .step-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease-out calc(var(--d, 0) * 1s),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--d, 0) * 1s);
+}
+
+/* A single ring that expands from a badge when the line reaches it. */
+.badge-ring {
+  opacity: 0;
+}
+html.js-motion [data-reveal="shown"] .badge-ring {
+  animation: badge-ring 0.9s ease-out calc(var(--d, 0) * 1s) both;
+}
+@keyframes badge-ring {
+  0% { opacity: 0.55; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.9); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-motion [data-reveal="pending"] .line-grow-x,
+  html.js-motion [data-reveal="pending"] .line-grow-y,
+  html.js-motion [data-reveal="shown"] .line-grow-x,
+  html.js-motion [data-reveal="shown"] .line-grow-y {
+    transform: none;
+    transition: none;
+  }
+  html.js-motion [data-reveal="pending"] .step-in,
+  html.js-motion [data-reveal="shown"] .step-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html.js-motion [data-reveal="shown"] .travel-dot,
+  html.js-motion [data-reveal="shown"] .badge-ring {
+    animation: none;
+  }
+}
+
+/* Service selector: the newly shown panel fades and rises a little. */
+.service-panel:not([hidden]) {
+  animation: service-panel-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes service-panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* Page entrance - opacity only. A transform on the wrapper would make it a

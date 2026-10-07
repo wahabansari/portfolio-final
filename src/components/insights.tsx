@@ -1,90 +1,9 @@
 import Link from "next/link";
-import { insights, type Insight } from "@/content/insights";
+import { insights, insightsHub, type Insight } from "@/content/insights";
 import { cn } from "@/lib/cn";
-import { SERVICE_ICONS } from "./services";
-import { ArrowIcon, CodeIcon, Reveal, Section, SectionHeading } from "./ui";
+import { ArrowIcon, Breadcrumbs, Reveal, Section } from "./ui";
 
-/* A short, stable integer from a string — used to vary each article's cover
-   deterministically (same slug always renders the same cover) without
-   storing per-article art direction anywhere. */
-function hashSeed(input: string): number {
-  let h = 0;
-  for (let i = 0; i < input.length; i++) {
-    h = (h * 31 + input.charCodeAt(i)) >>> 0;
-  }
-  return h;
-}
-
-/* Deterministic float in [0,1) from two integers — a sine-hash PRNG. Pure
-   floating-point, no bitwise shifts, so there is no signed/unsigned pitfall
-   to repeat (an earlier cover generator used `seed >> n` on a value that can
-   exceed 2^31 and got reinterpreted as negative — see git history). Used
-   here only to vary the background wash angle, which has no bounds to
-   overflow regardless of the input. */
-function rand(seed: number, salt: number): number {
-  const x = Math.sin(seed * 12.9898 + salt * 78.233) * 43758.5453;
-  return x - Math.floor(x);
-}
-
-/**
- * The "image" for an article that has no photography — a dark bento tile
- * with two soft lime/cyan glows, a dot grid and a few accent dots, carrying
- * the matching service's icon (via `SERVICE_ICONS`, one shared mapping so a
- * topic never gets two different icons on different pages) in a
- * hairline-edged square. The glow positions and dot layout are the only
- * things varied per article, and every one of them stays inside the tile.
- * Used small as a hub thumbnail and large as the article page's hero cover.
- */
-export function InsightCover({ insight, className }: { insight: Insight; className?: string }) {
-  const seed = hashSeed(insight.slug);
-  const Icon = SERVICE_ICONS[insight.relatedServiceSlug] ?? CodeIcon;
-  const dots = Array.from({ length: 5 }, (_, i) => ({
-    x: 10 + rand(seed, 10 + i * 2) * 80,
-    y: 10 + rand(seed, 11 + i * 2) * 80,
-    r: 1 + rand(seed, 30 + i) * 1.4,
-  }));
-
-  /* Two glow centres, positioned per article so the covers differ without
-     ever leaving the tile. */
-  const ax = 15 + Math.round(rand(seed, 1) * 40);
-  const ay = 10 + Math.round(rand(seed, 2) * 40);
-  const bx = 55 + Math.round(rand(seed, 3) * 35);
-  const by = 50 + Math.round(rand(seed, 4) * 40);
-
-  return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-[var(--radius-card)] border border-border",
-        className,
-      )}
-      style={{
-        background: `radial-gradient(60% 70% at ${ax}% ${ay}%, var(--color-gradient-from) 0%, transparent 70%), radial-gradient(55% 65% at ${bx}% ${by}%, var(--color-gradient-to) 0%, transparent 70%), var(--color-surface)`,
-      }}
-    >
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(var(--color-grid-line) 1px, transparent 1px)",
-          backgroundSize: "18px 18px",
-        }}
-      />
-      <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-        {dots.map((d, i) => (
-          <circle key={i} cx={d.x} cy={d.y} r={d.r} fill="var(--color-accent)" fillOpacity={0.45} />
-        ))}
-      </svg>
-      <div aria-hidden className="absolute inset-0 flex items-center justify-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-hairline bg-bg text-accent shadow-[0_0_40px_-8px_var(--color-accent-hairline)] md:h-20 md:w-20">
-          <Icon className="h-8 w-8 md:h-10 md:w-10" />
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function formatDate(iso: string) {
+export function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -103,14 +22,134 @@ export function readingTime(insight: Insight): number {
   return Math.max(1, Math.round(words / 250));
 }
 
+export function clusterId(cluster: string) {
+  return `topic-${cluster.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+}
+
 /**
- * The one magazine-cover moment on the hub — the single most recently
- * updated article, full width, cover art on one side and an oversized
- * headline on the other. This is the only place on the hub that spends a
- * cover on a list item; everything below it is typography-only, which is
- * what actually separates this page from a generic blog grid rather than
- * just re-skinning the same thumbnail-plus-title card.
+ * A neutral frame where an article's image will go. It carries no artwork on
+ * purpose: nothing is generated or invented, the frame simply holds the space
+ * (and the aspect ratio) until a real image is supplied. `compact` drops the
+ * caption for thumbnail sizes.
  */
+export function ImagePlaceholder({
+  className,
+  compact = false,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      role="img"
+      aria-label="Image placeholder"
+      className={cn(
+        "relative flex items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border bg-surface",
+        className,
+      )}
+    >
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-70"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(135deg, transparent 0 14px, var(--color-border-subtle) 14px 15px)",
+        }}
+      />
+      <span className="relative flex flex-col items-center gap-2 text-fg-subtle">
+        <svg
+          aria-hidden
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={compact ? "h-6 w-6" : "h-8 w-8"}
+        >
+          <rect x="3.5" y="4.5" width="17" height="15" rx="2.5" />
+          <circle cx="9" cy="10" r="1.6" />
+          <path d="m4.5 17.5 4.6-4.4a1.5 1.5 0 0 1 2.1 0l2.3 2.2 1.7-1.6a1.5 1.5 0 0 1 2.1 0l2.2 2.1" />
+        </svg>
+        {!compact && <span className="text-[0.75rem] font-medium tracking-[0.04em]">Image placeholder</span>}
+      </span>
+    </div>
+  );
+}
+
+function Meta({ insight, className }: { insight: Insight; className?: string }) {
+  return (
+    <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1", className)}>
+      <time dateTime={insight.updatedAt} className="ds-meta whitespace-nowrap normal-case">
+        {formatDate(insight.updatedAt)}
+      </time>
+      <span className="ds-meta" aria-hidden="true">
+        &middot;
+      </span>
+      <span className="ds-meta whitespace-nowrap normal-case">{readingTime(insight)} min read</span>
+    </div>
+  );
+}
+
+/**
+ * Hub opener: the title and the one-line promise on the left, and on the right
+ * a topic index (each topic with its article count, linking down to its
+ * section) so a reader can jump straight to the problem they have.
+ */
+export function InsightsHero() {
+  const topics = Array.from(new Set(insights.map((i) => i.cluster))).map((cluster) => ({
+    cluster,
+    count: insights.filter((i) => i.cluster === cluster).length,
+  }));
+
+  return (
+    <section className="hero-aurora border-b border-border pt-28 pb-14 md:pt-32 md:pb-20">
+      <div className="ds-container">
+        <Breadcrumbs trail={[{ label: "Home", href: "/" }, { label: "Insights" }]} />
+
+        <div className="mt-8 grid items-end gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="lg:col-span-7">
+            <Reveal>
+              <span className="inline-flex items-center rounded-full border border-border bg-bg/80 px-4 py-1.5 text-[0.8125rem] font-medium text-fg-muted backdrop-blur-sm">
+                {insights.length} articles &middot; {topics.length} topics
+              </span>
+            </Reveal>
+            <Reveal delay={0.06}>
+              <h1 className="display mt-5 text-[clamp(2.5rem,5vw,4.25rem)] font-extrabold">{insightsHub.h1}</h1>
+              <p className="body-large mt-5 max-w-xl">{insightsHub.intro}</p>
+            </Reveal>
+          </div>
+
+          <Reveal delay={0.12} className="lg:col-span-5">
+            <nav aria-label="Topics" className="rounded-3xl border border-border bg-bg/80 p-2 backdrop-blur-sm">
+              <p className="ds-meta px-4 pt-3 pb-2">Jump to a topic</p>
+              <ul>
+                {topics.map((t) => (
+                  <li key={t.cluster}>
+                    <a
+                      href={`#${clusterId(t.cluster)}`}
+                      className="group flex items-center justify-between gap-4 rounded-2xl px-4 py-3 transition-colors duration-200 hover:bg-accent-soft"
+                    >
+                      <span className="text-[0.9375rem] font-semibold text-fg transition-colors group-hover:text-accent">
+                        {t.cluster}
+                      </span>
+                      <span className="flex items-center gap-3">
+                        <span className="ds-chip">{t.count}</span>
+                        <ArrowIcon className="h-3.5 w-3.5 rotate-90 text-fg-subtle transition-colors group-hover:text-accent" />
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** The most recently updated article, given the page's one large moment. */
 function FeaturedInsight({ insight }: { insight: Insight }) {
   return (
     <Section tone="plain">
@@ -119,78 +158,56 @@ function FeaturedInsight({ insight }: { insight: Insight }) {
           href={`/insights/${insight.slug}`}
           data-track="cta_click"
           data-track-label={insight.slug}
-          className="group grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16"
+          className="group grid gap-8 overflow-hidden rounded-[2rem] border border-border bg-bg p-4 transition-shadow duration-300 hover:shadow-[var(--shadow-card-hover)] md:p-5 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-12"
         >
-          <div>
-            <span className="ds-overline-accent block">Latest &middot; {insight.cluster}</span>
-            <h2 className="mt-5 font-display text-[2rem] font-bold leading-[1.2] tracking-[-0.01em] text-fg transition-colors duration-200 group-hover:text-accent md:text-[2.5rem]">
+          <ImagePlaceholder className="aspect-[16/11] w-full" />
+          <div className="px-2 pb-3 lg:py-6 lg:pr-8">
+            <span className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1 text-[0.75rem] font-semibold tracking-[0.04em] text-accent uppercase">
+              Latest &middot; {insight.cluster}
+            </span>
+            <h2 className="mt-5 text-[1.75rem] leading-[1.18] font-bold tracking-[-0.02em] text-fg transition-colors duration-200 group-hover:text-accent md:text-[2.25rem]">
               {insight.title}
             </h2>
-            <p className="ds-body-lg mt-5 max-w-xl text-fg-muted">{insight.dek}</p>
-            <div className="mt-6 flex items-center gap-3">
-              <time dateTime={insight.updatedAt} className="ds-meta whitespace-nowrap">
-                {formatDate(insight.updatedAt)}
-              </time>
-              <span className="ds-meta" aria-hidden="true">&middot;</span>
-              <span className="ds-meta whitespace-nowrap">{readingTime(insight)} min read</span>
-            </div>
-            <span className="mt-7 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-fg transition-colors duration-200 group-hover:text-accent">
+            <p className="ds-body-lg mt-4 max-w-xl text-fg-muted">{insight.dek}</p>
+            <Meta insight={insight} className="mt-5" />
+            <span className="mt-6 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-accent">
               Read the article
               <ArrowIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
             </span>
           </div>
-          <InsightCover
-            insight={insight}
-            className="aspect-[4/3] w-full transition-transform duration-500 ease-out group-hover:scale-[1.01] lg:aspect-[5/4]"
-          />
         </Link>
       </Reveal>
     </Section>
   );
 }
 
-/**
- * One row in the index — a large tabular numeral, the title, a single-line
- * dek and the date/reading-time off to the side, separated only by a
- * hairline. No cover, no card, no fill: below the one featured article, the
- * hub is typography doing all the work, the way a table of contents or an
- * editorial index reads rather than a scanned rack of thumbnails.
- */
-function InsightIndexRow({ insight, index }: { insight: Insight; index: number }) {
+/** One article in a topic: a thumbnail frame beside the title, dek and meta. */
+function InsightRow({ insight }: { insight: Insight }) {
   return (
     <Link
       href={`/insights/${insight.slug}`}
       data-track="cta_click"
       data-track-label={insight.slug}
-      className="group flex items-start gap-5 border-b border-border py-7 transition-colors duration-150 hover:bg-surface-hover md:items-center md:gap-8 md:py-8"
+      className="group -mx-3 flex items-start gap-5 rounded-2xl px-3 py-5 transition-colors duration-200 hover:bg-accent-soft md:gap-6"
     >
-      <span className="shrink-0 font-mono text-[1rem] font-medium leading-none text-fg-subtle tabular-nums transition-colors duration-150 group-hover:text-accent md:text-[1.75rem]">
-        {String(index + 1).padStart(2, "0")}
-      </span>
+      <ImagePlaceholder compact className="aspect-[4/3] w-28 shrink-0 sm:w-40" />
       <div className="min-w-0 flex-1">
-        <h3 className="font-display text-[1.1875rem] font-semibold leading-[1.3] tracking-[-0.01em] text-fg transition-colors duration-150 group-hover:text-accent md:text-[1.5rem]">
+        <h3 className="text-[1.0625rem] leading-snug font-semibold tracking-[-0.015em] text-fg transition-colors duration-200 group-hover:text-accent md:text-[1.25rem]">
           {insight.title}
         </h3>
-        <p className="ds-body-sm mt-1.5 max-w-2xl text-fg-muted">{insight.dek}</p>
+        <p className="ds-body-sm mt-1.5 line-clamp-2 max-w-2xl">{insight.dek}</p>
+        <Meta insight={insight} className="mt-3" />
       </div>
-      <div className="hidden shrink-0 flex-col items-end gap-1 text-right sm:flex">
-        <time dateTime={insight.updatedAt} className="ds-meta whitespace-nowrap">
-          {formatDate(insight.updatedAt)}
-        </time>
-        <span className="ds-meta whitespace-nowrap">{readingTime(insight)} min</span>
-      </div>
-      <ArrowIcon className="hidden h-4 w-4 shrink-0 text-ink-soft transition-all duration-150 group-hover:translate-x-0.5 group-hover:text-accent md:block" />
+      <ArrowIcon className="mt-2 hidden h-4 w-4 shrink-0 text-fg-subtle transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent md:block" />
     </Link>
   );
 }
 
 /**
- * /insights hub. One featured article leads (see `FeaturedInsight`), then
- * every remaining article grouped by cluster as a plain typographic index
- * (see `InsightIndexRow`) — no thumbnail grid, no cards, no CSS-columns
- * masonry. The featured pick is whichever article has the most recent
- * `updatedAt`, computed rather than hardcoded, so publishing a new or
- * refreshed article moves it to the top automatically.
+ * /insights hub. The featured article (the most recently updated, computed so
+ * a refreshed article moves up on its own), then each topic as a two-column
+ * block: the topic name and count held in place on the left, its articles as
+ * ruled rows on the right.
  */
 export function InsightsList() {
   const [featured, ...rest] = [...insights].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
@@ -202,59 +219,28 @@ export function InsightsList() {
       {clusters.map((cluster, ci) => {
         const items = rest.filter((i) => i.cluster === cluster);
         return (
-          <Section key={cluster} tone={ci % 2 === 0 ? "soft" : "plain"}>
-            <div className="flex items-baseline justify-between gap-6 border-b-2 border-accent pb-5">
-              <h2 className="font-display text-[1.75rem] font-semibold tracking-[-0.01em] text-fg md:text-[2.25rem]">
-                {cluster}
-              </h2>
-              <span className="ds-meta whitespace-nowrap">
-                {items.length} {items.length === 1 ? "article" : "articles"}
-              </span>
-            </div>
-            <div className="mt-2">
-              {items.map((insight, i) => (
-                <Reveal key={insight.slug} delay={i * 0.03}>
-                  <InsightIndexRow insight={insight} index={i} />
-                </Reveal>
-              ))}
+          <Section key={cluster} id={clusterId(cluster)} tone={ci % 2 === 0 ? "soft" : "plain"}>
+            <div className="grid gap-8 lg:grid-cols-12 lg:gap-14">
+              <div className="lg:col-span-4">
+                <div className="lg:sticky lg:top-28">
+                  <span className="ds-overline-accent block">Topic</span>
+                  <h2 className="ds-h2 mt-3">{cluster}</h2>
+                  <p className="ds-body-sm mt-3">
+                    {items.length} {items.length === 1 ? "article" : "articles"}
+                  </p>
+                </div>
+              </div>
+              <ul className="border-b border-border lg:col-span-8">
+                {items.map((insight, i) => (
+                  <Reveal as="li" key={insight.slug} delay={i * 0.03} className="border-t border-border">
+                    <InsightRow insight={insight} />
+                  </Reveal>
+                ))}
+              </ul>
             </div>
           </Section>
         );
       })}
     </>
-  );
-}
-
-/**
- * Homepage teaser — three index rows, the same typography-only treatment
- * the hub uses below its featured pick. An internal-linking hook into
- * /insights, not a second hub competing with it.
- */
-export function InsightsTeaser({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
-  const featured = insights.slice(0, 3);
-  if (featured.length === 0) return null;
-
-  return (
-    <Section id="insights" tone={tone}>
-      <SectionHeading
-        overline="Insights"
-        title="Notes from production work"
-        description="Problem-led write-ups on migration and performance — first-hand, not generic advice."
-        align="between"
-        aside={
-          <Link href="/insights" className="ds-btn ds-btn-secondary">
-            All insights
-            <ArrowIcon />
-          </Link>
-        }
-      />
-      <div className="mt-2 border-t border-border">
-        {featured.map((insight, i) => (
-          <Reveal key={insight.slug} delay={i * 0.05}>
-            <InsightIndexRow insight={insight} index={i} />
-          </Reveal>
-        ))}
-      </div>
-    </Section>
   );
 }

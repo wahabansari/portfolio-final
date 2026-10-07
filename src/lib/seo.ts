@@ -34,7 +34,7 @@ export function pageMetadata({
   /**
    * Skip the layout's title template. Set this when the title already names
    * the person — otherwise the template appends the name a second time and
-   * the <title> reads "About Wahab Ansari | ... | Wahab Ansari".
+   * the <title> reads "About Craftwise | ... | Craftwise".
    */
   absoluteTitle?: boolean;
   /**

@@ -9,21 +9,14 @@ import { ArrowIcon, CheckIcon, ExternalIcon, Reveal, Section } from "./ui";
 import { cn } from "@/lib/cn";
 import { SelectField } from "@/components/ds/select";
 
-/* Every service plus the two paths that are not a service — a hiring
- conversation, and the honest "I do not know yet". Forcing a buyer to
- classify their own problem before they have described it loses leads. */
+/* The four services, plus the two paths that are not a service: an agency
+ partnership (an engagement model) and the honest "we do not know yet".
+ Forcing a buyer to classify their own problem before they have described it
+ loses leads. */
 const PROJECT_TYPES = [
  ...services.map((s) => s.title),
- "A full-time role",
+ "Agency Partnership",
  "Not sure yet",
-];
-
-const TIMELINES = [
- "As soon as possible",
- "Within a month",
- "One to three months",
- "Later this year",
- "Still deciding",
 ];
 
 const BUDGETS = [
@@ -41,7 +34,6 @@ type Fields = {
  company: string;
  projectType: string;
  url: string;
- timeline: string;
  budget: string;
  brief: string;
 };
@@ -52,7 +44,6 @@ const EMPTY: Fields = {
  company: "",
  projectType: "",
  url: "",
- timeline: "",
  budget: "",
  brief: "",
 };
@@ -65,15 +56,15 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 function validate(values: Fields): Partial<Record<keyof Fields, string>> {
  const errors: Partial<Record<keyof Fields, string>> = {};
 
- if (!values.name.trim()) errors.name = "Enter your name so I know who I am replying to.";
+ if (!values.name.trim()) errors.name = "Enter your name so we know who we are replying to.";
 
- if (!values.email.trim()) errors.email = "Enter an email address so I can reply.";
+ if (!values.email.trim()) errors.email = "Enter an email address so we can reply.";
  else if (!EMAIL.test(values.email.trim()))
  errors.email = "That does not look like an email address — check for a typo.";
 
  if (!values.projectType) errors.projectType = "Pick the closest option, or “Not sure yet”.";
 
- if (!values.brief.trim()) errors.brief = "Tell me what you are building, even briefly.";
+ if (!values.brief.trim()) errors.brief = "Tell us what you are building, even briefly.";
  else if (values.brief.trim().length < 20)
  errors.brief = "A little more detail will get you a much more useful reply.";
 
@@ -155,7 +146,6 @@ export function ContactForm() {
  values.company.trim() && `Company / product: ${values.company.trim()}`,
  `Project type: ${values.projectType}`,
  values.url.trim() && `Current site / Figma / product: ${values.url.trim()}`,
- values.timeline && `Timeline: ${values.timeline}`,
  values.budget && `Budget: ${values.budget}`,
  "",
  "Brief:",
@@ -292,9 +282,9 @@ export function ContactForm() {
 
  return (
  <Form.Root noValidate ref={formRef} onSubmit={onSubmit} className="relative mt-9 md:mt-10">
- <p className="ds-meta">Project brief</p>
+ <p className="ds-meta">Project inquiry</p>
  <p className="ds-body-sm mt-2">
- This goes straight to my inbox. Only what you type here is sent — no account, no
+ This goes straight to our inbox. Only what you type here is sent — no account, no
  newsletter, and nothing shared with anyone else.
  </p>
 
@@ -354,7 +344,7 @@ export function ContactForm() {
  className="flex flex-col gap-2"
  >
  <Form.Label className={labelClass}>
- Work email {requiredMark}
+ Email {requiredMark}
  </Form.Label>
  <Form.Control asChild>
  <input
@@ -373,7 +363,7 @@ export function ContactForm() {
  serverInvalid={Boolean(errors.company)}
  className="flex flex-col gap-2"
  >
- <Form.Label className={labelClass}>Company / product</Form.Label>
+ <Form.Label className={labelClass}>Company (optional)</Form.Label>
  <Form.Control asChild>
  <input
  {...fieldProps("company")}
@@ -415,29 +405,10 @@ export function ContactForm() {
  {...fieldProps("url")}
  type="url"
  inputMode="url"
- placeholder="https:// — optional, but the fastest context you can give me"
+ placeholder="https:// — optional, but the fastest context you can give us"
  onChange={(e) => set("url")(e.target.value)}
  />
  </Form.Control>
- </Form.Field>
-
- <Form.Field
- name="timeline"
- serverInvalid={Boolean(errors.timeline)}
- className="flex flex-col gap-2"
- >
- <label className={cn(labelClass)} htmlFor={`${id}-timeline`}>
- Timeline
- </label>
- <SelectField
- id={`${id}-timeline`}
- name="timeline"
- value={values.timeline}
- onValueChange={(v) => set("timeline")(v)}
- placeholder="Optional"
- options={TIMELINES.map((s) => ({ value: s, label: s }))}
- invalid={Boolean(errors.timeline)}
- />
  </Form.Field>
 
  <Form.Field
@@ -446,7 +417,7 @@ export function ContactForm() {
  className="flex flex-col gap-2"
  >
  <label className={cn(labelClass)} htmlFor={`${id}-budget`}>
- Budget range
+ Budget (optional)
  </label>
  <SelectField
  id={`${id}-budget`}
@@ -465,13 +436,13 @@ export function ContactForm() {
  className="flex flex-col gap-2 sm:col-span-2"
  >
  <Form.Label className={labelClass}>
- The brief {requiredMark}
+ Message {requiredMark}
  </Form.Label>
  <Form.Control asChild>
  <textarea
  {...fieldProps("brief", true)}
  rows={5}
- placeholder="What you are building, what is in the way, and roughly when you need it."
+ placeholder="What you are building, what needs to change, and anything that is in the way."
  onChange={(e) => set("brief")(e.target.value)}
  className={cn(fieldProps("brief").className, "resize-y")}
  />
@@ -513,11 +484,11 @@ export function ContactForm() {
  ) : sent === "sent" || sent === "handed-off" ? (
  <>
  <CheckIcon />
- Brief sent
+ Inquiry sent
  </>
  ) : (
  <>
- Send project brief
+ Send project inquiry
  <ArrowIcon />
  </>
  )}
@@ -540,11 +511,11 @@ export function ContactForm() {
  {sent === "sent" && (
  <>
  <p className="text-[0.9375rem] font-semibold text-ink">
- Sent — it is in my inbox.
+ Sent — it is in our inbox.
  </p>
  <p className="ds-body-sm mt-2">
- I will read the brief and reply with what I would tackle first and what I would
- need to estimate it. If anything was missing, just reply to that email.
+ We will read it and reply with what we would tackle first and what we would need
+ in order to estimate it. If anything was missing, just reply to that email.
  </p>
  </>
  )}
@@ -571,7 +542,7 @@ export function ContactForm() {
  That did not go through.
  </p>
  <p className="ds-body-sm mt-2">
- Something on my end failed rather than anything you did. Use{" "}
+ Something on our end failed rather than anything you did. Use{" "}
  <span className="font-medium text-ink">Copy it instead</span> and send it to{" "}
  <a href={`mailto:${site.email}`} className="text-accent hover:underline">
  {site.email}
@@ -583,7 +554,7 @@ export function ContactForm() {
 
  {sent !== "sent" && (
  <button type="button" onClick={() => setSent("idle")} className="ds-link mt-4">
- Edit the brief and try again
+ Edit the message and try again
  </button>
  )}
  </div>
@@ -599,8 +570,8 @@ export function ContactForm() {
  */
 export function Contact({
  tone = "plain",
- heading = "Tell me what you're building, or what's getting in the way",
- body = "Send your current site, a Figma file, a repository, API notes or a short description of the problem. I'll review it and tell you what I would tackle first — including telling you if I am not the right person for it.",
+ heading = "Tell us what you're building, or what's getting in the way",
+ body = "Send your current site, a Figma file, a repository, API notes or a short description of the problem. We will review it and tell you what we would tackle first, including if we are not the right fit for it.",
  level = "h2",
 }: {
  tone?: "plain" | "soft" | "deep";

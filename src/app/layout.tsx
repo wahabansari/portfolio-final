@@ -30,7 +30,7 @@ const inter = Inter({
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: dark)", color: "#0e0f1b" },
   ],
 };
 
@@ -47,8 +47,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: desc,
     applicationName: site.name,
-    authors: [{ name: site.name, url: site.url }],
-    creator: site.name,
+    authors: [{ name: siteEn.founder.name, url: `${site.url}/about` }],
+    creator: siteEn.founder.name,
     publisher: site.name,
     alternates: { canonical: `${base}/` },
     openGraph: {

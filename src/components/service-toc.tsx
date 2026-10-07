@@ -32,7 +32,7 @@ export function ServiceToc({
       <div className="ds-container">
         {/* The negative margin lets the row bleed to the container edge on
             mobile, so a partially visible chip signals that it scrolls. */}
-        <ul className="-mx-6 flex gap-1 overflow-x-auto px-6 py-2.5 md:mx-0 md:flex-wrap md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <ul className="-mx-5 flex gap-1 overflow-x-auto px-5 py-2.5 md:mx-0 md:flex-wrap md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {sections.map((section) => (
             <li key={section.id} className="shrink-0">
               <a

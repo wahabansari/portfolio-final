@@ -143,7 +143,7 @@ export default async function CaseStudyPage({
  <h2 className="ds-h3 mt-5">What the product is</h2>
  <p className="ds-body mt-4">{study.context}</p>
 
- <h2 className="ds-h3 mt-11">The problem</h2>
+ <h2 className="ds-h3 mt-11">The challenge</h2>
  <p className="ds-body mt-4">{study.problem}</p>
 
  {/* Constraints, before the approach. A decision only looks
@@ -166,7 +166,7 @@ export default async function CaseStudyPage({
 
  <Reveal delay={0.06} className="lg:col-span-5">
  <div className="h-full border-t border-border">
- <p className="ds-meta">My role</p>
+ <p className="ds-meta">Role</p>
  <ul className="mt-5 space-y-3.5">
  {study.responsibility.map((item) => (
  <li key={item} className="flex items-start gap-3">
@@ -306,7 +306,7 @@ export default async function CaseStudyPage({
   navy
   tone="plain"
   heading={study.cta.line}
- body="Send what you have — a product, a repository, a Figma file or a description of the problem. I will reply with what I would do first and what I would need to estimate it."
+ body="Send what you have — a product, a repository, a Figma file or a description of the problem. We will reply with what we would do first and what we would need to estimate it."
  primary={{ label: "Discuss a similar project", href: "/contact" }}
  secondary={{ label: study.cta.label, href: study.cta.href }}
  />

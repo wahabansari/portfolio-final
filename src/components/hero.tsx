@@ -3,13 +3,12 @@ import { featuredProjects } from "@/content/work";
 import { hero, proof, site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { FlickStack, type StackItem } from "./flick-stack";
-import { ArrowIcon, ChevronRightIcon, DownloadIcon, LayersIcon, Reveal, Section } from "./ui";
-import { CalendarIcon, ShieldCheckIcon, TrendUpIcon } from "./home-svg";
+import { ChevronRightIcon, LayersIcon, Reveal, Section, UserIcon } from "./ui";
+import { CalendarIcon, TrendUpIcon } from "./home-svg";
 
 /**
- * Hero - a two-part layout that fits one screen: the founder-facing
- * statement and actions on the left, the flickable project stack on the
- * right. The stack is the page's one memorable element (see
+ * Hero - a two-part layout that fits one screen: the studio statement and
+ * actions on the left, the flickable project stack on the right. The stack is the page's one memorable element (see
  * flick-stack.tsx); only the fields a card needs are passed down, so the
  * case-study bodies never travel to the client.
  */
@@ -33,7 +32,7 @@ export function Hero() {
           <div className="lg:col-span-6">
             {site.available && (
               <Reveal>
-                <p className="inline-flex items-center gap-2.5 rounded-full bg-surface px-4 py-1.5 text-[0.8125rem] text-fg-muted">
+                <p className="inline-flex items-center gap-2.5 rounded-full border border-border bg-bg/80 px-4 py-1.5 text-[0.8125rem] font-medium text-fg-muted backdrop-blur-sm">
                   <span className="relative flex h-2 w-2" aria-hidden>
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
@@ -68,17 +67,6 @@ export function Hero() {
                   <ChevronRightIcon />
                 </Link>
               </div>
-              <Link
-                href={hero.resumeCta.href}
-                target="_blank"
-                rel="noreferrer"
-                data-track="cta_click"
-                data-track-label="hero-resume"
-                className="ds-link mt-4 text-[0.9375rem]"
-              >
-                <DownloadIcon className="h-3.5 w-3.5" />
-                {hero.resumeCta.label}
-              </Link>
             </Reveal>
           </div>
 
@@ -92,52 +80,71 @@ export function Hero() {
 }
 
 /**
- * Proof band - the four facts a founder or recruiter needs, set as plain
- * type. The verified metric is the only one in colour and links to the case
- * study where it was measured.
+ * Proof band - the four facts a buyer needs, as one slim row: a small icon,
+ * the figure, what it is and the basis for it, with a hairline between items.
+ * No box and no fill, so it reads as a quiet strip under the hero rather than
+ * a section of its own. The verified metric is the only figure in colour and
+ * links to the case study where it was measured. Figures are static text,
+ * never counted up, so the server HTML is already correct.
  */
 const PROOF_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  "Years of experience": CalendarIcon,
-  "Core Web Vitals improvement": TrendUpIcon,
-  "What I build with": LayersIcon,
-  "Delivery focus": ShieldCheckIcon,
+  "Production experience": CalendarIcon,
+  "Measured Core Web Vitals improvement": TrendUpIcon,
+  "Core engineering stack": LayersIcon,
+  "Direct engineering ownership": UserIcon,
 };
 
 export function ProofBand({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
-    <Section tone={tone}>
-      <ul className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-10 text-center md:grid-cols-4">
+    <Section tone={tone} className="!py-8 md:!py-10">
+      <ul className="mx-auto grid max-w-6xl grid-cols-1 gap-y-1 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-border">
         {proof.map((item, i) => {
-          const value = item.chips ? item.chips.join(", ") : item.display;
           const Icon = PROOF_ICONS[item.label];
+          const compact = item.chips || item.display.length > 4;
           const body = (
             <>
               {Icon && (
-                <span className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-accent-soft text-accent">
-                  <Icon className="h-5 w-5" />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
+                  <Icon className="h-[1.125rem] w-[1.125rem]" />
                 </span>
               )}
-              <span
-                className={cn(
-                  "block font-semibold tabular-nums",
-                  item.chips
-                    ? "text-[1.0625rem] leading-snug tracking-[-0.01em]"
-                    : "text-[2.75rem] leading-none tracking-[-0.025em]",
-                  item.verified ? "text-accent" : "text-fg",
-                )}
-              >
-                {value}
+              <span className="min-w-0">
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  {item.chips ? (
+                    item.chips.map((chip) => (
+                      <span key={chip} className="text-[0.9375rem] leading-tight font-bold whitespace-nowrap text-fg">
+                        {chip}
+                        {chip !== item.chips?.[item.chips.length - 1] && (
+                          <span aria-hidden className="text-fg-subtle">
+                            {" "}
+                            ·
+                          </span>
+                        )}
+                      </span>
+                    ))
+                  ) : (
+                    <span
+                      className={cn(
+                        "leading-none font-bold tabular-nums",
+                        compact ? "text-[1.25rem] tracking-normal whitespace-nowrap" : "text-[1.875rem] tracking-[-0.03em]",
+                        item.verified ? "text-accent" : "text-fg",
+                      )}
+                    >
+                      {item.display}
+                    </span>
+                  )}
+                  {item.verified && (
+                    <span className="rounded-full border border-success-border bg-success-soft px-2 py-0.5 text-[0.625rem] font-semibold tracking-[0.05em] text-success uppercase">
+                      Measured
+                    </span>
+                  )}
+                </span>
+                <span className="mt-1.5 block text-[0.8125rem] leading-snug font-semibold text-fg">{item.label}</span>
+                <span className="mt-0.5 block text-[0.75rem] leading-snug text-fg-muted">{item.note}</span>
               </span>
-              <span className="mt-3 block text-[0.9375rem] font-medium text-fg">{item.label}</span>
-              <span className="ds-body-sm mt-1 block">{item.note}</span>
-              {item.verified && (
-                <span className="ds-link mt-2 text-[0.8125rem]">
-                  Verified, see how
-                  <ArrowIcon className="h-3 w-3" />
-                </span>
-              )}
             </>
           );
+          const row = "flex items-start gap-3.5 px-1 py-3 lg:px-6";
           return (
             <Reveal as="li" key={item.label} delay={i * 0.06}>
               {item.href ? (
@@ -145,12 +152,12 @@ export function ProofBand({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" 
                   href={item.href}
                   data-track="cta_click"
                   data-track-label={`proof:${item.label}`}
-                  className="group block rounded-2xl p-3 transition-colors hover:bg-surface"
+                  className={cn(row, "rounded-xl transition-colors duration-200 hover:bg-accent-soft")}
                 >
                   {body}
                 </Link>
               ) : (
-                <div className="p-3">{body}</div>
+                <div className={row}>{body}</div>
               )}
             </Reveal>
           );

@@ -11,18 +11,28 @@
  */
 
 export const site = {
-  name: "Muhammad Wahab Ansari",
-  shortName: "Wahab Ansari",
-  initials: "WA",
-  role: "React & Next.js Product Engineer",
+  /** The studio. The founder is a separate fact (`founder`, below). */
+  name: "Craftwise",
+  shortName: "Craftwise",
+  initials: "CW",
+  role: "Software Development Studio",
   location: "Lahore, Pakistan",
   locationShort: "Lahore, PK",
   timezone: "Asia/Karachi (UTC+5)",
   email: "wahabansari.dev@gmail.com",
   url: "https://wahabansari-portfolio-final.vercel.app",
   available: true,
-  availabilityNote: "Open to remote roles and selected projects",
+  availabilityNote: "Available for selected projects and agency partnerships",
+  /** The résumé file stays in /public for direct requests; the site does not promote it. */
   resumeHref: "/Resume-FEE-Extended.pdf",
+} as const;
+
+/** The person behind the studio. Used for the Person entity and the About page. */
+export const founder = {
+  name: "Muhammad Wahab Ansari",
+  shortName: "Wahab Ansari",
+  role: "Founder, Craftwise",
+  experience: "5+ years in production",
 } as const;
 
 /**
@@ -31,7 +41,7 @@ export const site = {
  * get reworded per surface.
  */
 export const positioning =
-  "I am a Frontend Product Engineer specializing in React and Next.js, with 5+ years of production experience building web products, customer-facing interfaces and performance-focused frontend systems.";
+  "Craftwise is a founder-led software development studio that helps small businesses and agencies build, improve, modernize and automate their software and digital systems.";
 
 /**
  * The commercial promise — the one sentence a buyer could repeat to a
@@ -40,19 +50,19 @@ export const positioning =
  * not for a stack list.
  */
 export const promise =
-  "I help startups, SaaS teams, businesses and agencies build, modernize and improve production web products with React and Next.js.";
+  "We help small businesses and agencies build new digital products and business systems, modernize existing software and automate practical workflows.";
 
 /** For direct clients. */
 export const commercialSentence =
-  "I help product teams and growing businesses redesign, build and improve web products that need better frontend execution.";
+  "We help small businesses build websites, web applications and business systems that fit how they work.";
 
 /** For agency outreach. */
 export const agencySentence =
-  "I help agencies ship React and Next.js projects when their client pipeline is ahead of their internal frontend capacity.";
+  "We help agencies deliver web and software projects when client demand is ahead of their engineering capacity.";
 
 /** Homepage <meta description>. Kept under 160 characters so it isn't truncated. */
 export const metaDescription =
-  "Independent React & Next.js developer for hire — building and improving production web products for SaaS teams, businesses and agencies.";
+  "Founder-led software development studio for small businesses and agencies: custom web apps, business dashboards, modernization and AI automation.";
 
 export const socials = [
   { label: "GitHub", handle: "github.com/wahabansari", href: "https://github.com/wahabansari" },
@@ -63,149 +73,42 @@ export const socials = [
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 
 export const hero = {
-  /* The role, plain. "Senior Frontend Engineer" gives a recruiter the
-     box to tick and a founder the rank to measure against immediately. */
-  eyebrow: "Senior Frontend Engineer · React & Next.js",
-  headline: "I help founders ship fast, scalable web products.",
+  eyebrow: "Software development studio",
+  headline: "Digital products and business systems, built to work.",
   support:
-    "A senior React & Next.js engineer with 5+ years in production, focused on performance, architecture and polished UI.",
+    "We help small businesses and agencies build, improve, modernize and automate their software and digital systems.",
   primaryCta: { label: "Start a project", href: "/contact" },
-  secondaryCta: { label: "View my work", href: "/work" },
-  /* The résumé is a first-class proof document, so it gets a third action in
-     the hero — a quiet ghost button that does not compete with the two that
-     are actually selling. */
-  resumeCta: { label: "View résumé", href: site.resumeHref },
-  /* Availability is stated commercially rather than as job-seeking. Remote
-     employment is real and stays visible — on /about and the résumé, which is
-     where someone hiring for a role actually looks — but it does not compete
-     with the commercial message in the first screen. */
+  secondaryCta: { label: "View our work", href: "/work" },
   availability: "Available for selected projects and agency partnerships",
 } as const;
 
 /* ── Problem selector ──────────────────────────────────────────────────────
    "What are you trying to solve?" — the homepage's routing layer.
 
-   A services list asks a buyer to translate their problem into my vocabulary
-   before they can act. This asks the question in theirs, and routes each
-   answer to exactly one service page — no two entries share a destination, or
-   the selector would be decoration rather than navigation.
-
-   Six entries against seven services: SaaS & MVP work is reached through the
-   first card rather than given its own, because "we need to build a new
-   product" is the sentence a founder actually says, and splitting it into two
-   near-identical cards would make the reader choose between synonyms. */
+   Exactly four entries, one per service, each phrased the way a buyer says it
+   rather than in the studio's vocabulary. No two entries share a destination,
+   or the selector would be decoration rather than navigation. */
 
 export const problemPaths = [
   {
-    problem: "We need to build a new product",
-    detail:
-      "A validated workflow that has to become a working, chargeable product — auth, dashboards, the real thing.",
-    href: "/services/frontend-product-engineering",
-    label: "Frontend product engineering",
+    problem: "We need to build something new",
+    href: "/services/custom-web-development",
+    label: "Custom Web Development",
   },
   {
-    problem: "Our website is outdated",
-    detail:
-      "The offer is not clear, the pages are slow, and mobile was an afterthought. Usually structure before styling.",
-    href: "/services/website-redesign-rebuild",
-    label: "Website redesign & rebuild",
+    problem: "We need a business system or dashboard",
+    href: "/services/business-dashboards",
+    label: "Business Dashboards & Custom Software",
   },
   {
-    problem: "We need to move off WordPress",
-    detail:
-      "A migration where the rankings, redirects, content and structured data all have to survive the move.",
-    href: "/services/wordpress-to-nextjs-migration",
-    label: "WordPress to Next.js migration",
+    problem: "Our existing software needs an upgrade",
+    href: "/services/software-modernization",
+    label: "Software Modernization",
   },
   {
-    problem: "Our frontend is too slow",
-    detail:
-      "Poor Core Web Vitals, a heavy bundle or an interface that stopped feeling fast as the product grew.",
-    href: "/services/performance-engineering",
-    label: "Performance engineering",
-  },
-  {
-    problem: "Our agency needs delivery capacity",
-    detail:
-      "White-label React and Next.js delivery behind your brand, inside your process and under your NDA.",
-    href: "/services/agency-frontend-development",
-    label: "Agency / white-label frontend",
-  },
-  {
-    problem: "We want to add AI to our product",
-    detail:
-      "A specific job for the feature to do, grounded in your own content, with the interface built for the model being wrong.",
-    href: "/services/ai-product-integration",
-    label: "AI product integration",
-  },
-] as const;
-
-/* ── Who I work with ───────────────────────────────────────────────────────
-   Three audiences, named explicitly, each with a route out. A visitor should
-   be able to find their own situation here and act on it in the same glance —
-   naming the audience without giving it somewhere to go just moves the
-   decision further down the page.
-
-   `primary` marks the best-fit buyer. It is emphasised rather than listed
-   first-among-equals, because a site that presents three audiences at
-   identical weight is telling a buyer nothing about where the depth is. */
-
-export const audiences = [
-  {
-    who: "SaaS & product teams",
-    detail:
-      "Frontend delivery for products with an existing backend, design system or evolving roadmap — where the constraint is implementation capacity, not direction.",
-    href: "/services/frontend-product-engineering",
-    label: "Frontend product engineering",
-    primary: true,
-  },
-  {
-    who: "Businesses",
-    detail:
-      "Website redesigns, conversion improvements and customer-facing web applications, where the current site is the thing getting in the way.",
-    href: "/services/website-redesign-rebuild",
-    label: "Redesign & rebuilds",
-  },
-  {
-    who: "Agencies",
-    detail:
-      "White-label React and Next.js delivery capacity behind your brand, inside your process and under your NDA. You keep the client relationship.",
-    href: "/services/agency-frontend-development",
-    label: "White-label delivery",
-  },
-] as const;
-
-/* ── Why work with me ──────────────────────────────────────────────────────
-   Four principles, each tied to something demonstrable rather than to an
-   adjective. These repeat on every service page, so the argument is the same
-   wherever a buyer enters the site.
-
-   The headings state the buyer's outcome, not my capability. "Production
-   ownership" describes what I have; "your product is maintained after launch"
-   describes what you get — and the second one is the version a buyer is
-   actually evaluating. The evidence for each claim stays in the detail line
-   underneath, so the outcome is never asserted without its basis. */
-
-export const principles = [
-  {
-    title: "Your product is maintained, not abandoned at handover",
-    detail:
-      "Five years on a live product rather than a sequence of handovers. I have maintained what I shipped, which is what teaches you where regressions come from and what a change actually costs.",
-  },
-  {
-    title: "Your design ships as drawn — including the states it implies",
-    detail:
-      "I built and maintained a design system before I wrote production React full-time, so I read a Figma file as a specification rather than a picture — including the hover, loading, empty and error states it implies but does not draw.",
-  },
-  {
-    title: "Speed is measured before and after, never just promised",
-    detail:
-      "Performance is treated as a feature with a baseline and a second measurement, not a polish step at the end. On Sunhub that discipline produced a measured 30% performance improvement.",
-  },
-  {
-    title: "Your team can extend the code without me",
-    detail:
-      "Typed code, feature boundaries and documented decisions in your repository. The test is whether your team can keep building after I leave, and that is the state I aim to hand over in.",
+    problem: "We want to automate repetitive work",
+    href: "/services/ai-business-automation",
+    label: "AI Business Automation",
   },
 ] as const;
 
@@ -239,27 +142,26 @@ export type ProofItem = {
 export const proof: ProofItem[] = [
   {
     display: "5+",
-    label: "Years of experience",
-    note: "Production React & Next.js since 2020",
+    label: "Production experience",
+    note: "React and Next.js in production since 2020",
   },
   {
     display: "30%",
-    label: "Core Web Vitals improvement",
-    note: "Measured on Sunhub",
+    label: "Measured Core Web Vitals improvement",
+    note: "On Sunhub, a production React marketplace",
     verified: true,
     href: "/work/sunhub",
   },
   {
-    display: "Primary stack",
-    label: "What I build with",
-    note: "TypeScript, shipped to production",
+    display: "React, Next.js, TypeScript",
     chips: ["React", "Next.js", "TypeScript"],
+    label: "Core engineering stack",
+    note: "Shipped to production",
   },
   {
-    display: "Production",
-    label: "Delivery focus",
-    note: "From plan to production, measured not assumed",
-    chips: ["Scalable", "Maintainable", "Measurable"],
+    display: "Founder-led",
+    label: "Direct engineering ownership",
+    note: "The person who scopes the work builds it",
   },
 ];
 
@@ -268,33 +170,28 @@ export const proof: ProofItem[] = [
 export const process = [
   {
     step: "Understand",
-    detail:
-      "Requirements, users, constraints and success criteria — before anything is designed.",
-    benefit: "The right problem gets defined before anything is built.",
+    detail: "Requirements, users, goals and constraints.",
+    benefit: "The right problem is defined before anything is built.",
   },
   {
     step: "Shape",
-    detail:
-      "Architecture, UX alignment and the key product and system decisions, in writing.",
+    detail: "Scope, UX and technical direction.",
     benefit: "A plan you can approve before a line of code exists.",
   },
   {
     step: "Build",
-    detail:
-      "Implementation, integrations and responsive behavior, in reviewable slices.",
+    detail: "Reviewable production work.",
     benefit: "Working software you can see progress on, not one big drop at the end.",
   },
   {
     step: "Refine",
-    detail:
-      "QA, accessibility, performance and cross-browser checks before launch.",
-    benefit: "What you ship has been checked on real devices, not only on my screen.",
+    detail: "QA, accessibility, responsiveness and performance.",
+    benefit: "What ships has been checked on real devices.",
   },
   {
     step: "Ship",
-    detail:
-      "Handoff, deployment, documentation and the next round of work.",
-    benefit: "What goes live is stable, documented and passable to anyone.",
+    detail: "Deployment, documentation and handover.",
+    benefit: "What goes live is stable, documented and ready to hand over.",
   },
 ] as const;
 
@@ -302,22 +199,14 @@ export const process = [
 
 export const engagements = [
   {
-    title: "Full-time / remote product role",
-    detail:
-      "A frontend or product engineering seat on a team building something long-lived. Five years on a production platform is the experience I bring to it.",
-    cta: { label: "View résumé", href: site.resumeHref },
+    title: "Project engagement",
+    detail: "For a defined build, rebuild or modernization effort, with the scope agreed in writing before work starts.",
+    cta: { label: "Start a project", href: "/contact" },
   },
   {
-    title: "Project or contract engagement",
-    detail:
-      "A defined build with a defined scope — a redesign, a product frontend, an MVP, or a performance pass on something already live.",
-    cta: { label: "Discuss your project", href: "/contact" },
-  },
-  {
-    title: "Agency frontend partnership",
-    detail:
-      "Ongoing white-label React and Next.js delivery behind your brand, under your process and your NDA. You keep the client relationship.",
-    cta: { label: "Discuss a partnership", href: "/services/agency-frontend-development" },
+    title: "Agency partnership",
+    detail: "For agencies that need engineering capacity behind client work. You keep the client relationship; we handle the build.",
+    cta: { label: "Talk about a partnership", href: "/contact" },
   },
 ] as const;
 
@@ -335,44 +224,38 @@ export const contactSteps = [
   {
     step: "You send the project context",
     detail:
-      "The current site, a Figma file, a repository, API notes, or a few lines describing the problem. It does not need to be a finished brief — whatever exists is enough to start from.",
+      "The current site, a Figma file, a repository, API notes, or a few lines describing the problem. It does not need to be a finished brief: whatever exists is enough to start from.",
   },
   {
-    step: "I review the problem, constraints and likely scope",
+    step: "We review the problem, constraints and likely scope",
     detail:
       "A real read of what is actually in the way, what it would take to fix, and whether it is smaller than you were expecting. No call needed to get this far.",
   },
   {
-    step: "I reply with the recommended next step",
+    step: "We reply with the recommended next step",
     detail:
-      "What I would tackle first, and what I would need in order to estimate it properly. If I am the wrong person for it, I will say so and point you somewhere more useful.",
+      "What we would tackle first, and what we would need in order to estimate it properly. If we are the wrong fit, we will say so and point you somewhere more useful.",
   },
 ] as const;
 
-/* Risk reduction, stated plainly. Every one of these is a question a cautious
-   buyer asks internally before enquiring, and leaving them unanswered is what
-   makes an enquiry feel like a commitment rather than a conversation. */
+/* Why Craftwise: three reasons, each tied to something demonstrable rather
+   than to an adjective. Capability, then the benefit, then the basis. */
 
 export const assurances = [
   {
-    title: "You work directly with me",
+    title: "Direct ownership",
     detail:
-      "No account manager, no rotating team, no work quietly passed to someone you have not spoken to. The person who scopes it is the person who writes it.",
+      "The person who scopes the work is the person who builds it, so nothing is lost between the conversation and the code.",
   },
   {
-    title: "Scope is agreed before code exists",
+    title: "Clear communication",
     detail:
-      "What is included and what is not, written down before the build starts rather than negotiated halfway through it.",
+      "Scope is agreed in writing before the build starts, and progress is visible in reviewable slices rather than one drop at the end.",
   },
   {
-    title: "Performance is measured before and after",
+    title: "Quality beyond launch",
     detail:
-      "A baseline, then the change, then a second measurement. That is the only way either of us can know whether the work did what it claimed.",
-  },
-  {
-    title: "I leave code your team can extend",
-    detail:
-      "Typed code, feature boundaries and documented decisions in your repository — so the handover is a handover, not a dependency.",
+      "Performance is measured before and after, and the code is typed and documented so your team can keep extending it without us.",
   },
 ] as const;
 
@@ -420,82 +303,60 @@ export const testimonials: Testimonial[] = [
 
 export const homeFaqs = [
   {
-    q: "What does a frontend product engineer actually do?",
-    a: "Frontend product engineering is the implementation layer that turns product requirements and interface designs into responsive, API-connected web experiences that can be maintained as the product grows. In practice that means owning the interface end to end: architecture, components, state, data fetching, forms, auth-gated areas, performance and deployment — not just styling screens.",
+    q: "What type of projects do you take on?",
+    a: "Business websites and web applications, dashboards and internal tools, improvements to existing software, and workflow automation. We work with small businesses and with digital, creative and web agencies.",
   },
   {
-    q: "Can you work with our existing backend and design files?",
-    a: "Yes, and that is the usual case. I integrate against an existing REST or API layer rather than requiring a rewrite, and I work from Figma directly — the deliverable is production-ready UI, not a static mockup.",
+    q: "Can you work with an existing application?",
+    a: "Yes. Improving, migrating and extending existing software is a large part of the work. The first step is understanding what is already there and what can stay.",
   },
   {
-    q: "Do you take on rebuilds, or only new builds?",
-    a: "Both. A large share of the work is rebuilds and refactors: a product that has outgrown its structure, a marketing site that needs to become an application, or a codebase where shipping has become slow. Incremental feature delivery on an existing codebase is a normal engagement.",
+    q: "Can you work with our existing backend?",
+    a: "Yes. Most projects connect to an API or backend that already exists. We do not need it rewritten to build the interface in front of it.",
   },
   {
-    q: "How do you work with agencies?",
-    a: "White-label. You sell and own the client relationship; I provide the React and Next.js implementation behind your brand, inside your process and under NDA where required. It adds delivery capacity without a permanent hire.",
+    q: "Can you work from Figma?",
+    a: "Yes, and it is the usual starting point. The deliverable is production-ready UI rather than a static mockup. If there is no design yet, we can help shape one.",
   },
   {
-    q: "Are you available for full-time roles as well as project work?",
-    a: "Yes. I am open to remote product roles, and separately to contract, project and agency engagements. Which one makes sense usually becomes obvious in the first conversation.",
+    q: "How does a project start?",
+    a: "You send a message describing what you want to build, improve or fix. We read it and reply with a clear next step, asking for more detail if something is unclear. If it looks like a good fit, the next step is a conversation about scope and approach. Nothing is agreed until both sides confirm it.",
   },
   {
-    q: "How do you approach performance?",
-    a: "As a feature with a baseline, not a final polish step. On the Sunhub platform that meant removing unused assets, optimising the build pipeline, and applying lazy loading, tree-shaking and image compression — a measured 30% Core Web Vitals improvement. I do not quote performance numbers I have not measured.",
-  },
-  {
-    q: "Will a rebuild or migration cost us our search rankings?",
-    a: "Not if SEO preservation is a named deliverable rather than an assumption. That means a URL-by-URL redirect map built from a crawl, the sitemap and Search Console's own indexed-pages report; canonicals and structured data rebuilt to match what the old templates emitted; and indexation monitored for weeks after launch rather than checked once on the day. Rankings are lost by migrations that skip those steps, not by the framework change itself.",
-  },
-  {
-    q: "Can you move us off WordPress but keep our content team publishing?",
-    a: "Yes — that is what headless WordPress is for. Content and editing stay in WordPress, Next.js takes over rendering and performance, and nobody has to learn a new publishing workflow. Whether that or a full replacement is right gets decided during the migration audit rather than assumed up front.",
-  },
-  {
-    q: "Do you handle the technical SEO side of a build?",
-    a: "Yes, as part of the build rather than as an add-on: canonical URLs, sitemap, robots rules, semantic headings, structured data that matches what is visibly on the page, descriptive internal links and image alt text. What I do not do is ongoing SEO retainers, content marketing or link building — that is a different discipline and I will say so rather than take it on.",
-  },
-  {
-    q: "Where are you based, and does timezone matter?",
-    a: "Lahore, Pakistan (UTC+5). I work remotely with teams in Europe, the UK, Australia and North America, with a real overlap window for European and UK mornings and Australian afternoons.",
+    q: "Can you work with agencies?",
+    a: "Yes. Digital, creative and web agencies can work with us on the build side of a client project. You keep the client relationship; we work inside your process and, where needed, under your NDA.",
   },
 ] as const;
 
 /* ── About ─────────────────────────────────────────────────────────────── */
 
 export const about = {
-  h1: "Frontend engineering shaped by real product work",
+  h1: "Who is behind Craftwise?",
   intro:
-    "I am Muhammad Wahab Ansari, a frontend product engineer based in Lahore, Pakistan. Since 2020 I have worked on production web products across frontend engineering, interface design, performance and client-facing applications.",
+    "Craftwise is a founder-led software development studio, run by me, Muhammad Wahab Ansari, from Lahore, Pakistan. I scope the work, build it and stay accountable for it. There is no layer of account managers between the conversation and the code.",
   statement: "Design sensibility. Engineering discipline.",
   teaser:
-    "I work at the seam between product design and frontend engineering — turning product requirements and Figma designs into interfaces that are maintainable, responsive and ready for real users. My experience spans production React platforms, design systems, performance work and client-facing web applications.",
+    "I started in interface design and moved into production frontend engineering, so I think about how something looks, how it behaves and how it will be maintained at the same time.",
   narrative: [
     {
       heading: "How the work developed",
-      body: "I started from interface and frontend work, then expanded into product engineering: API-connected experiences, reusable component systems, performance optimisation, authentication flows and production delivery. Working on a long-lived product taught me to think beyond individual screens — how a change affects performance, maintainability, users and the features that come after it.",
+      body: "I started from interface design: at Elite International Group I led a redesign of an LMS platform and built the design system it runs on. Since 2020 I have worked in production engineering, and at Oxiliry I have spent several years on one long-lived React platform. That means API-connected experiences, component systems, performance work and authentication flows, shipped into a product that real people use every day.",
     },
     {
-      heading: "Why a long run on one product is an asset",
-      body: "A long-running production platform creates a specific kind of engineering experience: maintaining real systems, shipping incremental change, dealing with regression risk, improving performance over time, and understanding how frontend decisions compound into product quality. My portfolio also includes externally delivered projects that show breadth across different environments and constraints.",
+      heading: "Why a long run on one product matters",
+      body: "Maintaining a real system for years teaches things a new build does not: shipping incremental change safely, living with regression risk, and seeing how early decisions compound into product quality. That is the experience the studio brings to a new project, and to a rescue of an existing one.",
     },
     {
-      heading: "Where I am extending",
-      body: "Backwards into the stack — Node, Express, Prisma, Postgres — so the frontend I own does not stop at the API boundary. And sideways into practical AI integration: LLM and API-driven features inside real products, with grounded sources, sensible fallbacks and a human in the loop where the workflow needs one.",
+      heading: "Where the studio is extending",
+      body: "Backwards into the stack (Node, Express, Prisma, Postgres) so the interface does not stop at the API boundary. And sideways into practical automation: workflow and API-driven features with sensible fallbacks and a human in the loop where the work needs one.",
     },
   ],
-  /* Ordered by buyer relevance, not by biography. A visitor deciding whether
-     I can solve their problem needs the production proof and the stack before
-     they need to know which city I am in — geography matters to the decision,
-     but it is not the first question. The hero card shows all six; the
-     homepage teaser shows the first four, which is why those four are the
-     ones that have to earn their position. */
   facts: [
+    { k: "Studio", v: "Craftwise, founder-led" },
     { k: "Experience", v: "5+ years in production" },
-    { k: "Title", v: site.role },
     { k: "Core stack", v: "React · Next.js · TypeScript" },
     { k: "Backend capability", v: "Node.js · Express · Prisma · Postgres" },
-    { k: "Available for", v: "Projects, product work, agency partnerships" },
+    { k: "Available for", v: "Selected projects and agency partnerships" },
     { k: "Based in", v: "Lahore, Pakistan (UTC+5)" },
   ],
 } as const;
@@ -572,7 +433,7 @@ export const capabilities: CapabilityGroup[] = [
   },
   {
     title: "Backend capability",
-    summary: "Enough of the stack that the frontend I own does not stop at the API boundary.",
+    summary: "Enough of the stack that the frontend we build does not stop at the API boundary.",
     lead: ["Node.js", "Express.js", "REST APIs"],
     support: ["PostgreSQL", "MongoDB", "Prisma", "Drizzle", "OAuth 2.0", "JWT"],
   },
@@ -589,14 +450,14 @@ export const capabilities: CapabilityGroup[] = [
     support: ["Agile / Scrum", "Code review", "Figma handoff", "Documentation"],
   },
   {
-    title: "AI integration",
-    summary: "Practical features inside real products — grounded, with fallbacks.",
-    lead: ["LLM / API integration", "Retrieval-based UI patterns", "n8n workflow automation"],
+    title: "Workflow automation",
+    summary: "Practical automation inside real workflows, with fallbacks and human review.",
+    lead: ["API integration", "n8n workflow automation", "LLM / API integration"],
     support: ["Streaming UI states", "Citations and sources", "Human-review workflows"],
   },
 ];
 
-/* Also available, but not sold as headline services — kept honest and visible
+/* Also available on request, but not sold as headline services — kept honest and visible
    without letting it define the positioning. */
 export const byRequest = [
   "WordPress theme and plugin development",

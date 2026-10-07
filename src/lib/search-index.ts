@@ -39,45 +39,45 @@ export function buildSearchIndex(): SearchEntry[] {
       href: "/",
       excerpt:
         hero.headline + " " + hero.support,
-      keywords: ["home", "portfolio", "senior", "react", "next.js", "engineer", "hire"],
+      keywords: ["home", "craftwise", "software development studio", "custom software", "web development"],
     },
     {
       type: "Page",
-      title: "Work — React & Next.js projects",
+      title: "Work — software projects and case studies",
       href: "/work",
       excerpt:
-        "Selected production work and case studies across frontend engineering, performance and Next.js architecture.",
-      keywords: ["projects", "case studies", "portfolio", "production work"],
+        "Selected software projects and case studies: web applications, migrations, performance and client portals.",
+      keywords: ["projects", "case studies", "software portfolio", "production work"],
     },
     {
       type: "Page",
       title: "Services",
       href: "/services",
       excerpt:
-        "Seven frontend engineering services — build, migrate, modernise and partner.",
+        "Four services: custom web development, business dashboards, software modernization and AI business automation.",
       keywords: ["services", "offerings", "engagements"],
     },
     {
       type: "Page",
-      title: "About Wahab Ansari",
+      title: "About Craftwise",
       href: "/about",
       excerpt:
-        "Background, experience, capabilities and credentials — the person behind the portfolio.",
-      keywords: ["about", "background", "experience", "capabilities", "resume", "education", "design system"],
+        "Who is behind Craftwise: the founder, the experience and the way the studio works.",
+      keywords: ["about", "founder", "studio", "background", "experience", "capabilities", "design system"],
     },
     {
       type: "Page",
       title: "Contact",
       href: "/contact",
-      excerpt: "Send a project brief or discuss frontend engineering, SaaS, website or AI product work.",
-      keywords: ["contact", "hire", "brief", "project", "inquiry"],
+      excerpt: "Start a project: tell us what you are building, improving or automating.",
+      keywords: ["contact", "start a project", "brief", "project", "inquiry", "agency partnership"],
     },
     {
       type: "Page",
       title: "Insights",
       href: "/insights",
       excerpt:
-        "First-hand notes on React, Next.js, migrations, performance and AI integration.",
+        "First-hand notes on migrations, performance, security and building software that lasts.",
       keywords: ["articles", "blog", "notes", "insights", "guides"],
     },
 
