@@ -23,7 +23,7 @@ function ProofCard({ project, wide = false }: { project: Project; wide?: boolean
     <>
       <Plate
         project={project}
-        className={cn("border-b border-border", wide && "lg:w-[46%] lg:shrink-0 lg:border-r lg:border-b-0")}
+        className={cn("border-b border-border", wide && "md:w-[46%] md:shrink-0 md:border-r md:border-b-0")}
       />
       <div className="flex h-full flex-1 flex-col p-6 md:p-7">
         <span className="ds-overline-accent">{project.kind}</span>
@@ -58,7 +58,7 @@ function ProofCard({ project, wide = false }: { project: Project; wide?: boolean
 
   const cardClass =
     "group ds-card ds-card-interactive flex h-full w-full flex-col overflow-hidden p-0";
-  const layoutClass = wide ? "lg:flex-row" : "";
+  const layoutClass = wide ? "md:flex-row" : "";
 
   if (isCaseStudy) {
     return (
@@ -158,17 +158,24 @@ export function WorkIndex() {
   const supporting = projects.filter((p) => !p.featured);
 
   return (
-    <Section id="work" tone="plain">
-      <div className="mb-12 flex items-end justify-between gap-8">
+    <Section id="work" tone="soft">
+      <div className="mb-7 flex items-end justify-between gap-8 md:mb-9">
         <div>
           <span className="ds-overline-accent mb-4 block">All projects</span>
           <h2 className="ds-h2">The proof wall</h2>
         </div>
       </div>
-      <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {/* Asymmetric, the way the homepage grid runs: one wide lead case across
+          the full row, the two supporting cases beneath it at half width. */}
+      <ul className="grid gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-6">
         {featuredProjects.map((project, i) => (
-          <Reveal as="li" key={project.slug} delay={i * 0.05} className="flex h-full">
-            <ProofCard project={project} />
+          <Reveal
+            as="li"
+            key={project.slug}
+            delay={i * 0.05}
+            className={cn("flex h-full", i === 0 ? "md:col-span-2 lg:col-span-6" : "lg:col-span-3")}
+          >
+            <ProofCard project={project} wide={i === 0} />
           </Reveal>
         ))}
       </ul>

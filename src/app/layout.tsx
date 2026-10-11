@@ -1,29 +1,32 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { en } from "@/content";
 import * as siteEn from "@/content/en/site";
 import { LocaleProvider } from "@/components/locale-provider";
 import { themeScript } from "@/components/theme-toggle";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { TrackClicks } from "@/components/analytics";
+import { PageViewTracker, ScrollDepthTracker, TrackClicks } from "@/components/analytics";
 import { Gtm } from "@/components/gtm";
+import { GoogleAnalytics } from "@/components/ga";
 import { Spotlight } from "@/components/spotlight";
 import { buildSearchIndex } from "@/lib/search-index";
 import { PageTransition } from "@/components/page-transition";
 
 /*
- * Type follows Apple: San Francisco (SF Pro) on Apple devices, via the system
- * font stack in globals.css. Everywhere else the stack falls through to
- * Inter - the closest open typeface to SF - which is loaded here as a
- * variable font so every weight is available from one file.
+ * Type: Inter for body (geometric sans) + Plus Jakarta Sans for display.
  */
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  /* Optical size axis: Inter then behaves like SF Pro Display at large
-     sizes and SF Pro Text at small ones. */
   axes: ["opsz"],
+  display: "swap",
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -93,7 +96,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       lang="en"
       dir="ltr"
       data-theme="light"
-      className={inter.variable}
+        className={`${inter.variable} ${plusJakarta.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -114,6 +117,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             Skip to content
           </a>
           <Gtm />
+          <GoogleAnalytics />
+          <PageViewTracker />
+          <ScrollDepthTracker />
           <TrackClicks />
           <SpeedInsights />
           {/* Spotlight search — index built server-side, JSON-serialized in. */}

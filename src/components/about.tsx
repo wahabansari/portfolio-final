@@ -50,7 +50,7 @@ export function AboutHero() {
           </div>
 
           <Reveal delay={0.14} className="lg:col-span-5">
-            <div className="theme-tint overflow-hidden rounded-[28px] border border-border shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)]">
+            <div className="theme-tint overflow-hidden rounded-[20px] border border-border shadow-[0_10px_40px_-24px_rgba(0,0,0,0.4)]">
               <div className="flex items-center gap-4 border-b border-border-subtle p-6">
                 <span
                   aria-hidden
@@ -83,7 +83,7 @@ export function AboutHero() {
   );
 }
 
-/** The three-part story, as open columns: a numeral, a rule and the text. */
+/** The three-part story, as three tiles: a numeral, a rule and the text. */
 export function AboutStory({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
     <Section id="story" tone={tone}>
@@ -92,10 +92,10 @@ export function AboutStory({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
         title="How the studio came to be"
         description="Design first, then production engineering, then the parts of the stack that sit behind the interface."
       />
-      <ol className="mx-auto grid max-w-6xl gap-x-12 gap-y-10 lg:grid-cols-3">
+      <ul className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3 md:gap-5">
         {about.narrative.map((block, i) => (
-          <Reveal as="li" key={block.heading} delay={i * 0.08}>
-            <div className="border-t-2 border-accent-deep pt-6">
+          <Reveal as="li" key={block.heading} delay={i * 0.08} className="h-full">
+            <div className="ds-card h-full p-6 md:p-7">
               <span className="font-display text-[2.75rem] leading-none font-bold tracking-[-0.03em] text-accent-hairline tabular-nums">
                 {String(i + 1).padStart(2, "0")}
               </span>
@@ -104,7 +104,7 @@ export function AboutStory({ tone = "soft" }: { tone?: "plain" | "soft" | "deep"
             </div>
           </Reveal>
         ))}
-      </ol>
+      </ul>
     </Section>
   );
 }

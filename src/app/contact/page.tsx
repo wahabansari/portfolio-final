@@ -74,27 +74,29 @@ export default function ContactPage() {
             title="Whichever of these you are"
             description="Three reasons people land here. Each one has a different first step."
           />
-          <ul className="grid border-b border-border md:grid-cols-3 md:gap-x-10">
+          <ul className="grid gap-4 md:grid-cols-3 md:gap-5">
             {paths.map((path, i) => (
-              <Reveal as="li" key={path.who} delay={i * 0.04} className="flex flex-col border-t border-border py-7">
-                <p className="ds-meta">{path.who}</p>
-                <p className="ds-body-sm mt-3 flex-1">{path.what}</p>
-                {path.routed ? (
-                  <Link href={path.href} className="ds-link mt-5">
-                    {path.label}
-                    <ArrowIcon className="h-3.5 w-3.5" />
-                  </Link>
-                ) : (
-                  <a
-                    href={path.href}
-                    data-track={path.href.startsWith("mailto:") ? "email_click" : undefined}
-                    data-track-label="contact-routing"
-                    className="ds-link mt-5"
-                  >
-                    {path.label}
-                    <ArrowIcon className="h-3.5 w-3.5" />
-                  </a>
-                )}
+              <Reveal as="li" key={path.who} delay={i * 0.04} className="h-full">
+                <div className="ds-card flex h-full flex-col p-6 md:p-7">
+                  <p className="ds-meta">{path.who}</p>
+                  <p className="ds-body-sm mt-3 flex-1">{path.what}</p>
+                  {path.routed ? (
+                    <Link href={path.href} className="ds-link mt-5">
+                      {path.label}
+                      <ArrowIcon className="h-3.5 w-3.5" />
+                    </Link>
+                  ) : (
+                    <a
+                      href={path.href}
+                      data-track={path.href.startsWith("mailto:") ? "email_click" : undefined}
+                      data-track-label="contact-routing"
+                      className="ds-link mt-5"
+                    >
+                      {path.label}
+                      <ArrowIcon className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                </div>
               </Reveal>
             ))}
           </ul>
@@ -104,20 +106,20 @@ export default function ContactPage() {
             a question a cautious buyer asks internally before enquiring, and
             leaving them unanswered is what makes an enquiry feel like a
             commitment rather than a conversation. */}
-        <Section tone="plain">
+        <Section tone="soft">
           <SectionHeading
             overline="How the work runs"
             title="What you are agreeing to, before you agree to it"
             description="No engagement starts with a surprise. These things are true of every project, whatever the service."
           />
-          <ul className="grid gap-x-10 gap-y-8 md:grid-cols-3">
+          <ul className="grid gap-4 md:grid-cols-3 md:gap-5">
             {assurances.map((item, i) => (
-              <Reveal as="li" key={item.title} delay={i * 0.04} className="flex gap-4">
-                <span aria-hidden className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent-soft">
-                  <CheckIcon className="text-accent" />
-                </span>
-                <div>
-                  <h3 className="ds-title-sm">{item.title}</h3>
+              <Reveal as="li" key={item.title} delay={i * 0.04} className="h-full">
+                <div className="ds-card h-full p-6 md:p-7">
+                  <span aria-hidden className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft">
+                    <CheckIcon className="text-accent" />
+                  </span>
+                  <h3 className="ds-title-sm mt-4">{item.title}</h3>
                   <p className="ds-body-sm mt-2">{item.detail}</p>
                 </div>
               </Reveal>

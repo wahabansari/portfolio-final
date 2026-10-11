@@ -174,6 +174,8 @@ export function ContactForm() {
  setErrors(found);
 
  if (Object.keys(found).length > 0) {
+ /* Which fields failed, never what was typed in them. */
+ track("form_error", { label: Object.keys(found).join(",") });
  /* Focus moves to the summary rather than the first bad field, so a
  screen reader user gets the count and the full list before being
  dropped into an input with no context. The effect above does the
@@ -582,12 +584,7 @@ export function Contact({
  const Heading = level;
 
 return (
-    <Section id="contact" tone={tone} className={level === "h1" ? "relative overflow-hidden" : undefined}>
-      {/* As the /contact page's opening section it gets the same brand glow
-          every other page header has. */}
-      {level === "h1" && (
-        <div aria-hidden className="ds-hero-glow pointer-events-none absolute inset-0" />
-      )}
+    <Section id="contact" tone={tone}>
       <div className="relative grid gap-12 lg:grid-cols-12 lg:gap-14">
         <Reveal className="lg:col-span-7">
           <div className="max-w-2xl">

@@ -10,13 +10,11 @@ import { Faqs, Reveal, Section, SectionHeading } from "./ui";
 export function HomeFaq({ tone = "soft" }: { tone?: "plain" | "soft" | "deep" }) {
   return (
     <Section id="faq" tone={tone}>
-      <SectionHeading
-        overline=""
-        title="Questions worth asking first"
-        description="What founders and agencies usually want to know before the first call."
-      />
+      <SectionHeading title="Questions worth asking first" description="What founders and agencies usually want to know before the first call." />
       <Reveal>
-        <Faqs faqs={homeFaqs} className="mx-auto max-w-3xl" />
+        <div className="ds-card mx-auto max-w-3xl px-5 py-2 md:px-8 md:py-3">
+          <Faqs faqs={homeFaqs} defaultOpen={["faq-0"]} />
+        </div>
       </Reveal>
     </Section>
   );

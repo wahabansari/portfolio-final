@@ -103,7 +103,7 @@ export default async function CaseStudyPage({
  <div className="ds-card overflow-hidden">
  <Plate project={project} className="border-b border-border" priority />
  </div>
- <div className="mt-6">
+ <div className="ds-card p-6">
  <dl className="grid grid-cols-2 gap-x-6 gap-y-5">
  <Field label="Role" value={study.role} className="col-span-2" />
  <Field label="Scope" value={study.scope} className="col-span-2" />
@@ -136,7 +136,7 @@ export default async function CaseStudyPage({
  />
 
  {/* Context and problem, before anything about the solution. */}
- <Section tone="plain">
+ <Section tone="soft">
  <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
  <Reveal className="lg:col-span-7">
  <span className="ds-overline">Context</span>
@@ -202,7 +202,7 @@ export default async function CaseStudyPage({
  </ul>
  </Section>
 
- <Section tone="plain">
+ <Section tone="soft">
  <SectionHeading
  overline="Decisions"
  title="Choices worth defending"
@@ -264,7 +264,7 @@ export default async function CaseStudyPage({
  )}
  </Section>
 
- <Section tone="plain">
+ <Section tone="soft">
  <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
  <Reveal className="lg:col-span-7">
  <span className="ds-overline">Honestly</span>
@@ -311,7 +311,7 @@ export default async function CaseStudyPage({
  secondary={{ label: study.cta.label, href: study.cta.href }}
  />
 
- <Section tone="soft" bordered>
+ <Section tone="plain" bordered>
  <Reveal>
  <Link
  href={`/work/${nextStudy.slug}`}

@@ -1,8 +1,9 @@
 "use client";
 
 import { Accordion as AccordionPrimitive } from "radix-ui";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { track } from "@/lib/analytics";
 
 /**
  * Accordion — Radix behaviour, styled by this system.
@@ -16,17 +17,21 @@ import { cn } from "@/lib/cn";
  *   · Multiple panels may be open at once. Auto-closing the previous panel is
  *     a common default and a bad one — it destroys the comparison a reader is
  *     usually making between two answers.
- *   · Each item is a fill card: raised white on the band, tinted to blue-50 on
- *     the open state. No outline, no shadow — the fill does the work.
-*  · Content is force-mounted and collapsed with grid rows, so every answer
-   *    stays in the initial HTML for crawlers and in-page search while looking
-   *    like a smooth open/close to the eye. Closed panels are hidden with
-   *    `visibility: hidden`, which also takes them out of the a11y tree and
-   *    keyboard tab order — force-mount alone leaves the collapsed answers
-   *    (and any links inside them) reachable by screen readers.
-   *  · The reveal uses `data-[state=open]` on the trigger: no JavaScript state
-   *    is involved, so reduced-motion and no-JS degrade cleanly.
-   */
+ *   · Items are ruled rows — a hairline between questions, no fill of their
+ *     own. Where the section needs a surface (e.g. the homepage FAQ on a
+ *     gray band) the whole accordion sits inside a `ds-card`, so the rules
+ *     read as inset lines rather than as the only edge on screen.
+ *   · The question is set at 16–17px/600 and the answer at 17px regular, so
+ *     the question always outweighs the answer it introduces.
+ *   · Content is force-mounted and collapsed with grid rows, so every answer
+ *     stays in the initial HTML for crawlers and in-page search while looking
+ *     like a smooth open/close to the eye. Closed panels are hidden with
+ *     `visibility: hidden`, which also takes them out of the a11y tree and
+ *     keyboard tab order — force-mount alone leaves the collapsed answers
+ *     (or any links inside them) reachable by screen readers.
+ *   · The reveal uses `data-[state=open]` on the trigger: no JavaScript state
+ *     is involved, so reduced-motion and no-JS degrade cleanly.
+ */
 
 export type AccordionEntry = {
   value: string;
@@ -46,10 +51,23 @@ export function Accordion({
   defaultOpen?: string[];
   icon?: "chevron" | "plus";
 }) {
+  /* Which panels are open, so a change can be read as "this one just opened".
+     Only openings are reported; closing a question says nothing about interest. */
+  const open = useRef<string[]>(defaultOpen);
+
+  const onValueChange = (next: string[]) => {
+    const opened = next.find((value) => !open.current.includes(value));
+    open.current = next;
+    if (!opened) return;
+    const entry = entries.find((e) => e.value === opened);
+    track("faq_open", { label: typeof entry?.title === "string" ? entry.title : opened });
+  };
+
   return (
     <AccordionPrimitive.Root
       type="multiple"
       defaultValue={defaultOpen}
+      onValueChange={onValueChange}
       className={cn("flex flex-col border-t border-border", className)}
     >
       {entries.map((entry) => (
@@ -60,7 +78,7 @@ export function Accordion({
         >
           <AccordionPrimitive.Header className="flex">
             <AccordionPrimitive.Trigger className="flex w-full cursor-pointer items-start justify-between gap-6 py-4 text-left transition-colors hover:text-accent">
-              <span className="text-[0.9375rem] font-medium leading-snug text-ink transition-colors group-data-[state=open]:text-accent md:text-base">
+              <span className="text-base leading-snug font-semibold text-ink transition-colors group-data-[state=open]:text-accent md:text-[1.0625rem]">
                 {entry.title}
               </span>
               <span

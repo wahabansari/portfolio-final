@@ -53,54 +53,51 @@ export default function ServicesPage() {
 
         <Section tone="soft">
           <SectionHeading
-            overline="Choosing"
             title={servicesHub.fit.heading}
             description={servicesHub.fit.description}
           />
 
-          <Reveal className="mx-auto max-w-4xl">
-            <ul className="ds-card divide-y divide-border overflow-hidden">
-              {servicesHub.fit.rows.map((row) => {
-                const service = getService(row.slug);
-                if (!service) return null;
-                return (
-                  <li key={row.slug}>
-                    <Link
-                      href={`/services/${row.slug}`}
-                      data-track="cta_click"
-                      data-track-label={`fit:${row.slug}`}
-                      className="group flex flex-col gap-3 px-6 py-5 transition-colors duration-200 hover:bg-surface-hover sm:flex-row sm:items-center sm:gap-6 sm:px-8"
-                    >
-                      <span className="ds-body-sm min-w-0 flex-1">{row.situation}</span>
-                      <span className="flex shrink-0 items-center gap-3 text-[0.9375rem] font-medium text-accent">
-                        {service.shortTitle}
-                        <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </Reveal>
+          {/* Four situation tiles, not a divided list: each one is the buyer's
+              own sentence with the service that answers it underneath — the
+              same routing language as the homepage cards. */}
+          <ul className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2 md:gap-5">
+            {servicesHub.fit.rows.map((row, i) => {
+              const service = getService(row.slug);
+              if (!service) return null;
+              return (
+                <Reveal as="li" key={row.slug} delay={i * 0.05} className="h-full">
+                  <Link
+                    href={`/services/${row.slug}`}
+                    data-track="cta_click"
+                    data-track-label={`fit:${row.slug}`}
+                    className="group ds-card ds-card-interactive flex h-full flex-col p-5 md:p-6"
+                  >
+                    <span className="ds-body-sm flex-1">{row.situation}</span>
+                    <span className="ds-link mt-4 text-[0.9375rem]">
+                      {service.shortTitle}
+                      <ArrowIcon className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </span>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </ul>
         </Section>
 
-        <Section tone="plain">
-          <SectionHeading overline="Engagement" title={servicesHub.ways.heading} />
-          <ul className="mx-auto grid max-w-4xl overflow-hidden rounded-3xl border border-border bg-bg md:grid-cols-2">
+        <Section tone="soft">
+          <SectionHeading
+            title={servicesHub.ways.heading}
+          />
+          <ul className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2 md:gap-5">
             {servicesHub.ways.items.map((item, i) => (
-              <Reveal
-                as="li"
-                key={item.title}
-                delay={i * 0.06}
-                className="border-b border-border-subtle last:border-b-0 md:border-b-0 md:[&:not(:first-child)]:border-l"
-              >
+              <Reveal as="li" key={item.title} delay={i * 0.06} className="h-full">
                 <Link
                   href={item.cta.href}
                   data-track="cta_click"
                   data-track-label={`ways:${i}`}
-                  className="group flex h-full flex-col p-7 transition-colors duration-200 hover:bg-accent-soft md:p-8"
+                  className="group ds-card ds-card-interactive flex h-full flex-col p-6 md:p-7"
                 >
-                  <h3 className="ds-h3">{item.title}</h3>
+                  <h3 className="ds-h4">{item.title}</h3>
                   <p className="ds-body-sm mt-2 flex-1">{item.detail}</p>
                   <span className="ds-link mt-5 text-[0.9375rem]">
                     {item.cta.label}
@@ -114,18 +111,17 @@ export default function ServicesPage() {
 
         <Section tone="soft">
           <SectionHeading
-            overline="Process"
             title="How every engagement runs"
             description="Five steps, in this order, whichever service applies."
           />
           <ProcessTimeline steps={process} />
         </Section>
 
-        <WorkResults tone="plain" />
+        <WorkResults tone="soft" />
 
         <CtaBand
           navy
-          tone="soft"
+          tone="plain"
           heading="Not sure which one applies?"
           body="Describe the problem rather than the service. We will tell you which of these fits, whether it is a smaller job than you think, and if it is something we should not be doing."
           primary={{ label: "Start a project", href: "/contact" }}

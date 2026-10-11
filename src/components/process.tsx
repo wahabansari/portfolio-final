@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { CodeIcon, CompassIcon, GaugeIcon, LayoutIcon, Reveal, RocketIcon } from "./ui";
 
-type ProcessStep = { step: string; detail: string };
+type ProcessStep = { step: string; detail: string; benefit: string };
 
 const STEP_ICONS = [CompassIcon, LayoutIcon, CodeIcon, GaugeIcon, RocketIcon];
 
@@ -84,11 +84,12 @@ export function ProcessTimeline({ steps }: { steps: readonly ProcessStep[] }) {
                 className="step-in flex-1 pb-4 lg:w-full lg:pb-0 lg:text-center"
                 style={style({ "--d": d + 0.15 })}
               >
-                <span className="text-[0.75rem] font-semibold tracking-[0.08em] text-accent tabular-nums">
-                  STEP {String(i + 1).padStart(2, "0")}
+                <span className="text-xs font-semibold text-accent tabular-nums">
+                  Step {i + 1}
                 </span>
                 <h3 className="ds-title mt-1.5">{s.step}</h3>
                 <p className="ds-body-sm mt-1.5">{s.detail}</p>
+                <p className="ds-meta mt-1">{s.benefit}</p>
               </div>
             </li>
           );

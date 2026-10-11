@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { cn } from "@/lib/cn";
 
 /**
  * The presentation layer's only motion primitive.
@@ -85,7 +84,7 @@ export function Reveal({
       ref={ref as React.Ref<never>}
       data-reveal="pending"
       style={delay ? { transitionDelay: `${delay}s` } : undefined}
-      className={cn("ds-reveal", className)}
+      className={className}
     >
       {children}
     </Tag>

@@ -1,17 +1,8 @@
 import Link from "next/link";
 import { services, type Service } from "@/content/services";
-import { ServicesShowcase, type ShowcaseService } from "./services-showcase";
-import { ArrowIcon, CodeIcon, LayoutIcon, RefreshIcon, SparklesIcon, Reveal, Section, SectionHeading } from "./ui";
-
-// Service slug → icon mapping. Exported so anything routing to the same
-// service topic (e.g. the problem selector, an Insight's `relatedServiceSlug`)
-// can reuse the exact same icon rather than maintaining a second, driftable mapping.
-export const SERVICE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  "custom-web-development": CodeIcon,
-  "business-dashboards": LayoutIcon,
-  "software-modernization": RefreshIcon,
-  "ai-business-automation": SparklesIcon,
-};
+import { problemPaths } from "@/content/site";
+import { SERVICE_ICONS } from "./service-icons";
+import { ArrowIcon, CodeIcon, Reveal, Section, SectionHeading } from "./ui";
 
 /**
  * One service as an editorial row: a large numeral, the name and summary, an
@@ -45,7 +36,7 @@ function ServiceRow({
           <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent sm:flex">
             <Icon className="h-5 w-5" />
           </span>
-          <span className="ds-h3 transition-colors duration-200 group-hover:text-accent">{service.title}</span>
+        <span className="ds-h4 transition-colors duration-200 group-hover:text-accent">{service.title}</span>
         </span>
       </span>
 
@@ -82,39 +73,56 @@ function RowList({ track, compact }: { track: string; compact?: boolean }) {
   );
 }
 
-/** Homepage: the four services as a selector (list on the left, detail on the right). */
+/**
+ * Homepage: the four services as bento cards. Each card opens with the
+ * buyer's own sentence (`problemPaths`) and lands on the service that fits —
+ * the problem selector and the service list collapsed into one routing tile,
+ * because they were the same four destinations twice.
+ */
 export function ServicesOverview({ tone = "plain" }: { tone?: "plain" | "soft" | "deep" }) {
-  const items: ShowcaseService[] = services.map((sv) => {
-    const fit = sv.idealFor[0];
-    return {
-      slug: sv.slug,
-      index: sv.index,
-      title: sv.title,
-      shortTitle: sv.shortTitle,
-      eyebrow: sv.eyebrow,
-      summary: sv.summary,
-      bestFor: `${fit.charAt(0).toLowerCase()}${fit.slice(1)}${fit.endsWith(".") ? "" : "."}`,
-      gets: sv.deliverables.slice(0, 3).map((d) => d.title),
-    };
-  });
-
   return (
     <Section id="services" tone={tone}>
-      <Reveal className="mx-auto mb-8 flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <span className="ds-overline-accent block">Services</span>
-          <h2 className="mt-3 text-[1.75rem] leading-tight font-bold tracking-[-0.025em] text-fg md:text-[2rem]">
-            Four ways we can help
-          </h2>
-        </div>
-        <Link href="/services" className="ds-link shrink-0 text-[0.9375rem]">
+      <SectionHeading
+        title="Four ways we can help"
+        description="Each card opens with the situation the way you would say it, and names the service underneath."
+      />
+      <ul className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2 md:gap-5">
+        {services.map((sv, i) => {
+          const Icon = SERVICE_ICONS[sv.slug] ?? CodeIcon;
+          const path = problemPaths.find((p) => p.href === `/services/${sv.slug}`);
+          return (
+            <Reveal as="li" key={sv.slug} delay={i * 0.05} className="h-full">
+              <Link
+                href={`/services/${sv.slug}`}
+                data-track="cta_click"
+                data-track-label={`home-service:${sv.slug}`}
+                className="group ds-card ds-card-interactive flex h-full flex-col p-6 md:p-7"
+              >
+                <span className="flex items-start justify-between gap-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-accent">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span className="font-display text-[2rem] leading-none font-bold tracking-[-0.03em] text-accent-hairline tabular-nums transition-colors duration-200 group-hover:text-accent">
+                    {sv.index}
+                  </span>
+                </span>
+                <h3 className="ds-h3 mt-5">{path?.problem ?? sv.shortTitle}</h3>
+                <p className="ds-body-sm mt-2.5">{sv.summary}</p>
+                <span className="ds-link mt-auto pt-6 text-[0.9375rem]">
+                  {sv.shortTitle}
+                  <ArrowIcon className="h-3 w-3" />
+                </span>
+              </Link>
+            </Reveal>
+          );
+        })}
+      </ul>
+      <div className="mt-8 text-center">
+        <Link href="/services" className="ds-link text-[0.9375rem]">
           Compare all services
           <ArrowIcon className="h-3 w-3" />
         </Link>
-      </Reveal>
-      <Reveal delay={0.05}>
-        <ServicesShowcase items={items} />
-      </Reveal>
+      </div>
     </Section>
   );
 }
@@ -122,7 +130,7 @@ export function ServicesOverview({ tone = "plain" }: { tone?: "plain" | "soft" |
 /** /services hub: the four services, with who each one is for. */
 export function ServicesList() {
   return (
-    <Section tone="plain">
+    <Section tone="soft">
       <SectionHeading
         overline="The services"
         title="Four services, one way of working"

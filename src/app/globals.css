@@ -28,53 +28,50 @@
    their conventional green and red so status colours still mean something. */
 :root,
 .theme-light {
-  --c-bg: #ffffff;
-  /* Tiles and cards: barely tinted, a light step above white. */
-  --c-surface: #f8f9fd;
-  --c-surface-hover: #f0f2fa;
-  /* Alternating section bands. */
-  --c-band: #f5f6fb;
-  --c-grid-line: rgba(67, 56, 202, 0.07);
-  --c-border: #e1e4f0;
-  --c-border-subtle: #eaecf5;
-  --c-fg: #1c1e30;
-  --c-fg-muted: #444860;
-  /* 5.4:1 on white, 5.1:1 on the card tint. */
-  --c-fg-subtle: #666a82;
-  --c-fg-softest: #d5d8e6;
-  /* Link indigo. */
-  --c-accent: #4338ca;
-  --c-accent-hover: #3730a3;
-  /* Button indigo. */
-  --c-accent-deep: #4f46e5;
-  --c-accent-deep-hover: #4338ca;
-  --c-accent-soft: rgba(79, 70, 229, 0.08);
+  /* Monochrome luxe: warm ivory-beige background, soft blacks */
+  --c-bg: #f7f6f3;
+  --c-surface: #ffffff;
+  --c-surface-hover: #fafafa;
+  --c-band: #f1f0ec;
+  --c-grid-line: rgba(17, 17, 17, 0.06);
+  --c-border: #e6e4df;
+  --c-border-subtle: #ebe8e2;
+  --c-fg: #111111;
+  --c-fg-muted: #333533;
+  --c-fg-subtle: #6b6b66;
+  --c-fg-softest: #d4d2cc;
+  /* Refined single accent (minimal) */
+  --c-accent: #111111;
+  --c-accent-hover: #000000;
+  --c-accent-deep: #111111;
+  --c-accent-deep-hover: #000000;
+  --c-accent-soft: rgba(17, 17, 17, 0.06);
   --c-accent-fg: #ffffff;
-  --c-accent-hairline: rgba(79, 70, 229, 0.28);
-  --c-surface-blue: #eef0fd;
-  --c-accent-line: rgba(79, 70, 229, 0.35);
-  --c-glow: rgba(79, 70, 229, 0.06);
-  --c-gradient-from: rgba(79, 70, 229, 0.1);
-  --c-gradient-to: rgba(79, 70, 229, 0.04);
-  --c-aurora-a: rgba(99, 102, 241, 0.18);
-  --c-aurora-b: rgba(167, 139, 250, 0.16);
-  --c-aurora-c: rgba(56, 189, 248, 0.14);
-  --c-coral: #8a5300;
-  --c-coral-soft: rgba(138, 83, 0, 0.09);
-  --c-success: #17803d;
-  --c-success-soft: #e8f6ee;
-  --c-success-border: #bfe5cd;
-  --c-warn: #c8283c;
-  --c-warn-soft: #fff1f3;
-  --c-warn-border: #ffc9d1;
-  --c-deep: #14152a;
-  --c-deep-text: #f1f2fa;
-  --c-panel: #1a1b33;
-  --c-panel-text: #f1f2fa;
-  --c-panel-dim: #a4a7c4;
-  --c-panel-border: rgba(255, 255, 255, 0.12);
-  --shadow-card: 0 1px 2px rgba(28, 30, 60, 0.03);
-  --shadow-card-hover: 0 16px 36px -18px rgba(49, 46, 129, 0.28);
+  --c-accent-hairline: rgba(17, 17, 17, 0.18);
+  --c-surface-blue: #f5f4f1;
+  --c-accent-line: rgba(17, 17, 17, 0.24);
+  --c-glow: rgba(17, 17, 17, 0.04);
+  --c-gradient-from: rgba(17, 17, 17, 0.08);
+  --c-gradient-to: rgba(17, 17, 17, 0.03);
+  --c-aurora-a: rgba(17, 17, 17, 0.06);
+  --c-aurora-b: rgba(17, 17, 17, 0.04);
+  --c-aurora-c: rgba(17, 17, 17, 0.03);
+  --c-coral: #8f7b3b;
+  --c-coral-soft: rgba(143, 123, 59, 0.10);
+  --c-success: #1a7c3e;
+  --c-success-soft: #f1f8f4;
+  --c-success-border: #d6e8dc;
+  --c-warn: #b6252e;
+  --c-warn-soft: #fbf1f2;
+  --c-warn-border: #f0d6d8;
+  --c-deep: #0b0b0b;
+  --c-deep-text: #f7f6f3;
+  --c-panel: #111111;
+  --c-panel-text: #f7f6f3;
+  --c-panel-dim: #b9b8b2;
+  --c-panel-border: rgba(255, 255, 255, 0.16);
+  --shadow-card: 0 1px 1px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 6px 20px -10px rgba(0, 0, 0, 0.16);
 }
 
 /* ── Tokens - tint ───────────────────────────────────────────────────────
@@ -95,48 +92,48 @@
 html[data-theme="dark"],
 .theme-dark,
 .tone-deep {
-  --c-bg: #0e0f1b;
-  --c-surface: #171829;
-  --c-surface-hover: #202239;
-  --c-band: #121324;
-  --c-grid-line: rgba(165, 180, 252, 0.09);
-  --c-border: #33365a;
-  --c-border-subtle: #262942;
-  --c-fg: #f1f2fb;
-  --c-fg-muted: #aaadc8;
-  --c-fg-subtle: #8c90ad;
-  --c-fg-softest: #3a3d5c;
-  --c-accent: #a5b4fc;
-  --c-accent-hover: #c7d2fe;
-  --c-accent-deep: #5457e8;
-  --c-accent-deep-hover: #6366f1;
-  --c-accent-soft: rgba(165, 180, 252, 0.14);
-  --c-accent-fg: #ffffff;
-  --c-accent-hairline: rgba(165, 180, 252, 0.4);
-  --c-surface-blue: #15183a;
-  --c-accent-line: rgba(165, 180, 252, 0.45);
-  --c-glow: rgba(129, 140, 248, 0.1);
-  --c-gradient-from: rgba(129, 140, 248, 0.18);
-  --c-gradient-to: rgba(129, 140, 248, 0.06);
-  --c-aurora-a: rgba(99, 102, 241, 0.26);
-  --c-aurora-b: rgba(167, 139, 250, 0.2);
-  --c-aurora-c: rgba(56, 189, 248, 0.14);
-  --c-coral: #fbbf24;
-  --c-coral-soft: rgba(251, 191, 36, 0.12);
-  --c-success: #34d399;
-  --c-success-soft: rgba(52, 211, 153, 0.1);
-  --c-success-border: rgba(52, 211, 153, 0.28);
-  --c-warn: #ff7a8a;
-  --c-warn-soft: rgba(255, 122, 138, 0.1);
-  --c-warn-border: rgba(255, 122, 138, 0.3);
-  --c-deep: #0a0b16;
-  --c-deep-text: #f1f2fb;
-  --c-panel: #14152a;
-  --c-panel-text: #f1f2fb;
-  --c-panel-dim: #8c90ad;
-  --c-panel-border: rgba(255, 255, 255, 0.14);
+  --c-bg: #0b0b0b;
+  --c-surface: #141414;
+  --c-surface-hover: #1b1b1b;
+  --c-band: #101010;
+  --c-grid-line: rgba(247, 246, 243, 0.06);
+  --c-border: #262626;
+  --c-border-subtle: #1f1f1f;
+  --c-fg: #f7f6f3;
+  --c-fg-muted: #dcd9d1;
+  --c-fg-subtle: #b9b8b2;
+  --c-fg-softest: #3a3a36;
+  --c-accent: #f7f6f3;
+  --c-accent-hover: #ffffff;
+  --c-accent-deep: #f7f6f3;
+  --c-accent-deep-hover: #ffffff;
+  --c-accent-soft: rgba(247, 246, 243, 0.08);
+  --c-accent-fg: #0b0b0b;
+  --c-accent-hairline: rgba(247, 246, 243, 0.22);
+  --c-surface-blue: #151515;
+  --c-accent-line: rgba(247, 246, 243, 0.28);
+  --c-glow: rgba(247, 246, 243, 0.04);
+  --c-gradient-from: rgba(247, 246, 243, 0.10);
+  --c-gradient-to: rgba(247, 246, 243, 0.04);
+  --c-aurora-a: rgba(247, 246, 243, 0.06);
+  --c-aurora-b: rgba(247, 246, 243, 0.04);
+  --c-aurora-c: rgba(247, 246, 243, 0.03);
+  --c-coral: #d9c27c;
+  --c-coral-soft: rgba(217, 194, 124, 0.12);
+  --c-success: #3fb984;
+  --c-success-soft: rgba(63, 185, 132, 0.12);
+  --c-success-border: rgba(63, 185, 132, 0.26);
+  --c-warn: #f28b91;
+  --c-warn-soft: rgba(242, 139, 145, 0.12);
+  --c-warn-border: rgba(242, 139, 145, 0.28);
+  --c-deep: #050505;
+  --c-deep-text: #f7f6f3;
+  --c-panel: #111111;
+  --c-panel-text: #f7f6f3;
+  --c-panel-dim: #b9b8b2;
+  --c-panel-border: rgba(255, 255, 255, 0.16);
   --shadow-card: none;
-  --shadow-card-hover: 0 14px 34px -16px rgba(0, 0, 0, 0.8);
+  --shadow-card-hover: 0 10px 40px -20px rgba(0, 0, 0, 0.9);
 }
 /* A tint panel on the dark site is simply a raised dark panel. */
 html[data-theme="dark"] .theme-tint {
@@ -153,7 +150,7 @@ html[data-theme="dark"] .theme-tint {
   /* ── Typography - SF Pro where it exists, Inter everywhere else ────── */
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", var(--font-inter), system-ui, sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", var(--font-inter), system-ui, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-display, var(--font-inter)), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", var(--font-inter), system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
 
   /* ── Colors - theme tokens ──────────────────────────────────────── */
@@ -229,7 +226,7 @@ html[data-theme="dark"] .theme-tint {
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-control: 12px;
-  --radius-card: 28px;
+  --radius-card: 20px;
 }
 
 /* Scoped regions re-resolve the colour aliases. A custom property that
@@ -488,22 +485,46 @@ html[data-theme="dark"] .theme-tint {
 }
 
 .ds-btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3.25rem;
+  padding: 0 1.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,0.12);
   background-color: var(--color-accent-deep);
   color: var(--color-accent-fg);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform 0.16s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset, 0 1px 2px rgba(0,0,0,0.08);
 }
-.ds-btn-primary:hover {
-  background-color: var(--color-accent-deep-hover);
-}
+.ds-btn-primary:hover { background-color: var(--color-accent-deep-hover); }
+.ds-btn-primary:active { transform: scale(0.995); }
+.ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--color-glow), 0 1px 0 rgba(255,255,255,0.12) inset; }
 
 .ds-btn-secondary {
-  background-color: transparent;
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3.25rem;
+  padding: 0 1.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-fg);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.16s ease;
 }
-.ds-btn-secondary:hover {
-  background-color: var(--color-accent);
-  color: var(--color-bg);
-}
+.ds-btn-secondary:hover { background-color: var(--color-surface-hover); border-color: var(--color-accent-hairline); }
+.ds-btn-secondary:active { transform: scale(0.995); }
+.ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--color-glow); }
 
 .ds-btn-ghost {
   background-color: transparent;
@@ -577,35 +598,26 @@ html[data-theme="dark"] .theme-tint {
   isolation: isolate;
   overflow: hidden;
   background:
-    linear-gradient(180deg, var(--color-band) 0%, var(--color-bg) 100%);
+    radial-gradient(120% 120% at 50% 0%, var(--color-surface) 0%, var(--color-bg) 100%);
 }
 .hero-aurora::before {
   content: "";
   position: absolute;
-  inset: -20% -10% -10% -10%;
+  inset: -20% -10% -20% -10%;
   z-index: -1;
   background:
-    radial-gradient(48% 60% at 84% 14%, var(--c-aurora-a), transparent 70%),
-    radial-gradient(44% 58% at 12% 6%, var(--c-aurora-b), transparent 70%),
-    radial-gradient(52% 52% at 62% 100%, var(--c-aurora-c), transparent 72%);
-  animation: aurora-drift 26s ease-in-out infinite alternate;
+    radial-gradient(40% 60% at 50% 0%, rgba(17,17,17,0.05), transparent 70%),
+    radial-gradient(60% 40% at 80% 10%, rgba(17,17,17,0.03), transparent 70%),
+    radial-gradient(50% 40% at 20% 10%, rgba(17,17,17,0.03), transparent 72%);
+  animation: aurora-drift 28s ease-in-out infinite alternate;
   will-change: transform;
 }
 @keyframes aurora-drift {
-  from { transform: translate3d(-3%, -2%, 0) scale(1); }
-  to { transform: translate3d(3%, 3%, 0) scale(1.08); }
+  from { transform: translate3d(-1%, -1%, 0) scale(1); }
+  to { transform: translate3d(1%, 1%, 0) scale(1.02); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-aurora::before { animation: none; }
-}
-
-/* ── Retired decoration ──────────────────────────────────────────────── */
-.ds-hero-glow {
-  display: none;
-}
-.ds-gradient-band {
-  background: linear-gradient(135deg, var(--color-surface-blue) 0%, var(--color-surface) 100%);
-  border: 1px solid var(--color-accent-hairline);
 }
 
 .ds-card-tags {
@@ -637,6 +649,14 @@ html[data-theme="dark"] .theme-tint {
   .ds-section {
     padding-top: var(--spacing-section-mobile);
     padding-bottom: var(--spacing-section-mobile);
+  }
+}
+/* The anchor sections (work, close) get more air so the page's rhythm
+   reads 48 / 72 / 104 rather than one flat band size. Desktop only. */
+@media (min-width: 768px) {
+  .ds-section.ds-section-roomy {
+    padding-top: 104px;
+    padding-bottom: 104px;
   }
 }
 

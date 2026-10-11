@@ -152,13 +152,13 @@ export function InsightsHero() {
 /** The most recently updated article, given the page's one large moment. */
 function FeaturedInsight({ insight }: { insight: Insight }) {
   return (
-    <Section tone="plain">
+    <Section tone="soft">
       <Reveal>
         <Link
           href={`/insights/${insight.slug}`}
           data-track="cta_click"
           data-track-label={insight.slug}
-          className="group grid gap-8 overflow-hidden rounded-[2rem] border border-border bg-bg p-4 transition-shadow duration-300 hover:shadow-[var(--shadow-card-hover)] md:p-5 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-12"
+          className="group ds-card ds-card-interactive grid gap-8 overflow-hidden p-0 transition-shadow duration-300 hover:shadow-[var(--shadow-card-hover)] lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-12"
         >
           <ImagePlaceholder className="aspect-[16/11] w-full" />
           <div className="px-2 pb-3 lg:py-6 lg:pr-8">
@@ -181,24 +181,31 @@ function FeaturedInsight({ insight }: { insight: Insight }) {
   );
 }
 
-/** One article in a topic: a thumbnail frame beside the title, dek and meta. */
-function InsightRow({ insight }: { insight: Insight }) {
+/**
+ * Bento tile for insights: image frame, topic, title, dek, meta, and a small
+ * "Read" link.
+ */
+function InsightTile({ insight }: { insight: Insight }) {
   return (
     <Link
       href={`/insights/${insight.slug}`}
       data-track="cta_click"
       data-track-label={insight.slug}
-      className="group -mx-3 flex items-start gap-5 rounded-2xl px-3 py-5 transition-colors duration-200 hover:bg-accent-soft md:gap-6"
+      className="group ds-card ds-card-interactive flex h-full flex-col overflow-hidden p-0"
     >
-      <ImagePlaceholder compact className="aspect-[4/3] w-28 shrink-0 sm:w-40" />
-      <div className="min-w-0 flex-1">
-        <h3 className="text-[1.0625rem] leading-snug font-semibold tracking-[-0.015em] text-fg transition-colors duration-200 group-hover:text-accent md:text-[1.25rem]">
+      <ImagePlaceholder className="aspect-[16/10] w-full border-b border-border-subtle" />
+      <div className="flex flex-1 flex-col p-5 md:p-6">
+        <span className="ds-chip self-start">{insight.cluster}</span>
+        <h3 className="ds-title mt-3 transition-colors duration-200 group-hover:text-accent">
           {insight.title}
         </h3>
-        <p className="ds-body-sm mt-1.5 line-clamp-2 max-w-2xl">{insight.dek}</p>
-        <Meta insight={insight} className="mt-3" />
+        <p className="ds-body-sm mt-2 line-clamp-3">{insight.dek}</p>
+        <Meta insight={insight} className="mt-4" />
+        <span className="ds-link mt-auto pt-5 text-[0.875rem]">
+          Read
+          <ArrowIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+        </span>
       </div>
-      <ArrowIcon className="mt-2 hidden h-4 w-4 shrink-0 text-fg-subtle transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent md:block" />
     </Link>
   );
 }
@@ -216,24 +223,26 @@ export function InsightsList() {
   return (
     <>
       {featured && <FeaturedInsight insight={featured} />}
-      {clusters.map((cluster, ci) => {
+      {/* Bento hub: cluster section on soft canvas with a 2/3 article grid
+          (sticky topic rail, articles as bento tiles). */}
+      {clusters.map((cluster) => {
         const items = rest.filter((i) => i.cluster === cluster);
         return (
-          <Section key={cluster} id={clusterId(cluster)} tone={ci % 2 === 0 ? "soft" : "plain"}>
+          <Section key={cluster} id={clusterId(cluster)} tone="soft">
             <div className="grid gap-8 lg:grid-cols-12 lg:gap-14">
-              <div className="lg:col-span-4">
+              <div className="lg:col-span-3">
                 <div className="lg:sticky lg:top-28">
                   <span className="ds-overline-accent block">Topic</span>
-                  <h2 className="ds-h2 mt-3">{cluster}</h2>
+                  <h2 className="ds-h3 mt-3">{cluster}</h2>
                   <p className="ds-body-sm mt-3">
                     {items.length} {items.length === 1 ? "article" : "articles"}
                   </p>
                 </div>
               </div>
-              <ul className="border-b border-border lg:col-span-8">
+              <ul className="grid gap-4 md:grid-cols-2 md:gap-5 lg:col-span-9">
                 {items.map((insight, i) => (
-                  <Reveal as="li" key={insight.slug} delay={i * 0.03} className="border-t border-border">
-                    <InsightRow insight={insight} />
+                  <Reveal as="li" key={insight.slug} delay={i * 0.03} className="h-full">
+                    <InsightTile insight={insight} />
                   </Reveal>
                 ))}
               </ul>

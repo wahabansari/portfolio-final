@@ -31,6 +31,7 @@ export function OutboundLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      data-outbound
       aria-label={ariaLabel}
       onClick={() => track(event, payload)}
       className={className}

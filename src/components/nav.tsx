@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { useContent, useLocaleHref } from "./locale-provider";
 import { ThemeToggle } from "./theme-toggle";
 import { ArrowIcon, BrandMark, ChevronDownIcon } from "./ui";
+import { SERVICE_NAV } from "@/lib/service-nav";
 
 function useScrolled(threshold = 4) {
   const [scrolled, setScrolled] = useState(false);
@@ -19,19 +20,15 @@ function useScrolled(threshold = 4) {
   return scrolled;
 }
 
-// Services for dropdown — keep in sync with src/content/en/services.ts
-const SERVICE_ITEMS = [
-  { slug: "custom-web-development", label: "Custom Web Development" },
-  { slug: "business-dashboards", label: "Business Dashboards & Custom Software" },
-  { slug: "software-modernization", label: "Software Modernization" },
-  { slug: "ai-business-automation", label: "AI Business Automation" },
-] as const;
+// Services for the dropdown — the shared client-safe list (see service-nav.ts).
+const SERVICE_ITEMS = SERVICE_NAV;
 
 /**
- * Header — 68px fixed bar.
+ * Header — 48px fixed bar.
  *
- * Wordmark left, three core links center-right, theme toggle and one CTA
- * right. Scrolled state gains a blurred surface and a hairline.
+ * Wordmark left, four core links center-right, theme toggle and one CTA
+ * right. Scrolled state gains a blurred surface and a hairline. The active
+ * page is marked by colour plus a short accent underline that scales in.
  *
  * On mobile the core links collapse into an animated panel using
  * grid-rows (0fr → 1fr) + visibility so closed panels leave the a11y
@@ -142,7 +139,7 @@ export function Nav() {
                     aria-haspopup="true"
                     data-track="nav_services_toggle"
                     className={cn(
-                      "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[0.8125rem] font-normal tracking-[-0.01em] transition-colors duration-150",
+                      "relative flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[0.8125rem] font-normal tracking-[-0.01em] transition-colors duration-150",
                       active || servicesOpen ? "text-fg" : "text-fg/85 hover:text-fg",
                     )}
                   >
@@ -151,8 +148,8 @@ export function Nav() {
                     <span
                       aria-hidden
                       className={cn(
-                        "hidden",
-                        active ? "scale-x-100" : "scale-x-0 origin-left",
+                        "absolute inset-x-3 -bottom-0.5 h-[2px] origin-left rounded-full bg-accent transition-transform duration-200",
+                        active ? "scale-x-100" : "scale-x-0",
                       )}
                     />
                   </button>
@@ -222,8 +219,8 @@ export function Nav() {
                 <span
                   aria-hidden
                   className={cn(
-                    "hidden",
-                    active ? "scale-x-100" : "scale-x-0 origin-left",
+                    "absolute inset-x-3 -bottom-0.5 h-[2px] origin-left rounded-full bg-accent transition-transform duration-200",
+                    active ? "scale-x-100" : "scale-x-0",
                   )}
                 />
               </Link>

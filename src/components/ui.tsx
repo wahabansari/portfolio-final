@@ -16,6 +16,7 @@ export function Section({
  className,
  tone = "plain",
  bordered = false,
+ size = "default",
 }: {
  id?: string;
  children: ReactNode;
@@ -24,6 +25,8 @@ export function Section({
  tone?: "plain" | "soft" | "deep";
  /** A hairline above the section, for when two plain bands have to meet. */
  bordered?: boolean;
+ /** Roomy gives the page's anchor sections (work, close) more vertical air. */
+ size?: "default" | "roomy";
 }) {
 return (
     <section
@@ -34,6 +37,7 @@ return (
         tone === "soft" && "tone-soft",
         tone === "deep" && "tone-deep",
         bordered && "border-t border-border",
+        size === "roomy" && "ds-section-roomy",
         className,
       )}
     >
@@ -56,7 +60,7 @@ export function SectionHeading({
  align = "center",
  size,
 }: {
- overline: string;
+ overline?: string;
  title: ReactNode;
  description?: string;
  aside?: ReactNode;
@@ -76,16 +80,16 @@ export function SectionHeading({
  >
  <div className={cn("max-w-3xl", align === "center" && "text-center")}>
  {overline && <span className="ds-overline-accent">{overline}</span>}
- <Heading
- className={cn(
- overline && "mt-3",
- level === "h1"
- ? "ds-h1"
- : size === "sm"
- ? "ds-h3"
- : "ds-h2",
- )}
- >
+  <Heading
+  className={cn(
+  overline && "mt-3",
+  level === "h1"
+  ? "ds-h1"
+  : size === "sm"
+  ? "ds-h4"
+  : "ds-h2",
+  )}
+  >
  {title}
  </Heading>
  {description && (
@@ -447,16 +451,18 @@ export function ChipList({ items, className }: { items: readonly string[]; class
 export function Faqs({
  faqs,
  className,
+ defaultOpen,
 }: {
  faqs: readonly { q: string; a: string }[];
  className?: string;
+ defaultOpen?: string[];
 }) {
  const entries = faqs.map((f, i) => ({
  value: `faq-${i}`,
  title: f.q,
  panel: <p className="ds-body">{f.a}</p>,
  }));
- return <Accordion entries={entries} className={className} />;
+ return <Accordion entries={entries} className={className} defaultOpen={defaultOpen} />;
 }
 
 /* ── Fit lists ──────────────────────────────────────────────────────────────
@@ -560,10 +566,10 @@ export function CtaBand({
   steps?: readonly { step: string; detail: string }[];
   tone?: "plain" | "soft" | "deep";
   /**
-   * Renders the band as the closing bookend: a rounded panel in the brand
-   * gradient (`.ds-gradient-band`, same as the homepage contact CTA) with
-   * ink type and the primary action. When off, the band stays on the
-   * section tone with the accent hairline.
+   * Renders the band as the closing bookend: a tinted rounded panel
+   * (`.theme-tint`, same panel language as the homepage close and the
+   * PageHeader statement) with the primary action. When off, the band stays
+   * on the section tone with the accent hairline.
    */
   navy?: boolean;
 }) {
@@ -573,7 +579,7 @@ export function CtaBand({
     return (
       <Section tone={tone}>
         <Reveal>
-          <div className="ds-gradient-band rounded-[1.75rem] px-6 py-12 sm:px-10 md:px-14 md:py-16">
+          <div className="theme-tint rounded-[20px] border border-border px-6 py-12 sm:px-10 md:px-14 md:py-16">
             <div
               className={cn(
                 "relative",
@@ -740,11 +746,10 @@ export function Breadcrumbs({ trail, center = false }: { trail: Crumb[]; center?
 
 /**
  * The header band every inner page opens with. Breadcrumbs, an eyebrow, the
- * one h1, its value proposition, and the page's dominant action — on the
- * soft band, so the page has a distinct head and body.
- *
- * Visual parity with the homepage hero: the same single brand gradient
- * glow (`.ds-hero-glow`) and nothing else — no grid lines, no watermark.
+ * one h1, its value proposition, and the page's dominant action — inside a
+ * tinted statement panel on the aurora opener, the same panel language as the
+ * homepage hero. An `aside` sits beside the panel as its own tile on the same
+ * 12-column row, so the page opens bento the way the home hero does.
  */
 export function PageHeader({
   trail,
@@ -765,67 +770,69 @@ export function PageHeader({
   aside?: ReactNode;
   align?: "left" | "center";
 }) {
-  if (align === "center") {
-    return (
-      <section className="relative overflow-hidden border-b border-border bg-surface pt-28 pb-16 md:pt-32 md:pb-20">
-        <div aria-hidden className="ds-hero-glow pointer-events-none absolute inset-0" />
-        <div className="ds-container relative">
-          {trail && <Breadcrumbs trail={trail} center />}
-          <div className={cn("mx-auto flex max-w-3xl flex-col items-center text-center", trail && "mt-8")}>
-            {eyebrow && <span className="ds-overline-accent mb-5 block">{eyebrow}</span>}
-            <h1 className="ds-h1">{title}</h1>
-            {lede && <p className="ds-lede mx-auto mt-6 max-w-2xl">{lede}</p>}
-            {intro && (
-              <div className="mt-6 space-y-4">
-                {intro.map((p) => (
-                  <p key={p} className="ds-body">
-                    {p}
-                  </p>
-                ))}
-              </div>
-            )}
-            {actions && (
-              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
-                {actions}
-              </div>
-            )}
-          </div>
-          {aside && <div className="mx-auto mt-10 max-w-4xl">{aside}</div>}
+  const inner = (
+    <>
+      {eyebrow && <span className="ds-overline-accent mb-5 block">{eyebrow}</span>}
+      <h1 className={cn("ds-h1", !eyebrow && "max-w-2xl")}>{title}</h1>
+      {lede && (
+        <p className={cn("ds-lede mt-6", align === "center" ? "mx-auto max-w-2xl" : "max-w-2xl")}>
+          {lede}
+        </p>
+      )}
+      {intro && (
+        <div className={cn("mt-6 space-y-4", align === "center" && "mx-auto max-w-2xl")}>
+          {intro.map((p) => (
+            <p key={p} className="ds-body">
+              {p}
+            </p>
+          ))}
         </div>
-      </section>
-    );
-  }
+      )}
+      {actions && (
+        <div
+          className={cn(
+            "mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap",
+            align === "center" && "justify-center",
+          )}
+        >
+          {actions}
+        </div>
+      )}
+    </>
+  );
+
+  const panel = (
+    <div className="theme-tint rounded-[20px] border border-border px-6 py-9 sm:px-9 md:px-12 md:py-14">
+      {align === "center" ? (
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">{inner}</div>
+      ) : (
+        <div className={cn(aside ? "max-w-2xl" : "max-w-3xl")}>{inner}</div>
+      )}
+    </div>
+  );
 
   return (
-    <section className="relative overflow-hidden border-b border-border bg-surface pt-28 pb-16 md:pt-32 md:pb-20">
-      <div aria-hidden className="ds-hero-glow pointer-events-none absolute inset-0" />
+    <section className="hero-aurora border-b border-border pt-28 pb-14 md:pt-32 md:pb-20">
+      <div className="ds-container">
+        {trail && <Breadcrumbs trail={trail} center={align === "center"} />}
 
-      <div className="ds-container relative">
-        {trail && <Breadcrumbs trail={trail} />}
-
-        <div className={cn("grid gap-10 lg:grid-cols-12 lg:gap-16", trail && "mt-8")}>
-          <div className={cn("max-w-3xl", aside ? "lg:col-span-7" : "lg:col-span-9")}>
-            {eyebrow && <span className="ds-overline-accent mb-5 block">{eyebrow}</span>}
-            <h1 className={cn("ds-h1", !eyebrow && "max-w-2xl")}>{title}</h1>
-            {lede && <p className="ds-lede mt-6 max-w-2xl">{lede}</p>}
-
-            {intro && (
-              <div className="mt-6 space-y-4">
-                {intro.map((p) => (
-                  <p key={p} className="ds-body">
-                    {p}
-                  </p>
-                ))}
+        {aside && align === "left" ? (
+          <div className={cn("grid items-start gap-4 md:gap-5 lg:grid-cols-12", trail && "mt-8")}>
+            <Reveal className="lg:col-span-7">{panel}</Reveal>
+            <Reveal delay={0.08} className="flex flex-col gap-4 md:gap-5 lg:col-span-5">
+              {aside}
+            </Reveal>
+          </div>
+        ) : (
+          <div className={cn(trail && "mt-8")}>
+            <Reveal>{panel}</Reveal>
+            {aside && (
+              <div className="mx-auto mt-4 flex max-w-4xl flex-col gap-4 md:mt-5 md:gap-5">
+                {aside}
               </div>
             )}
-
-            {actions && (
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">{actions}</div>
-            )}
           </div>
-
-          {aside && <div className="lg:col-span-5">{aside}</div>}
-        </div>
+        )}
       </div>
     </section>
   );

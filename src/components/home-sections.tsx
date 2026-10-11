@@ -1,104 +1,44 @@
 import Link from "next/link";
 import { featuredProjects, type Project } from "@/content/work";
-import { assurances, problemPaths, process as processSteps, site } from "@/content/site";
+import { process as processSteps, site } from "@/content/site";
+import { cn } from "@/lib/cn";
 import { OutboundLink } from "./outbound";
-import { SERVICE_ICONS } from "./services";
-import { CheckCircleIcon } from "./home-svg";
 import { ProcessTimeline } from "./process";
-import {
-  ArrowIcon,
-  ChevronRightIcon,
-  CodeIcon,
-  GaugeIcon,
-  LayoutIcon,
-  RefreshIcon,
-  Reveal,
-  Section,
-  SectionHeading,
-  UserIcon,
-} from "./ui";
+import { Plate } from "./plate";
+import { ArrowIcon, ChevronRightIcon, Reveal, Section, SectionHeading } from "./ui";
 
 /*
- * Homepage sections. Each one is short on purpose: an icon, a title and one
- * line. The detail lives on the service, work and About pages they link to;
- * every line below comes from content/site.ts, content/services.ts or
+ * Homepage sections, bento edition. The routing layer (problem → service)
+ * lives in services.tsx as four bento cards and the "why" reasons live with
+ * the testimonials in trust.tsx — what is left here is the work grid, the
+ * process, and the close. Every line comes from content/site.ts or
  * content/work.ts, never a new claim.
  */
 
 type Tone = "plain" | "soft" | "deep";
 
-const ICON_TILE =
-  "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-accent";
+/* ── Results ─────────────────────────────────────────────────────────── */
 
-/* ── 1. What are you trying to solve? ───────────────────────────────────── */
-
-export function ProblemPaths({ tone = "plain" }: { tone?: Tone }) {
-  return (
-    <Section id="solve" tone={tone}>
-      <SectionHeading
-        overline=""
-        title="What are you trying to solve?"
-        description="Pick the situation closest to yours. Each one goes straight to the service that fits."
-      />
-      {/* Ruled rows rather than tiles: the sentence is the thing being chosen,
-          so it is set large, with the destination and an arrow on the right. */}
-      <ul className="mx-auto grid max-w-6xl border-b border-border md:grid-cols-2 md:gap-x-12">
-        {problemPaths.map((path, i) => {
-          const slug = path.href.split("/").pop() ?? "";
-          const Icon = SERVICE_ICONS[slug] ?? CodeIcon;
-          return (
-            <Reveal as="li" key={path.href} delay={i * 0.05} className="border-t border-border md:[&:nth-child(n+3)]:border-t">
-              <Link
-                href={path.href}
-                data-track="cta_click"
-                data-track-label={`problem:${slug}`}
-                className="group -mx-3 flex items-center gap-4 rounded-2xl px-3 py-6 transition-colors duration-200 hover:bg-accent-soft"
-              >
-                <span className={ICON_TILE}>
-                  <Icon className="h-5 w-5" />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[1.1875rem] font-semibold leading-snug tracking-[-0.015em] text-fg">
-                    {path.problem}
-                  </span>
-                  <span className="mt-1 block text-[0.875rem] text-fg-muted">{path.label}</span>
-                </span>
-                <span
-                  aria-hidden
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-accent transition-all duration-200 group-hover:translate-x-0.5 group-hover:border-accent group-hover:bg-accent-deep group-hover:text-accent-fg"
-                >
-                  <ArrowIcon className="h-3.5 w-3.5" />
-                </span>
-              </Link>
-            </Reveal>
-          );
-        })}
-      </ul>
-    </Section>
-  );
-}
-
-/* ── 2. Results ─────────────────────────────────────────────────────────── */
-
-function ProjectIcon({ kind, className }: { kind: string; className?: string }) {
-  const k = kind.toLowerCase();
-  if (k.includes("performance")) return <GaugeIcon className={className} />;
-  if (k.includes("migration")) return <RefreshIcon className={className} />;
-  if (k.includes("auth") || k.includes("application")) return <UserIcon className={className} />;
-  return <LayoutIcon className={className} />;
-}
-
-function ResultCard({ project }: { project: Project }) {
+/**
+ * One project as a bento tile. `wide` is the lead card: the plate takes the
+ * left half and the outcome the right, so the first case study reads as the
+ * anchor of the grid rather than as a taller copy of the small ones.
+ */
+function ResultCard({ project, wide = false }: { project: Project; wide?: boolean }) {
   const isCaseStudy = Boolean(project.caseStudy);
   const isExternal = Boolean(project.href && !project.caseStudy);
 
-  const inner = (
-    <>
-      <span className={ICON_TILE}>
-        <ProjectIcon kind={project.kind} className="h-5 w-5" />
-      </span>
-      <p className="ds-meta mt-5">{project.kind}</p>
-      <h3 className="ds-h3 mt-1">{project.title}</h3>
+  const content = (
+    <div className="flex flex-1 flex-col p-6 md:p-7">
+      <p className="ds-meta">{project.kind}</p>
+      <h3
+        className={cn(
+          "mt-1 font-semibold tracking-[-0.02em] text-fg",
+          wide ? "text-[1.375rem] leading-tight md:text-[1.5rem]" : "ds-h3",
+        )}
+      >
+        {project.title}
+      </h3>
       <p className="ds-body-sm mt-3">{project.outcome}</p>
       {(isCaseStudy || isExternal) && (
         <span className="ds-link mt-auto pt-5 text-[0.9375rem]">
@@ -106,10 +46,28 @@ function ResultCard({ project }: { project: Project }) {
           <ArrowIcon className="h-3 w-3" />
         </span>
       )}
+    </div>
+  );
+
+  const inner = wide ? (
+    <>
+      {/* The plate keeps its own 16:10 ratio — at half-card width it is what
+          sets the row height, so the lead card is taller than the small ones
+          without anyone asking it to be. */}
+      <Plate project={project} className="border-b border-border-subtle md:border-r md:border-b-0" />
+      {content}
+    </>
+  ) : (
+    <>
+      <Plate project={project} className="shrink-0 border-b border-border-subtle" />
+      {content}
     </>
   );
 
-  const cls = "group ds-card ds-card-interactive flex h-full flex-col p-7";
+  const cls = cn(
+    "group ds-card ds-card-interactive h-full overflow-hidden",
+    wide ? "grid grid-cols-1 md:grid-cols-2" : "flex flex-col",
+  );
   if (isCaseStudy) {
     return (
       <Link
@@ -138,17 +96,28 @@ function ResultCard({ project }: { project: Project }) {
   return <div className={cls}>{inner}</div>;
 }
 
-export function WorkResults({ tone = "soft" }: { tone?: Tone }) {
+/**
+ * The work grid: one wide lead case across the top, the two supporting
+ * projects beneath it. Asymmetric on purpose — an even three-up would read
+ * as a gallery, and the bento reads as a hierarchy.
+ */
+export function WorkResults({ tone = "soft", size = "default" }: { tone?: Tone; size?: "default" | "roomy" }) {
+  const [lead, ...rest] = featuredProjects;
+
   return (
-    <Section id="work" tone={tone}>
+    <Section id="work" tone={tone} size={size}>
       <SectionHeading
-        overline=""
         title="Selected work"
         description="Real products, each one linked to its case study or live site."
       />
-      <ul className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
-        {featuredProjects.map((project, i) => (
-          <Reveal as="li" key={project.slug} delay={i * 0.06} className="h-full">
+      <ul className="mx-auto grid max-w-6xl gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-6">
+        {lead && (
+          <Reveal as="li" className="h-full md:col-span-2 lg:col-span-6">
+            <ResultCard project={lead} wide />
+          </Reveal>
+        )}
+        {rest.map((project, i) => (
+          <Reveal as="li" key={project.slug} delay={(i + 1) * 0.06} className="h-full lg:col-span-3">
             <ResultCard project={project} />
           </Reveal>
         ))}
@@ -163,13 +132,12 @@ export function WorkResults({ tone = "soft" }: { tone?: Tone }) {
   );
 }
 
-/* ── 3. How it works ────────────────────────────────────────────────────── */
+/* ── How it works ────────────────────────────────────────────────────── */
 
 export function HowItWorks({ tone = "plain" }: { tone?: Tone }) {
   return (
     <Section id="process" tone={tone}>
       <SectionHeading
-        overline=""
         title="How we work"
         description="The same five steps whichever service applies."
       />
@@ -178,40 +146,15 @@ export function HowItWorks({ tone = "plain" }: { tone?: Tone }) {
   );
 }
 
-/* ── 4. Why Craftwise ───────────────────────────────────────────────────── */
+/* ── Close ───────────────────────────────────────────────────────────── */
 
-export function WhyMe({ tone = "plain" }: { tone?: Tone }) {
+export function HomeClose({ tone = "plain", size = "default" }: { tone?: Tone; size?: "default" | "roomy" }) {
   return (
-    <Section id="why" tone={tone}>
-      <SectionHeading overline="" title="Why Craftwise" />
-      <ul className="mx-auto grid max-w-5xl gap-x-10 gap-y-10 md:grid-cols-3">
-        {assurances.map((item, i) => (
-          <Reveal as="li" key={item.title} delay={i * 0.08}>
-            <CheckCircleIcon className="h-9 w-9 text-accent" />
-            <h3 className="ds-title mt-4">{item.title}</h3>
-            <p className="ds-body-sm mt-1.5">{item.detail}</p>
-          </Reveal>
-        ))}
-      </ul>
-      <div className="mt-10 text-center">
-        <Link href="/about" className="ds-link text-[0.9375rem]">
-          Who is behind Craftwise?
-          <ChevronRightIcon />
-        </Link>
-      </div>
-    </Section>
-  );
-}
-
-/* ── 5. Close ───────────────────────────────────────────────────────────── */
-
-export function HomeClose({ tone = "plain" }: { tone?: Tone }) {
-  return (
-    <Section id="contact" tone={tone}>
+    <Section id="contact" tone={tone} size={size}>
       <Reveal>
-        <div className="theme-tint rounded-[28px] px-6 py-12 text-center md:px-14 md:py-16">
+        <div className="theme-tint rounded-[20px] border border-border px-6 py-12 text-center md:px-14 md:py-16">
           <h2 className="ds-h1 mx-auto max-w-2xl">Have a project in mind?</h2>
-          <p className="body-large mx-auto mt-4 max-w-xl">
+          <p className="ds-lede mx-auto mt-4 max-w-xl">
             Tell us what you are building, what needs to change, or where your current system is getting in the way.
           </p>
 

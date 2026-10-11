@@ -340,7 +340,7 @@ export function FlickStack({ items }: { items: StackItem[] }) {
         })}
       </div>
 
-      <div className="mt-12 flex flex-col items-center gap-3 text-center">
+      <div className="mt-8 flex flex-col items-center gap-3 text-center">
         <p className="ds-body-sm" aria-live="polite">
           <span className="font-semibold text-fg">{current.title}</span>
           {" "}
@@ -364,6 +364,7 @@ export function FlickStack({ items }: { items: StackItem[] }) {
             Next
           </button>
         </div>
+        <p className="ds-meta">Drag a card, or use the arrow keys</p>
       </div>
     </div>
   );

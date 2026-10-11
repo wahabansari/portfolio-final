@@ -32,13 +32,15 @@ export default function AboutPage() {
       <Nav />
       <main id="main">
         <AboutHero />
+        {/* One continuous canvas under the opener: story, experience,
+            capabilities and engagement as tiles, then the plain close. */}
         <AboutStory tone="soft" />
-        <ExperienceList tone="plain" />
+        <ExperienceList tone="soft" />
         <Capabilities tone="soft" />
-        <Engagement tone="plain" />
+        <Engagement tone="soft" />
         <CtaBand
           navy
-          tone="soft"
+          tone="plain"
           heading="Have a project in mind?"
           body="Tell us what you are building, what needs to change, or where your current system is getting in the way."
           primary={{ label: "Start a project", href: "/contact" }}

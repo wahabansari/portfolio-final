@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContent, useLocaleHref } from "./locale-provider";
+import { SERVICE_NAV } from "@/lib/service-nav";
 
 /**
  * Footer — one compact band.
@@ -25,12 +26,10 @@ export function Footer() {
     { label: "Contact", href: localeHref("/contact") },
   ];
 
-  const serviceLinks = [
-    { label: "Custom Web Development", href: "/services/custom-web-development" },
-    { label: "Business Dashboards", href: "/services/business-dashboards" },
-    { label: "Software Modernization", href: "/services/software-modernization" },
-    { label: "AI Business Automation", href: "/services/ai-business-automation" },
-  ];
+  const serviceLinks = SERVICE_NAV.map((svc) => ({
+    label: svc.footerLabel,
+    href: `/services/${svc.slug}`,
+  }));
 
   return (
     <footer className="border-t border-border bg-surface">

@@ -79,28 +79,23 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
 
   const tocSections = insight.sections.map((s) => ({ id: slugify(s.heading), label: s.heading }));
 
-  /* Bands after the article body alternate; which of them exist depends on the
-     article, so the tones are derived rather than hard-coded. */
+  /* One continuous canvas after the aurora opener: every band sits on the
+     same soft fill, and the page closes on plain white with the prev/next
+     cards — the homepage's three-fill rhythm. */
   type Tone = "plain" | "soft";
   const hasFaqs = Boolean(insight.faqs && insight.faqs.length > 0);
   const hasRefs = Boolean(insight.references && insight.references.length > 0);
   const hasRelated = insight.relatedCaseStudySlugs.length > 0;
-  /* The body is "plain"; each band that is present flips the tone from the one
-     before it. Counting the bands that came earlier gives each one's tone. */
-  const toneAfter = (bands: number): Tone => (bands % 2 === 0 ? "plain" : "soft");
-  const faqBand = hasFaqs ? 1 : 0;
-  const refsBand = faqBand + (hasRefs ? 1 : 0);
-  const relatedBand = refsBand + (hasRelated ? 1 : 0);
-  const faqTone = toneAfter(faqBand);
-  const refsTone = toneAfter(refsBand);
-  const relatedTone = toneAfter(relatedBand);
-  const ctaTone = toneAfter(relatedBand + 1);
-  const footerTone = toneAfter(relatedBand + 2);
+  const faqTone: Tone = "soft";
+  const refsTone: Tone = "soft";
+  const relatedTone: Tone = "soft";
+  const ctaTone: Tone = "soft";
+  const footerTone: Tone = "plain";
 
   return (
     <>
       <ArticleJsonLd insight={insight} />
-      <PageEvent event="case_study_view" label={insight.slug} />
+      <PageEvent event="insight_view" label={insight.slug} />
       <Nav />
       <main id="main">
         <section className="hero-aurora border-b border-border pt-28 pb-12 md:pt-32 md:pb-16">
@@ -113,7 +108,10 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
               ]}
             />
 
-            <div className="mt-8 max-w-3xl">
+            {/* The statement in a tinted panel — the same opener language as
+                PageHeader and the homepage hero. */}
+            <div className="theme-tint mt-8 rounded-[28px] border border-border px-6 py-9 sm:px-9 md:px-12 md:py-14">
+            <div className="max-w-3xl">
               <Reveal>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   <span className="rounded-full bg-accent-soft px-3 py-1 text-[0.75rem] font-semibold tracking-[0.04em] text-accent uppercase">
@@ -154,8 +152,9 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
                 </Reveal>
               )}
             </div>
+            </div>
 
-            <Reveal delay={0.16} className="mt-10">
+            <Reveal delay={0.16} className="mt-4 md:mt-5">
               <ImagePlaceholder className="aspect-[21/9] w-full" />
             </Reveal>
           </div>
@@ -164,7 +163,7 @@ export default async function InsightPage({ params }: { params: Promise<{ slug: 
         {/* Phone and tablet: the sticky chip row. Desktop gets the rail. */}
         {tocSections.length > 1 && <ServiceToc sections={tocSections} className="lg:hidden" />}
 
-        <Section tone="plain">
+        <Section tone="soft">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
             {/* Desktop rail: where you are in the article, and the next step. */}
             <aside className="hidden lg:col-span-3 lg:block">

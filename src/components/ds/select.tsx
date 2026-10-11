@@ -18,8 +18,9 @@ import { cn } from "@/lib/cn";
  *     field colour so an unanswered required control is obvious at a glance.
  *   · The chevron flips on open but stays muted — direction on a select is
  *     discovered, not decorated.
- *   · The listbox portal is the same sheet language as the Dialog: white
- *     panel on a fog, hairline border, accent ring on the focused option.
+ *   · The listbox portal is a sheet of the same language as the accordion
+ *     panel: white on the fog behind it, hairline border, accent ring on the
+ *     focused option.
  *
  * `data-field={name}` participates in the contact form's "jump to what needs
  * attention" behaviour without colliding with native inputs' `[name]`.

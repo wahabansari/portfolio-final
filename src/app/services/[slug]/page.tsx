@@ -92,7 +92,6 @@ export async function generateMetadata({
 }
 
 type Tone = "plain" | "soft";
-const flip = (t: Tone): Tone => (t === "plain" ? "soft" : "plain");
 
 /* A left-aligned block inside the main column: overline, heading, optional
    lede, then the content. One wrapper so every block opens the same way. */
@@ -165,13 +164,14 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   const hasProof = service.proofSlugs.length > 0;
   const sections = sectionsFor(hasProof);
 
-  /* Bands after the two-column body alternate; the optional proof and insights
-     bands shift the sequence, so the tones are derived rather than hard-coded. */
+  /* One continuous canvas after the header: every band sits on the same soft
+     fill (tiles flip to white inside it), and the page closes on plain white
+     with the next-service card — the homepage's three-fill rhythm. */
   const proofTone: Tone = "soft";
-  const insightsTone: Tone = hasProof ? flip(proofTone) : proofTone;
-  const faqTone = relatedInsights.length > 0 ? flip(insightsTone) : insightsTone;
-  const contactTone = flip(faqTone);
-  const nextTone = flip(contactTone);
+  const insightsTone: Tone = "soft";
+  const faqTone: Tone = "soft";
+  const contactTone: Tone = "soft";
+  const nextTone: Tone = "plain";
 
   return (
     <>
@@ -210,7 +210,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         {/* Phone and tablet: the sticky chip row. Desktop gets the rail. */}
         <ServiceToc sections={sections} className="lg:hidden" />
 
-        <Section tone="plain">
+        <Section tone="soft">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
             <div className="min-w-0 space-y-20 lg:col-span-8">
               {/* Answer-first. One quotable sentence before any sales copy. */}
